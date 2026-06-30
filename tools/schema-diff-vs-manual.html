@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual Schema Diff vs SchemaLens — Time & Cost Calculator</title>
+  <meta name="description" content="Compare the time and cost of checking database schemas manually vs using SchemaLens. Interactive calculator shows your team's savings instantly.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-diff-vs-manual.html">
+  <meta property="og:title" content="Manual Schema Diff vs SchemaLens — Time & Cost Calculator">
+  <meta property="og:description" content="See how much manual schema diffing costs your team. Compare step-by-step and calculate time saved with SchemaLens.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-diff-vs-manual.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Manual Schema Diff vs SchemaLens — Time & Cost Calculator">
+  <meta name="twitter:description" content="See how much manual schema diffing costs your team. Compare step-by-step and calculate time saved with SchemaLens.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Manual Schema Diff vs SchemaLens Calculator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": "Compares manual SQL schema diff workflow against SchemaLens step-by-step, calculates time and cost savings based on team size and migration volume.",
+    "url": "https://schemalens.tech/tools/schema-diff-vs-manual.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    :root {
+      --manual: #ef4444;
+      --schemalens: #10b981;
+      --savings: #6366f1;
+    }
+    .page-header { padding: 56px 24px 32px; text-align: center; max-width: 760px; margin: 0 auto; }
+    .page-header h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 14px; line-height: 1.15; }
+    .page-header p { color: var(--text-muted); font-size: 1.1rem; margin: 0 auto; }
+    .eyebrow { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 10px; }
+
+    .compare-section { max-width: 1100px; margin: 0 auto; padding: 32px 24px 48px; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 800px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; }
+    .compare-card.manual { border-top: 4px solid var(--manual); }
+    .compare-card.schemalens { border-top: 4px solid var(--schemalens); }
+    .compare-card h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .compare-card .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; }
+    .step-list { list-style: none; padding: 0; margin: 0; }
+    .step-list li { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); color: var(--text); font-size: 0.95rem; }
+    .step-list li:last-child { border-bottom: none; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+    .manual .step-num { background: rgba(239,68,68,0.12); color: var(--manual); }
+    .schemalens .step-num { background: rgba(16,185,129,0.12); color: var(--schemalens); }
+    .step-time { margin-left: auto; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+
+    .calc-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 56px 24px; }
+    .calc-inner { max-width: 1000px; margin: 0 auto; }
+    .calc-inner h2 { text-align: center; font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+    .calc-inner .lead { text-align: center; color: var(--text-muted); margin-bottom: 36px; }
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+    @media (max-width: 800px) { .calc-grid { grid-template-columns: 1fr; } }
+    .calc-card-plain { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .calc-card-plain h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; }
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; color: var(--text); }
+    .input-group input[type="range"] { width: 100%; margin-bottom: 6px; accent-color: var(--primary); }
+    .input-group input[type="number"] {
+      width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 0.95rem; box-sizing: border-box;
+    }
+    .value-display { font-size: 0.85rem; color: var(--primary); font-weight: 600; }
+    .results-card { background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05)); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .results-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
+    .result-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .result-row:last-child { border-bottom: none; }
+    .result-row .label { font-size: 0.9rem; color: var(--text-muted); }
+    .result-row .value { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+    .result-row .value.positive { color: var(--schemalens); }
+    .result-row .value.negative { color: var(--manual); }
+    .result-row .value.highlight { color: var(--savings); }
+    .big-result { text-align: center; padding: 24px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); margin-top: 20px; }
+    .big-result .num { font-size: 2.4rem; font-weight: 800; color: var(--savings); }
+    .big-result .label { font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; }
+
+    .cta-section { padding: 64px 24px; text-align: center; max-width: 720px; margin: 0 auto; }
+    .cta-section h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; }
+    .cta-section p { color: var(--text-muted); margin-bottom: 24px; }
+    .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .cta-row a {
+      display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; border-radius: var(--radius-sm);
+      font-weight: 700; font-size: 1rem; text-decoration: none; transition: all 0.2s;
+    }
+    .cta-row a.primary { background: var(--primary); color: #fff; }
+    .cta-row a.primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .cta-row a.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+    .cta-row a.secondary:hover { border-color: var(--hover-border); }
+
+    .faq-section { max-width: 760px; margin: 0 auto; padding: 48px 24px; }
+    .faq-section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 24px; text-align: center; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 18px 0; }
+    .faq-item h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+    .faq-item p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin: 0; }
+
+    .share-bar { text-align: center; padding: 24px; }
+    .share-bar button {
+      background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 18px; font-size: 0.85rem; cursor: pointer; margin: 0 6px 8px;
+    }
+    .share-bar button:hover { border-color: var(--hover-border); }
+    .disclaimer { font-size: 0.8rem; color: var(--text-muted); text-align: center; padding: 24px; max-width: 760px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+
+<nav style="position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);">
+  <div style="max-width:var(--max-width);margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <a href="../index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-weight:700;font-size:1.1rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      SchemaLens
+    </a>
+    <div style="display:flex;gap:18px;align-items:center;font-size:0.9rem;">
+      <a href="../app.html" style="color:var(--text-muted);text-decoration:none;">App</a>
+      <a href="../tools.html" style="color:var(--text-muted);text-decoration:none;">Tools</a>
+      <a href="../pricing.html" style="color:var(--text-muted);text-decoration:none;">Pricing</a>
+      <a href="../github-action.html" style="color:var(--text-muted);text-decoration:none;">GitHub Action</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div class="eyebrow">Time & Cost Comparison</div>
+    <h1>Manual schema diff vs SchemaLens</h1>
+    <p>See exactly how long the old way takes, what SchemaLens replaces, and how much your team saves in a year. Adjust the calculator to match your workflow.</p>
+  </div>
+
+  <section class="compare-section">
+    <div class="compare-grid">
+      <div class="compare-card manual">
+        <h2>🔥 The manual way</h2>
+        <p class="subtitle">What most teams do today</p>
+        <ul class="step-list">
+          <li>
+            <span class="step-num">1</span>
+            <span>Dump schemas with <code>pg_dump</code> or <code>mysqldump</code></span>
+            <span class="step-time">5 min</span>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <span>Open both dumps side-by-side in an editor</span>
+            <span class="step-time">5 min</span>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <span>Scan every table, column, index, and constraint for changes</span>
+            <span class="step-time">15 min</span>
+          </li>
+          <li>
+            <span class="step-num">4</span>
+            <span>Write <code>ALTER TABLE</code> scripts by hand</span>
+            <span class="step-time">20 min</span>
+          </li>
+          <li>
+            <span class="step-num">5</span>
+            <span>Review with a teammate, fix typos, run tests</span>
+            <span class="step-time">15 min</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="compare-card schemalens">
+        <h2>⚡ The SchemaLens way</h2>
+        <p class="subtitle">Paste. Compare. Migrate.</p>
+        <ul class="step-list">
+          <li>
+            <span class="step-num">1</span>
+            <span>Paste your old and new <code>CREATE TABLE</code> schemas</span>
+            <span class="step-time">1 min</span>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <span>Get a visual diff showing every added, removed, and changed object</span>
+            <span class="step-time">instant</span>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <span>Copy the generated migration SQL in your dialect</span>
+            <span class="step-time">instant</span>
+          </li>
+          <li>
+            <span class="step-num">4</span>
+            <span>Review the breaking-change warnings and rollback script</span>
+            <span class="step-time">2 min</span>
+          </li>
+          <li>
+            <span class="step-num">5</span>
+            <span>Add the GitHub Action to catch schema changes in every PR</span>
+            <span class="step-time">5 min setup</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="calc-section">
+    <div class="calc-inner">
+      <h2>Calculate your savings</h2>
+      <p class="lead">Adjust the numbers to match your team. The calculator updates instantly.</p>
+
+      <div class="calc-grid">
+        <div class="calc-card-plain">
+          <h3>Your workflow</h3>
+
+          <div class="input-group">
+            <label for="teamSize">Engineers reviewing migrations</label>
+            <input type="range" id="teamSize" min="1" max="50" value="4">
+            <div class="value-display"><span id="teamSizeVal">4</span> people</div>
+          </div>
+
+          <div class="input-group">
+            <label for="migrationsPerMonth">Schema changes reviewed per month</label>
+            <input type="range" id="migrationsPerMonth" min="1" max="100" value="6">
+            <div class="value-display"><span id="migrationsPerMonthVal">6</span> migrations</div>
+          </div>
+
+          <div class="input-group">
+            <label for="manualMinutes">Minutes spent on a manual schema diff</label>
+            <input type="range" id="manualMinutes" min="5" max="120" step="5" value="60">
+            <div class="value-display"><span id="manualMinutesVal">60</span> min</div>
+          </div>
+
+          <div class="input-group">
+            <label for="schemaLensMinutes">Minutes with SchemaLens</label>
+            <input type="range" id="schemaLensMinutes" min="1" max="30" step="1" value="5">
+            <div class="value-display"><span id="schemaLensMinutesVal">5</span> min</div>
+          </div>
+
+          <div class="input-group">
+            <label for="hourlyRate">Average fully-loaded hourly rate</label>
+            <input type="number" id="hourlyRate" value="75" min="10" step="5">
+          </div>
+        </div>
+
+        <div class="results-card">
+          <h3>Annual impact</h3>
+          <div class="result-row">
+            <span class="label">Hours spent manually per year</span>
+            <span class="value negative" id="manualHours">288 h</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Hours with SchemaLens per year</span>
+            <span class="value" id="schemaLensHours">24 h</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Time saved per year</span>
+            <span class="value positive" id="timeSaved">264 h</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Cost saved per year</span>
+            <span class="value positive" id="costSaved">$19,800</span>
+          </div>
+          <div class="result-row">
+            <span class="label">SchemaLens Pro cost</span>
+            <span class="value" id="proCost">$39</span>
+          </div>
+
+          <div class="big-result">
+            <div class="num" id="netSavings">$19,761</div>
+            <div class="label">Net savings in year one with Pro</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="share-bar">
+        <button onclick="copyLink()">🔗 Copy result link</button>
+        <button onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('I calculated how much manual schema diffing costs my team: ' + document.getElementById('costSaved').textContent + ' saved/year with SchemaLens. ') + '&url=' + encodeURIComponent(location.href), '_blank')">Share on X</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2>Stop paying the manual-diff tax</h2>
+    <p>SchemaLens is free forever for browser diffs. Pro adds exports, history, shareable links, and 80+ tools. Add it to your CI/CD pipeline and never miss a breaking schema change again.</p>
+    <div class="cta-row">
+      <a href="../app.html" class="primary">Try the free diff →</a>
+      <a href="../pricing.html" class="secondary">See Pro & Team plans</a>
+      <a href="../github-action.html" class="secondary">Add GitHub Action</a>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>Is the web diff really free?</h3>
+      <p>Yes. Paste two schemas, get the visual diff, full migration SQL, rollback script, and ORM export — no account, no limits, no catch.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What does Pro add?</h3>
+      <p>Pro ($39 lifetime) adds exports (Markdown, PDF, JSON, SQL), saved diff history, shareable links, and access to all 80+ micro-tools including this calculator.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How does the GitHub Action help?</h3>
+      <p>The SchemaLens GitHub Action runs on every PR, comments the schema diff, reports breaking changes, and archives a self-contained HTML report. It catches schema drift before it reaches production.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Do I need a credit card to try it?</h3>
+      <p>No. The browser tool is free. The GitHub Action is free. Pro is a one-time purchase through Gumroad.</p>
+    </div>
+  </section>
+
+  <p class="disclaimer">Savings estimates are based on the inputs above and assume every schema change is reviewed. Actual savings depend on team size, migration complexity, and incident history.</p>
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:40px 24px;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <p style="margin:0 0 12px;">
+    <a href="../index.html" style="color:var(--text-muted);text-decoration:none;margin:0 10px;">Home</a>
+    <a href="../app.html" style="color:var(--text-muted);text-decoration:none;margin:0 10px;">App</a>
+    <a href="../tools.html" style="color:var(--text-muted);text-decoration:none;margin:0 10px;">Tools</a>
+    <a href="../pricing.html" style="color:var(--text-muted);text-decoration:none;margin:0 10px;">Pricing</a>
+    <a href="../trust.html" style="color:var(--text-muted);text-decoration:none;margin:0 10px;">Trust</a>
+  </p>
+  <p style="margin:0;">© 2026 SchemaLens. Built for developers who ship schema changes.</p>
+</footer>
+
+<script>
+(function() {
+  const inputs = {
+    teamSize: document.getElementById('teamSize'),
+    migrationsPerMonth: document.getElementById('migrationsPerMonth'),
+    manualMinutes: document.getElementById('manualMinutes'),
+    schemaLensMinutes: document.getElementById('schemaLensMinutes'),
+    hourlyRate: document.getElementById('hourlyRate'),
+  };
+
+  const displays = {
+    teamSize: document.getElementById('teamSizeVal'),
+    migrationsPerMonth: document.getElementById('migrationsPerMonthVal'),
+    manualMinutes: document.getElementById('manualMinutesVal'),
+    schemaLensMinutes: document.getElementById('schemaLensMinutesVal'),
+  };
+
+  const results = {
+    manualHours: document.getElementById('manualHours'),
+    schemaLensHours: document.getElementById('schemaLensHours'),
+    timeSaved: document.getElementById('timeSaved'),
+    costSaved: document.getElementById('costSaved'),
+    proCost: document.getElementById('proCost'),
+    netSavings: document.getElementById('netSavings'),
+  };
+
+  function fmtMoney(n) {
+    return '$' + Math.round(n).toLocaleString();
+  }
+
+  function fmtHours(n) {
+    return Math.round(n).toLocaleString() + ' h';
+  }
+
+  function readParams() {
+    const params = new URLSearchParams(location.search);
+    const set = (key, el) => {
+      if (params.has(key)) {
+        const v = parseFloat(params.get(key));
+        if (!isNaN(v)) el.value = v;
+      }
+    };
+    set('team', inputs.teamSize);
+    set('migrations', inputs.migrationsPerMonth);
+    set('manual', inputs.manualMinutes);
+    set('schemalens', inputs.schemaLensMinutes);
+    set('rate', inputs.hourlyRate);
+  }
+
+  function updateURL() {
+    const params = new URLSearchParams();
+    params.set('team', inputs.teamSize.value);
+    params.set('migrations', inputs.migrationsPerMonth.value);
+    params.set('manual', inputs.manualMinutes.value);
+    params.set('schemalens', inputs.schemaLensMinutes.value);
+    params.set('rate', inputs.hourlyRate.value);
+    const newUrl = location.pathname + '?' + params.toString();
+    history.replaceState(null, '', newUrl);
+  }
+
+  function calculate() {
+    const teamSize = parseInt(inputs.teamSize.value, 10) || 1;
+    const migrations = parseInt(inputs.migrationsPerMonth.value, 10) || 1;
+    const manualMin = parseInt(inputs.manualMinutes.value, 10) || 60;
+    const slMin = parseInt(inputs.schemaLensMinutes.value, 10) || 5;
+    const rate = parseFloat(inputs.hourlyRate.value) || 75;
+
+    displays.teamSize.textContent = teamSize;
+    displays.migrationsPerMonth.textContent = migrations;
+    displays.manualMinutes.textContent = manualMin;
+    displays.schemaLensMinutes.textContent = slMin;
+
+    const yearlyMigrations = migrations * 12;
+    const manualHours = (yearlyMigrations * manualMin) / 60;
+    const slHours = (yearlyMigrations * slMin) / 60;
+    const timeSaved = Math.max(0, manualHours - slHours);
+    const costSaved = timeSaved * rate;
+    const proCost = 39;
+    const netSavings = costSaved - proCost;
+
+    results.manualHours.textContent = fmtHours(manualHours);
+    results.schemaLensHours.textContent = fmtHours(slHours);
+    results.timeSaved.textContent = fmtHours(timeSaved);
+    results.costSaved.textContent = fmtMoney(costSaved);
+    results.proCost.textContent = fmtMoney(proCost);
+    results.netSavings.textContent = fmtMoney(netSavings);
+
+    updateURL();
+  }
+
+  Object.values(inputs).forEach(el => {
+    el.addEventListener('input', calculate);
+  });
+
+  window.copyLink = function() {
+    navigator.clipboard.writeText(location.href).then(() => {
+      alert('Result link copied to clipboard');
+    }).catch(() => {
+      alert('Could not copy link');
+    });
+  };
+
+  readParams();
+  calculate();
+
+  if (window.track) {
+    track('page_view', { page: 'tools/schema-diff-vs-manual.html' });
+  }
+})();
+</script>
+
+</body>
+</html>
