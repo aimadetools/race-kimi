@@ -1595,6 +1595,21 @@ function getFreeTierLimit() {
   window.SchemaLensPaywallVariant = variant;
 })();
 </script>
+<script>
+(function() {
+  const PAYWALL_KEY_V2 = 'sl_paywall_timing_variant_v2';
+  let variant = localStorage.getItem(PAYWALL_KEY_V2);
+  if (!variant) {
+    // A/B test: control (post-result banner) vs interstitial (pre-result Pro preview)
+    variant = Math.random() < 0.5 ? 'control' : 'interstitial';
+    localStorage.setItem(PAYWALL_KEY_V2, variant);
+    if (window.SchemaLensAnalytics) {
+      window.SchemaLensAnalytics.track('paywall_timing_v2_assigned', { variant, test: 'paywall_timing_v2_june2026' });
+    }
+  }
+  window.SchemaLensPaywallVariantV2 = variant;
+})();
+</script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f0f0f">
@@ -2034,7 +2049,7 @@ CREATE TABLE users (
     </div>
 
     <div id="proHint" class="pro-hint">
-      <span>💡 <strong>Free:</strong> unlimited visual diff + full migration SQL + rollback + ORM export. <strong>Pro:</strong> exports, diff history, shareable links, priority support, and 80+ micro-tools. <a href="pricing.html" style="color:var(--primary);text-decoration:underline;">See Pro features →</a></span>
+      <span>💡 <strong>Free forever:</strong> unlimited visual diff + full migration SQL + rollback + ORM + Markdown/PDF export. <strong>Pro:</strong> saved diff history, shareable links, 80+ micro-tools, priority support, and no exit-intent popups. <a href="pricing.html" style="color:var(--primary);text-decoration:underline;">See Pro features →</a></span>
       <a href="pricing.html">Upgrade →</a>
     </div>
 
@@ -2194,11 +2209,11 @@ CREATE TABLE users (
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">The web diff is free forever. Pro adds power features for developers who live in their database.</p>
       <ul style="font-size:0.85rem;color:var(--text);margin:0 0 14px 18px;padding:0;line-height:1.7;">
         <li>Unlimited diff history & saved diffs</li>
-        <li>Export to Markdown, PDF, JSON, SQL</li>
         <li>Shareable diff links with custom names</li>
         <li>Access to all 80+ micro-tools</li>
         <li>Priority email support</li>
         <li>No exit-intent popups</li>
+        <li>Early access to new features</li>
       </ul>
       <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary gumroad-button" style="width:100%;text-align:center;margin-bottom:14px;" onclick="if(window.SchemaLensAnalytics)window.SchemaLensAnalytics.track('license_modal_buy_click',{source:'license_modal'})" id="licenseModalBuyBtn">⚡ Get Lifetime Pro — $39 once</a>
       <div style="text-align:center;font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;">Already have a key? Enter it below</div>
@@ -2270,6 +2285,63 @@ DROP TABLE audit_logs;</code></pre>
         <button class="btn btn-secondary" onclick="closeProPreviewModal()">Close</button>
       </div>
       <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);text-align:center;">14-day money-back guarantee · Instant activation · All future updates included</p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="proPreviewInterstitial">
+    <div class="modal" style="max-width: 720px; max-height: 92vh; overflow-y: auto; padding: 0;">
+      <div style="padding: 28px 28px 18px;">
+        <h3 style="margin-bottom:6px;">🚀 Your schema diff is ready</h3>
+        <p style="font-size:0.95rem;color:var(--text-muted);margin-bottom:16px;">The visual diff and full migration SQL are <strong>free forever</strong>. Pro adds the power features teams rely on when shipping database changes every week.</p>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="proInterstitialBadges">
+          <!-- populated by JS -->
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:0.8rem;font-weight:600;color:var(--text-muted);">Forward Migration</span>
+              <span style="font-size:0.7rem;color:var(--success);font-weight:600;background:rgba(34,197,94,0.1);padding:2px 8px;border-radius:12px;">Free</span>
+            </div>
+            <pre id="proInterstitialForward" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.75rem;overflow-x:auto;color:var(--text);line-height:1.5;max-height:140px;"><code></code></pre>
+            <div style="position:absolute;bottom:14px;left:14px;right:14px;height:48px;background:linear-gradient(transparent,var(--surface));"></div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:0.8rem;font-weight:600;color:var(--text-muted);">Rollback Safety Net</span>
+              <span style="font-size:0.7rem;color:var(--warning);font-weight:600;background:rgba(245,158,11,0.1);padding:2px 8px;border-radius:12px;">Pro</span>
+            </div>
+            <pre id="proInterstitialRollback" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.75rem;overflow-x:auto;color:var(--text);line-height:1.5;max-height:140px;filter:blur(3px);opacity:0.6;"><code></code></pre>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+              <span style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.75rem;color:var(--text-muted);box-shadow:0 4px 12px rgba(0,0,0,0.2);">Unlock Pro to view rollback</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.08));border:1px solid rgba(99,102,241,0.2);border-radius:10px;padding:14px 16px;margin-bottom:18px;">
+          <div style="font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:8px;">✨ What Pro unlocks for this diff</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px 14px;font-size:0.82rem;color:var(--text);">
+            <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Export Markdown / PDF / JSON</div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Shareable diff links</div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Unlimited saved diff history</div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Full rollback migration</div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Access to 80+ micro-tools</div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Priority email support</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;">
+          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" id="proInterstitialBuyBtn" class="btn btn-primary gumroad-button" style="flex:1;min-width:200px;text-align:center;" target="_blank" rel="noopener">⚡ Unlock Pro — $39 lifetime</a>
+          <a href="team-buy.html?utm_source=pro-interstitial" id="proInterstitialTeamBtn" class="btn btn-secondary" style="flex:1;min-width:200px;text-align:center;">👥 See Team plan</a>
+        </div>
+        <div style="text-align:center;">
+          <button id="proInterstitialContinueBtn" class="btn btn-text" style="font-size:0.85rem;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline;">Continue with free diff →</button>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding:12px 28px;background:rgba(0,0,0,0.15);border-radius:0 0 var(--radius) var(--radius);text-align:center;">
+        <p style="font-size:0.78rem;color:var(--text-muted);margin:0;">30-day money-back guarantee · No subscription · Instant activation · All future updates included</p>
+      </div>
     </div>
   </div>
 
@@ -4862,6 +4934,175 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScor
   warnContainer.innerHTML = warnHTML;
 }
 
+// --- Pro Preview Interstitial (paywall timing v2) ---
+const PRO_INTERSTITIAL_DISMISS_KEY = 'sl_pro_interstitial_dismissed_v1';
+
+function getTotalChangeCount(diff) {
+  if (!diff) return 0;
+  return (diff.tablesAdded || []).length +
+    (diff.tablesRemoved || []).length +
+    (diff.tablesRenamed || []).length +
+    (diff.tablesModified || []).length +
+    (diff.enumsAdded || []).length +
+    (diff.enumsRemoved || []).length +
+    (diff.triggersAdded || []).length +
+    (diff.triggersRemoved || []).length +
+    (diff.triggersModified || []).length +
+    (diff.viewsAdded || []).length +
+    (diff.viewsRemoved || []).length +
+    (diff.viewsModified || []).length +
+    (diff.functionsAdded || []).length +
+    (diff.functionsRemoved || []).length +
+    (diff.functionsModified || []).length;
+}
+
+function shouldShowProInterstitial() {
+  if (isProUnlocked()) return false;
+  try {
+    const dismissed = localStorage.getItem(PRO_INTERSTITIAL_DISMISS_KEY);
+    if (dismissed) {
+      const then = parseInt(dismissed, 10);
+      // Re-show once per session if user dismissed more than 7 days ago
+      if (!isNaN(then) && Date.now() - then < 7 * 24 * 60 * 60 * 1000) return false;
+    }
+  } catch (e) {}
+  const variant = window.SchemaLensPaywallVariantV2 || 'control';
+  return variant === 'interstitial';
+}
+
+function truncateSQL(sql, lines) {
+  if (!sql) return '';
+  const split = sql.split('\n');
+  return split.slice(0, lines).join('\n') + (split.length > lines ? '\n-- ...' : '');
+}
+
+function openProPreviewInterstitial(diff, migrationSQL, rollbackSQL, breakingChanges, risk) {
+  const modal = document.getElementById('proPreviewInterstitial');
+  if (!modal) return;
+
+  const total = getTotalChangeCount(diff);
+  const breakingCount = (breakingChanges || []).length;
+  const tablesChanged = new Set();
+  (diff.tablesAdded || []).forEach(t => tablesChanged.add(t.name));
+  (diff.tablesRemoved || []).forEach(t => tablesChanged.add(t.name));
+  (diff.tablesRenamed || []).forEach(t => tablesChanged.add(t.from || t.to));
+  (diff.tablesModified || []).forEach(t => tablesChanged.add(t.name));
+
+  const badges = document.getElementById('proInterstitialBadges');
+  if (badges) {
+    const riskColor = risk >= 70 ? '#ef4444' : (risk >= 40 ? '#f59e0b' : '#22c55e');
+    const riskBg = risk >= 70 ? 'rgba(239,68,68,0.12)' : (risk >= 40 ? 'rgba(245,158,11,0.12)' : 'rgba(34,197,94,0.12)');
+    badges.innerHTML = `
+      <span style="background:${riskBg};color:${riskColor};font-size:0.75rem;font-weight:700;padding:4px 12px;border-radius:20px;">⚠️ Risk Score: ${risk}/100</span>
+      ${breakingCount > 0 ? `<span style="background:rgba(248,113,113,0.12);color:#ef4444;font-size:0.75rem;font-weight:700;padding:4px 12px;border-radius:20px;">🔴 ${breakingCount} Breaking change${breakingCount > 1 ? 's' : ''}</span>` : ''}
+      <span style="background:rgba(99,102,241,0.12);color:var(--primary);font-size:0.75rem;font-weight:700;padding:4px 12px;border-radius:20px;">${tablesChanged.size} Table${tablesChanged.size !== 1 ? 's' : ''} · ${total} Change${total !== 1 ? 's' : ''}</span>
+    `;
+  }
+
+  const forwardEl = document.getElementById('proInterstitialForward');
+  if (forwardEl) forwardEl.querySelector('code').textContent = truncateSQL(migrationSQL, 10) || '-- No migration SQL generated';
+
+  const rollbackEl = document.getElementById('proInterstitialRollback');
+  if (rollbackEl) rollbackEl.querySelector('code').textContent = truncateSQL(rollbackSQL, 8) || '-- No rollback SQL generated';
+
+  // Wire CTAs fresh to avoid duplicate listeners
+  const buyBtn = document.getElementById('proInterstitialBuyBtn');
+  if (buyBtn) {
+    buyBtn.onclick = function(e) {
+      e.preventDefault();
+      if (window.SchemaLensAnalytics) {
+        window.SchemaLensAnalytics.track('pro_interstitial_upgrade_click', { variant: window.SchemaLensPaywallVariantV2 || 'interstitial' });
+      }
+      window.open('https://gumroad.com/l/schemalens-lifetime?wanted=true', '_blank', 'noopener');
+    };
+  }
+  const teamBtn = document.getElementById('proInterstitialTeamBtn');
+  if (teamBtn) {
+    teamBtn.onclick = function(e) {
+      e.preventDefault();
+      if (window.SchemaLensAnalytics) {
+        window.SchemaLensAnalytics.track('pro_interstitial_team_click', { variant: window.SchemaLensPaywallVariantV2 || 'interstitial' });
+      }
+      window.location.href = 'team-buy.html?utm_source=pro-interstitial';
+    };
+  }
+  const continueBtn = document.getElementById('proInterstitialContinueBtn');
+  if (continueBtn) {
+    continueBtn.onclick = function() {
+      try { localStorage.setItem(PRO_INTERSTITIAL_DISMISS_KEY, String(Date.now())); } catch (e) {}
+      if (window.SchemaLensAnalytics) {
+        window.SchemaLensAnalytics.track('pro_interstitial_continue_click', { variant: window.SchemaLensPaywallVariantV2 || 'interstitial' });
+      }
+      closeProPreviewInterstitial();
+      revealDiffResults();
+    };
+  }
+
+  modal.classList.add('active');
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('pro_interstitial_shown', {
+      variant: window.SchemaLensPaywallVariantV2 || 'interstitial',
+      total_changes: total,
+      breaking_changes: breakingCount,
+      risk_score: risk,
+      tables_changed: tablesChanged.size
+    });
+  }
+}
+
+function closeProPreviewInterstitial() {
+  const modal = document.getElementById('proPreviewInterstitial');
+  if (modal) modal.classList.remove('active');
+}
+
+function revealDiffResults(confidenceA, confidenceB) {
+  // Re-uses the globals set during compare
+  const diff = window.lastDiff;
+  const migrationSQL = window.lastMigrationSQL;
+  const rollbackSQL = window.lastRollbackSQL;
+  const breakingChanges = window.lastBreakingChanges || [];
+  const risk = window.lastRiskScore || 0;
+
+  if (!diff) return;
+
+  renderSummary(diff, confidenceA, confidenceB, breakingChanges, risk);
+  renderVisualDiff(diff, breakingChanges);
+  renderMigration(migrationSQL, rollbackSQL, diff);
+  renderMarkdown();
+  renderPDF();
+  renderORM();
+  renderExplanation(diff, breakingChanges);
+  renderProValueBanner();
+
+  if (isViewingSharedDiff()) {
+    renderPoweredByBadge();
+  } else {
+    renderShareCtaBanner();
+    renderTeamDriftCtaBanner();
+  }
+
+  if (currentSavedDiffId) {
+    loadComments(currentSavedDiffId);
+  } else {
+    diffCommentsCache = [];
+    renderAllComments();
+  }
+
+  document.getElementById('results').classList.add('active');
+  document.getElementById('welcomeHint').classList.add('hidden');
+  setCompareLoading(false);
+
+  const newDiffCount = incrementDiffCount();
+  if (newDiffCount === 1) {
+    setTimeout(() => {
+      if (shouldShowEmailCapture()) openEmailCaptureModal();
+    }, 1800);
+  }
+
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  scrollToLinkedTable();
+}
+
 function renderCICDCta(diff, breakingChanges) {
   const CTA_KEY = 'sl_cicd_cta_dismissed_v2';
   if (localStorage.getItem(CTA_KEY)) return '';
@@ -4923,6 +5164,9 @@ function renderCICDCta(diff, breakingChanges) {
       </div>
       <div class="cicd-cta-footer">
         Free for open source · Works with any CI platform · No backend required
+        <span style="display:block;margin-top:8px;color:var(--primary);font-weight:500;">
+          👉 <a href="team-buy.html?utm_source=app-cicd-cta" style="color:var(--primary);text-decoration:underline;" onclick="trackCICDCtaClick('team_upsell','direct','team')">Need shared workspaces, drift alerts, and admin controls? See SchemaLens Team →</a>
+        </span>
       </div>
     </div>
   `;
@@ -5429,7 +5673,7 @@ function getProValueChecklistHTML() {
       <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Breaking change warnings</div>
       <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Export Markdown / PDF / SQL</div>
       <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> ORM export (Prisma & Drizzle)</div>
-      <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Shareable diff links</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Saved diff history & share links</div>
     </div>
   `;
 }
@@ -9041,35 +9285,6 @@ document.getElementById('compareBtn').addEventListener('click', () => {
     tip: migrationWarnings.filter(w => w.severity === 'tip').length
   };
 
-  renderSummary(diff, confidenceA, confidenceB, breakingChanges, risk);
-  renderVisualDiff(diff, breakingChanges);
-  renderMigration(migrationSQL, rollbackSQL, diff);
-  renderMarkdown();
-  renderPDF();
-  renderORM();
-  renderExplanation(diff, breakingChanges);
-  renderProValueBanner();
-
-  // Show share CTA, Team drift CTA, or powered-by badge based on context
-  if (isViewingSharedDiff()) {
-    renderPoweredByBadge();
-  } else {
-    renderShareCtaBanner();
-    renderTeamDriftCtaBanner();
-  }
-
-  // Load comments if this diff is associated with a saved diff
-  if (currentSavedDiffId) {
-    loadComments(currentSavedDiffId);
-  } else {
-    diffCommentsCache = [];
-    renderAllComments();
-  }
-
-  document.getElementById('results').classList.add('active');
-  document.getElementById('welcomeHint').classList.add('hidden');
-  setCompareLoading(false);
-
   if (window.SchemaLensAnalytics) {
     window.SchemaLensAnalytics.track('diff_run', {
       dialect,
@@ -9077,26 +9292,22 @@ document.getElementById('compareBtn').addEventListener('click', () => {
       tables_new: diff.totalTablesNew,
       changes: diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesRenamed.length + diff.tablesModified.length,
       variant: window.SchemaLensHeadlineVariant || 'A',
-      tableLimit: getFreeTierLimit()
+      tableLimit: getFreeTierLimit(),
+      paywall_variant_v2: window.SchemaLensPaywallVariantV2 || 'control'
     });
   }
 
   // Auto-send webhook if configured
   maybeAutoWebhook(diff, migrationSQL, breakingChanges, dialect);
 
-  // Track diff count and maybe show email capture after first diff
-  const newDiffCount = incrementDiffCount();
-  if (newDiffCount === 1) {
-    setTimeout(() => {
-      if (shouldShowEmailCapture()) openEmailCaptureModal();
-    }, 1800);
+  // Paywall timing A/B test v2: show Pro preview interstitial before result for interstitial variant
+  if (shouldShowProInterstitial()) {
+    setCompareLoading(false);
+    openProPreviewInterstitial(diff, migrationSQL, rollbackSQL, breakingChanges, risk);
+    return;
   }
 
-  // Scroll to results
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  // Scroll to specific table if linked
-  scrollToLinkedTable();
+  revealDiffResults(confidenceA, confidenceB);
 });
 
 document.getElementById('clearBtn').addEventListener('click', () => {

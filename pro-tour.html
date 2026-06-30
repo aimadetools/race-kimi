@@ -101,16 +101,16 @@
     <p class="pt-guarantee">30-day money-back guarantee · No subscription · Instant license</p>
   </section>
 
-  <!-- Step 1: Unlimited Tables -->
+  <!-- Step 1: Free Forever Web Diff -->
   <section class="pt-step">
     <div class="pt-step-text">
-      <span class="pt-badge">Free vs Pro</span>
+      <span class="pt-badge">Free Forever</span>
       <h2>Unlimited schema comparisons</h2>
-      <p>The free tier now covers unlimited tables. Pro adds power features like exports, history, shareable links, and priority support.</p>
+      <p>The web diff is free forever — unlimited tables, full migration SQL, rollback, exports, and ORM conversion. No credit card required.</p>
       <ul>
         <li>Diff schemas of any size — no table limits</li>
         <li>Compare entire databases, not just snippets</li>
-        <li>Batch-process multi-schema migrations</li>
+        <li>Full migration + rollback for every change</li>
       </ul>
       <a href="app.html" style="color:var(--primary-light);font-weight:600;">Try the free tier first →</a>
     </div>
@@ -119,14 +119,14 @@
       <div class="pt-mockup-body">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
           <span style="font-weight:600;">Visual Diff</span>
-          <span style="font-size:0.7rem;color:var(--danger);background:rgba(239,68,68,0.12);padding:2px 8px;border-radius:4px;">Free limit reached</span>
+          <span style="font-size:0.7rem;color:var(--success);background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:4px;">Free</span>
         </div>
         <div class="pt-bar add" style="animation-delay:0.1s">users — 4 columns added</div>
         <div class="pt-bar mod" style="animation-delay:0.2s">orders — 2 columns modified</div>
         <div class="pt-bar del" style="animation-delay:0.3s">old_logs — table removed</div>
         <div class="pt-bar add" style="animation-delay:0.4s">audit_trail — new table</div>
-        <div style="margin-top:10px;padding:10px;background:rgba(239,68,68,0.08);border:1px dashed var(--danger);border-radius:6px;text-align:center;font-size:0.8rem;color:var(--danger);">
-          🔒 23 more tables hidden — <a href="#" style="color:var(--primary-light);">Unlock Pro</a>
+        <div style="margin-top:10px;padding:10px;background:rgba(16,185,129,0.08);border:1px dashed var(--success);border-radius:6px;text-align:center;font-size:0.8rem;color:var(--success);">
+          ✓ Unlimited diffs — no paywall on results
         </div>
       </div>
     </div>
@@ -135,9 +135,9 @@
   <!-- Step 2: Full Migration SQL -->
   <section class="pt-step">
     <div class="pt-step-text">
-      <span class="pt-badge">Pro Feature</span>
+      <span class="pt-badge">Free Forever</span>
       <h2>Complete migration scripts</h2>
-      <p>Free shows a preview. Pro generates the full <code>ALTER TABLE</code> script for every change — copy, paste, deploy.</p>
+      <p>Every plan gets the full <code>ALTER TABLE</code> script for every change — copy, paste, deploy. No upsell required.</p>
       <ul>
         <li>Forward migration: get from old schema to new</li>
         <li>Rollback migration: reverse every change safely</li>
@@ -166,9 +166,9 @@
   <!-- Step 3: Breaking Changes -->
   <section class="pt-step">
     <div class="pt-step-text">
-      <span class="pt-badge">Pro Feature</span>
+      <span class="pt-badge">Free Forever</span>
       <h2>Breaking change detection</h2>
-      <p>Pro scans every diff for production-killing changes: dropped columns, type mismatches, lost constraints. Each diff gets a risk score.</p>
+      <p>Every diff gets a 0–100 risk score and flags production-killing changes: dropped columns, type mismatches, lost constraints — on every plan.</p>
       <ul>
         <li>0–100 risk score on every comparison</li>
         <li>Flags dropped columns referenced by views</li>
@@ -200,9 +200,9 @@
   <!-- Step 4: Export Formats -->
   <section class="pt-step">
     <div class="pt-step-text">
-      <span class="pt-badge">Pro Feature</span>
+      <span class="pt-badge">Free Forever</span>
       <h2>Export to Markdown, PDF & JSON</h2>
-      <p>Share schema reviews with your team in the format they prefer. Perfect for PR descriptions, compliance docs, and Slack updates.</p>
+      <p>Download schema reviews in the format your team prefers. Perfect for PR descriptions, compliance docs, and Slack updates.</p>
       <ul>
         <li>Markdown: paste directly into GitHub PRs</li>
         <li>PDF: attach to compliance or audit records</li>
@@ -240,9 +240,9 @@
   <!-- Step 5: Rollback -->
   <section class="pt-step">
     <div class="pt-step-text">
-      <span class="pt-badge">Pro Feature</span>
+      <span class="pt-badge">Free Forever</span>
       <h2>Rollback safety net</h2>
-      <p>Every Pro migration includes a reverse script. If your deploy goes wrong, you have the exact commands to undo it — tested and ready.</p>
+      <p>Every migration includes a reverse script. If your deploy goes wrong, you have the exact commands to undo it — tested and ready.</p>
       <ul>
         <li>Auto-generated rollback for every change</li>
         <li>Preserves original column types and constraints</li>
@@ -272,8 +272,8 @@
   <section class="pt-step">
     <div class="pt-step-text">
       <span class="pt-badge">Pro Feature</span>
-      <h2>Shareable diff links</h2>
-      <p>Generate a permanent link to any schema comparison. Send it to teammates for async review — no screenshots, no copy-paste.</p>
+      <h2>Shareable diff links & saved history</h2>
+      <p>Pro keeps a history of every comparison and generates permanent share links. Send diffs to teammates for async review — no screenshots, no copy-paste.</p>
       <ul>
         <li>One-click link generation</li>
         <li>Links include full diff state</li>
@@ -300,12 +300,48 @@
     </div>
   </section>
 
+  <!-- Step 7: Team CI/CD -->
+  <section class="pt-step">
+    <div class="pt-step-text">
+      <span class="pt-badge">Team Plan</span>
+      <h2>For teams: CI/CD & drift alerts</h2>
+      <p>The web diff is free. Team makes it repeatable — auto-diff every PR, alert the team in Slack or Teams, and track risk trends in a shared dashboard.</p>
+      <ul>
+        <li>Shared team workspace with unlimited members</li>
+        <li>Schema drift alerts in Slack / Microsoft Teams</li>
+        <li>Team risk dashboard & admin controls</li>
+        <li>API access for custom workflows</li>
+      </ul>
+      <a href="team-buy.html" style="color:var(--primary-light);font-weight:600;">See Team pricing →</a>
+    </div>
+    <div class="pt-mockup">
+      <div class="pt-mockup-header"><span class="pt-dot r"></span><span class="pt-dot y"></span><span class="pt-dot g"></span></div>
+      <div class="pt-mockup-body">
+        <div style="font-weight:600;margin-bottom:10px;">Slack Alert — #database-changes</div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;font-size:0.8rem;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="font-size:1rem;">🚨</span>
+            <span style="font-weight:600;">Breaking schema change detected</span>
+          </div>
+          <div style="color:var(--text-muted);margin-bottom:6px;">PR #482 · users table · risk 72/100</div>
+          <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:4px;padding:8px;color:var(--danger);font-size:0.75rem;">
+            Dropped column <code>legacy_id</code> referenced by view <code>user_profiles</code>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <span style="background:rgba(99,102,241,0.12);color:var(--primary-light);font-size:0.7rem;padding:3px 10px;border-radius:4px;">Shared workspace</span>
+          <span style="background:rgba(16,185,129,0.12);color:var(--success);font-size:0.7rem;padding:3px 10px;border-radius:4px;">Auto-detected</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="pt-footer-cta">
     <h2>One payment. Forever.</h2>
     <p>SchemaLens Pro is $39 once — no subscription, no renewal, no surprise charges. Use it for every migration for the rest of your career.</p>
     <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="pt-btn-lg" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39</a>
-    <p class="pt-guarantee">30-day money-back guarantee · Instant license key delivery · Used by developers at startups and Fortune 500s</p>
-    <p style="margin-top:16px;font-size:0.85rem;"><a href="open-source-license.html" style="color:var(--primary-light);">Open source maintainer? Get Pro free →</a> · <a href="student-license.html" style="color:var(--primary-light);">Student? Get Pro free →</a></p>
+    <p class="pt-guarantee">30-day money-back guarantee · Instant license key delivery · Open-source core · Zero data sent to servers</p>
+    <p style="margin-top:16px;font-size:0.85rem;"><a href="team-buy.html" style="color:var(--primary-light);font-weight:600;">Need Team features? Start at $29/mo →</a> · <a href="open-source-license.html" style="color:var(--primary-light);">Open source maintainer? Get Pro free →</a> · <a href="student-license.html" style="color:var(--primary-light);">Student? Get Pro free →</a></p>
   </section>
 
   <footer style="text-align:center;padding:32px 24px;border-top:1px solid var(--border);color:var(--text-muted);font-size:0.85rem;">
