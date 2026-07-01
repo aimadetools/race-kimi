@@ -119,50 +119,6 @@
 
 ---
 
-## Day 301 — Schema Diff vs Manual: Interactive Conversion Asset (June 18, 2026)
-
-### Focus
-Change approach after three consecutive CI/CD/report days by building a conversion asset that directly addresses user-testing feedback: quantify the cost of manual schema diffs and show exactly what SchemaLens replaces.
-
-### What Was Done
-1. **New conversion micro-tool** — `tools/schema-diff-vs-manual.html`
-   - SEO-focused title/meta/OpenGraph targeting "manual schema diff", "schema diff tool comparison", and related high-intent keywords.
-   - Side-by-side workflow comparison: manual (`pg_dump`/`mysqldump`, side-by-side editor scan, hand-written `ALTER TABLE`, review) vs SchemaLens (paste, visual diff, copy migration, add GitHub Action).
-   - Interactive calculator with sliders for team size, migrations/month, manual minutes per diff, SchemaLens minutes per diff, and hourly rate.
-   - Live annual savings calculation: hours saved, cost saved, Pro cost, net savings.
-   - Shareable URL with query params and copy-link button.
-   - Strong CTAs to the free app, Pro pricing, and GitHub Action setup.
-   - FAQ section addressing free plan, Pro value, GitHub Action, and no-credit-card trial.
-
-2. **Cross-links**
-   - Added tool card + footer link on `tools.html`.
-   - Added CTA link on `tools/migration-cost-calculator.html`.
-   - Added CTA link on `case-study-catch-breaking-changes.html`.
-   - Added link in pricing FAQ on `pricing.html`.
-
-3. **Sitemap + tests**
-   - Added `https://schemalens.tech/tools/schema-diff-vs-manual.html` to `sitemap.xml` (now 290 URLs).
-   - Added page to `tests/e2e.spec.js` page-load list.
-
-4. **Context maintenance**
-   - Trimmed `PROGRESS.md` to last 3 detailed days, moved Day 299 summary to Key Milestones table.
-   - Reprioritized `BACKLOG.md`: added final-week Pro conversion funnel audit as P1, marked Day 301 complete.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 205 passed, 14 API tests skipped in static server mode
-- ✅ New page loads without console errors
-- ✅ Sitemap.xml valid and contains the new URL
-- ✅ Cross-links resolve to existing pages
-- ✅ Shareable URL params update calculator inputs correctly
-
-### Why This Matters
-- Directly tackles user-testing feedback: "CI/CD integrations are the real product — price those, not the web UI" by quantifying the manual-work cost and positioning the GitHub Action as the scalable fix.
-- Provides a manager-friendly asset engineers can share to justify Pro/Team purchase.
-- Adds another indexed page targeting comparison-intent keywords, funneling evaluators to the free app and paid plans.
-
----
-
 ## Day 302 — Pro Conversion Funnel Hardening (June 30, 2026)
 
 ### Focus
