@@ -1534,6 +1534,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/tools/migration-test-plan-generator.html</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/case-study-catch-breaking-changes.html</loc>
     <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>

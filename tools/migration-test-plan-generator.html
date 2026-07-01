@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Database Migration Test Plan Generator — Free Checklist for SQL Migrations | SchemaLens</title>
+<meta name="description" content="Generate a production-ready database migration test plan from any SQL migration script. Covers pre-migration checks, execution validation, post-migration verification, and rollback tests. Free, instant, no signup.">
+<meta property="og:title" content="Database Migration Test Plan Generator — Free Checklist for SQL Migrations">
+<meta property="og:description" content="Generate a production-ready database migration test plan from any SQL migration script. Pre-migration, execution, post-migration, and rollback checks.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/migration-test-plan-generator.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Database Migration Test Plan Generator — Free Checklist for SQL Migrations">
+<meta name="twitter:description" content="Generate a production-ready database migration test plan from any SQL migration script.">
+<meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Database Migration Test Plan Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Generates database migration test plans from SQL scripts. Includes pre-migration checks, execution validation, post-migration verification, and rollback tests for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.",
+  "url": "https://schemalens.tech/tools/migration-test-plan-generator.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+  .mode-tabs { display: flex; gap: 8px; justify-content: center; margin: 24px 0 16px; flex-wrap: wrap; }
+  .mode-tab {
+    background: var(--surface); color: var(--text-muted); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 18px; font-size: 0.95rem; cursor: pointer; font-weight: 500;
+  }
+  .mode-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+  @media (max-width: 900px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .input-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+  .input-card h3 { font-size: 1rem; margin-bottom: 10px; }
+  .input-card textarea {
+    width: 100%; min-height: 220px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical; box-sizing: border-box;
+  }
+
+  .toolbar { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 20px 0; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select, .toolbar button {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 16px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button.primary { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+  .toolbar button.primary:hover { background: var(--primary-hover); }
+
+  .summary-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.5rem; margin: 1.5rem 0; text-align: center;
+  }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 1rem; }
+  .summary-pill {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0.75rem; text-align: center;
+  }
+  .summary-pill .num { font-size: 1.4rem; font-weight: 700; }
+  .summary-pill .lbl { font-size: 0.8rem; color: var(--text-muted); }
+
+  .plan-section { margin: 1.5rem 0; }
+  .plan-section h3 {
+    font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px;
+  }
+  .plan-section h3 .count {
+    background: var(--primary); color: #fff; font-size: 0.75rem; font-weight: 600;
+    padding: 2px 8px; border-radius: 999px;
+  }
+
+  .test-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px 16px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .test-item input[type="checkbox"] { margin-top: 4px; width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
+  .test-content { flex: 1; }
+  .test-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+  .test-desc { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; }
+  .test-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .test-tag {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 2px 8px; border-radius: 999px;
+  }
+  .tag-critical { background: rgba(239,68,68,0.15); color: var(--danger); }
+  .tag-required { background: rgba(245,158,11,0.15); color: var(--warning); }
+  .tag-recommended { background: rgba(99,102,241,0.15); color: var(--primary); }
+  .tag-optional { background: rgba(148,163,184,0.15); color: var(--text-muted); }
+
+  .output-actions { display: flex; gap: 10px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+  .output-actions button { display: inline-flex; align-items: center; gap: 6px; }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(34,211,238,0.08));
+    border: 1px solid var(--primary); border-radius: var(--radius);
+    padding: 1.25rem; margin-top: 2rem; text-align: center;
+  }
+
+  .copy-toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--surface); color: var(--text); padding: 10px 20px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); font-size: 0.9rem; opacity: 0; transition: all 0.3s ease; z-index: 200;
+  }
+  .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <a href="../index.html" class="logo" style="font-weight:700;font-size:1.1rem;color:var(--text);">SchemaLens</a>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <a href="../app.html" style="color:var(--text-muted);font-size:0.9rem;">App</a>
+      <a href="../tools.html" style="color:var(--text-muted);font-size:0.9rem;">Tools</a>
+      <a href="../pricing.html" style="color:var(--text-muted);font-size:0.9rem;">Pricing</a>
+      <button onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;">🌓</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <h1>🧪 Database Migration Test Plan Generator</h1>
+    <p>Turn any SQL migration into a production-ready test plan. Get pre-migration checks, execution validation, post-migration verification, and rollback tests tailored to your dialect and table size.</p>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="setMode('migration')" id="tabMigration">Migration SQL only</button>
+    <button class="mode-tab" onclick="setMode('schemas')" id="tabSchemas">Old + New schema</button>
+  </div>
+
+  <div id="migrationInput">
+    <div class="input-card">
+      <h3>Migration SQL</h3>
+      <textarea id="migrationSql" placeholder="-- Paste your migration script here
+ALTER TABLE users ADD COLUMN email_verified_at TIMESTAMP;
+CREATE INDEX idx_users_email ON users(email);"></textarea>
+    </div>
+  </div>
+
+  <div id="schemasInput" style="display:none;">
+    <div class="input-grid">
+      <div class="input-card">
+        <h3>Schema Before</h3>
+        <textarea id="schemaBefore" placeholder="Paste the old schema (CREATE TABLE statements)..."></textarea>
+      </div>
+      <div class="input-card">
+        <h3>Schema After</h3>
+        <textarea id="schemaAfter" placeholder="Paste the new schema (CREATE TABLE statements)..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <label for="dialect">Dialect:</label>
+    <select id="dialect">
+      <option value="postgres">PostgreSQL</option>
+      <option value="mysql">MySQL / MariaDB</option>
+      <option value="sqlite">SQLite</option>
+      <option value="mssql">SQL Server</option>
+      <option value="oracle">Oracle</option>
+    </select>
+    <label for="tableSize">Largest table:</label>
+    <select id="tableSize">
+      <option value="small">&lt; 100K rows</option>
+      <option value="medium" selected>100K – 10M rows</option>
+      <option value="large">&gt; 10M rows</option>
+    </select>
+    <button class="primary" id="generateBtn">Generate Test Plan</button>
+    <button id="sampleBtn">Load Sample</button>
+    <button id="clearBtn">Clear</button>
+  </div>
+
+  <div id="results" style="display:none;">
+    <div class="summary-card">
+      <div class="summary-grid">
+        <div class="summary-pill"><div class="num" id="statTotal">0</div><div class="lbl">Total checks</div></div>
+        <div class="summary-pill"><div class="num" id="statCritical" style="color:var(--danger)">0</div><div class="lbl">Critical</div></div>
+        <div class="summary-pill"><div class="num" id="statRequired" style="color:var(--warning)">0</div><div class="lbl">Required</div></div>
+        <div class="summary-pill"><div class="num" id="statRisk">—</div><div class="lbl">Risk level</div></div>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin:0;">Use this checklist in your migration runbook, PR description, or team wiki. Check items off as you complete them.</p>
+    </div>
+
+    <div class="output-actions">
+      <button class="primary" id="copyMarkdownBtn">📋 Copy as Markdown</button>
+      <button id="copyUrlBtn">🔗 Copy Share URL</button>
+      <button id="printBtn">🖨️ Print</button>
+    </div>
+
+    <div id="planOutput"></div>
+
+    <div class="cta-box">
+      <p style="margin-bottom:0.5rem;font-weight:600;">Want to automate these checks on every PR?</p>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.75rem;">SchemaLens GitHub Action runs schema diff, risk scoring, and breaking-change detection in CI/CD — free forever.</p>
+      <a href="../github-action.html" class="btn btn-primary" style="display:inline-block;" data-event="migration_test_plan_github_action_cta">Add to GitHub Actions →</a>
+      <a href="../app.html" class="btn btn-secondary" style="display:inline-block;margin-left:8px;" data-event="migration_test_plan_app_cta">Open SchemaLens →</a>
+    </div>
+  </div>
+
+  <div style="margin-top:3rem;">
+    <h3 style="margin-bottom:0.75rem;">What this generator covers</h3>
+    <ul style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;list-style:none;padding:0;">
+      <li style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.7rem 0.9rem;font-size:0.9rem;color:var(--text-muted);">✅ Pre-migration backups and lock analysis</li>
+      <li style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.7rem 0.9rem;font-size:0.9rem;color:var(--text-muted);">✅ Statement-by-statement execution validation</li>
+      <li style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.7rem 0.9rem;font-size:0.9rem;color:var(--text-muted);">✅ Post-migration schema and data integrity checks</li>
+      <li style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.7rem 0.9rem;font-size:0.9rem;color:var(--text-muted);">✅ Rollback and down-migration verification</li>
+      <li style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.7rem 0.9rem;font-size:0.9rem;color:var(--text-muted);">✅ Dialect-specific guidance (Postgres, MySQL, SQL Server, etc.)</li>
+      <li style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.7rem 0.9rem;font-size:0.9rem;color:var(--text-muted);">✅ Table-size-aware performance and locking advice</li>
+    </ul>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:2.5rem 1rem;margin-top:3rem;">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>SchemaLens</h4>
+        <p style="color:var(--text-muted);font-size:0.9rem;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <p><a href="../app.html">Schema Diff</a></p>
+        <p><a href="../tools.html">Free Tools</a></p>
+        <p><a href="../pricing.html">Pricing</a></p>
+        <p><a href="../cli/">CLI</a></p>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <p><a href="../blog.html">Blog</a></p>
+        <p><a href="../migration-checklist.html">Migration Checklist</a></p>
+        <p><a href="../github-action.html">GitHub Action</a></p>
+        <p><a href="../api-guide.html">API Guide</a></p>
+      </div>
+      <div>
+        <h4>Compare</h4>
+        <p><a href="../schemalens-vs-liquibase-flyway.html">vs Liquibase &amp; Flyway</a></p>
+        <p><a href="../schemalens-vs-redgate-vs-prisma.html">vs Redgate &amp; Prisma</a></p>
+        <p><a href="../schemalens-vs-cli-tools.html">vs CLI Tools</a></p>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:24px;">© 2026 SchemaLens. Built for developers who care about clean migrations.</p>
+  </div>
+</footer>
+
+<div class="copy-toast" id="copyToast">Copied!</div>
+
+<script src="../lib/analytics-client.js"></script>
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+
+let currentMode = 'migration';
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('tabMigration').classList.toggle('active', mode === 'migration');
+  document.getElementById('tabSchemas').classList.toggle('active', mode === 'schemas');
+  document.getElementById('migrationInput').style.display = mode === 'migration' ? 'block' : 'none';
+  document.getElementById('schemasInput').style.display = mode === 'schemas' ? 'grid' : 'none';
+  document.getElementById('results').style.display = 'none';
+}
+
+function splitStatements(sql) {
+  const statements = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const c = sql[i];
+    if (inString) {
+      current += c;
+      if (c === stringChar && sql[i-1] !== '\\') inString = false;
+    } else if (c === "'" || c === '"' || c === '`') {
+      inString = true; stringChar = c; current += c;
+    } else if (c === ';') {
+      current += c; statements.push(current.trim()); current = '';
+    } else {
+      current += c;
+    }
+  }
+  if (current.trim()) statements.push(current.trim());
+  return statements;
+}
+
+function normalize(sql) {
+  return sql.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/--[^\n]*/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function extractTableName(stmt) {
+  const upper = normalize(stmt).toUpperCase();
+  const m = stmt.match(/ALTER\s+TABLE\s+[`"']?(\w+)[`"']?/i) ||
+            stmt.match(/CREATE\s+(?:UNIQUE\s+)?INDEX\s+\w+\s+ON\s+[`"']?(\w+)[`"']?/i) ||
+            stmt.match(/CREATE\s+TABLE\s+[`"']?(\w+)[`"']?/i) ||
+            stmt.match(/DROP\s+TABLE\s+[`"']?(\w+)[`"']?/i);
+  return m ? m[1] : null;
+}
+
+function detectOperations(sql) {
+  const ops = [];
+  const statements = splitStatements(sql);
+  for (const stmt of statements) {
+    const upper = normalize(stmt).toUpperCase();
+    const table = extractTableName(stmt);
+    if (upper.startsWith('CREATE TABLE')) {
+      ops.push({ type: 'create_table', table, stmt });
+    } else if (upper.startsWith('DROP TABLE')) {
+      ops.push({ type: 'drop_table', table, stmt });
+    } else if (upper.startsWith('ALTER TABLE')) {
+      if (upper.includes('ADD COLUMN') || (upper.includes('ADD') && /ADD\s+[`"']?\w+[`"']?\s+/i.test(upper))) {
+        ops.push({ type: 'add_column', table, stmt });
+      }
+      if (upper.includes('DROP COLUMN')) {
+        ops.push({ type: 'drop_column', table, stmt });
+      }
+      if (upper.includes('ALTER COLUMN') || upper.includes('MODIFY') || upper.includes('CHANGE COLUMN')) {
+        ops.push({ type: 'alter_column', table, stmt });
+      }
+      if (upper.includes('RENAME')) {
+        ops.push({ type: 'rename', table, stmt });
+      }
+      if (upper.includes('ADD PRIMARY KEY') || upper.includes('ADD UNIQUE') || (upper.includes('ADD CONSTRAINT') && upper.includes('UNIQUE'))) {
+        ops.push({ type: 'add_constraint', table, stmt });
+      }
+      if (upper.includes('DROP PRIMARY KEY') || upper.includes('DROP CONSTRAINT') || upper.includes('DROP UNIQUE')) {
+        ops.push({ type: 'drop_constraint', table, stmt });
+      }
+      if (upper.includes('ADD FOREIGN') || (upper.includes('ADD CONSTRAINT') && upper.includes('FOREIGN'))) {
+        ops.push({ type: 'add_fk', table, stmt });
+      }
+    } else if (upper.startsWith('CREATE INDEX') || upper.startsWith('CREATE UNIQUE INDEX')) {
+      ops.push({ type: 'create_index', table, stmt });
+    } else if (upper.startsWith('DROP INDEX')) {
+      ops.push({ type: 'drop_index', table, stmt });
+    } else if (upper.startsWith('DELETE') || upper.startsWith('TRUNCATE') || upper.startsWith('UPDATE')) {
+      ops.push({ type: 'data_modification', table, stmt });
+    }
+  }
+  return ops;
+}
+
+function generatePlan() {
+  const dialect = document.getElementById('dialect').value;
+  const tableSize = document.getElementById('tableSize').value;
+  let ops = [];
+  let hasMigrationSql = false;
+
+  if (currentMode === 'migration') {
+    const sql = document.getElementById('migrationSql').value;
+    if (!sql.trim()) return null;
+    hasMigrationSql = true;
+    ops = detectOperations(sql);
+  } else {
+    const before = document.getElementById('schemaBefore').value;
+    const after = document.getElementById('schemaAfter').value;
+    if (!before.trim() || !after.trim()) return null;
+    // Treat the diff as a set of inferred operations based on simple patterns
+    ops = detectOperations(after); // crude: use after schema for table creation signals
+    // Note: a real diff engine would be better, but this gives useful test-plan guidance
+  }
+
+  const hasRollback = currentMode === 'migration' &&
+    /ROLLBACK|DOWN|DROP.*IF EXISTS|REVERSE/i.test(normalize(document.getElementById('migrationSql').value));
+
+  const sections = [];
+
+  // Pre-migration checks (always)
+  const pre = [
+    { title: 'Back up the database', desc: 'Take a full backup or snapshot before running the migration. Verify the backup is restorable.', level: 'critical' },
+    { title: 'Run migration in a staging environment first', desc: 'Apply the exact same migration script to a production-like staging database and verify the result.', level: 'critical' },
+    { title: 'Review the migration with a peer', desc: 'Have another engineer review the migration script, test plan, and rollback steps.', level: 'required' },
+    { title: 'Check deployment window', desc: 'Schedule the migration during a low-traffic window. Notify the team and prepare an on-call plan.', level: 'required' },
+  ];
+  if (tableSize === 'large') {
+    pre.push({ title: 'Estimate lock duration', desc: 'Large tables can be locked for minutes during ALTER TABLE or CREATE INDEX. Estimate duration on a copy of production data.', level: 'critical' });
+    pre.push({ title: 'Check replica lag', desc: 'If running against a primary-replica setup, plan to monitor replica lag during and after the migration.', level: 'required' });
+  }
+  if (dialect === 'postgres') {
+    pre.push({ title: 'Use a recent PostgreSQL client', desc: 'Ensure the client version matches the server major version to avoid unexpected DDL behavior.', level: 'recommended' });
+  }
+  sections.push({ name: 'Pre-Migration Checks', items: pre });
+
+  // Migration execution checks
+  const exec = [
+    { title: 'Run migration in a transaction where supported', desc: 'Wrap schema changes in BEGIN/COMMIT so errors roll back cleanly. Note: some DDL in MySQL/Oracle implicitly commits.', level: dialect === 'mysql' || dialect === 'oracle' ? 'recommended' : 'required' },
+    { title: 'Verify each statement completes successfully', desc: 'Watch for warnings, lock timeouts, or partial failures. Stop immediately on error and assess rollback.', level: 'critical' },
+    { title: 'Capture exact migration output and timing', desc: 'Log the output, duration, and row counts. Save these for post-mortems and future optimization.', level: 'required' },
+  ];
+  sections.push({ name: 'Migration Execution', items: exec });
+
+  // Operation-specific checks
+  const opChecks = [];
+  const hasDrop = ops.some(o => o.type === 'drop_table' || o.type === 'drop_column');
+  const hasAddNotNull = ops.some(o => o.type === 'add_column' && /NOT\s+NULL/i.test(o.stmt) && !/DEFAULT/i.test(o.stmt));
+  const hasTypeChange = ops.some(o => o.type === 'alter_column');
+  const hasRename = ops.some(o => o.type === 'rename');
+  const hasCreateIndex = ops.some(o => o.type === 'create_index');
+  const hasAddFk = ops.some(o => o.type === 'add_fk');
+  const hasDropConstraint = ops.some(o => o.type === 'drop_constraint');
+  const hasDataMod = ops.some(o => o.type === 'data_modification');
+
+  if (hasDrop) {
+    opChecks.push({ title: 'Verify dropped objects are unused', desc: 'Confirm no application code, views, triggers, stored procedures, or reports reference the dropped table/column.', level: 'critical' });
+    opChecks.push({ title: 'Export data before dropping', desc: 'Archive any data from dropped tables/columns that may be needed for compliance or history.', level: 'required' });
+  }
+  if (hasAddNotNull) {
+    opChecks.push({ title: 'Backfill existing rows before adding NOT NULL', desc: 'Adding NOT NULL without a DEFAULT fails on existing rows. Backfill first or provide a DEFAULT value.', level: 'critical' });
+  }
+  if (hasTypeChange) {
+    opChecks.push({ title: 'Test column type changes on production data', desc: 'Type changes can truncate or fail on real data. Test on a copy first and verify no data loss.', level: 'critical' });
+  }
+  if (hasRename) {
+    opChecks.push({ title: 'Update all references after rename', desc: 'Renames are breaking changes. Update ORM models, queries, views, and documentation before deploying.', level: 'critical' });
+  }
+  if (hasCreateIndex) {
+    if (dialect === 'postgres' && tableSize !== 'small') {
+      opChecks.push({ title: 'Use CREATE INDEX CONCURRENTLY', desc: 'On large PostgreSQL tables, use CONCURRENTLY to avoid blocking writes.', level: tableSize === 'large' ? 'critical' : 'required' });
+    }
+    if (dialect === 'mysql' && tableSize !== 'small') {
+      opChecks.push({ title: 'Consider ALGORITHM=INPLACE, LOCK=NONE', desc: 'For large MySQL tables, specify online DDL options to reduce lock time.', level: tableSize === 'large' ? 'critical' : 'required' });
+    }
+    if (dialect === 'mssql' && tableSize !== 'small') {
+      opChecks.push({ title: 'Use ONLINE = ON for SQL Server', desc: 'For large SQL Server tables, build the index with ONLINE = ON to minimize blocking.', level: tableSize === 'large' ? 'critical' : 'required' });
+    }
+  }
+  if (hasAddFk) {
+    if (dialect === 'postgres') {
+      opChecks.push({ title: 'Add foreign key with NOT VALID then VALIDATE', desc: 'Avoid locking the table while verifying existing rows. Add NOT VALID, then VALIDATE CONSTRAINT in a follow-up migration.', level: tableSize !== 'small' ? 'critical' : 'required' });
+    } else {
+      opChecks.push({ title: 'Verify referential integrity before adding FK', desc: 'Ensure all existing child rows have matching parent rows before adding the constraint.', level: 'required' });
+    }
+  }
+  if (hasDropConstraint) {
+    opChecks.push({ title: 'Check dependencies before dropping constraints', desc: 'Dropping PRIMARY KEY or UNIQUE constraints can break foreign keys and allow duplicate data.', level: 'critical' });
+  }
+  if (hasDataMod) {
+    opChecks.push({ title: 'Review data modification statements', desc: 'UPDATE/DELETE/TRUNCATE in migrations can have unintended effects. Ensure WHERE clauses are specific and idempotent.', level: 'critical' });
+  }
+  if (ops.length === 0 && hasMigrationSql) {
+    opChecks.push({ title: 'No recognizable schema operations found', desc: 'Paste CREATE TABLE / ALTER TABLE / CREATE INDEX statements so we can generate specific checks, or switch to Old + New schema mode.', level: 'recommended' });
+  }
+  if (opChecks.length > 0) {
+    sections.push({ name: 'Operation-Specific Tests', items: opChecks });
+  }
+
+  // Post-migration checks
+  const post = [
+    { title: 'Verify schema matches expected state', desc: 'Run a schema diff or describe the affected tables to confirm the migration produced the intended result.', level: 'critical' },
+    { title: 'Run application smoke tests', desc: 'Exercise the code paths that touch the changed tables/columns. Check for query errors and performance regressions.', level: 'critical' },
+    { title: 'Validate data integrity', desc: 'Run sanity queries: row counts, NOT NULL violations, foreign key consistency, and unique constraint compliance.', level: 'required' },
+    { title: 'Check query performance', desc: 'Run the slowest queries that touch changed tables. Verify execution plans have not degraded.', level: 'required' },
+  ];
+  if (tableSize === 'large') {
+    post.push({ title: 'Monitor for long-running locks', desc: 'After the migration, check for lingering locks, blocked queries, or deadlocks.', level: 'required' });
+  }
+  post.push({ title: 'Update schema documentation', desc: 'Update ER diagrams, data dictionaries, and team wikis with the new schema.', level: 'recommended' });
+  sections.push({ name: 'Post-Migration Verification', items: post });
+
+  // Rollback checks
+  const rollback = [
+    { title: 'Verify rollback script exists and is tested', desc: 'Run the rollback/down migration in staging and confirm it restores the previous schema without data loss.', level: 'critical' },
+    { title: 'Confirm rollback does not lose data', desc: 'For destructive changes (DROP COLUMN/TABLE), ensure the rollback can restore or re-link the removed data.', level: 'critical' },
+    { title: 'Document rollback trigger conditions', desc: 'Define exactly when the team should execute the rollback (e.g., error rate > 1%, smoke test failure).', level: 'required' },
+  ];
+  if (!hasRollback && currentMode === 'migration') {
+    rollback.unshift({ title: 'Write a rollback migration', desc: 'No rollback script was detected. Generate one now — every production migration needs a tested down path.', level: 'critical' });
+  }
+  sections.push({ name: 'Rollback Verification', items: rollback });
+
+  // Calculate risk
+  let riskScore = 0;
+  if (hasDrop) riskScore += 40;
+  if (hasAddNotNull) riskScore += 25;
+  if (hasTypeChange) riskScore += 25;
+  if (hasRename) riskScore += 30;
+  if (hasDataMod) riskScore += 20;
+  if (hasDropConstraint) riskScore += 20;
+  if (hasCreateIndex && tableSize === 'large') riskScore += 15;
+  if (hasAddFk && tableSize === 'large') riskScore += 15;
+  if (tableSize === 'large') riskScore += 10;
+  if (riskScore > 100) riskScore = 100;
+
+  const riskLevel = riskScore >= 70 ? 'High' : riskScore >= 40 ? 'Medium' : 'Low';
+
+  return { sections, riskScore, riskLevel, ops };
+}
+
+function renderPlan(plan) {
+  const resultsEl = document.getElementById('results');
+  const outputEl = document.getElementById('planOutput');
+  resultsEl.style.display = 'block';
+
+  let total = 0, critical = 0, required = 0;
+  for (const section of plan.sections) {
+    total += section.items.length;
+    for (const item of section.items) {
+      if (item.level === 'critical') critical++;
+      else if (item.level === 'required') required++;
+    }
+  }
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statCritical').textContent = critical;
+  document.getElementById('statRequired').textContent = required;
+  const riskEl = document.getElementById('statRisk');
+  riskEl.textContent = plan.riskLevel;
+  riskEl.style.color = plan.riskLevel === 'High' ? 'var(--danger)' : plan.riskLevel === 'Medium' ? 'var(--warning)' : 'var(--success)';
+
+  const levelClass = { critical: 'tag-critical', required: 'tag-required', recommended: 'tag-recommended', optional: 'tag-optional' };
+
+  outputEl.innerHTML = plan.sections.map((section, sIdx) => `
+    <div class="plan-section">
+      <h3>${escapeHtml(section.name)} <span class="count">${section.items.length}</span></h3>
+      ${section.items.map((item, iIdx) => `
+        <div class="test-item">
+          <input type="checkbox" id="chk-${sIdx}-${iIdx}" data-section="${sIdx}" data-index="${iIdx}">
+          <div class="test-content">
+            <div class="test-title">${escapeHtml(item.title)}</div>
+            <div class="test-desc">${escapeHtml(item.desc)}</div>
+            <div class="test-meta">
+              <span class="test-tag ${levelClass[item.level]}">${item.level}</span>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+
+  outputEl.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const key = `mtp_${window.location.search}`;
+      saveProgress();
+    });
+  });
+
+  window.scrollTo({ top: resultsEl.offsetTop - 80, behavior: 'smooth' });
+}
+
+function saveProgress() {
+  const checked = Array.from(document.querySelectorAll('#planOutput input[type="checkbox"]:checked')).map(cb => cb.id);
+  try { localStorage.setItem('migration_test_plan_progress_' + window.location.search, JSON.stringify(checked)); } catch {}
+}
+
+function restoreProgress() {
+  try {
+    const checked = JSON.parse(localStorage.getItem('migration_test_plan_progress_' + window.location.search) || '[]');
+    for (const id of checked) {
+      const cb = document.getElementById(id);
+      if (cb) cb.checked = true;
+    }
+  } catch {}
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function toMarkdown(plan) {
+  const lines = [
+    `# Database Migration Test Plan`,
+    ``,
+    `**Risk Level:** ${plan.riskLevel} (${plan.riskScore}/100)`,
+    `**Generated by:** [SchemaLens Migration Test Plan Generator](https://schemalens.tech/tools/migration-test-plan-generator.html)`,
+    ``,
+  ];
+  for (const section of plan.sections) {
+    lines.push(`## ${section.name}`);
+    lines.push('');
+    for (const item of section.items) {
+      lines.push(`- [ ] **${item.title}** (${item.level})`);
+      lines.push(`  - ${item.desc}`);
+      lines.push('');
+    }
+  }
+  lines.push('---');
+  lines.push('Generated with SchemaLens — https://schemalens.tech');
+  return lines.join('\n');
+}
+
+function shareUrl() {
+  const params = new URLSearchParams();
+  params.set('mode', currentMode);
+  params.set('dialect', document.getElementById('dialect').value);
+  params.set('tableSize', document.getElementById('tableSize').value);
+  if (currentMode === 'migration') {
+    params.set('migration', document.getElementById('migrationSql').value);
+  } else {
+    params.set('before', document.getElementById('schemaBefore').value);
+    params.set('after', document.getElementById('schemaAfter').value);
+  }
+  return window.location.origin + window.location.pathname + '?' + params.toString();
+}
+
+function loadFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has('migration') && !params.has('before')) return;
+  const mode = params.get('mode') || 'migration';
+  setMode(mode);
+  document.getElementById('dialect').value = params.get('dialect') || 'postgres';
+  document.getElementById('tableSize').value = params.get('tableSize') || 'medium';
+  if (mode === 'migration') {
+    document.getElementById('migrationSql').value = params.get('migration') || '';
+  } else {
+    document.getElementById('schemaBefore').value = params.get('before') || '';
+    document.getElementById('schemaAfter').value = params.get('after') || '';
+  }
+  const plan = generatePlan();
+  if (plan) {
+    renderPlan(plan);
+    restoreProgress();
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('copyToast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+function loadSample() {
+  setMode('migration');
+  document.getElementById('dialect').value = 'postgres';
+  document.getElementById('tableSize').value = 'large';
+  document.getElementById('migrationSql').value = `-- Add email verification tracking to users table
+ALTER TABLE users ADD COLUMN email_verified_at TIMESTAMP;
+
+-- New index for login lookups
+CREATE INDEX CONCURRENTLY idx_users_email_verified ON users(email_verified_at) WHERE email_verified_at IS NOT NULL;
+
+-- Link sessions to users
+ALTER TABLE sessions ADD COLUMN user_id INTEGER;
+ALTER TABLE sessions ADD CONSTRAINT fk_sessions_user_id FOREIGN KEY (user_id) REFERENCES users(id) NOT VALID;
+ALTER TABLE sessions VALIDATE CONSTRAINT fk_sessions_user_id;`;
+  trackEvent('migration_test_plan_load_sample');
+}
+
+document.getElementById('generateBtn').addEventListener('click', () => {
+  const plan = generatePlan();
+  if (!plan) {
+    showToast('Please enter migration SQL or both schemas.');
+    return;
+  }
+  renderPlan(plan);
+  restoreProgress();
+  trackEvent('migration_test_plan_generate', { risk_level: plan.riskLevel, dialect: document.getElementById('dialect').value, table_size: document.getElementById('tableSize').value });
+});
+
+document.getElementById('sampleBtn').addEventListener('click', loadSample);
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('migrationSql').value = '';
+  document.getElementById('schemaBefore').value = '';
+  document.getElementById('schemaAfter').value = '';
+  document.getElementById('results').style.display = 'none';
+  trackEvent('migration_test_plan_clear');
+});
+
+document.getElementById('copyMarkdownBtn').addEventListener('click', async () => {
+  const plan = generatePlan();
+  if (!plan) return;
+  const md = toMarkdown(plan);
+  try {
+    await navigator.clipboard.writeText(md);
+    showToast('Markdown copied!');
+    trackEvent('migration_test_plan_copy_markdown');
+  } catch {
+    showToast('Copy failed');
+  }
+});
+
+document.getElementById('copyUrlBtn').addEventListener('click', async () => {
+  const url = shareUrl();
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast('Share URL copied!');
+    trackEvent('migration_test_plan_share_url');
+  } catch {
+    showToast('Copy failed');
+  }
+});
+
+document.getElementById('printBtn').addEventListener('click', () => {
+  window.print();
+  trackEvent('migration_test_plan_print');
+});
+
+function trackEvent(name, metadata) {
+  if (typeof window.trackSchemaLensEvent === 'function') {
+    window.trackSchemaLensEvent(name, metadata || {});
+  }
+}
+
+// Load from URL on page load
+loadFromUrl();
+</script>
+</body>
+</html>
