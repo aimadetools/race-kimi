@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Schema Diff PR Comment Generator — Free GitHub PR Comment Template | SchemaLens</title>
+  <meta name="description" content="Generate ready-to-post GitHub PR comments for database schema changes. Includes diff summary, risk score, migration SQL, rollback SQL, and reviewer checklist.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-diff-pr-comment-generator.html">
+  <meta property="og:title" content="Schema Diff PR Comment Generator — Free GitHub PR Comment Template">
+  <meta property="og:description" content="Generate ready-to-post GitHub PR comments for database schema changes. Includes diff summary, risk score, migration SQL, and reviewer checklist.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-diff-pr-comment-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Schema Diff PR Comment Generator — Free GitHub PR Comment Template">
+  <meta name="twitter:description" content="Generate ready-to-post GitHub PR comments for database schema changes. Includes diff summary, risk score, migration SQL, and reviewer checklist.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Schema Diff PR Comment Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates GitHub PR comments from schema diffs. Includes change summary, risk score, migration SQL, rollback SQL, and reviewer checklist.",
+    "url": "https://schemalens.tech/tools/schema-diff-pr-comment-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .announcement-bar {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
+
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1300px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 1100px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 180px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85rem; line-height: 1.6; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output {
+      background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px;
+      overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; min-height: 320px;
+    }
+
+    .preview-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .preview-tabs button { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+    .preview-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-box {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 14px; text-align: center;
+    }
+    .stat-box .num { font-size: 1.5rem; font-weight: 700; }
+    .stat-box .num.added { color: var(--success); }
+    .stat-box .num.removed { color: var(--danger); }
+    .stat-box .num.modified { color: var(--warning); }
+    .stat-box .num.breaking { color: var(--danger); }
+    .stat-box .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+    .risk-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+      font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+    }
+    .risk-low { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .risk-medium { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .risk-high { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="announcement-bar">
+    🏁 Final Week — Lifetime Pro <strong>$39</strong> until July 10. <a href="../launch-special.html">Claim yours →</a>
+  </div>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Schema Diff PR Comment Generator</h1>
+      <p>Generate a polished GitHub PR comment from any schema diff. Paste your old and new schema, get a markdown summary with risk score, migration SQL, rollback plan, and reviewer checklist — ready to post.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Schemas</h2>
+          <div class="field-row">
+            <div class="field">
+              <label for="dialect">SQL dialect</label>
+              <select id="dialect">
+                <option value="postgres">PostgreSQL</option>
+                <option value="mysql">MySQL / MariaDB</option>
+                <option value="sqlite">SQLite</option>
+                <option value="mssql">SQL Server</option>
+                <option value="oracle">Oracle</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="prNumber">PR number <span class="hint">(optional)</span></label>
+              <input type="text" id="prNumber" placeholder="#123">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="oldSchema">Old schema</label>
+            <textarea id="oldSchema" placeholder="CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="newSchema">New schema</label>
+            <textarea id="newSchema" placeholder="CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  display_name VARCHAR(100),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE user_preferences (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  preferences JSONB
+);"></textarea>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="author">Author <span class="hint">(optional)</span></label>
+              <input type="text" id="author" placeholder="@alice">
+            </div>
+            <div class="field">
+              <label for="reviewer">Reviewer <span class="hint">(optional)</span></label>
+              <input type="text" id="reviewer" placeholder="@dba-team">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="deployWindow">Deploy window <span class="hint">(optional)</span></label>
+            <input type="text" id="deployWindow" placeholder="e.g. Today at 3 PM UTC">
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+            <button class="btn btn-primary" id="generateBtn" onclick="generateComment()">📝 Generate PR Comment</button>
+            <button class="btn btn-secondary" onclick="loadExample()">Load Example</button>
+            <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:24px;">
+          <h2>💡 Pro tip</h2>
+          <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6; margin:0;">
+            Posting these manually works for one-off reviews. To get them automatically on every PR, add the free <a href="../github-action.html">SchemaLens GitHub Action</a> to your repo. It diffs schemas, posts PR comments, and fails the build on breaking changes.
+          </p>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel">
+          <h2>2. Generated PR comment</h2>
+
+          <div id="statsSection" class="hidden">
+            <div class="stats-grid" id="statsGrid"></div>
+            <div style="margin-bottom:16px;">
+              <span id="riskBadge" class="risk-badge"></span>
+              <span id="breakingCount" style="margin-left:10px; color:var(--text-muted); font-size:0.85rem;"></span>
+            </div>
+          </div>
+
+          <div class="preview-tabs hidden" id="previewTabs">
+            <button class="active" onclick="showTab('github')" data-tab="github">GitHub Markdown</button>
+            <button onclick="showTab('plain')" data-tab="plain">Plain Text</button>
+          </div>
+
+          <div class="output-wrap">
+            <div id="output" class="output">Click "Generate PR Comment" to create a markdown comment from your schema diff.</div>
+            <button class="btn btn-secondary btn-copy hidden" id="copyBtn" onclick="copyOutput()">Copy</button>
+          </div>
+
+          <div class="share-row hidden" id="shareRow">
+            <button class="btn btn-secondary" onclick="downloadComment()">⬇️ Download .md</button>
+            <button class="btn btn-secondary" onclick="copyShareUrl()">🔗 Copy Share URL</button>
+            <button class="btn btn-secondary" onclick="shareTwitter()">𝕏 Share on X</button>
+            <button class="btn btn-secondary" onclick="shareLinkedIn()">💼 Share on LinkedIn</button>
+          </div>
+
+          <div class="upsell" id="upsellBox" style="display:none;">
+            <h3>🚀 Automate this in CI/CD</h3>
+            <ul>
+              <li>Get this exact comment posted automatically on every pull request</li>
+              <li>Block breaking changes before they merge with a failing Check Run</li>
+              <li>Alert your team in Slack / Teams when drift is detected</li>
+            </ul>
+            <a href="../github-action.html" class="btn btn-primary">Add Free GitHub Action →</a>
+            <a href="../team/workspace-preview.html" style="margin-left:8px;" class="btn btn-secondary">Preview Team Workspace</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top:0;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../github-action.html">GitHub Action</a>
+          <a href="../team.html">Team</a>
+        </div>
+        <div class="footer-col">
+          <h4>Related Tools</h4>
+          <a href="../github-pr-schema-diff.html">GitHub PR Schema Diff</a>
+          <a href="../tools/schema-change-slack-message-generator.html">Slack Message Generator</a>
+          <a href="../tools/migration-runbook-generator.html">Migration Runbook Generator</a>
+          <a href="../tools/migration-test-plan-generator.html">Migration Test Plan Generator</a>
+          <a href="../tools/schema-change-checklist.html">Schema Change Checklist</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script src="../engine/engine.js"></script>
+<script>
+let currentComment = '';
+let currentPlain = '';
+let currentDiff = null;
+let currentDialect = 'postgres';
+
+function track(event, metadata) {
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track(event, metadata || {});
+  }
+}
+
+function getInputs() {
+  return {
+    dialect: document.getElementById('dialect').value,
+    oldSchema: document.getElementById('oldSchema').value,
+    newSchema: document.getElementById('newSchema').value,
+    prNumber: document.getElementById('prNumber').value.trim(),
+    author: document.getElementById('author').value.trim(),
+    reviewer: document.getElementById('reviewer').value.trim(),
+    deployWindow: document.getElementById('deployWindow').value.trim()
+  };
+}
+
+function setInputs(state) {
+  if (state.dialect) document.getElementById('dialect').value = state.dialect;
+  if (state.oldSchema !== undefined) document.getElementById('oldSchema').value = state.oldSchema;
+  if (state.newSchema !== undefined) document.getElementById('newSchema').value = state.newSchema;
+  if (state.prNumber !== undefined) document.getElementById('prNumber').value = state.prNumber;
+  if (state.author !== undefined) document.getElementById('author').value = state.author;
+  if (state.reviewer !== undefined) document.getElementById('reviewer').value = state.reviewer;
+  if (state.deployWindow !== undefined) document.getElementById('deployWindow').value = state.deployWindow;
+}
+
+function encodeState(state) {
+  return btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+}
+
+function decodeState(hash) {
+  try {
+    return JSON.parse(decodeURIComponent(escape(atob(hash))));
+  } catch (e) {
+    return null;
+  }
+}
+
+function loadFromUrl() {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
+  const state = decodeState(hash);
+  if (state) {
+    setInputs(state);
+    generateComment(false);
+  }
+}
+
+function updateShareUrl() {
+  const state = getInputs();
+  const hash = encodeState(state);
+  history.replaceState(null, '', '#' + hash);
+}
+
+function generateComment(shouldTrack = true) {
+  const inputs = getInputs();
+  currentDialect = inputs.dialect;
+
+  if (!inputs.oldSchema.trim() || !inputs.newSchema.trim()) {
+    alert('Please paste both an old schema and a new schema.');
+    return;
+  }
+
+  try {
+    const oldSchema = parseSQL(inputs.oldSchema, inputs.dialect);
+    const newSchema = parseSQL(inputs.newSchema, inputs.dialect);
+    const diff = diffSchemas(oldSchema, newSchema);
+    const migration = generateMigration(diff, inputs.dialect);
+    const rollback = generateRollbackMigration(diff, inputs.dialect);
+    const breaking = detectBreakingChanges(diff);
+    const riskScore = calculateRiskScore(diff, breaking);
+
+    currentDiff = diff;
+
+    const githubComment = buildGitHubComment({
+      inputs,
+      diff,
+      migration,
+      rollback,
+      breaking,
+      riskScore
+    });
+
+    const plainComment = buildPlainComment({
+      inputs,
+      diff,
+      migration,
+      rollback,
+      breaking,
+      riskScore
+    });
+
+    currentComment = githubComment;
+    currentPlain = plainComment;
+
+    renderStats(diff, breaking, riskScore);
+    showTab('github');
+
+    document.getElementById('statsSection').classList.remove('hidden');
+    document.getElementById('previewTabs').classList.remove('hidden');
+    document.getElementById('copyBtn').classList.remove('hidden');
+    document.getElementById('shareRow').classList.remove('hidden');
+    document.getElementById('upsellBox').style.display = 'block';
+
+    updateShareUrl();
+
+    if (shouldTrack) {
+      track('pr_comment_generated', {
+        dialect: inputs.dialect,
+        risk_level: riskScore.level,
+        breaking_count: String(breaking.length),
+        has_migration: migration ? 'yes' : 'no'
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    document.getElementById('output').textContent = 'Error parsing schemas: ' + err.message + '\n\nTip: Make sure both inputs contain valid CREATE TABLE statements for the selected dialect.';
+    document.getElementById('statsSection').classList.add('hidden');
+    document.getElementById('previewTabs').classList.add('hidden');
+    document.getElementById('copyBtn').classList.add('hidden');
+    document.getElementById('shareRow').classList.add('hidden');
+    document.getElementById('upsellBox').style.display = 'none';
+    track('pr_comment_error', { error: err.message });
+  }
+}
+
+function buildGitHubComment({ inputs, diff, migration, rollback, breaking, riskScore }) {
+  const lines = [];
+  const prRef = inputs.prNumber ? ` for ${inputs.prNumber}` : '';
+
+  lines.push(`## 🗄️ Schema Diff Report${prRef}`);
+  lines.push('');
+
+  // Summary table
+  const addedTables = (diff.tablesAdded || []).length;
+  const removedTables = (diff.tablesRemoved || []).length;
+  const modifiedTables = (diff.tablesModified || []).length;
+  const addedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsAdded || []).length, 0);
+  const removedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsRemoved || []).length, 0);
+  const modifiedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsModified || []).length, 0);
+
+  lines.push('| Metric | Count |');
+  lines.push('|--------|-------|');
+  lines.push(`| Tables added | ${addedTables} |`);
+  lines.push(`| Tables removed | ${removedTables} |`);
+  lines.push(`| Tables modified | ${modifiedTables} |`);
+  lines.push(`| Columns added | ${addedColumns} |`);
+  lines.push(`| Columns removed | ${removedColumns} |`);
+  lines.push(`| Columns modified | ${modifiedColumns} |`);
+  lines.push(`| **Breaking changes** | **${breaking.length}** |`);
+  lines.push('');
+
+  // Risk
+  const riskEmoji = riskScore.level === 'high' ? '🔴' : riskScore.level === 'medium' ? '🟡' : '🟢';
+  lines.push(`**Risk level:** ${riskEmoji} ${riskScore.level.toUpperCase()} (${riskScore.score}/100)`);
+  lines.push('');
+
+  // Breaking changes
+  if (breaking.length > 0) {
+    lines.push('### ⚠️ Breaking Changes');
+    lines.push('');
+    for (const b of breaking.slice(0, 20)) {
+      lines.push(`- **${b.type}** in \`${b.table}\`${b.column ? ` (\`${b.column}\`)` : ''}: ${b.message}`);
+    }
+    if (breaking.length > 20) {
+      lines.push(`- *…and ${breaking.length - 20} more*`);
+    }
+    lines.push('');
+  }
+
+  // Tables changed
+  if (addedTables > 0 || removedTables > 0 || modifiedTables > 0) {
+    lines.push('### 📋 Tables Changed');
+    lines.push('');
+    for (const t of diff.tablesAdded || []) {
+      lines.push(`- ➕ **${t.name}** — new table`);
+    }
+    for (const t of diff.tablesRemoved || []) {
+      lines.push(`- ➖ **${t.name}** — table removed`);
+    }
+    for (const t of diff.tablesModified || []) {
+      const changes = [];
+      if ((t.columnsAdded || []).length) changes.push(`${t.columnsAdded.length} column(s) added`);
+      if ((t.columnsRemoved || []).length) changes.push(`${t.columnsRemoved.length} column(s) removed`);
+      if ((t.columnsModified || []).length) changes.push(`${t.columnsModified.length} column(s) modified`);
+      if ((t.indexesAdded || []).length) changes.push(`${t.indexesAdded.length} index(es) added`);
+      if ((t.indexesRemoved || []).length) changes.push(`${t.indexesRemoved.length} index(es) removed`);
+      if ((t.constraintsAdded || []).length) changes.push(`${t.constraintsAdded.length} constraint(s) added`);
+      if ((t.constraintsRemoved || []).length) changes.push(`${t.constraintsRemoved.length} constraint(s) removed`);
+      lines.push(`- ✏️ **${t.name}** — ${changes.join(', ') || 'structural change'}`);
+    }
+    lines.push('');
+  }
+
+  // Migration SQL
+  if (migration && migration.trim()) {
+    lines.push('### 🚀 Forward Migration');
+    lines.push('');
+    lines.push('```sql');
+    lines.push(migration.trim());
+    lines.push('```');
+    lines.push('');
+  }
+
+  // Rollback SQL
+  if (rollback && rollback.trim()) {
+    lines.push('### ↩️ Rollback');
+    lines.push('');
+    lines.push('```sql');
+    lines.push(rollback.trim());
+    lines.push('```');
+    lines.push('');
+  }
+
+  // Reviewer checklist
+  lines.push('### ✅ Reviewer Checklist');
+  lines.push('');
+  lines.push('- [ ] Migration has been tested in staging');
+  lines.push('- [ ] Rollback script has been tested');
+  lines.push('- [ ] Large tables have a low-downtime plan (e.g. `pt-online-schema-change`, `gh-ost`, `CONCURRENTLY`)');
+  lines.push('- [ ] Breaking changes are approved by consumers of the API / database');
+  lines.push('- [ ] New columns have sensible defaults where needed');
+  lines.push('- [ ] Indexes are added before foreign keys for large tables');
+  lines.push('- [ ] On-call has been notified of deploy window');
+  lines.push('');
+
+  // Metadata
+  const meta = [];
+  if (inputs.author) meta.push(`Author: ${inputs.author}`);
+  if (inputs.reviewer) meta.push(`Reviewer: ${inputs.reviewer}`);
+  if (inputs.deployWindow) meta.push(`Deploy window: ${inputs.deployWindow}`);
+  if (meta.length > 0) {
+    lines.push('### 👤 Metadata');
+    lines.push('');
+    for (const m of meta) lines.push(`- ${m}`);
+    lines.push('');
+  }
+
+  lines.push('---');
+  lines.push('*Generated with [SchemaLens](https://schemalens.tech)* — free schema diff for CI/CD.');
+
+  return lines.join('\n');
+}
+
+function buildPlainComment({ inputs, diff, migration, rollback, breaking, riskScore }) {
+  const lines = [];
+  const prRef = inputs.prNumber ? ` for ${inputs.prNumber}` : '';
+
+  lines.push(`Schema Diff Report${prRef}`);
+  lines.push('');
+
+  const addedTables = (diff.tablesAdded || []).length;
+  const removedTables = (diff.tablesRemoved || []).length;
+  const modifiedTables = (diff.tablesModified || []).length;
+  const addedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsAdded || []).length, 0);
+  const removedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsRemoved || []).length, 0);
+  const modifiedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsModified || []).length, 0);
+
+  lines.push(`Tables added: ${addedTables}`);
+  lines.push(`Tables removed: ${removedTables}`);
+  lines.push(`Tables modified: ${modifiedTables}`);
+  lines.push(`Columns added: ${addedColumns}`);
+  lines.push(`Columns removed: ${removedColumns}`);
+  lines.push(`Columns modified: ${modifiedColumns}`);
+  lines.push(`Breaking changes: ${breaking.length}`);
+  lines.push(`Risk level: ${riskScore.level.toUpperCase()} (${riskScore.score}/100)`);
+  lines.push('');
+
+  if (breaking.length > 0) {
+    lines.push('Breaking Changes:');
+    for (const b of breaking.slice(0, 20)) {
+      lines.push(`- ${b.type} in ${b.table}${b.column ? ` (${b.column})` : ''}: ${b.message}`);
+    }
+    lines.push('');
+  }
+
+  if (migration && migration.trim()) {
+    lines.push('Forward Migration:');
+    lines.push(migration.trim());
+    lines.push('');
+  }
+
+  if (rollback && rollback.trim()) {
+    lines.push('Rollback:');
+    lines.push(rollback.trim());
+    lines.push('');
+  }
+
+  return lines.join('\n');
+}
+
+function renderStats(diff, breaking, riskScore) {
+  const addedTables = (diff.tablesAdded || []).length;
+  const removedTables = (diff.tablesRemoved || []).length;
+  const modifiedTables = (diff.tablesModified || []).length;
+  const addedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsAdded || []).length, 0);
+  const removedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsRemoved || []).length, 0);
+  const modifiedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsModified || []).length, 0);
+
+  const html = `
+    <div class="stat-box"><div class="num added">+${addedTables}</div><div class="label">Tables Added</div></div>
+    <div class="stat-box"><div class="num removed">−${removedTables}</div><div class="label">Tables Removed</div></div>
+    <div class="stat-box"><div class="num modified">~${modifiedTables}</div><div class="label">Tables Modified</div></div>
+    <div class="stat-box"><div class="num added">+${addedColumns}</div><div class="label">Columns Added</div></div>
+    <div class="stat-box"><div class="num removed">−${removedColumns}</div><div class="label">Columns Removed</div></div>
+    <div class="stat-box"><div class="num modified">~${modifiedColumns}</div><div class="label">Columns Modified</div></div>
+  `;
+  document.getElementById('statsGrid').innerHTML = html;
+
+  const badge = document.getElementById('riskBadge');
+  badge.className = 'risk-badge risk-' + riskScore.level;
+  badge.textContent = (riskScore.level === 'high' ? '🔴' : riskScore.level === 'medium' ? '🟡' : '🟢') + ' ' + riskScore.level.toUpperCase() + ' RISK (' + riskScore.score + '/100)';
+
+  document.getElementById('breakingCount').textContent = breaking.length > 0
+    ? `${breaking.length} breaking change${breaking.length === 1 ? '' : 's'} detected`
+    : 'No breaking changes detected';
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.preview-tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  const output = document.getElementById('output');
+  output.textContent = tab === 'github' ? currentComment : currentPlain;
+  track('pr_comment_tab_switch', { tab });
+}
+
+function copyOutput() {
+  const text = document.querySelector('.preview-tabs button.active').dataset.tab === 'github' ? currentComment : currentPlain;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+    track('pr_comment_copy', { tab: document.querySelector('.preview-tabs button.active').dataset.tab });
+  });
+}
+
+function downloadComment() {
+  const blob = new Blob([currentComment], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'schema-diff-pr-comment.md';
+  a.click();
+  URL.revokeObjectURL(url);
+  track('pr_comment_download');
+}
+
+function copyShareUrl() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    track('pr_comment_share_url_copy');
+    alert('Share URL copied to clipboard!');
+  });
+}
+
+function shareTwitter() {
+  const text = encodeURIComponent('I just generated a schema diff PR comment with SchemaLens. Free tool for database migration reviews:');
+  const url = encodeURIComponent('https://schemalens.tech/tools/schema-diff-pr-comment-generator.html');
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+  track('pr_comment_share_twitter');
+}
+
+function shareLinkedIn() {
+  const url = encodeURIComponent('https://schemalens.tech/tools/schema-diff-pr-comment-generator.html');
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+  track('pr_comment_share_linkedin');
+}
+
+function loadExample() {
+  const example = {
+    dialect: 'postgres',
+    prNumber: '#42',
+    author: '@alice',
+    reviewer: '@dba-team',
+    deployWindow: 'Today at 3 PM UTC',
+    oldSchema: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  title VARCHAR(255),
+  body TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);`,
+    newSchema: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  display_name VARCHAR(100),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  title VARCHAR(255),
+  body TEXT,
+  published_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER NOT NULL REFERENCES posts(id),
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  body TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);`
+  };
+  setInputs(example);
+  generateComment();
+  track('pr_comment_load_example');
+}
+
+function clearAll() {
+  setInputs({
+    oldSchema: '',
+    newSchema: '',
+    prNumber: '',
+    author: '',
+    reviewer: '',
+    deployWindow: ''
+  });
+  document.getElementById('output').textContent = 'Click "Generate PR Comment" to create a markdown comment from your schema diff.';
+  document.getElementById('statsSection').classList.add('hidden');
+  document.getElementById('previewTabs').classList.add('hidden');
+  document.getElementById('copyBtn').classList.add('hidden');
+  document.getElementById('shareRow').classList.add('hidden');
+  document.getElementById('upsellBox').style.display = 'none';
+  history.replaceState(null, '', window.location.pathname);
+  track('pr_comment_clear');
+}
+
+window.addEventListener('DOMContentLoaded', loadFromUrl);
+</script>
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
