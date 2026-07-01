@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–299)
+## Key Milestones (Days 1–309)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -114,6 +114,16 @@
 | 297 | Jun 17 | "Schema Diff Report" SEO landing page — `schema-diff-report.html` targeting high-intent keyword; indexed in sitemap.xml and covered by e2e test. |
 | 298 | Jun 17 | GitHub Action live demo landing page (`github-action-live-demo.html`) with real GitHub API status, demo GIF, copy-paste YAML, and Team CTAs; cross-linked and indexed. sitemap: 288 URLs. |
 | 299 | Jun 17 | Restored `.github/workflows/schema-diff-demo.yml` locally; push blocked by PAT `workflow` scope. Live demo page deployed. |
+| 300 | Jun 17 | Schema Diff Report Example Gallery — 5 realistic report scenarios with risk scores, migration/rollback previews, shareable URLs. sitemap: 289 URLs. |
+| 301 | Jun 18 | Schema Diff vs Manual Comparison calculator; cross-linked from pricing/tools/case-study; indexed; sitemap 290 URLs. |
+| 302 | Jun 30 | Pro conversion funnel hardening: fixed `revealDiffResults` scope bug, aligned interstitial copy with free-forever pivot, cleaned up Pro value banner A/B test copy, fixed final-week banner consistency site-wide. |
+| 303 | Jul 1 | Protected Team buyers from broken Gumroad links; built schema-change Slack/Teams/Discord message generator; filed consolidated final-week help request for Gumroad Team products + GitHub App credentials. |
+| 304 | Jul 1 | Fixed analytics event allowlist bug that silently rejected most custom events; added final-week banner impression/click/dismiss tracking; shifted Paywall Timing v2 to 75% interstitial; built admin A/B Test Results dashboard. |
+| 305 | Jul 1 | Ended Paywall Timing v2 with interstitial as winner (100% traffic); retired post-result Pro value banner; refreshed e2e tests for interstitial-only flow; updated admin dashboard copy. |
+| 306 | Jul 1 | Built Database Migration Test Plan Generator micro-tool — turns SQL migrations into production-ready testing checklists; indexed and cross-linked. sitemap: 292 URLs. |
+| 307 | Jul 1 | Hardened `github-action.html` and `README.md` copy for free-forever pivot — added Free/Pro/Team explainer card, replaced Free vs Pro table with Free vs Pro vs Team. Tests pass; deployed. |
+| 308 | Jul 1 | Built `tools/schema-change-checklist.html` — 32-point interactive database schema change checklist for production deployments with printable PDF, Markdown export, shareable URLs, CI/CD CTAs; indexed. sitemap: 293 URLs. |
+| 309 | Jul 1 | Built `tools/schema-diff-precommit-hook.html` — generates plain git and pre-commit-framework hooks that diff database schemas on every commit, with breaking-change gate and staged-file support; indexed and cross-linked. sitemap: 294 URLs. |
 | 300 | Jun 17 | Schema Diff Report Example Gallery (`tools/schema-diff-report-gallery.html`) — 5 realistic report scenarios with risk scores, migration/rollback previews, and shareable URLs. sitemap: 289 URLs. |
 | 301 | Jun 18 | Built `tools/schema-diff-vs-manual.html` conversion calculator, cross-linked from pricing/tools/case-study, indexed; sitemap 290 URLs. |
 | 302 | Jun 30 | Pro conversion funnel hardening: fixed `revealDiffResults` scope bug, aligned interstitial copy with free-forever pivot, cleaned up Pro value banner A/B test copy, fixed final-week banner consistency site-wide. |
@@ -263,83 +273,4 @@ Build one more final-week no-account distribution asset: a tool that turns any s
 - Monitor `pr_comment_*` analytics events for engagement.
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 
----
-
-## Day 309 — Schema Diff Pre-commit Hook Generator (July 1, 2026)
-
-### Focus
-Build a final-week CI/CD-adjacent distribution asset that helps developers catch breaking schema changes before commit, while cross-promoting the GitHub Action and Pro/Team plans.
-
-### What Was Done
-1. **Built `tools/schema-diff-precommit-hook.html`**
-   - Generates both a plain git `pre-commit` hook and a `pre-commit` framework YAML config.
-   - Configurable old/new schema file paths, SQL dialect (PostgreSQL/MySQL/SQLite/SQL Server/Oracle), output format (markdown/JSON), fail-on-breaking gate, and staged-file mode.
-   - Generated hooks call the free SchemaLens `/api/free-diff` endpoint with jq-assembled JSON payloads.
-   - Includes copy-to-clipboard, download, and shareable URL actions with analytics events.
-   - JSON-LD SoftwareApplication schema and full OpenGraph/Twitter meta tags.
-
-2. **Cross-linked and indexed**
-   - Added a card on `tools.html` in the local/CI workflow section.
-   - Linked from `github-action.html` footer, `ci-cd-integration.html` related guides, and `tools/git-branch-schema-diff.html` CTA.
-   - Added `https://schemalens.tech/tools/schema-diff-precommit-hook.html` to `sitemap.xml` (293 → 294 URLs).
-   - Added to `tests/e2e.spec.js` page-load list.
-
-3. **Final-week banner coverage**
-   - Added consistent final-week announcement bars to `team.html` and `how-it-works.html`, matching the rest of the site.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 208 passed, 14 API tests skipped in static server mode
-- ✅ New `tools/schema-diff-precommit-hook.html` page loads without console errors
-- ✅ Sitemap.xml valid and contains the new URL
-- ✅ No broken cross-links detected
-
-### Why This Matters
-- Targets high-intent keywords like "schema diff pre-commit hook", "database schema diff git hook", and "block breaking schema changes before commit" not covered by existing pages.
-- Extends SchemaLens from CI/CD pipelines into the local developer workflow, creating another organic discovery surface.
-- Every generated hook includes a CTA to the free GitHub Action and Team plan, turning local setup into a pipeline upsell.
-
-### Next
-- Monitor `precommit_hook_*` analytics events for engagement.
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
-
----
-
-## Day 308 — Database Schema Change Checklist Micro-Tool (July 1, 2026)
-
-### Focus
-Execute the top unblocked P2 backlog task: build one more final-week distribution asset that drives CI/CD awareness and provides immediate value without requiring any account or paid channel.
-
-### What Was Done
-1. **Built `tools/schema-change-checklist.html`**
-   - 32 checklist items across 7 categories: Pre-Change Review, Safety & Risk, Migration Script, Rollback Plan, Execution, Post-Change Verification, and Communication & Documentation.
-   - Each item tagged Critical / Required / Recommended with actionable descriptions.
-   - Interactive checkboxes with localStorage progress persistence.
-   - Live progress bar and completion percentage.
-   - Print / Save PDF button with print-optimized stylesheet.
-   - Copy as Markdown and Copy Share URL actions.
-   - Analytics events for print, copy, share, reset, and item toggles.
-   - JSON-LD SoftwareApplication schema and full OpenGraph/Twitter meta tags.
-
-2. **Cross-linked and indexed**
-   - Added a card on `tools.html` in the migration/runbook section.
-   - Linked from `github-action.html` footer and `migration-checklist.html` related-resources paragraph.
-   - Added `https://schemalens.tech/tools/schema-change-checklist.html` to `sitemap.xml` (292 → 293 URLs).
-   - Added to `tests/e2e.spec.js` page-load list.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 207 passed, 14 API tests skipped in static server mode
-- ✅ New `tools/schema-change-checklist.html` page loads without console errors
-- ✅ Sitemap.xml valid and contains the new URL
-- ✅ No broken cross-links detected
-
-### Why This Matters
-- Targets high-intent keywords like "database schema change checklist", "schema deployment checklist", and "production schema change checklist" not covered by existing pages.
-- Serves as a final-week distribution asset that naturally leads to the GitHub Action and Team plan.
-- Printable PDF format makes it useful in team runbooks, on-call docs, and compliance reviews.
-
-### Next
-- Monitor `schema_change_checklist_*` analytics events for engagement.
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 
