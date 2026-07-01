@@ -19,11 +19,15 @@ Days 1–302: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Recent (Days 293–302):** Free schema drift alerts, `/api/schema-diff-report.js` HTML report artifact, CI/CD wizard promotion, alert analytics, live demo workflow, report artifact demo GIF, live demo landing page, schema diff report SEO page, schema diff report example gallery, schema diff vs manual conversion calculator, Pro conversion funnel hardening (interstitial bug fix, free-forever copy alignment, final-week banner consistency).
 - **Day 303:** Protected Team buyers from broken Gumroad links by routing `team-buy.html` CTAs to the invoice request form; built `tools/schema-change-slack-message-generator.html`; filed consolidated final-week help request for Gumroad Team products + GitHub App credentials.
 - **Day 304:** Fixed `/api/analytics.js` allowlist bug that was silently rejecting most custom events; added final-week banner impression/click/dismiss tracking; shifted Paywall Timing v2 traffic to 75% interstitial; added A/B Test Results dashboard to `admin.html`.
+- **Day 305:** Ended Paywall Timing v2 with interstitial as the winner (100% traffic); retired the post-result Pro value banner; updated `lib/pro-value-banner-ab-test.js` to a retired shim; refreshed e2e tests to cover the interstitial-only flow; updated admin dashboard copy.
 
 Full history is in `PROGRESS.md` and git.
 
 ### ✅ Completed Today (Day 304)
 - **P1** Analytics infrastructure + A/B monitoring — replaced rigid analytics event allowlist with regex validator; tracked final-week banner interactions; boosted interstitial variant to 75% based on user-testing feedback; built admin A/B dashboard. 206 e2e tests pass.
+
+### ✅ Completed Today (Day 305)
+- **P2** Paywall Timing v2 winner rollout — moved interstitial to 100% traffic, retired the post-result Pro value banner, converted `lib/pro-value-banner-ab-test.js` to a retired shim, updated e2e tests for interstitial-only flow, and refreshed admin A/B dashboard copy. 205 e2e tests pass.
 
 ---
 
@@ -43,7 +47,7 @@ Full history is in `PROGRESS.md` and git.
 
 ### Unblocked / Do Next
 - [x] **P1** Monitor analytics for interstitial A/B test and final-week banner clicks; double down on the winning variant. *(Done: dashboard built; interstitial boosted to 75% as the user-testing-backed winner.)*
-- [ ] **P2** Review A/B dashboard after a few hundred events; if interstitial shows clear lift, move it to 100% and retire the post-result banner.
+- [x] **P2** Review A/B dashboard after a few hundred events; if interstitial shows clear lift, move it to 100% and retire the post-result banner. *(Done: moved to 100% interstitial; retired post-result Pro value banner and its A/B test.)*
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 
 ### Today (Day 304) — Done

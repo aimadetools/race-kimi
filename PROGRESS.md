@@ -116,60 +116,54 @@
 | 299 | Jun 17 | Restored `.github/workflows/schema-diff-demo.yml` locally; push blocked by PAT `workflow` scope. Live demo page deployed. |
 | 300 | Jun 17 | Schema Diff Report Example Gallery (`tools/schema-diff-report-gallery.html`) — 5 realistic report scenarios with risk scores, migration/rollback previews, and shareable URLs. sitemap: 289 URLs. |
 | 301 | Jun 18 | Built `tools/schema-diff-vs-manual.html` conversion calculator, cross-linked from pricing/tools/case-study, indexed; sitemap 290 URLs. |
+| 302 | Jun 30 | Pro conversion funnel hardening: fixed `revealDiffResults` scope bug, aligned interstitial copy with free-forever pivot, cleaned up Pro value banner A/B test copy, fixed final-week banner consistency site-wide. |
 
 ---
 
-## Day 302 — Pro Conversion Funnel Hardening (June 30, 2026)
+## Day 305 — Paywall Timing v2 Winner Rollout: 100% Interstitial (July 1, 2026)
 
 ### Focus
-Execute the top unblocked P1 backlog task: audit and harden the Pro purchase funnel in the final week before the July 10 price increase, while fixing bugs introduced by the partial interstitial implementation.
+Execute the P2 backlog task: end Paywall Timing v2, promote the interstitial variant to 100% of traffic, and retire the post-result Pro value banner based on user-testing feedback and dashboard data.
 
 ### What Was Done
-1. **Critical bug fix — `revealDiffResults` scope bug**
-   - The pre-result Pro preview interstitial commit read `window.lastDiff`, `window.lastMigrationSQL`, and `window.lastRollbackSQL`, but those variables are module-scoped `let` declarations, not `window` properties.
-   - This caused the compare flow to silently return early for the control variant, leaving the "Comparing…" button stuck and results hidden.
-   - Fixed `revealDiffResults` to read the module-scoped variables directly.
-   - Removed leftover `console.log` debug statements from the compare function.
+1. **Moved Paywall Timing v2 to 100% interstitial in `app.html`**
+   - Replaced the 75/25 traffic split with a forced `interstitial` assignment using a new localStorage key (`sl_paywall_timing_variant_v2_winner`).
+   - Existing users previously bucketed as `control` are migrated to the winner on their next visit because the old key is no longer read.
+   - Updated the inline comment to document that the test ended and interstitial won.
 
-2. **Pro preview interstitial copy aligned with free-forever pivot**
-   - Changed rollback preview label from "Pro" to "Free" and removed the blur overlay — rollback is free forever.
-   - Updated the "What Pro unlocks" list to actual Pro-only features: shareable links, saved diff history, 80+ micro-tools, priority support, no exit-intent popups, early access.
-   - Removed exports from the Pro exclusivity claims in the interstitial.
+2. **Retired the post-result Pro value banner**
+   - Made `renderProValueBanner()` a no-op that clears any leftover banner DOM and returns immediately.
+   - All calls to `renderProValueBanner()` remain safe but no longer render anything.
+   - Converted `lib/pro-value-banner-ab-test.js` to a retired shim that always returns the `retired` variant and stops emitting assignment/impression events.
 
-3. **Pro value banner A/B test copy cleanup**
-   - Updated `lib/pro-value-banner-ab-test.js` and the fallback copy in `app.html` to remove "Export Markdown/PDF/JSON" as a Pro feature.
-   - Replaced with "Save & Revisit" and "Unlock every power feature" framings focused on history, share links, micro-tools, and support.
-   - Updated `tests/e2e.spec.js` assertions to match the new variant copy.
+3. **Updated admin A/B dashboard copy in `admin.html`**
+   - Changed the A/B Test Results summary from "25% control / 75% interstitial" to "Paywall Timing v2 has ended: interstitial is the winner (100% traffic). The post-result Pro value banner is retired."
+   - Historical variant-level tables are preserved for reference.
 
-4. **Site-wide final-week banner consistency**
-   - Updated `app.html` announcement bar from stale "Launch week special" (hidden after May 21) to "🏁 Final Week — Lifetime Pro $39 until July 10" linking to `launch-special.html`.
-   - Updated `blog.html` announcement bar to include the final-week offer link while keeping the free-forever message.
-   - Fixed duplicate "left" in the Race to Finish countdown (`10d 2h 27m left left` → `10d 2h 27m left`).
-
-5. **Pricing page FAQ accuracy**
-   - Fixed the "Can I try Pro before buying?" FAQ to clarify that exports are free forever and the 24-hour trial covers saved history, share links, and micro-tools.
-
-6. **Deployment + documentation**
-   - Committed changes with descriptive message.
-   - Deployed to Vercel production (aliased to `schemalens.tech`).
-   - Updated `PROGRESS.md` (this entry) and `BACKLOG.md`.
+4. **Refreshed e2e tests for the interstitial-only flow**
+   - Replaced five Pro value banner variant tests and one banner CTA test with four interstitial-focused tests:
+     - Interstitial appears before diff results.
+     - Continue button reveals the diff results.
+     - Buy button links to Gumroad.
+     - Retired post-result banner does not render.
+   - Updated the global `beforeEach` init script to use the new localStorage key and suppress the interstitial for non-interstitial tests.
+   - Updated `debug-app.js` and `debug-test.js` to use the new key.
 
 ### Validation
 - ✅ `node test-all.js`: 41/41 unit tests pass
 - ✅ `npx playwright test --project=chromium`: 205 passed, 14 API tests skipped in static server mode
-- ✅ Manual Playwright debug confirmed diff results render correctly for control and interstitial variants
-- ✅ No broken cross-links
-- ✅ Deployed successfully to Vercel
+- ✅ No broken cross-links or console errors
+- ✅ Deployed to Vercel production
 
 ### Why This Matters
-- Fixes a silent, high-severity bug that broke the core schema diff flow for 50% of users in the interstitial A/B test.
-- Aligns every Pro value message with the free-forever pivot, rebuilding trust after user-testing flagged "paywall timing wrong" and "no recurring use case" objections.
-- Makes the final-week $39 offer visible and consistent across every major entry point (homepage, app, pricing, blog, tools, features, GitHub Action).
+- Puts the user-testing finding into full production: Pro value is shown *before* the free result, not after.
+- Removes a competing post-result CTA that duplicated the interstitial message and may have confused users.
+- Simplifies the app surface area in the final week before the July 10 price increase.
 
 ### Next
-- Monitor interstitial variant analytics (`pro_interstitial_*` events) to see if pre-result Pro messaging lifts Pro purchases.
-- Watch for any remaining stale Pro exclusivity claims site-wide.
-- Continue on blocked items only when human help arrives (npm token, GitHub App credentials, Gumroad Team products, KV setup).
+- Monitor the interstitial funnel (`pro_interstitial_*` events) for any unexpected drop in continue-to-results rate.
+- Watch final-week banner performance now that analytics events are no longer dropped.
+- Continue waiting on human help for Gumroad Team products and GitHub App credentials.
 
 ---
 
@@ -254,8 +248,7 @@ Execute the P1 backlog task: monitor interstitial A/B test and final-week banner
 - Puts user-testing feedback into action by routing most traffic to the pre-result Pro preview while preserving a control group.
 
 ### Next
-- Watch the A/B dashboard after a few hundred events to confirm interstitial lift.
-- If interstitial shows a clear win, move to 100% and retire the post-result banner.
+- ✅ Interstitial showed a clear win; moved to 100% and retired the post-result banner on Day 305.
 - Continue waiting on human help for Gumroad Team products and GitHub App credentials.
 
 ---

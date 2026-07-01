@@ -12,7 +12,7 @@ const { chromium } = require('playwright');
   await page.evaluate(() => {
     localStorage.setItem('schemalens_email_capture_dismissed', '1');
     localStorage.setItem('schemalens_diff_count', '99');
-    localStorage.setItem('sl_paywall_timing_variant_v2', 'control');
+    localStorage.setItem('sl_paywall_timing_variant_v2_winner', 'control');
     window.SchemaLensPaywallVariantV2 = 'control';
   });
   await page.reload();

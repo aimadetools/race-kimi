@@ -463,7 +463,7 @@ test('app: breaking changes detection works for dropped column', async ({ page }
   expect(pageText).toMatch(/breaking|DROP COLUMN/i);
 });
 
-async function runDiffForBanner(page) {
+async function runDiff(page) {
   const schemaA = `CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL, phone TEXT);`;
   const schemaB = `CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL);`;
 
@@ -472,89 +472,70 @@ async function runDiffForBanner(page) {
   await page.waitForTimeout(200);
 
   await page.click('#compareBtn');
-  await page.waitForSelector('#results.active', { state: 'visible', timeout: 10000 });
 }
 
-test('app: pro value banner control variant renders save-revisit framing above tabs', async ({ page }) => {
-  await page.goto(`${BASE_URL}/app.html`);
+async function enableInterstitial(page) {
   await page.evaluate(() => {
     localStorage.clear();
-    localStorage.setItem('sl_pro_value_banner_ab_variant', 'control');
+    localStorage.setItem('sl_paywall_timing_variant_v2_winner', 'interstitial');
     localStorage.setItem('schemalens_email_capture_dismissed', '1');
     localStorage.setItem('schemalens_diff_count', '99');
+    // The paywall assignment script already ran; override the variant directly
+    // so the pre-result interstitial is shown without a reload (which would re-run
+    // the global beforeEach init script and reset the variant to control).
+    window.SchemaLensPaywallVariantV2 = 'interstitial';
   });
-  await page.reload();
+}
 
-  await runDiffForBanner(page);
+test('app: pro preview interstitial appears before diff results', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await enableInterstitial(page);
+
+  await runDiff(page);
+
+  const interstitial = page.locator('#proPreviewInterstitial');
+  await expect(interstitial).toHaveClass(/active/);
+  await expect(page.locator('#proInterstitialBuyBtn')).toContainText('Lifetime Pro');
+  await expect(page.locator('#proInterstitialContinueBtn')).toBeVisible();
+
+  // Results should remain hidden until the user continues
+  const visualDiff = page.locator('#visualDiff');
+  await expect(visualDiff).not.toContainText('phone');
+});
+
+test('app: pro preview interstitial continue button reveals diff results', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await enableInterstitial(page);
+
+  await runDiff(page);
+  await page.click('#proInterstitialContinueBtn');
+
+  await expect(page.locator('#proPreviewInterstitial')).not.toHaveClass(/active/);
+  await expect(page.locator('#visualDiff')).toContainText('phone');
+});
+
+test('app: pro preview interstitial buy button links to Gumroad', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await enableInterstitial(page);
+
+  await runDiff(page);
+
+  const buyBtn = page.locator('#proInterstitialBuyBtn');
+  await expect(buyBtn).toBeVisible();
+  await expect(buyBtn).toHaveAttribute('href', /gumroad\.com\/l\/schemalens-lifetime/);
+});
+
+test('app: retired pro value banner does not render after diff results', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await enableInterstitial(page);
+
+  await runDiff(page);
+  await page.click('#proInterstitialContinueBtn');
 
   const banner = page.locator('#proValueBanner .pro-value-banner');
-  await expect(banner).toBeVisible();
-  await expect(banner).toHaveAttribute('data-variant', 'control');
-  await expect(banner).toHaveAttribute('data-placement', 'above_tabs');
-  await expect(banner.locator('.pro-value-title')).toContainText('Save & revisit every diff');
-});
-
-test('app: pro value banner v1 variant renders power-features framing above tabs', async ({ page }) => {
-  await page.goto(`${BASE_URL}/app.html`);
-  await page.evaluate(() => {
-    localStorage.clear();
-    localStorage.setItem('sl_pro_value_banner_ab_variant', 'v1');
-    localStorage.setItem('schemalens_email_capture_dismissed', '1');
-    localStorage.setItem('schemalens_diff_count', '99');
-  });
-  await page.reload();
-
-  await runDiffForBanner(page);
-
-  const banner = page.locator('#proValueBanner .pro-value-banner');
-  await expect(banner).toBeVisible();
-  await expect(banner).toHaveAttribute('data-variant', 'v1');
-  await expect(banner).toHaveAttribute('data-placement', 'above_tabs');
-  await expect(banner.locator('.pro-value-title')).toContainText('Unlock every power feature');
-});
-
-test('app: pro value banner v2 variant renders save-revisit framing inside visual panel', async ({ page }) => {
-  await page.goto(`${BASE_URL}/app.html`);
-  await page.evaluate(() => {
-    localStorage.clear();
-    localStorage.setItem('sl_pro_value_banner_ab_variant', 'v2');
-    localStorage.setItem('schemalens_email_capture_dismissed', '1');
-    localStorage.setItem('schemalens_diff_count', '99');
-  });
-  await page.reload();
-
-  await runDiffForBanner(page);
-
-  const topBanner = page.locator('#proValueBanner .pro-value-banner');
-  await expect(topBanner).toHaveCount(0);
-
+  await expect(banner).toHaveCount(0);
   const visualBanner = page.locator('#visualDiff > .pro-value-banner.inside-visual');
-  await expect(visualBanner).toBeVisible();
-  await expect(visualBanner).toHaveAttribute('data-variant', 'v2');
-  await expect(visualBanner).toHaveAttribute('data-placement', 'inside_visual');
-  await expect(visualBanner.locator('.pro-value-title')).toContainText('Save & revisit every diff');
-});
-
-test('app: pro value banner v3 variant renders power-features framing inside visual panel', async ({ page }) => {
-  await page.goto(`${BASE_URL}/app.html`);
-  await page.evaluate(() => {
-    localStorage.clear();
-    localStorage.setItem('sl_pro_value_banner_ab_variant', 'v3');
-    localStorage.setItem('schemalens_email_capture_dismissed', '1');
-    localStorage.setItem('schemalens_diff_count', '99');
-  });
-  await page.reload();
-
-  await runDiffForBanner(page);
-
-  const topBanner = page.locator('#proValueBanner .pro-value-banner');
-  await expect(topBanner).toHaveCount(0);
-
-  const visualBanner = page.locator('#visualDiff > .pro-value-banner.inside-visual');
-  await expect(visualBanner).toBeVisible();
-  await expect(visualBanner).toHaveAttribute('data-variant', 'v3');
-  await expect(visualBanner).toHaveAttribute('data-placement', 'inside_visual');
-  await expect(visualBanner.locator('.pro-value-title')).toContainText('Unlock every power feature');
+  await expect(visualBanner).toHaveCount(0);
 });
 
 test('app: ORM export generates Prisma and Drizzle schemas', async ({ page }) => {
@@ -609,30 +590,6 @@ test('app: license modal opens and shows Gumroad buy button', async ({ page }) =
     }
     await expect(modal).toBeHidden();
   }
-});
-
-test('app: pro value banner primary CTA is a Gumroad button', async ({ page }) => {
-  await page.goto(`${BASE_URL}/app.html`);
-  await page.evaluate(() => {
-    localStorage.clear();
-    localStorage.setItem('sl_pro_value_banner_ab_variant', 'control');
-    localStorage.setItem('schemalens_email_capture_dismissed', '1');
-    localStorage.setItem('schemalens_diff_count', '99');
-  });
-  await page.reload();
-  await dismissEmailCapture(page);
-
-  const schemaA = `CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL, phone TEXT);`;
-  const schemaB = `CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL);`;
-  await page.fill('#schemaA', schemaA);
-  await page.fill('#schemaB', schemaB);
-  await page.waitForTimeout(200);
-  await page.click('#compareBtn');
-  await page.waitForSelector('#results.active', { state: 'visible', timeout: 10000 });
-
-  const buyBtn = page.locator('#proValueBanner .pro-value-banner .pro-value-actions a.gumroad-button').first();
-  await expect(buyBtn).toBeVisible();
-  await expect(buyBtn).toHaveAttribute('href', /gumroad\.com\/l\/schemalens-lifetime/);
 });
 
 test('app: share button shows copied feedback', async ({ page }) => {
