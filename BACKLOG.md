@@ -22,6 +22,7 @@ Days 1–305: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 305:** Ended Paywall Timing v2 with interstitial as winner (100% traffic); retired the post-result Pro value banner; converted `lib/pro-value-banner-ab-test.js` to a retired shim; refreshed e2e tests to cover the interstitial-only flow; updated admin A/B dashboard copy.
 - **Day 306:** Built `tools/migration-test-plan-generator.html` — a dialect/table-size-aware test plan generator for SQL migrations; added to `tools.html`, sitemap, e2e tests, and cross-linked from migration/CI/CD pages. sitemap: 292 URLs.
 - **Day 307:** Hardened `github-action.html` and `README.md` copy for the free-forever pivot — added Free/Pro/Team explainer card, replaced the Free vs Pro table with Free vs Pro vs Team, and aligned README pricing/monetization messaging. Tests pass; deployed.
+- **Day 308:** Built `tools/schema-change-checklist.html` — a 32-point interactive database schema change checklist for production deployments with printable PDF, Markdown export, shareable URLs, and CI/CD CTAs; indexed and cross-linked. sitemap: 293 URLs.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -43,7 +44,6 @@ Full history is in `PROGRESS.md` and git.
 
 ### Unblocked / Do Next
 - [ ] **P2** Review real analytics/GSC data once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is available to double down on highest-converting keywords.
-- [ ] **P2** Build one more final-week distribution asset (e.g., schema migration testing blog post, migration checklist PDF, or comparison page update).
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
