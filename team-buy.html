@@ -27,7 +27,7 @@
         "priceCurrency": "USD",
         "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock",
-        "url": "https://gumroad.com/l/schemalens-team-monthly"
+        "url": "https://schemalens.tech/tools/request-team-invoice.html"
       },
       {
         "@type": "Offer",
@@ -36,7 +36,7 @@
         "priceCurrency": "USD",
         "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock",
-        "url": "https://gumroad.com/l/schemalens-team-yearly"
+        "url": "https://schemalens.tech/tools/request-team-invoice.html"
       }
     ]
   }
@@ -366,8 +366,8 @@
             <li>Unlimited API access</li>
             <li>Priority support</li>
           </ul>
-          <a href="https://gumroad.com/l/schemalens-team-monthly?wanted=true" class="btn btn-primary btn-lg" data-plan="monthly">Start Team Monthly →</a>
-          <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 12px;">Secure checkout via Gumroad · <a href="tools/request-team-invoice.html" style="color:var(--primary);">Need an invoice?</a></p>
+          <a href="tools/request-team-invoice.html" class="btn btn-primary btn-lg" data-plan="monthly">Request Team Monthly →</a>
+          <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 12px;">Self-serve checkout launching soon — request an invoice or demo today. 30-day money-back guarantee.</p>
         </div>
         <div class="pricing-card-buy recommended" id="cardYearly">
           <span class="badge">Best Value</span>
@@ -386,8 +386,8 @@
             <li>Team risk dashboard</li>
             <li>Admin &amp; user management</li>
           </ul>
-          <a href="https://gumroad.com/l/schemalens-team-yearly?wanted=true" class="btn btn-primary btn-lg" data-plan="yearly">Start Team Yearly →</a>
-          <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 12px;">Secure checkout via Gumroad · <a href="tools/request-team-invoice.html" style="color:var(--primary);">Need an invoice?</a></p>
+          <a href="tools/request-team-invoice.html" class="btn btn-primary btn-lg" data-plan="yearly">Request Team Yearly →</a>
+          <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 12px;">Self-serve checkout launching soon — request an invoice or demo today. 2 months free vs monthly.</p>
         </div>
       </div>
     </div>
@@ -519,7 +519,7 @@
         </div>
         <div class="faq-item">
           <h3>Can I cancel or get a refund?</h3>
-          <p>Yes. Cancel anytime from your Gumroad account. Annual plans are refunded pro-rata within 14 days. Monthly plans can be cancelled at any time.</p>
+          <p>Yes. Monthly and yearly Team plans can be cancelled at any time. Annual plans are refunded pro-rata within 14 days. Self-serve checkout is launching soon; invoice customers get the same terms.</p>
         </div>
         <div class="faq-item">
           <h3>What if I need an invoice or custom terms?</h3>
@@ -533,8 +533,8 @@
     <div class="container text-center">
       <h2>Ready to automate schema review?</h2>
       <p class="mb-24">Join teams that catch breaking schema changes before merge. Start with a monthly plan or save with yearly.</p>
-      <a href="https://gumroad.com/l/schemalens-team-monthly?wanted=true" class="btn btn-primary btn-lg" id="finalCtaMonthly">Start Team Monthly — $29</a>
-      <p style="margin-top: 16px; font-size: 0.9rem; color: var(--text-muted);">Or <a href="tools/request-team-invoice.html" style="color: var(--primary);">request a manual invoice</a> · <a href="book-demo.html" style="color: var(--primary);">book a setup call</a> · <a href="tools/team-roi-calculator.html" style="color: var(--primary);">calculate ROI</a> · <a href="tools/team-plan-comparison.html" style="color: var(--primary);">compare vs enterprise</a> · <a href="tools/team-plan-one-pager.html" style="color: var(--primary);">print one-pager</a></p>
+      <a href="tools/request-team-invoice.html" class="btn btn-primary btn-lg" id="finalCtaMonthly">Request Team Monthly — $29</a>
+      <p style="margin-top: 16px; font-size: 0.9rem; color: var(--text-muted);">Self-serve checkout launching soon — request an invoice or demo today. <a href="book-demo.html" style="color: var(--primary);">book a setup call</a> · <a href="tools/team-roi-calculator.html" style="color: var(--primary);">calculate ROI</a> · <a href="tools/team-plan-comparison.html" style="color: var(--primary);">compare vs enterprise</a> · <a href="tools/team-plan-one-pager.html" style="color: var(--primary);">print one-pager</a></p>
     </div>
   </section>
 
@@ -638,15 +638,15 @@
         yearlyCard.style.borderColor = 'var(--primary)';
         monthlyCard.style.borderColor = 'var(--border)';
         if (finalCta) {
-          finalCta.href = 'https://gumroad.com/l/schemalens-team-yearly?wanted=true';
-          finalCta.textContent = 'Start Team Yearly — $290';
+          finalCta.href = 'tools/request-team-invoice.html';
+          finalCta.textContent = 'Request Team Yearly — $290';
         }
       } else {
         monthlyCard.style.borderColor = 'var(--primary)';
         yearlyCard.style.borderColor = 'var(--border)';
         if (finalCta) {
-          finalCta.href = 'https://gumroad.com/l/schemalens-team-monthly?wanted=true';
-          finalCta.textContent = 'Start Team Monthly — $29';
+          finalCta.href = 'tools/request-team-invoice.html';
+          finalCta.textContent = 'Request Team Monthly — $29';
         }
       }
       try { localStorage.setItem('schemalens_team_billing', period); } catch (e) {}
@@ -671,9 +671,9 @@
 
     // Analytics
     if (window.SchemaLensAnalytics) {
-      document.querySelectorAll('a[href*="gumroad.com/l/schemalens-team"]').forEach(link => {
+      document.querySelectorAll('a[data-plan][href*="request-team-invoice"]').forEach(link => {
         link.addEventListener('click', () => {
-          window.SchemaLensAnalytics.track('team_checkout_click', { plan: link.dataset.plan || state.period });
+          window.SchemaLensAnalytics.track('team_invoice_request_click', { plan: link.dataset.plan || state.period });
         });
       });
     }

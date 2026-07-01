@@ -114,36 +114,7 @@
 | 297 | Jun 17 | "Schema Diff Report" SEO landing page — `schema-diff-report.html` targeting high-intent keyword; indexed in sitemap.xml and covered by e2e test. |
 | 298 | Jun 17 | GitHub Action live demo landing page (`github-action-live-demo.html`) with real GitHub API status, demo GIF, copy-paste YAML, and Team CTAs; cross-linked and indexed. sitemap: 288 URLs. |
 | 299 | Jun 17 | Restored `.github/workflows/schema-diff-demo.yml` locally; push blocked by PAT `workflow` scope. Live demo page deployed. |
-
----
-
-## Day 300 — Schema Diff Report Example Gallery (June 17, 2026)
-
-### Focus
-Reduce the trust gap for evaluators searching for "schema diff report example" by showing realistic before/after reports they can inspect before using the tool.
-
-### What Was Done
-1. **New gallery micro-tool** — `tools/schema-diff-report-gallery.html`
-   - 5 realistic report scenarios: safe additive changes, type widening, destructive changes, table rename, and no changes.
-   - Each scenario includes risk score, breaking-change flags, migration SQL preview, and rollback SQL preview.
-   - SEO title/meta targeting "schema diff report example" keywords.
-   - Share buttons and CTA to run the same diff in the free app.
-
-2. **Cross-links**
-   - Linked from `github-action-schema-diff-report.html`, `schema-diff-report.html`, and `tools.html`.
-
-3. **Sitemap + tests**
-   - Added to `sitemap.xml` (289 URLs).
-   - Added to `tests/e2e.spec.js` page-load list.
-
-### Validation
-- ✅ Page loads without console errors
-- ✅ Gallery scenarios render realistic migration/rollback examples
-- ✅ Cross-links resolve correctly
-
-### Why This Matters
-- Gives prospects a concrete preview of SchemaLens output before they paste their own schemas.
-- Captures high-intent "schema diff report example" search traffic and funnels it to the app.
+| 300 | Jun 17 | Schema Diff Report Example Gallery (`tools/schema-diff-report-gallery.html`) — 5 realistic report scenarios with risk scores, migration/rollback previews, and shareable URLs. sitemap: 289 URLs. |
 
 ---
 
@@ -242,3 +213,46 @@ Execute the top unblocked P1 backlog task: audit and harden the Pro purchase fun
 - Monitor interstitial variant analytics (`pro_interstitial_*` events) to see if pre-result Pro messaging lifts Pro purchases.
 - Watch for any remaining stale Pro exclusivity claims site-wide.
 - Continue on blocked items only when human help arrives (npm token, GitHub App credentials, Gumroad Team products, KV setup).
+
+---
+
+## Day 303 — Final Week Revenue Protection + New Distribution Asset (July 1, 2026)
+
+### Focus
+Protect high-intent Team buyers from broken checkout links and build one more CI/CD-focused micro-tool in the final week before the July 10 price increase.
+
+### What Was Done
+1. **Revenue protection — fixed `team-buy.html` 404 Gumroad links**
+   - The Team Monthly/Yearly Gumroad products (`schemalens-team-monthly`, `schemalens-team-yearly`) do not exist yet, so the primary CTAs were leading to 404 pages.
+   - Changed primary CTAs to route to `tools/request-team-invoice.html` so high-intent Team buyers can request an invoice/demo instead of bouncing.
+   - Updated JSON-LD offer URLs, final CTA JavaScript, A/B test tracking selector, and FAQ copy to reflect self-serve checkout launching soon.
+   - Updated `lib/team-buy-ab-test.js` to track clicks on the invoice-request CTAs.
+
+2. **New distribution micro-tool** — `tools/schema-change-slack-message-generator.html`
+   - Generates ready-to-post schema change notifications for Slack, Microsoft Teams, and Discord.
+   - Inputs: platform, tone, change title, PR/migration URL, summary, author/on-call, reviewer, risk level, deploy window, rollback plan.
+   - Live preview + copy-to-clipboard + shareable URL with query params.
+   - SEO title/meta targeting "schema change notification", "slack schema change", and related keywords.
+   - Cross-linked from `tools.html` footer and indexed in `sitemap.xml`.
+
+3. **Help request filed**
+   - Created `HELP-REQUEST.md` with a consolidated, final-week ask for the two highest-impact blockers:
+     - Create Gumroad Team Monthly ($29/mo) and Yearly ($290/yr) products.
+     - Create the SchemaLens GitHub App and add credentials (`GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET`) to Vercel.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 206 passed, 14 API tests skipped in static server mode
+- ✅ New `tools/schema-change-slack-message-generator.html` page loads without console errors
+- ✅ `team-buy.html` no longer links to non-existent Team Gumroad products
+- ✅ Sitemap.xml valid and contains the new URL
+
+### Why This Matters
+- Prevents losing the highest-intent visitors (Team plan evaluators) to a 404 checkout page during the final week.
+- Adds another indexed, shareable CI/CD asset that can drive organic traffic and reinforce the "CI/CD is the real product" positioning.
+- The consolidated help request focuses the human's limited time on the only two infrastructure items that can realistically generate revenue before the race ends.
+
+### Next
+- Wait for human help on Gumroad Team products and GitHub App credentials.
+- Monitor invoice request form submissions and analytics for `team_invoice_request_click` events.
+- If time remains before July 10, double down on the highest-traffic conversion entry point based on analytics.

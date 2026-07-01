@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Schema Change Notification Generator — Slack, Teams, Discord | SchemaLens</title>
+  <meta name="description" content="Generate ready-to-post schema change notifications for Slack, Microsoft Teams, and Discord. Include risk score, breaking changes, migration link, and reviewer tags.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-change-slack-message-generator.html">
+  <meta property="og:title" content="Schema Change Notification Generator — Slack, Teams, Discord">
+  <meta property="og:description" content="Generate ready-to-post schema change notifications for Slack, Microsoft Teams, and Discord. Include risk score, breaking changes, and migration link.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-change-slack-message-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Schema Change Notification Generator — Slack, Teams, Discord">
+  <meta name="twitter:description" content="Generate ready-to-post schema change notifications for Slack, Microsoft Teams, and Discord. Include risk score, breaking changes, and migration link.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Schema Change Notification Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates schema change notifications for Slack, Microsoft Teams, and Discord. Includes risk score, breaking change summary, migration link, and reviewer tags.",
+    "url": "https://schemalens.tech/tools/schema-change-slack-message-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 960px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 90px; resize: vertical; font-family: inherit; font-size: 0.95rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; min-height: 240px; }
+
+    .preview-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .preview-tabs button { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+    .preview-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .risk-options { display: flex; gap: 12px; flex-wrap: wrap; }
+    .risk-options label { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; cursor: pointer; font-size: 0.9rem; }
+    .risk-options input { margin: 0; }
+    .risk-options label:has(input:checked) { border-color: var(--primary); background: rgba(99,102,241,0.08); }
+
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Schema Change Notification Generator</h1>
+      <p>Generate ready-to-post schema change announcements for Slack, Microsoft Teams, and Discord. Drop them into your team channel before a risky migration ships.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Change details</h2>
+          <div class="field-row">
+            <div class="field">
+              <label for="platform">Platform</label>
+              <select id="platform">
+                <option value="slack">Slack</option>
+                <option value="teams">Microsoft Teams</option>
+                <option value="discord">Discord</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="tone">Tone</label>
+              <select id="tone">
+                <option value="friendly">Friendly</option>
+                <option value="formal">Formal</option>
+                <option value="alert">Alert</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="changeTitle">Change title</label>
+              <input type="text" id="changeTitle" placeholder="e.g. Add user_preferences table">
+            </div>
+            <div class="field">
+              <label for="prUrl">PR / migration URL <span class="hint">(optional)</span></label>
+              <input type="text" id="prUrl" placeholder="https://github.com/org/repo/pull/123">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="summary">What changed?</label>
+            <textarea id="summary" placeholder="e.g. Added user_preferences table, added preferences JSONB column to users, created idx_user_prefs index."></textarea>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="author">Author / on-call <span class="hint">(optional)</span></label>
+              <input type="text" id="author" placeholder="@alice or alice@example.com">
+            </div>
+            <div class="field">
+              <label for="reviewer">Reviewer <span class="hint">(optional)</span></label>
+              <input type="text" id="reviewer" placeholder="@dba-team">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Risk level</label>
+            <div class="risk-options">
+              <label><input type="radio" name="risk" value="low" checked> Low — additive only</label>
+              <label><input type="radio" name="risk" value="medium"> Medium — indexes or type changes</label>
+              <label><input type="radio" name="risk" value="high"> High — breaking or destructive</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="deployWindow">Deploy window <span class="hint">(optional)</span></label>
+            <input type="text" id="deployWindow" placeholder="e.g. Today at 3 PM UTC">
+          </div>
+
+          <div class="field">
+            <label for="rollback">Rollback plan <span class="hint">(optional)</span></label>
+            <textarea id="rollback" placeholder="e.g. Revert migration PR and restore from pre-deploy snapshot if error rate > 0.1%."></textarea>
+          </div>
+
+          <button class="btn btn-primary" id="generateBtn" style="width:100%;">Generate Notification</button>
+        </div>
+
+        <div class="upsell">
+          <h3>🔔 Automate these alerts</h3>
+          <ul>
+            <li>Get Slack/Teams alerts automatically when a PR changes a .sql file.</li>
+            <li>Include risk score, migration SQL, and rollback plan in every alert.</li>
+            <li>Route breaking changes to #incidents or #dba-review.</li>
+          </ul>
+          <a href="../schema-drift-alert.html" class="btn btn-primary">Set Up Schema Drift Alerts →</a>
+          <span style="margin-left:12px;">or <a href="../team-buy.html">upgrade to Team</a> for shared workspaces.</span>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel" style="position:sticky;top:80px;">
+          <h2>2. Generated message</h2>
+          <div class="preview-tabs">
+            <button class="active" data-tab="text">Text</button>
+            <button data-tab="preview">Preview</button>
+          </div>
+          <div class="output-wrap">
+            <button class="btn btn-secondary btn-copy" id="copyBtn">Copy</button>
+            <div class="output" id="output" tabindex="0" aria-label="Generated notification"></div>
+          </div>
+          <div class="share-row">
+            <button class="btn btn-secondary" id="copyLinkBtn">Copy Share Link</button>
+            <a href="../app.html" class="btn btn-secondary">Open Schema Diff App</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Built with 💜 by <a href="../index.html">SchemaLens</a> ·
+        <a href="../open.html">Open Startup</a> ·
+        <a href="../privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const platform = document.getElementById('platform');
+    const tone = document.getElementById('tone');
+    const changeTitle = document.getElementById('changeTitle');
+    const prUrl = document.getElementById('prUrl');
+    const summary = document.getElementById('summary');
+    const author = document.getElementById('author');
+    const reviewer = document.getElementById('reviewer');
+    const deployWindow = document.getElementById('deployWindow');
+    const rollback = document.getElementById('rollback');
+    const generateBtn = document.getElementById('generateBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    const output = document.getElementById('output');
+
+    let currentText = '';
+    let currentTab = 'text';
+
+    const riskEmoji = { low: '🟢', medium: '🟡', high: '🔴' };
+    const riskLabel = { low: 'Low', medium: 'Medium', high: 'High' };
+
+    // Pre-fill from URL params
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('platform')) platform.value = params.get('platform');
+      if (params.get('tone')) tone.value = params.get('tone');
+      if (params.get('title')) changeTitle.value = decodeURIComponent(params.get('title'));
+      if (params.get('url')) prUrl.value = decodeURIComponent(params.get('url'));
+      if (params.get('summary')) summary.value = decodeURIComponent(params.get('summary'));
+      if (params.get('author')) author.value = decodeURIComponent(params.get('author'));
+      if (params.get('reviewer')) reviewer.value = decodeURIComponent(params.get('reviewer'));
+      if (params.get('deploy')) deployWindow.value = decodeURIComponent(params.get('deploy'));
+      if (params.get('rollback')) rollback.value = decodeURIComponent(params.get('rollback'));
+      const risk = params.get('risk');
+      if (risk && ['low','medium','high'].includes(risk)) {
+        document.querySelector('input[name="risk"][value="' + risk + '"]').checked = true;
+      }
+    } catch (e) {}
+
+    function getRisk() {
+      return document.querySelector('input[name="risk"]:checked')?.value || 'low';
+    }
+
+    function generateMessage() {
+      const p = platform.value;
+      const t = tone.value;
+      const title = changeTitle.value.trim() || 'Schema change';
+      const url = prUrl.value.trim();
+      const sum = summary.value.trim() || 'No summary provided.';
+      const auth = author.value.trim();
+      const rev = reviewer.value.trim();
+      const deploy = deployWindow.value.trim();
+      const roll = rollback.value.trim();
+      const risk = getRisk();
+
+      const emoji = riskEmoji[risk];
+      const label = riskLabel[risk];
+
+      let lines = [];
+
+      if (p === 'slack') {
+        if (t === 'alert') lines.push(`:rotating_light: *Schema change alert*`);
+        else if (t === 'formal') lines.push(`*Schema change notification*`);
+        else lines.push(`:schema: *Schema change heads-up*`);
+
+        lines.push(`*${title}* ${emoji} Risk: ${label}`);
+        lines.push('');
+        lines.push(`*What changed:*`);
+        lines.push(...sum.split('\n').filter(Boolean).map(s => `• ${s}`));
+        if (url) { lines.push(''); lines.push(`*PR / migration:* ${url}`); }
+        if (deploy) { lines.push(`*Deploy window:* ${deploy}`); }
+        if (auth) { lines.push(`*Author / on-call:* ${auth}`); }
+        if (rev) { lines.push(`*Reviewer:* ${rev}`); }
+        if (roll) { lines.push(`*Rollback plan:* ${roll}`); }
+        lines.push('');
+        lines.push(`_Generated with <https://schemalens.tech|SchemaLens>_`);
+      } else if (p === 'teams') {
+        if (t === 'alert') lines.push(`🚨 **Schema change alert**`);
+        else if (t === 'formal') lines.push(`**Schema change notification**`);
+        else lines.push(`🗃️ **Schema change heads-up**`);
+
+        lines.push(`**${title}** ${emoji} Risk: ${label}`);
+        lines.push('');
+        lines.push(`**What changed:**`);
+        lines.push(...sum.split('\n').filter(Boolean).map(s => `• ${s}`));
+        if (url) { lines.push(''); lines.push(`**PR / migration:** ${url}`); }
+        if (deploy) { lines.push(`**Deploy window:** ${deploy}`); }
+        if (auth) { lines.push(`**Author / on-call:** ${auth}`); }
+        if (rev) { lines.push(`**Reviewer:** ${rev}`); }
+        if (roll) { lines.push(`**Rollback plan:** ${roll}`); }
+        lines.push('');
+        lines.push(`_Generated with [SchemaLens](https://schemalens.tech)_`);
+      } else if (p === 'discord') {
+        if (t === 'alert') lines.push(`🚨 **Schema change alert**`);
+        else if (t === 'formal') lines.push(`**Schema change notification**`);
+        else lines.push(`🗃️ **Schema change heads-up**`);
+
+        lines.push(`**${title}** ${emoji} Risk: ${label}`);
+        lines.push('');
+        lines.push(`**What changed:**`);
+        lines.push(...sum.split('\n').filter(Boolean).map(s => `• ${s}`));
+        if (url) { lines.push(''); lines.push(`**PR / migration:** ${url}`); }
+        if (deploy) { lines.push(`**Deploy window:** ${deploy}`); }
+        if (auth) { lines.push(`**Author / on-call:** ${auth}`); }
+        if (rev) { lines.push(`**Reviewer:** ${rev}`); }
+        if (roll) { lines.push(`**Rollback plan:** ${roll}`); }
+        lines.push('');
+        lines.push(`_Generated with <https://schemalens.tech|SchemaLens>_`);
+      }
+
+      return lines.join('\n');
+    }
+
+    function renderPreview(text) {
+      const p = platform.value;
+      let html = text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/_(.*?)_/g, '<em>$1</em>')
+        .replace(/<https?:\/\/([^|>]+)\|([^>]+)>/g, '<a href="https://$1" target="_blank" rel="noopener" style="color:#60a5fa;">$2</a>')
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" style="color:#60a5fa;">$1</a>')
+        .replace(/• /g, '&bull; ')
+        .replace(/\n/g, '<br>');
+      return html;
+    }
+
+    function renderOutput() {
+      if (currentTab === 'text') {
+        output.textContent = currentText;
+        output.style.whiteSpace = 'pre-wrap';
+      } else {
+        output.innerHTML = renderPreview(currentText);
+        output.style.whiteSpace = 'normal';
+      }
+    }
+
+    document.querySelectorAll('.preview-tabs button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.preview-tabs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTab = btn.dataset.tab;
+        renderOutput();
+      });
+    });
+
+    function generate() {
+      currentText = generateMessage();
+      renderOutput();
+    }
+
+    generateBtn.addEventListener('click', generate);
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(currentText);
+        copyBtn.textContent = 'Copied!';
+        copyBtn.classList.add('copied');
+        setTimeout(() => { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 1500);
+      } catch (e) {
+        copyBtn.textContent = 'Copy failed';
+      }
+    });
+
+    copyLinkBtn.addEventListener('click', async () => {
+      try {
+        const params = new URLSearchParams();
+        params.set('platform', platform.value);
+        params.set('tone', tone.value);
+        if (changeTitle.value) params.set('title', encodeURIComponent(changeTitle.value));
+        if (prUrl.value) params.set('url', encodeURIComponent(prUrl.value));
+        if (summary.value) params.set('summary', encodeURIComponent(summary.value));
+        if (author.value) params.set('author', encodeURIComponent(author.value));
+        if (reviewer.value) params.set('reviewer', encodeURIComponent(reviewer.value));
+        if (deployWindow.value) params.set('deploy', encodeURIComponent(deployWindow.value));
+        if (rollback.value) params.set('rollback', encodeURIComponent(rollback.value));
+        params.set('risk', getRisk());
+        const url = location.origin + location.pathname + '?' + params.toString();
+        await navigator.clipboard.writeText(url);
+        copyLinkBtn.textContent = 'Link Copied!';
+        setTimeout(() => { copyLinkBtn.textContent = 'Copy Share Link'; }, 1500);
+      } catch (e) {
+        copyLinkBtn.textContent = 'Copy failed';
+      }
+    });
+
+    // Live update on input change
+    [platform, tone, changeTitle, prUrl, summary, author, reviewer, deployWindow, rollback].forEach(el => {
+      el.addEventListener('input', generate);
+    });
+    document.querySelectorAll('input[name="risk"]').forEach(el => {
+      el.addEventListener('change', generate);
+    });
+
+    // Initial generate
+    generate();
+  })();
+  </script>
+  <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

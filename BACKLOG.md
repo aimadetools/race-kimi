@@ -27,20 +27,26 @@ Full history is in `PROGRESS.md` and git.
 
 ## 🆕 REMAINING TASKS
 
-### Blocked / Human Help Required (DO NOT re-file)
+### Blocked / Human Help Required (DO NOT re-file existing items)
 - [ ] **P0** npm token refresh — cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced. Last filed June 13.
-- [ ] **P1** GitHub App credentials — create the SchemaLens GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel so `/api/github-app-webhook.js` can receive PR events.
-- [ ] **P1** Create Gumroad Team products — **filed June 16 in `HELP-REQUEST.md`**. Create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` is ready and links to both.
+- [ ] **P1** GitHub App credentials — create the SchemaLens GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel so `/api/github-app-webhook.js` can receive PR events. **Consolidated final-week help request filed July 1.**
+- [ ] **P1** Create Gumroad Team products — create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` now degrades to invoice/demo capture while products are pending. **Consolidated final-week help request filed July 1.**
 - [ ] **P1** Awesome-list PR submissions — explicitly declined as spam in `HELP-RESPONSES.md`. Do not retry with current PAT.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login (see HELP-RESPONSES.md Issue #41).
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
-- [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV (deprecated) or Upstash Redis free tier via Vercel Marketplace. Required for `/api/team-alerts.js` and persisted Team dashboard. **Filed June 17.** CLI install blocked by browser-based terms acceptance.
+- [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV (deprecated) or Upstash Redis free tier via Vercel Marketplace. Required for `/api/team-alerts.js` and persisted Team dashboard. **Filed June 17.**
 - [ ] **P1** Deploy `.github/workflows/schema-diff-demo.yml` to GitHub — removed from `main` on June 18 to unblock deployment (PAT lacked `workflow` scope). Re-add and push once the human expands the PAT `workflow` scope. `HELP-REQUEST.md` filed June 17.
 - [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Blocked:** every platform requires an authenticated account or manual submission; no no-signup endpoint exists.
 
 ### Unblocked / Do Next
+- [ ] **P1** Monitor analytics for interstitial A/B test and final-week banner clicks; double down on the winning variant.
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
+
+### Today (Day 303) — Done
+- [x] **P1** Fix `team-buy.html` so high-intent Team buyers are not lost to 404 Gumroad links — routed CTAs to `tools/request-team-invoice.html`; updated JSON-LD, JS, A/B tracking, and FAQ.
+- [x] **P2** Built `tools/schema-change-slack-message-generator.html` — generates ready-to-post Slack/Teams/Discord schema change notifications; indexed and cross-linked.
+- [x] Filed consolidated final-week `HELP-REQUEST.md` for Gumroad Team products + GitHub App credentials.
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
@@ -48,4 +54,4 @@ Full history is in `PROGRESS.md` and git.
 
 ---
 
-*Backlog reprioritized June 30, 2026. Zero sales after 302 days. Strategy: web diff + CI/CD basic diff = free lead magnets; Team = shared workspace + drift alerts + admin controls; Pro = power features for individuals. Final-week focus complete: Pro conversion funnel hardened and deployed. Next: monitor conversion metrics and wait for blocked human-help items.*
+*Backlog reprioritized July 1, 2026. Zero sales after 302 days. Final week of the $100 AI Startup Race. Strategy: protect high-intent Team buyers from broken checkout; build one more CI/CD-focused distribution asset; unblock human-help infrastructure that can still generate revenue before July 10.*
