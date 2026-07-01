@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Schema Diff Impact Report Generator — Free Database Change Impact Analysis | SchemaLens</title>
+  <meta name="description" content="Generate a manager-ready database schema change impact report. Assess operational risk, application impact, downtime exposure, and required actions from any SQL diff.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-diff-impact-report-generator.html">
+  <meta property="og:title" content="Schema Diff Impact Report Generator — Free Database Change Impact Analysis">
+  <meta property="og:description" content="Generate a manager-ready database schema change impact report. Assess operational risk, application impact, downtime exposure, and required actions from any SQL diff.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-diff-impact-report-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Schema Diff Impact Report Generator — Free Database Change Impact Analysis">
+  <meta name="twitter:description" content="Generate a manager-ready database schema change impact report. Assess operational risk, application impact, downtime exposure, and required actions from any SQL diff.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Schema Diff Impact Report Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates manager-ready impact reports from schema diffs. Includes operational risk, application impact, downtime exposure, and recommended actions.",
+    "url": "https://schemalens.tech/tools/schema-diff-impact-report-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .announcement-bar {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
+
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1300px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 1100px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 160px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85rem; line-height: 1.6; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output {
+      background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px;
+      overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; min-height: 320px;
+    }
+
+    .preview-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .preview-tabs button { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+    .preview-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-box {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 14px; text-align: center;
+    }
+    .stat-box .num { font-size: 1.5rem; font-weight: 700; }
+    .stat-box .num.added { color: var(--success); }
+    .stat-box .num.removed { color: var(--danger); }
+    .stat-box .num.modified { color: var(--warning); }
+    .stat-box .num.breaking { color: var(--danger); }
+    .stat-box .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+    .risk-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+      font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+    }
+    .risk-low { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .risk-medium { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .risk-high { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+    .impact-section {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 16px; margin-bottom: 12px;
+    }
+    .impact-section h4 { font-size: 0.95rem; margin-bottom: 8px; color: var(--text); }
+    .impact-section ul { margin: 0; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .impact-section li { margin-bottom: 5px; }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="announcement-bar">
+    🏁 Final Week — Lifetime Pro <strong>$39</strong> until July 10. <a href="../launch-special.html">Claim yours →</a>
+  </div>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Schema Diff Impact Report Generator</h1>
+      <p>Turn any schema diff into a manager-ready impact report. Assess operational risk, application impact, downtime exposure, and the exact actions your team should take before deploying.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Schemas & context</h2>
+          <div class="field-row">
+            <div class="field">
+              <label for="dialect">SQL dialect</label>
+              <select id="dialect">
+                <option value="postgres">PostgreSQL</option>
+                <option value="mysql">MySQL / MariaDB</option>
+                <option value="sqlite">SQLite</option>
+                <option value="mssql">SQL Server</option>
+                <option value="oracle">Oracle</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="changeId">Change / ticket ID <span class="hint">(optional)</span></label>
+              <input type="text" id="changeId" placeholder="PROJ-1234">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="oldSchema">Current schema</label>
+            <textarea id="oldSchema" placeholder="CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending'
+);"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="newSchema">Proposed schema</label>
+            <textarea id="newSchema" placeholder="CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending',
+  priority VARCHAR(20) DEFAULT 'normal'
+);
+
+CREATE TABLE order_logs (
+  id SERIAL PRIMARY KEY,
+  order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+  event_type VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);"></textarea>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="environment">Target environment</label>
+              <select id="environment">
+                <option value="production">Production</option>
+                <option value="staging">Staging</option>
+                <option value="multi-region">Multi-region production</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="tableSize">Largest table size <span class="hint">(approximate)</span></label>
+              <select id="tableSize">
+                <option value="small">&lt; 100k rows</option>
+                <option value="medium">100k – 10M rows</option>
+                <option value="large">10M – 100M rows</option>
+                <option value="massive">&gt; 100M rows</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+            <button class="btn btn-primary" id="generateBtn" onclick="generateReport()">📊 Generate Impact Report</button>
+            <button class="btn btn-secondary" onclick="loadExample()">Load Example</button>
+            <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:24px;">
+          <h2>💡 Pro tip</h2>
+          <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6; margin:0;">
+            Impact reports help teams approve schema changes safely. To automate impact assessment on every PR, add the free <a href="../github-action.html">SchemaLens GitHub Action</a>. It diffs schemas, flags breaking changes, and posts reports directly in your pull requests.
+          </p>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel">
+          <h2>2. Generated impact report</h2>
+
+          <div id="statsSection" class="hidden">
+            <div class="stats-grid" id="statsGrid"></div>
+            <div style="margin-bottom:16px;">
+              <span id="riskBadge" class="risk-badge"></span>
+              <span id="breakingCount" style="margin-left:10px; color:var(--text-muted); font-size:0.85rem;"></span>
+            </div>
+          </div>
+
+          <div class="preview-tabs hidden" id="previewTabs">
+            <button class="active" onclick="showTab('markdown')" data-tab="markdown">Markdown</button>
+            <button onclick="showTab('plain')" data-tab="plain">Plain Text</button>
+          </div>
+
+          <div class="output-wrap">
+            <div id="output" class="output">Click "Generate Impact Report" to create a manager-ready impact analysis from your schema diff.</div>
+            <button class="btn btn-secondary btn-copy hidden" id="copyBtn" onclick="copyOutput()">Copy</button>
+          </div>
+
+          <div class="share-row hidden" id="shareRow">
+            <button class="btn btn-secondary" onclick="downloadReport()">⬇️ Download .md</button>
+            <button class="btn btn-secondary" onclick="copyShareUrl()">🔗 Copy Share URL</button>
+            <button class="btn btn-secondary" onclick="shareTwitter()">𝕏 Share on X</button>
+            <button class="btn btn-secondary" onclick="shareLinkedIn()">💼 Share on LinkedIn</button>
+          </div>
+
+          <div class="upsell" id="upsellBox" style="display:none;">
+            <h3>🚀 Make every schema change reviewable</h3>
+            <ul>
+              <li>Auto-generate impact reports on every pull request</li>
+              <li>Block high-risk changes with a breaking-change gate</li>
+              <li>Keep a shared Team dashboard of drift alerts and reports</li>
+            </ul>
+            <a href="../github-action.html" class="btn btn-primary">Add Free GitHub Action →</a>
+            <a href="../team/workspace-preview.html" style="margin-left:8px;" class="btn btn-secondary">Preview Team Workspace</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top:0;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../github-action.html">GitHub Action</a>
+          <a href="../team.html">Team</a>
+        </div>
+        <div class="footer-col">
+          <h4>Related Tools</h4>
+          <a href="../tools/schema-diff-pr-comment-generator.html">PR Comment Generator</a>
+          <a href="../tools/migration-runbook-generator.html">Migration Runbook Generator</a>
+          <a href="../tools/migration-test-plan-generator.html">Migration Test Plan Generator</a>
+          <a href="../tools/schema-change-checklist.html">Schema Change Checklist</a>
+          <a href="../tools/database-downtime-cost-calculator.html">Downtime Cost Calculator</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>window.module = window.module || { exports: {} };</script>
+<script src="../engine/engine.js"></script>
+<script>
+let currentReport = '';
+let currentPlain = '';
+let currentDiff = null;
+let currentDialect = 'postgres';
+
+function track(event, metadata) {
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track(event, metadata || {});
+  }
+}
+
+function getInputs() {
+  return {
+    dialect: document.getElementById('dialect').value,
+    oldSchema: document.getElementById('oldSchema').value,
+    newSchema: document.getElementById('newSchema').value,
+    changeId: document.getElementById('changeId').value.trim(),
+    environment: document.getElementById('environment').value,
+    tableSize: document.getElementById('tableSize').value
+  };
+}
+
+function setInputs(state) {
+  if (state.dialect) document.getElementById('dialect').value = state.dialect;
+  if (state.oldSchema !== undefined) document.getElementById('oldSchema').value = state.oldSchema;
+  if (state.newSchema !== undefined) document.getElementById('newSchema').value = state.newSchema;
+  if (state.changeId !== undefined) document.getElementById('changeId').value = state.changeId;
+  if (state.environment) document.getElementById('environment').value = state.environment;
+  if (state.tableSize) document.getElementById('tableSize').value = state.tableSize;
+}
+
+function encodeState(state) {
+  return btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+}
+
+function decodeState(hash) {
+  try {
+    return JSON.parse(decodeURIComponent(escape(atob(hash))));
+  } catch (e) {
+    return null;
+  }
+}
+
+function loadFromUrl() {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
+  const state = decodeState(hash);
+  if (state) {
+    setInputs(state);
+    generateReport(false);
+  }
+}
+
+function updateShareUrl() {
+  const state = getInputs();
+  const hash = encodeState(state);
+  history.replaceState(null, '', '#' + hash);
+}
+
+function generateReport(shouldTrack = true) {
+  const inputs = getInputs();
+  currentDialect = inputs.dialect;
+
+  if (!inputs.oldSchema.trim() || !inputs.newSchema.trim()) {
+    alert('Please paste both a current schema and a proposed schema.');
+    return;
+  }
+
+  try {
+    const oldSchema = parseSQL(inputs.oldSchema, inputs.dialect);
+    const newSchema = parseSQL(inputs.newSchema, inputs.dialect);
+    const diff = diffSchemas(oldSchema, newSchema);
+    const migration = generateMigration(diff, inputs.dialect);
+    const rollback = generateRollbackMigration(diff, inputs.dialect);
+    const breaking = detectBreakingChanges(diff);
+    const riskScore = calculateRiskScore(diff, breaking);
+    const warnings = typeof generateMigrationWarnings === 'function' ? generateMigrationWarnings(diff, inputs.dialect) : [];
+
+    currentDiff = diff;
+
+    const report = buildMarkdownReport({ inputs, diff, migration, rollback, breaking, riskScore, warnings });
+    const plain = buildPlainReport({ inputs, diff, migration, rollback, breaking, riskScore, warnings });
+
+    currentReport = report;
+    currentPlain = plain;
+
+    renderStats(diff, breaking, riskScore);
+    showTab('markdown');
+
+    document.getElementById('statsSection').classList.remove('hidden');
+    document.getElementById('previewTabs').classList.remove('hidden');
+    document.getElementById('copyBtn').classList.remove('hidden');
+    document.getElementById('shareRow').classList.remove('hidden');
+    document.getElementById('upsellBox').style.display = 'block';
+
+    updateShareUrl();
+
+    if (shouldTrack) {
+      track('impact_report_generated', {
+        dialect: inputs.dialect,
+        environment: inputs.environment,
+        table_size: inputs.tableSize,
+        risk_level: riskScore.level,
+        breaking_count: String(breaking.length)
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    document.getElementById('output').textContent = 'Error parsing schemas: ' + err.message + '\n\nTip: Make sure both inputs contain valid CREATE TABLE statements for the selected dialect.';
+    document.getElementById('statsSection').classList.add('hidden');
+    document.getElementById('previewTabs').classList.add('hidden');
+    document.getElementById('copyBtn').classList.add('hidden');
+    document.getElementById('shareRow').classList.add('hidden');
+    document.getElementById('upsellBox').style.display = 'none';
+    track('impact_report_error', { error: err.message });
+  }
+}
+
+function getChangeStats(diff, breaking) {
+  const addedTables = (diff.tablesAdded || []).length;
+  const removedTables = (diff.tablesRemoved || []).length;
+  const modifiedTables = (diff.tablesModified || []).length;
+  const addedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsAdded || []).length, 0);
+  const removedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsRemoved || []).length, 0);
+  const modifiedColumns = (diff.tablesModified || []).reduce((sum, t) => sum + (t.columnsModified || []).length, 0);
+  const addedIndexes = (diff.tablesModified || []).reduce((sum, t) => sum + (t.indexesAdded || []).length, 0);
+  const removedIndexes = (diff.tablesModified || []).reduce((sum, t) => sum + (t.indexesRemoved || []).length, 0);
+  const addedConstraints = (diff.tablesModified || []).reduce((sum, t) => sum + (t.constraintsAdded || []).length, 0);
+  const removedConstraints = (diff.tablesModified || []).reduce((sum, t) => sum + (t.constraintsRemoved || []).length, 0);
+
+  return {
+    addedTables, removedTables, modifiedTables,
+    addedColumns, removedColumns, modifiedColumns,
+    addedIndexes, removedIndexes, addedConstraints, removedConstraints,
+    totalChanges: addedTables + removedTables + modifiedTables + addedColumns + removedColumns + modifiedColumns + addedIndexes + removedIndexes + addedConstraints + removedConstraints
+  };
+}
+
+function renderStats(diff, breaking, riskScore) {
+  const stats = getChangeStats(diff, breaking);
+  const grid = document.getElementById('statsGrid');
+  grid.innerHTML = `
+    <div class="stat-box"><div class="num added">+${stats.addedTables}</div><div class="label">Tables added</div></div>
+    <div class="stat-box"><div class="num removed">−${stats.removedTables}</div><div class="label">Tables removed</div></div>
+    <div class="stat-box"><div class="num modified">${stats.modifiedTables}</div><div class="label">Tables modified</div></div>
+    <div class="stat-box"><div class="num breaking">${breaking.length}</div><div class="label">Breaking changes</div></div>
+  `;
+
+  const badge = document.getElementById('riskBadge');
+  const riskEmoji = riskScore.level === 'high' ? '🔴' : riskScore.level === 'medium' ? '🟡' : '🟢';
+  badge.className = 'risk-badge risk-' + riskScore.level;
+  badge.textContent = `${riskEmoji} ${riskScore.level} risk (${riskScore.score}/100)`;
+
+  document.getElementById('breakingCount').textContent = breaking.length === 1 ? '1 breaking change detected' : `${breaking.length} breaking changes detected`;
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.preview-tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('output').textContent = tab === 'markdown' ? currentReport : currentPlain;
+  track('impact_report_tab_switch', { tab });
+}
+
+function buildMarkdownReport({ inputs, diff, migration, rollback, breaking, riskScore, warnings }) {
+  const stats = getChangeStats(diff, breaking);
+  const lines = [];
+  const changeRef = inputs.changeId ? ` (${inputs.changeId})` : '';
+
+  lines.push(`# Database Schema Change Impact Report${changeRef}`);
+  lines.push('');
+  lines.push(`**Generated:** ${new Date().toISOString().split('T')[0]}  `);
+  lines.push(`**Environment:** ${inputs.environment}  `);
+  lines.push(`**Largest table size:** ${inputs.tableSize}  `);
+  lines.push(`**SQL dialect:** ${inputs.dialect}  `);
+  lines.push('');
+
+  lines.push('## 🎯 Executive Summary');
+  lines.push('');
+  const riskEmoji = riskScore.level === 'high' ? '🔴' : riskScore.level === 'medium' ? '🟡' : '🟢';
+  lines.push(`This schema change is assessed as **${riskEmoji} ${riskScore.level.toUpperCase()} RISK** (${riskScore.score}/100).`);
+  lines.push('');
+
+  if (breaking.length > 0) {
+    lines.push(`It contains **${breaking.length} breaking change${breaking.length === 1 ? '' : 's'}** that will likely require application code updates, consumer notifications, or a coordinated deployment plan.`);
+  } else if (stats.totalChanges === 0) {
+    lines.push('No structural differences were detected between the two schemas.');
+  } else {
+    lines.push('No breaking changes were detected. The change is additive or compatible, but still verify query plans and deployment timing.');
+  }
+  lines.push('');
+
+  lines.push('## 📊 Change Summary');
+  lines.push('');
+  lines.push('| Metric | Count |');
+  lines.push('|--------|-------|');
+  lines.push(`| Tables added | ${stats.addedTables} |`);
+  lines.push(`| Tables removed | ${stats.removedTables} |`);
+  lines.push(`| Tables modified | ${stats.modifiedTables} |`);
+  lines.push(`| Columns added | ${stats.addedColumns} |`);
+  lines.push(`| Columns removed | ${stats.removedColumns} |`);
+  lines.push(`| Columns modified | ${stats.modifiedColumns} |`);
+  lines.push(`| Indexes added | ${stats.addedIndexes} |`);
+  lines.push(`| Indexes removed | ${stats.removedIndexes} |`);
+  lines.push(`| Constraints added | ${stats.addedConstraints} |`);
+  lines.push(`| Constraints removed | ${stats.removedConstraints} |`);
+  lines.push(`| **Breaking changes** | **${breaking.length}** |`);
+  lines.push('');
+
+  lines.push('## ⚙️ Operational Impact');
+  lines.push('');
+  const opsItems = [];
+
+  if (stats.removedTables > 0) {
+    opsItems.push(`**${stats.removedTables} table(s) will be dropped.** Verify no application queries, reports, or downstream consumers reference them.`);
+  }
+  if (stats.removedColumns > 0) {
+    opsItems.push(`**${stats.removedColumns} column(s) will be removed.** Confirm no SELECT * consumers, ORM models, or analytics pipelines depend on them.`);
+  }
+  if (stats.modifiedColumns > 0) {
+    opsItems.push(`**${stats.modifiedColumns} column(s) will be altered.** Review for data type narrowing, nullability changes, or default value changes that can lock large tables.`);
+  }
+  if (stats.addedIndexes > 0) {
+    opsItems.push(`**${stats.addedIndexes} new index(es).** Adding indexes on large tables can block writes; consider online index creation where supported.`);
+  }
+  if (stats.removedIndexes > 0) {
+    opsItems.push(`**${stats.removedIndexes} index(es) will be removed.** Ensure query performance regressions are acceptable.`);
+  }
+  if (stats.addedConstraints > 0) {
+    opsItems.push(`**${stats.addedConstraints} new constraint(s).** Adding foreign keys or unique constraints on large tables can lock writes and fail if existing data violates them.`);
+  }
+
+  if ((inputs.tableSize === 'large' || inputs.tableSize === 'massive') && (stats.modifiedColumns + stats.addedIndexes + stats.addedConstraints + stats.removedColumns > 0)) {
+    opsItems.push(`**High downtime exposure:** With ${inputs.tableSize} tables, schema changes should use online schema-change tools (e.g. pt-online-schema-change, gh-ost, PostgreSQL CONCURRENTLY).`);
+  }
+
+  if (opsItems.length === 0) {
+    opsItems.push('No significant operational impact identified. Change appears to be purely additive.');
+  }
+
+  for (const item of opsItems) {
+    lines.push(`- ${item}`);
+  }
+  lines.push('');
+
+  lines.push('## 🧩 Application Impact');
+  lines.push('');
+  const appItems = [];
+
+  if (breaking.length > 0) {
+    appItems.push('**Breaking changes detected.** Application code, API contracts, ORM models, and client integrations may need updates before deployment.');
+  }
+  if (stats.removedColumns > 0) {
+    appItems.push('**Query compatibility:** Remove dropped columns from SELECT lists, INSERT statements, and ORM schemas to avoid runtime errors.');
+  }
+  if (stats.addedColumns > 0) {
+    appItems.push('**New fields available:** Application code can safely ignore new columns if they have defaults or are nullable; document them for API consumers.');
+  }
+  if (stats.addedTables > 0) {
+    appItems.push(`**${stats.addedTables} new table(s).** Update entity diagrams, API documentation, and access-control rules if needed.`);
+  }
+
+  if (appItems.length === 0) {
+    appItems.push('No direct application impact identified.');
+  }
+
+  for (const item of appItems) {
+    lines.push(`- ${item}`);
+  }
+  lines.push('');
+
+  if (breaking.length > 0) {
+    lines.push('## ⚠️ Breaking Changes');
+    lines.push('');
+    for (const b of breaking.slice(0, 20)) {
+      lines.push(`- **${b.type}** in \`${b.table}\`${b.column ? ` (\`${b.column}\`)` : ''}: ${b.message}`);
+    }
+    if (breaking.length > 20) {
+      lines.push(`- *…and ${breaking.length - 20} more*`);
+    }
+    lines.push('');
+  }
+
+  if (warnings && warnings.length > 0) {
+    lines.push('## 🚨 Migration Warnings');
+    lines.push('');
+    for (const w of warnings.slice(0, 15)) {
+      lines.push(`- **${w.category || 'Warning'}:** ${w.message}`);
+    }
+    if (warnings.length > 15) {
+      lines.push(`- *…and ${warnings.length - 15} more warnings*`);
+    }
+    lines.push('');
+  }
+
+  lines.push('## ✅ Recommended Actions');
+  lines.push('');
+  const actions = [];
+  if (breaking.length > 0) {
+    actions.push('Obtain explicit approval from application owners and API consumers before deploying.');
+    actions.push('Run the migration in staging with production-like data and query load.');
+  }
+  if (inputs.tableSize === 'large' || inputs.tableSize === 'massive') {
+    actions.push('Use an online schema-change tool for operations on large tables.');
+  }
+  if (stats.addedConstraints > 0) {
+    actions.push('Validate existing data against new constraints before running the migration.');
+  }
+  if (stats.removedTables > 0 || stats.removedColumns > 0) {
+    actions.push('Back up affected tables/columns before removal.');
+  }
+  actions.push('Test the rollback script in staging.');
+  actions.push('Notify on-call and schedule the deploy window.');
+
+  for (const action of actions) {
+    lines.push(`- [ ] ${action}`);
+  }
+  lines.push('');
+
+  if (migration && migration.trim()) {
+    lines.push('## 🚀 Forward Migration');
+    lines.push('');
+    lines.push('```sql');
+    lines.push(migration.trim());
+    lines.push('```');
+    lines.push('');
+  }
+
+  if (rollback && rollback.trim()) {
+    lines.push('## ↩️ Rollback Plan');
+    lines.push('');
+    lines.push('```sql');
+    lines.push(rollback.trim());
+    lines.push('```');
+    lines.push('');
+  }
+
+  lines.push('---');
+  lines.push('*Generated with [SchemaLens](https://schemalens.tech)* — free schema diff impact reports for teams.');
+
+  return lines.join('\n');
+}
+
+function buildPlainReport({ inputs, diff, migration, rollback, breaking, riskScore, warnings }) {
+  const stats = getChangeStats(diff, breaking);
+  const lines = [];
+  const changeRef = inputs.changeId ? ` (${inputs.changeId})` : '';
+
+  lines.push(`Database Schema Change Impact Report${changeRef}`);
+  lines.push('');
+  lines.push(`Generated: ${new Date().toISOString().split('T')[0]}`);
+  lines.push(`Environment: ${inputs.environment}`);
+  lines.push(`Largest table size: ${inputs.tableSize}`);
+  lines.push(`SQL dialect: ${inputs.dialect}`);
+  lines.push('');
+  lines.push(`Risk level: ${riskScore.level.toUpperCase()} (${riskScore.score}/100)`);
+  lines.push(`Breaking changes: ${breaking.length}`);
+  lines.push(`Tables added: ${stats.addedTables}`);
+  lines.push(`Tables removed: ${stats.removedTables}`);
+  lines.push(`Tables modified: ${stats.modifiedTables}`);
+  lines.push(`Columns added: ${stats.addedColumns}`);
+  lines.push(`Columns removed: ${stats.removedColumns}`);
+  lines.push(`Columns modified: ${stats.modifiedColumns}`);
+  lines.push('');
+
+  if (breaking.length > 0) {
+    lines.push('Breaking Changes:');
+    for (const b of breaking) {
+      lines.push(`- ${b.type} in ${b.table}${b.column ? ` (${b.column})` : ''}: ${b.message}`);
+    }
+    lines.push('');
+  }
+
+  if (migration && migration.trim()) {
+    lines.push('Forward Migration:');
+    lines.push(migration.trim());
+    lines.push('');
+  }
+
+  if (rollback && rollback.trim()) {
+    lines.push('Rollback Plan:');
+    lines.push(rollback.trim());
+    lines.push('');
+  }
+
+  lines.push('Generated with SchemaLens — https://schemalens.tech');
+
+  return lines.join('\n');
+}
+
+function copyOutput() {
+  const text = document.getElementById('output').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 1500);
+    track('impact_report_copy', { tab: document.querySelector('.preview-tabs button.active')?.dataset.tab || 'markdown' });
+  });
+}
+
+function downloadReport() {
+  const blob = new Blob([currentReport], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `schema-impact-report-${new Date().toISOString().split('T')[0]}.md`;
+  a.click();
+  URL.revokeObjectURL(url);
+  track('impact_report_download');
+}
+
+function copyShareUrl() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    track('impact_report_share_url_copy');
+    alert('Share URL copied to clipboard.');
+  });
+}
+
+function shareTwitter() {
+  const text = encodeURIComponent('Generated a schema change impact report with SchemaLens — free database diff analysis for teams.');
+  const url = encodeURIComponent(window.location.href);
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+  track('impact_report_share_twitter');
+}
+
+function shareLinkedIn() {
+  const url = encodeURIComponent(window.location.href);
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+  track('impact_report_share_linkedin');
+}
+
+function loadExample() {
+  setInputs({
+    dialect: 'postgres',
+    changeId: 'PROJ-8842',
+    environment: 'production',
+    tableSize: 'large',
+    oldSchema: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(100),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  total DECIMAL(10,2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT NOW()
+);`,
+    newSchema: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(100),
+  phone VARCHAR(20),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  total DECIMAL(10,2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending',
+  priority VARCHAR(20) DEFAULT 'normal' NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE order_logs (
+  id SERIAL PRIMARY KEY,
+  order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  event_type VARCHAR(50) NOT NULL,
+  payload JSONB,
+  created_at TIMESTAMP DEFAULT NOW()
+);`
+  });
+  track('impact_report_load_example');
+  generateReport();
+}
+
+function clearAll() {
+  setInputs({
+    dialect: 'postgres',
+    changeId: '',
+    environment: 'production',
+    tableSize: 'small',
+    oldSchema: '',
+    newSchema: ''
+  });
+  document.getElementById('output').textContent = 'Click "Generate Impact Report" to create a manager-ready impact analysis from your schema diff.';
+  document.getElementById('statsSection').classList.add('hidden');
+  document.getElementById('previewTabs').classList.add('hidden');
+  document.getElementById('copyBtn').classList.add('hidden');
+  document.getElementById('shareRow').classList.add('hidden');
+  document.getElementById('upsellBox').style.display = 'none';
+  history.replaceState(null, '', window.location.pathname);
+  track('impact_report_clear');
+}
+
+window.addEventListener('DOMContentLoaded', loadFromUrl);
+</script>
+</body>
+</html>

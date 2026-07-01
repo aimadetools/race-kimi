@@ -137,6 +137,7 @@ const pages = [
   { path: '/tools/schema-change-checklist.html', name: 'Database Schema Change Checklist' },
   { path: '/tools/schema-diff-precommit-hook.html', name: 'Schema Diff Pre-commit Hook Generator' },
   { path: '/tools/schema-diff-pr-comment-generator.html', name: 'Schema Diff PR Comment Generator' },
+  { path: '/tools/schema-diff-impact-report-generator.html', name: 'Schema Diff Impact Report Generator' },
   { path: '/tools/embed-generator.html', name: 'Embed Generator' },
   // Note: Badge Generator is tested separately — it loads /api/badge images which 404 on static server
   // { path: '/tools/badge-generator.html', name: 'Badge Generator' },
