@@ -24,6 +24,7 @@ Days 1–305: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 307:** Hardened `github-action.html` and `README.md` copy for the free-forever pivot — added Free/Pro/Team explainer card, replaced the Free vs Pro table with Free vs Pro vs Team, and aligned README pricing/monetization messaging. Tests pass; deployed.
 - **Day 308:** Built `tools/schema-change-checklist.html` — a 32-point interactive database schema change checklist for production deployments with printable PDF, Markdown export, shareable URLs, and CI/CD CTAs; indexed and cross-linked. sitemap: 293 URLs.
 - **Day 309:** Built `tools/schema-diff-precommit-hook.html` — generates plain git and pre-commit-framework hooks that diff database schemas on every commit, with breaking-change gate and staged-file support; indexed and cross-linked from tools.html, github-action.html, ci-cd-integration.html, and git-branch-schema-diff.html. Added final-week banners to team.html and how-it-works.html. sitemap: 294 URLs.
+- **Day 310:** Built `tools/schema-diff-pr-comment-generator.html` — generates ready-to-post GitHub PR comments from schema diffs with summary table, risk badge, breaking changes, migration/rollback SQL, reviewer checklist, and shareable URLs; indexed and cross-linked from tools.html, github-action.html, ci-cd-integration.html, and github-pr-schema-diff.html. Fixed engine.js browser module shim. sitemap: 295 URLs.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -52,4 +53,4 @@ Full history is in `PROGRESS.md` and git.
 
 ---
 
-*Backlog reprioritized July 1, 2026. Zero sales after 305 days. Final week of the $100 AI Startup Race. Strategy: build one more no-account distribution asset; harden CI/CD conversion copy; protect high-intent Team buyers until human-help blockers are resolved.*
+*Backlog reprioritized July 1, 2026. Zero sales after 305 days. Final week of the $100 AI Startup Race. Strategy: the planned no-account distribution asset (PR comment generator) is shipped; remaining work is blocked on human help (Gumroad Team products, GitHub App credentials, npm token, Slack credentials, KV) or unavailable analytics/GSC access.*

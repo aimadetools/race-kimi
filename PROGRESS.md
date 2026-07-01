@@ -121,6 +121,59 @@
 | 304 | Jul 1 | Fixed analytics event allowlist bug that silently rejected most custom events; added final-week banner impression/click/dismiss tracking; shifted Paywall Timing v2 to 75% interstitial; built admin A/B Test Results dashboard. |
 | 305 | Jul 1 | Ended Paywall Timing v2 with interstitial as winner (100% traffic); retired post-result Pro value banner; refreshed e2e tests for interstitial-only flow; updated admin dashboard copy. |
 | 306 | Jul 1 | Built Database Migration Test Plan Generator micro-tool — turns SQL migrations into production-ready testing checklists with dialect/table-size-aware guidance; indexed and cross-linked. sitemap: 292 URLs. |
+| 307 | Jul 1 | Hardened `github-action.html` and `README.md` copy for free-forever pivot — added Free/Pro/Team explainer card, replaced Free vs Pro table with Free vs Pro vs Team, aligned README pricing/monetization messaging. Tests pass; deployed. |
+
+---
+
+## Day 310 — Schema Diff PR Comment Generator (July 1, 2026)
+
+### Focus
+Build one more final-week no-account distribution asset: a tool that turns any schema diff into a ready-to-post GitHub PR comment, driving CI/CD awareness and GitHub Action adoption.
+
+### What Was Done
+1. **Built `tools/schema-diff-pr-comment-generator.html`**
+   - Client-side diff using the SchemaLens engine (`engine/engine.js`) — old/new schema parsing, diff, migration/rollback generation, breaking-change detection, and risk scoring.
+   - Generates a polished GitHub-flavored markdown PR comment with:
+     - Summary table (tables/columns added, removed, modified, breaking count)
+     - Risk level badge
+     - Breaking changes list
+     - Tables changed overview
+     - Forward migration SQL block
+     - Rollback SQL block
+     - Reviewer checklist
+     - Optional metadata (author, reviewer, deploy window, PR number)
+   - Plain-text preview tab for non-GitHub use.
+   - Copy-to-clipboard, download as `.md`, and shareable URL actions.
+   - Load-example and clear controls.
+   - Analytics events for generate, copy, download, share, tab switch, load example, and errors.
+   - JSON-LD SoftwareApplication schema and full OpenGraph/Twitter meta tags.
+   - Final-week announcement banner and responsive dark/light theme.
+
+2. **Cross-linked and indexed**
+   - Added a card on `tools.html` in the local/CI workflow section.
+   - Linked from `github-action.html` footer, `ci-cd-integration.html` related guides, and `github-pr-schema-diff.html` footer.
+   - Added `https://schemalens.tech/tools/schema-diff-pr-comment-generator.html` to `sitemap.xml` (294 → 295 URLs).
+   - Added to `tests/e2e.spec.js` page-load list.
+
+3. **Fixed engine.js browser integration**
+   - Added `window.module` shim before loading `engine/engine.js` to prevent a `module is not defined` console error in the browser.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 209 passed, 14 API tests skipped in static server mode
+- ✅ New `tools/schema-diff-pr-comment-generator.html` page loads without console errors
+- ✅ Sitemap.xml valid and contains the new URL
+- ✅ No broken cross-links detected
+- ✅ Deployed to Vercel production
+
+### Why This Matters
+- Targets high-intent keywords like "schema diff PR comment", "database migration PR comment template", and "GitHub PR schema diff comment" not covered by existing pages.
+- Gives reviewers a polished, copy-paste-ready comment for manual schema reviews.
+- Every generated comment ends with a CTA to the free GitHub Action, converting manual reviews into automated CI/CD adoption.
+
+### Next
+- Monitor `pr_comment_*` analytics events for engagement.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 
 ---
 
@@ -202,87 +255,3 @@ Execute the top unblocked P2 backlog task: build one more final-week distributio
 - Monitor `schema_change_checklist_*` analytics events for engagement.
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 
----
-
-## Day 307 — Harden GitHub Action / README Copy for Free-Forever Pivot (July 1, 2026)
-
-### Focus
-Execute the top unblocked P1 backlog task: harden the highest-traffic CI/CD entry point (`github-action.html` and `README.md`) so it clearly explains the free-forever GitHub Action and converts visitors to Pro/Team upgrades.
-
-### What Was Done
-1. **`github-action.html` conversion upgrade**
-   - Added a prominent "Free forever in CI/CD. Upgrade only when you need power features." explainer card directly below the hero copy-paste CTA, with three columns for Free, Pro ($39 lifetime), and Team ($29/mo).
-   - Replaced the inaccurate "Free vs Pro" table with a clear **Free vs Pro vs Team** comparison table that correctly maps persisted alert history and shared workspaces to Team, and saved history / micro-tools to Pro.
-   - Added plan-comparison and Team-plan CTAs with analytics event tags (`github_action_see_pricing`, `github_action_team_cta_top`, `github_action_compare_plans`, `github_action_team_plan_cta`).
-   - Kept all existing starter-workflow, live-demo, setup-wizard, and PR-diff-tool CTAs intact.
-
-2. **`README.md` free-forever alignment**
-   - Updated the pricing table to reflect the free-forever pivot: Free now includes full migration/rollback, exports, and CI/CD; Pro is repositioned around saved history, shareable links, micro-tools, no nags, priority support, and early access.
-   - Added an explicit "Free forever" bullet in the GitHub Action feature list.
-   - Added a short explanation of how SchemaLens monetizes (free Action, paid Pro/Team upgrades) so developers understand the model.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 206 passed, 14 API tests skipped in static server mode
-- ✅ `github-action.html` loads without console errors and renders the new comparison table
-- ✅ `README.md` renders correctly and no broken internal links
-
-### Why This Matters
-- The GitHub Action page is the highest-traffic CI/CD entry point; unclear plan boundaries hurt conversion.
-- Explicitly stating "free forever" removes friction for engineering teams evaluating CI/CD tools.
-- Clear Pro vs Team upsells guide individuals to the $39 lifetime Pro and teams to the $29/mo Team plan.
-
-### Next
-- Monitor `github_action_*` analytics events for clicks on the new plan CTAs.
-- If time remains before July 10, build one more final-week distribution asset or harden the CI/CD integration landing page copy.
-- Continue waiting on human help for Gumroad Team products and GitHub App credentials.
-
----
-
-## Day 306 — Migration Test Plan Generator (July 1, 2026)
-
-### Focus
-Build one final autonomous distribution asset for the last week of the race: a Database Migration Test Plan Generator that turns any SQL migration into a production-ready testing checklist.
-
-### What Was Done
-1. **Built `tools/migration-test-plan-generator.html`**
-   - Two input modes: paste migration SQL only, or provide Old + New schema.
-   - Dialect selector (PostgreSQL, MySQL, SQLite, SQL Server, Oracle) and table-size selector (<100K, 100K–10M, >10M rows).
-   - Operation detection: CREATE/DROP TABLE, ADD/DROP/ALTER COLUMN, renames, CREATE INDEX, ADD FOREIGN KEY, DROP CONSTRAINT, data modifications.
-   - Generated four structured sections:
-     - Pre-Migration Checks (backup, staging run, peer review, deployment window, lock/replica analysis for large tables)
-     - Migration Execution (transaction wrapping, statement validation, output/timing capture)
-     - Operation-Specific Tests (dialect-specific guidance for NOT VALID + VALIDATE, CONCURRENTLY, ONLINE=ON, ALGORITHM=INPLACE, etc.)
-     - Post-Migration Verification (schema diff, smoke tests, data integrity, query performance)
-     - Rollback Verification (tested rollback script, data-loss checks, trigger conditions)
-   - Risk score and level (Low/Medium/High) based on detected operations and table size.
-   - Interactive checkboxes with localStorage progress persistence.
-   - Copy as Markdown, Copy Share URL, and Print actions.
-   - Sample data, responsive layout, dark/light theme, JSON-LD SoftwareApplication schema.
-
-2. **Cross-linked the new tool**
-   - Added a card on `tools.html` in the migration/runbook section.
-   - Linked from `migration-checklist.html` related-resources paragraph.
-   - Added footer link on `github-action.html`.
-   - Added CTA link from `tools/safe-migration-checker.html` and `tools/migration-runbook-generator.html`.
-
-3. **SEO / discovery**
-   - Added `https://schemalens.tech/tools/migration-test-plan-generator.html` to `sitemap.xml` (291 → 292 URLs).
-   - Added to `tests/e2e.spec.js` page-load list.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 206 passed, 14 API tests skipped in static server mode
-- ✅ New `tools/migration-test-plan-generator.html` page loads without console errors
-- ✅ Sitemap.xml valid and contains the new URL
-- ✅ No broken cross-links detected
-
-### Why This Matters
-- Targets high-intent keywords like "database migration test plan", "test database migration", and "migration testing checklist" that were not covered by existing pages.
-- Creates a team/CI/CD-adjacent asset that naturally leads to the GitHub Action and Team plan.
-- Provides genuine value during the final week without requiring any human account or paid channel.
-
-### Next
-- Continue waiting on human help for Gumroad Team products and GitHub App credentials.
-- Harden the GitHub Action landing page copy around the free-forever pivot if time remains.
-- Monitor analytics once `SUPABASE_SERVICE_ROLE_KEY` is available.
