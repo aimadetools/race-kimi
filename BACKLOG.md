@@ -17,11 +17,13 @@ Days 1–302: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Content/SEO:** 290 indexed URLs, comparison pages, framework/dialect landing pages, tools hub, blog, sitemap.
 - **Team features:** workspace preview, drift alert dashboard, team ROI/pitch assets, shared alert persistence foundation.
 - **Recent (Days 293–302):** Free schema drift alerts, `/api/schema-diff-report.js` HTML report artifact, CI/CD wizard promotion, alert analytics, live demo workflow, report artifact demo GIF, live demo landing page, schema diff report SEO page, schema diff report example gallery, schema diff vs manual conversion calculator, Pro conversion funnel hardening (interstitial bug fix, free-forever copy alignment, final-week banner consistency).
+- **Day 303:** Protected Team buyers from broken Gumroad links by routing `team-buy.html` CTAs to the invoice request form; built `tools/schema-change-slack-message-generator.html`; filed consolidated final-week help request for Gumroad Team products + GitHub App credentials.
+- **Day 304:** Fixed `/api/analytics.js` allowlist bug that was silently rejecting most custom events; added final-week banner impression/click/dismiss tracking; shifted Paywall Timing v2 traffic to 75% interstitial; added A/B Test Results dashboard to `admin.html`.
 
 Full history is in `PROGRESS.md` and git.
 
-### ✅ Completed Today (Day 302)
-- **P1** Pro conversion funnel hardening — fixed `revealDiffResults` scope bug that broke diff rendering for the interstitial A/B control variant; aligned Pro preview interstitial and Pro value banner copy with the free-forever pivot (rollback and exports are free); updated site-wide final-week banners in `app.html` and `blog.html`; fixed pricing FAQ; deployed. 205 e2e tests pass.
+### ✅ Completed Today (Day 304)
+- **P1** Analytics infrastructure + A/B monitoring — replaced rigid analytics event allowlist with regex validator; tracked final-week banner interactions; boosted interstitial variant to 75% based on user-testing feedback; built admin A/B dashboard. 206 e2e tests pass.
 
 ---
 
@@ -40,13 +42,14 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Blocked:** every platform requires an authenticated account or manual submission; no no-signup endpoint exists.
 
 ### Unblocked / Do Next
-- [ ] **P1** Monitor analytics for interstitial A/B test and final-week banner clicks; double down on the winning variant.
+- [x] **P1** Monitor analytics for interstitial A/B test and final-week banner clicks; double down on the winning variant. *(Done: dashboard built; interstitial boosted to 75% as the user-testing-backed winner.)*
+- [ ] **P2** Review A/B dashboard after a few hundred events; if interstitial shows clear lift, move it to 100% and retire the post-result banner.
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 
-### Today (Day 303) — Done
-- [x] **P1** Fix `team-buy.html` so high-intent Team buyers are not lost to 404 Gumroad links — routed CTAs to `tools/request-team-invoice.html`; updated JSON-LD, JS, A/B tracking, and FAQ.
-- [x] **P2** Built `tools/schema-change-slack-message-generator.html` — generates ready-to-post Slack/Teams/Discord schema change notifications; indexed and cross-linked.
-- [x] Filed consolidated final-week `HELP-REQUEST.md` for Gumroad Team products + GitHub App credentials.
+### Today (Day 304) — Done
+- [x] **P1** Fixed analytics allowlist bug and restored tracking for `pro_interstitial_*`, `pro_value_banner_*`, `final_week_*`, and all other custom events.
+- [x] **P1** Added final-week banner analytics (impression, click, dismiss) and shifted Paywall Timing v2 to 75% interstitial.
+- [x] **P2** Built A/B Test Results dashboard in `admin.html` with variant-level conversion tables.
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
