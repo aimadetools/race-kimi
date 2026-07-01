@@ -92,7 +92,7 @@ jobs:
 
 ### Features
 
-- **Free tier** — works without a license key
+- **Free forever** — full schema diff, migration SQL, rollback, PR comments, Check Runs, Job Summary, and drift alerts all work without a license key
 - **Breaking change detection** — fail the build before bad migrations reach production
 - **PR comments** — formatted diff summary posted automatically
 - **GitHub Check Runs** — native PR status checks with risk scores
@@ -101,6 +101,8 @@ jobs:
 - **Smart skip** — only runs when `.sql` files change
 - **🔔 Free schema drift alerts** — Slack/Teams notifications + shareable alert pages on every diff. No license key required. Team adds 90-day persisted history.
 - **5 SQL dialects** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle
+
+> 💡 **How SchemaLens makes money:** the GitHub Action is free forever. Individuals upgrade to Pro for saved history and micro-tools; teams upgrade to Team for a shared workspace with persisted alert history.
 
 ### 📄 HTML Report Artifact Demo
 
@@ -190,9 +192,9 @@ Add one input to the SchemaLens GitHub Action and every diff result becomes a Sl
 
 | Plan | Price | What's Included |
 |------|-------|-----------------|
-| **Free** | $0 | Diff unlimited tables. Visual diff. Breaking change detection. Risk score. No account needed. |
-| **Pro** | $39 lifetime | Unlimited tables. Full migration generation. Export Markdown / PDF / SQL / JSON. Prisma & Drizzle export. Save & share diffs. History. API access. All future updates included. |
-| **Team** | $29/mo or $290/yr | Everything in Pro. Shared cloud workspace. Diff versioning. Slack alerts. Org-wide billing. |
+| **Free** | $0 | Diff unlimited tables. Visual diff. Breaking change detection. Risk score. Full migration + rollback. Markdown / SQL / JSON export. CI/CD integrations. No account needed. |
+| **Pro** | $39 lifetime | Everything in Free, plus unlimited saved diff history, shareable links with custom names, access to all 80+ micro-tools, no exit-intent popups, priority support, Pro badge, and early access to new features. |
+| **Team** | $29/mo or $290/yr | Everything in Pro, plus a shared cloud workspace, 90-day persisted schema drift alert history, Slack/Teams alerts, admin controls, and org-wide billing. |
 
 **[→ Upgrade to Pro — $39 Lifetime](https://schemalens.tech/pricing.html)**
 

@@ -130,6 +130,28 @@
       <a href="github-pr-schema-diff.html" class="btn btn-secondary" style="font-size:0.85rem;" data-event="github_action_pr_diff_tool">Try on a public PR</a>
     </div>
 
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; margin: 24px 0;">
+      <h3 style="font-size: 1.05rem; margin-bottom: 12px; text-align: center;">Free forever in CI/CD. Upgrade only when you need power features.</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; font-size: 0.9rem; margin-bottom: 16px;">
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px;">
+          <strong style="color: var(--success);">Free</strong>
+          <p style="margin: 6px 0 0; color: var(--text-muted); line-height: 1.45;">Full diff, migration SQL, rollback, PR comments, Check Runs, Job Summary, and free Slack/Teams drift alerts.</p>
+        </div>
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px;">
+          <strong style="color: var(--primary);">Pro — $39 lifetime</strong>
+          <p style="margin: 6px 0 0; color: var(--text-muted); line-height: 1.45;">Saved diff history, shareable links, all 80+ micro-tools, no exit-intent nags, and priority support.</p>
+        </div>
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px;">
+          <strong style="color: #a855f7;">Team — $29/mo</strong>
+          <p style="margin: 6px 0 0; color: var(--text-muted); line-height: 1.45;">Shared workspace, 90-day persisted alert history, admin controls, and unlimited members.</p>
+        </div>
+      </div>
+      <div style="text-align: center;">
+        <a href="pricing.html" class="btn btn-secondary" data-event="github_action_see_pricing">Compare plans →</a>
+        <a href="team-buy.html" class="btn btn-primary" style="margin-left: 8px;" data-event="github_action_team_cta_top">Start Team plan →</a>
+      </div>
+    </div>
+
     <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius); padding: 18px 20px; margin: 24px 0; color: #166534;">
       <strong>Even faster:</strong> Add the SchemaLens starter workflow directly from the <strong>Actions → New workflow</strong> tab in your repo. <a href="https://github.com/aimadetools/race-kimi/tree/main/.github/workflow-templates" style="text-decoration: underline;" target="_blank" rel="noopener">View template →</a>
     </div>
@@ -325,27 +347,35 @@
       <p style="margin-top: 16px;"><a href="team/schema-drift-dashboard.html" class="btn btn-primary">Open Team Dashboard</a> <a href="schema-drift-alert.html" class="btn btn-secondary">See Sample Alert</a> <a href="slack-app.html" class="btn btn-secondary">Add Slack App</a></p>
     </div>
 
-    <h2>Free vs Pro</h2>
+    <h2>Free vs Pro vs Team</h2>
+    <p style="color: var(--text-muted); font-size: 0.95rem; margin: -8px 0 16px;">The GitHub Action is free for every repo. Upgrade to Pro for personal power features, or Team when you need a shared workspace.</p>
     <table class="comparison-table">
       <thead>
-        <tr><th>Feature</th><th>Free Tier</th><th>Pro (optional)</th></tr>
+        <tr><th>Feature</th><th>Free</th><th>Pro — $39 lifetime</th><th>Team — $29/mo</th></tr>
       </thead>
       <tbody>
-        <tr><td>Schema diff summary</td><td>✅</td><td>✅</td></tr>
-        <tr><td>Breaking change detection</td><td>✅</td><td>✅</td></tr>
-        <tr><td>Risk score</td><td>✅</td><td>✅</td></tr>
-        <tr><td>PR comments</td><td>✅</td><td>✅</td></tr>
-        <tr><td>GitHub Check Runs</td><td>✅</td><td>✅</td></tr>
-        <tr><td>Rich Job Summary</td><td>✅</td><td>✅</td></tr>
-        <tr><td>Smart Skip (no SQL changes)</td><td>✅</td><td>✅</td></tr>
-        <tr><td>Full migration SQL</td><td>✅ Complete script</td><td>✅ Complete script</td></tr>
-        <tr><td>Markdown export</td><td>✅</td><td>✅</td></tr>
-        <tr><td>JSON export</td><td>✅</td><td>✅</td></tr>
-        <tr><td>Rate limit</td><td>15/min API · 10/min drift alerts</td><td>30/min API · 60/min drift alerts</td></tr>
-        <tr><td>Schema drift alerts (Slack/Teams)</td><td>✅</td><td>✅</td></tr>
-        <tr><td>Persisted alert history</td><td>—</td><td>✅ 90 days</td></tr>
+        <tr><td>Schema diff summary</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Breaking change detection</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Risk score</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>PR comments</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>GitHub Check Runs</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Rich Job Summary</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Smart Skip (no SQL changes)</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Full migration SQL + rollback</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Markdown / JSON export</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Schema drift alerts (Slack/Teams)</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Saved diff history & shareable links</td><td>—</td><td>✅ Unlimited</td><td>✅ Unlimited</td></tr>
+        <tr><td>80+ micro-tools</td><td>—</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Priority support</td><td>—</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Persisted alert history</td><td>—</td><td>—</td><td>✅ 90 days</td></tr>
+        <tr><td>Shared workspace & admin controls</td><td>—</td><td>—</td><td>✅</td></tr>
+        <tr><td>Unlimited members</td><td>—</td><td>—</td><td>✅</td></tr>
       </tbody>
     </table>
+    <div style="text-align: center; margin: 20px 0 32px;">
+      <a href="pricing.html" class="btn btn-secondary" data-event="github_action_compare_plans">Compare all plans →</a>
+      <a href="team-buy.html" class="btn btn-primary" style="margin-left: 8px;" data-event="github_action_team_plan_cta">Start Team plan →</a>
+    </div>
 
     <h2>Full configuration reference</h2>
     <div class="code-block">

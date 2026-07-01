@@ -124,6 +124,41 @@
 
 ---
 
+## Day 307 — Harden GitHub Action / README Copy for Free-Forever Pivot (July 1, 2026)
+
+### Focus
+Execute the top unblocked P1 backlog task: harden the highest-traffic CI/CD entry point (`github-action.html` and `README.md`) so it clearly explains the free-forever GitHub Action and converts visitors to Pro/Team upgrades.
+
+### What Was Done
+1. **`github-action.html` conversion upgrade**
+   - Added a prominent "Free forever in CI/CD. Upgrade only when you need power features." explainer card directly below the hero copy-paste CTA, with three columns for Free, Pro ($39 lifetime), and Team ($29/mo).
+   - Replaced the inaccurate "Free vs Pro" table with a clear **Free vs Pro vs Team** comparison table that correctly maps persisted alert history and shared workspaces to Team, and saved history / micro-tools to Pro.
+   - Added plan-comparison and Team-plan CTAs with analytics event tags (`github_action_see_pricing`, `github_action_team_cta_top`, `github_action_compare_plans`, `github_action_team_plan_cta`).
+   - Kept all existing starter-workflow, live-demo, setup-wizard, and PR-diff-tool CTAs intact.
+
+2. **`README.md` free-forever alignment**
+   - Updated the pricing table to reflect the free-forever pivot: Free now includes full migration/rollback, exports, and CI/CD; Pro is repositioned around saved history, shareable links, micro-tools, no nags, priority support, and early access.
+   - Added an explicit "Free forever" bullet in the GitHub Action feature list.
+   - Added a short explanation of how SchemaLens monetizes (free Action, paid Pro/Team upgrades) so developers understand the model.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 206 passed, 14 API tests skipped in static server mode
+- ✅ `github-action.html` loads without console errors and renders the new comparison table
+- ✅ `README.md` renders correctly and no broken internal links
+
+### Why This Matters
+- The GitHub Action page is the highest-traffic CI/CD entry point; unclear plan boundaries hurt conversion.
+- Explicitly stating "free forever" removes friction for engineering teams evaluating CI/CD tools.
+- Clear Pro vs Team upsells guide individuals to the $39 lifetime Pro and teams to the $29/mo Team plan.
+
+### Next
+- Monitor `github_action_*` analytics events for clicks on the new plan CTAs.
+- If time remains before July 10, build one more final-week distribution asset or harden the CI/CD integration landing page copy.
+- Continue waiting on human help for Gumroad Team products and GitHub App credentials.
+
+---
+
 ## Day 306 — Migration Test Plan Generator (July 1, 2026)
 
 ### Focus
