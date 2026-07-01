@@ -111,32 +111,10 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'event_type is required and must be ≤64 chars' });
   }
 
-  const allowedEvents = new Set([
-    'page_view',
-    'diff_run',
-    'export_markdown',
-    'export_pdf',
-    'export_sql',
-    'export_json',
-    'share_diff',
-    'license_activate',
-    'tool_used',
-    'sample_loaded',
-    'breaking_changes_viewed',
-    'ref_click',
-    'ref_visit',
-    'share_cta_clicked',
-    'demo_auto_run',
-    'launch_special_cta_click',
-    'utm_visit',
-    'schema_drift_alert_viewed',
-    'schema_drift_tier_badge_shown',
-    'schema_drift_upgrade_clicked',
-    'team_dashboard_viewed'
-  ]);
-
-  if (!allowedEvents.has(event_type)) {
-    return res.status(400).json({ error: 'Invalid event_type' });
+  // Accept any lowercase, underscore-separated event name up to 64 chars.
+  // A fixed allowlist silently broke new A/B-test and feature events.
+  if (!/^[a-z0-9_]{1,64}$/.test(event_type)) {
+    return res.status(400).json({ error: 'event_type must be 1–64 lowercase letters, numbers, or underscores' });
   }
 
   const payload = {

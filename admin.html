@@ -626,6 +626,19 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>🧪 A/B Test Results</h3>
+          <span class="admin-badge" id="badgeABTests">Live</span>
+        </div>
+        <div class="admin-section-body" id="abTestBody">
+          <div class="admin-empty">A/B test metrics require service_role access. Configure in Vercel environment variables.</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshABTests()">Refresh</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>🐱 Product Hunt Monitor</h3>
           <span class="admin-badge" id="badgePHUnread">0</span>
         </div>
@@ -2091,6 +2104,124 @@
       downloadCsv('schemalens-oss-sponsorship-applications.csv', headers.slice(0, -1), rows);
     }
 
+    async function refreshABTests() {
+      const body = document.getElementById('abTestBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await adminFetch('analytics', 1000);
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No analytics events yet.</div>';
+          return;
+        }
+        const countBy = (type, keyFn) => {
+          const map = {};
+          for (const e of data) {
+            if (e.event_type !== type) continue;
+            const key = keyFn ? keyFn(e) : '_';
+            if (key == null) continue;
+            map[key] = (map[key] || 0) + 1;
+          }
+          return map;
+        };
+        const assignedV2 = countBy('paywall_timing_v2_assigned', e => e.metadata?.variant);
+        const interstitialShown = countBy('pro_interstitial_shown', e => e.metadata?.variant);
+        const interstitialUpgrade = countBy('pro_interstitial_upgrade_click', e => e.metadata?.variant);
+        const interstitialTeam = countBy('pro_interstitial_team_click', e => e.metadata?.variant);
+        const interstitialContinue = countBy('pro_interstitial_continue_click', e => e.metadata?.variant);
+        const bannerClickByPaywall = countBy('pro_value_banner_click', e => e.metadata?.paywall_variant);
+        const valueAssigned = countBy('pro_value_banner_ab_assigned', e => e.metadata?.variant);
+        const valueImpression = countBy('pro_value_banner_impression', e => e.metadata?.variant);
+        const valueClick = countBy('pro_value_banner_click', e => e.metadata?.variant);
+        const valueDismiss = countBy('pro_value_banner_dismissed', e => e.metadata?.variant);
+        const fwImpression = countBy('final_week_banner_impression', e => e.metadata?.banner);
+        const fwClick = countBy('final_week_banner_click', e => e.metadata?.banner);
+        const fwDismiss = countBy('final_week_banner_dismissed', e => e.metadata?.banner);
+        const fwBuy = countBy('final_week_buy_click', e => e.metadata?.location);
+
+        const variantsV2 = ['control', 'interstitial'];
+        const valueVariants = ['control', 'v1', 'v2', 'v3'];
+        const fmtPct = (num, den) => den > 0 ? ((num / den) * 100).toFixed(1) + '%' : '—';
+
+        const v2Rows = variantsV2.map(v => {
+          const assigned = assignedV2[v] || 0;
+          const shown = interstitialShown[v] || 0;
+          const upg = interstitialUpgrade[v] || 0;
+          const team = interstitialTeam[v] || 0;
+          const cont = interstitialContinue[v] || 0;
+          const bannerClicks = bannerClickByPaywall[v] || 0;
+          return `<tr>
+            <td><span class="admin-badge">${escapeHtml(v)}</span></td>
+            <td>${assigned.toLocaleString()}</td>
+            <td>${shown.toLocaleString()}</td>
+            <td>${upg.toLocaleString()} <span style="color:var(--text-muted);font-size:0.75rem;">(${fmtPct(upg, assigned)})</span></td>
+            <td>${team.toLocaleString()} <span style="color:var(--text-muted);font-size:0.75rem;">(${fmtPct(team, assigned)})</span></td>
+            <td>${cont.toLocaleString()}</td>
+            <td>${bannerClicks.toLocaleString()} <span style="color:var(--text-muted);font-size:0.75rem;">(${fmtPct(bannerClicks, assigned)})</span></td>
+          </tr>`;
+        }).join('');
+
+        const valueRows = valueVariants.map(v => {
+          const assigned = valueAssigned[v] || 0;
+          const imp = valueImpression[v] || 0;
+          const clk = valueClick[v] || 0;
+          const dis = valueDismiss[v] || 0;
+          return `<tr>
+            <td><span class="admin-badge">${escapeHtml(v)}</span></td>
+            <td>${assigned.toLocaleString()}</td>
+            <td>${imp.toLocaleString()}</td>
+            <td>${clk.toLocaleString()} <span style="color:var(--text-muted);font-size:0.75rem;">(${fmtPct(clk, imp)})</span></td>
+            <td>${dis.toLocaleString()} <span style="color:var(--text-muted);font-size:0.75rem;">(${fmtPct(dis, imp)})</span></td>
+          </tr>`;
+        }).join('');
+
+        const fwBanners = ['announcement_bar', 'race_to_finish'];
+        const fwRows = fwBanners.map(b => {
+          const imp = fwImpression[b] || 0;
+          const clk = fwClick[b] || 0;
+          const dis = fwDismiss[b] || 0;
+          return `<tr>
+            <td>${escapeHtml(b)}</td>
+            <td>${imp.toLocaleString()}</td>
+            <td>${clk.toLocaleString()} <span style="color:var(--text-muted);font-size:0.75rem;">(${fmtPct(clk, imp)})</span></td>
+            <td>${dis.toLocaleString()} <span style="color:var(--text-muted);font-size:0.75rem;">(${fmtPct(dis, imp)})</span></td>
+          </tr>`;
+        }).join('');
+
+        const buyRows = Object.entries(fwBuy).sort((a, b) => b[1] - a[1]).map(([loc, count]) => `<tr><td>${escapeHtml(loc)}</td><td>${count.toLocaleString()}</td></tr>`).join('');
+
+        body.innerHTML = `
+          <div style="padding:12px;">
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px;">Based on last 1,000 analytics events. Current traffic split: Paywall Timing v2 = 25% control / 75% interstitial.</p>
+
+            <h4 style="margin:0 0 10px;font-size:0.95rem;">Paywall Timing v2 (pre-result interstitial)</h4>
+            <table class="admin-table" style="margin-bottom:20px;">
+              <thead><tr><th>Variant</th><th>Assigned</th><th>Interstitial Shown</th><th>Upgrade Click</th><th>Team Click</th><th>Continue Click</th><th>Pro Banner Click</th></tr></thead>
+              <tbody>${v2Rows}</tbody>
+            </table>
+
+            <h4 style="margin:0 0 10px;font-size:0.95rem;">Pro Value Banner</h4>
+            <table class="admin-table" style="margin-bottom:20px;">
+              <thead><tr><th>Variant</th><th>Assigned</th><th>Impressions</th><th>Clicks</th><th>Dismisses</th></tr></thead>
+              <tbody>${valueRows}</tbody>
+            </table>
+
+            <h4 style="margin:0 0 10px;font-size:0.95rem;">Final-Week Banners</h4>
+            <table class="admin-table" style="margin-bottom:20px;">
+              <thead><tr><th>Banner</th><th>Impressions</th><th>Clicks</th><th>Dismisses</th></tr></thead>
+              <tbody>${fwRows}</tbody>
+            </table>
+
+            <h4 style="margin:0 0 10px;font-size:0.95rem;">Launch-Special Buy Clicks</h4>
+            <table class="admin-table">
+              <thead><tr><th>Location</th><th>Clicks</th></tr></thead>
+              <tbody>${buyRows || '<tr><td colspan="2">No clicks yet.</td></tr>'}</tbody>
+            </table>
+          </div>`;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load A/B metrics.<br><small>${e.message}</small><br><small>Ensure SUPABASE_SERVICE_ROLE_KEY is set in Vercel environment variables.</small></div>`;
+      }
+    }
+
     function refreshAll() {
       refreshFeedback();
       refreshLocalInvoices();
@@ -2100,6 +2231,7 @@
       refreshComments();
       refreshFunnel();
       refreshLaunchSpecial();
+      refreshABTests();
       refreshAnalytics();
       refreshLeads();
       refreshAffiliates();

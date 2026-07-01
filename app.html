@@ -1600,8 +1600,11 @@ function getFreeTierLimit() {
   const PAYWALL_KEY_V2 = 'sl_paywall_timing_variant_v2';
   let variant = localStorage.getItem(PAYWALL_KEY_V2);
   if (!variant) {
-    // A/B test: control (post-result banner) vs interstitial (pre-result Pro preview)
-    variant = Math.random() < 0.5 ? 'control' : 'interstitial';
+    // A/B test: control (post-result banner) vs interstitial (pre-result Pro preview).
+    // User-testing said showing Pro value before the free result is the right timing,
+    // so we are doubling down on the interstitial variant (75%) while keeping control
+    // as a holdout to measure the lift.
+    variant = Math.random() < 0.75 ? 'interstitial' : 'control';
     localStorage.setItem(PAYWALL_KEY_V2, variant);
     if (window.SchemaLensAnalytics) {
       window.SchemaLensAnalytics.track('paywall_timing_v2_assigned', { variant, test: 'paywall_timing_v2_june2026' });
@@ -1774,9 +1777,10 @@ function getFreeTierLimit() {
   </style>
 </head>
 <body>
-  <div class="announcement-bar">
-    🏁 Final Week — Lifetime Pro <strong>$39</strong> until July 10. <a href="launch-special.html">Claim yours →</a>
+  <div class="announcement-bar" id="finalWeekAnnouncementBar">
+    🏁 Final Week — Lifetime Pro <strong>$39</strong> until July 10. <a href="launch-special.html" id="finalWeekAnnouncementLink" onclick="if(window.SchemaLensAnalytics)window.SchemaLensAnalytics.track('final_week_banner_click',{banner:'announcement_bar'})">Claim yours →</a>
   </div>
+  <script>(function(){ if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('final_week_banner_impression',{banner:'announcement_bar'}); })();</script>
     <div id="offlineBanner" class="offline-banner">You're offline. Your last diff is still available.</div>
   <nav class="nav">
     <div class="container nav-inner">
@@ -1836,7 +1840,7 @@ function getFreeTierLimit() {
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px;">
         <span style="font-size:1.2rem;">🏁</span>
-        <span style="font-size:0.9rem;color:var(--text);"><strong>🏁 Final Week — <span id="raceToFinishCountdown" style="color:var(--danger);font-weight:600;"></span> left</strong> — The $100 AI Startup Race ends July 10. <strong>Lifetime Pro for $39</strong>. <a href="launch-special.html" style="color:var(--danger);font-weight:600;text-decoration:underline;">See the offer →</a></span>
+        <span style="font-size:0.9rem;color:var(--text);"><strong>🏁 Final Week — <span id="raceToFinishCountdown" style="color:var(--danger);font-weight:600;"></span> left</strong> — The $100 AI Startup Race ends July 10. <strong>Lifetime Pro for $39</strong>. <a href="launch-special.html" id="raceToFinishLink" style="color:var(--danger);font-weight:600;text-decoration:underline;" onclick="if(window.SchemaLensAnalytics)window.SchemaLensAnalytics.track('final_week_banner_click',{banner:'race_to_finish'})">See the offer →</a></span>
       </div>
       <button onclick="dismissRaceToFinishBanner()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.4rem;line-height:1;padding:4px;" aria-label="Dismiss banner">×</button>
     </div>
@@ -1884,6 +1888,7 @@ function getFreeTierLimit() {
     const b = document.getElementById('raceToFinishBanner');
     if (b) b.style.display = 'none';
     localStorage.setItem('raceToFinishBannerDismissed', Date.now().toString());
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('final_week_banner_dismissed', { banner: 'race_to_finish' });
   }
   function isRaceToFinish() {
     const now = new Date();
@@ -1899,6 +1904,7 @@ function getFreeTierLimit() {
     }
     const b = document.getElementById('raceToFinishBanner');
     if (b) b.style.display = 'block';
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('final_week_banner_impression', { banner: 'race_to_finish' });
     const cd = document.getElementById('raceToFinishCountdown');
     if (!cd) return;
     function update() {
