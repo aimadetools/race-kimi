@@ -125,6 +125,44 @@
 
 ---
 
+## Day 311 — Trust & Conversion Hardening: Consistent Guarantees + Trust Badges (July 1, 2026)
+
+### Focus
+Shift away from three straight micro-tool sessions and attack the #1 user-testing blocker: trust gap and purchase friction. Standardize the refund guarantee across every customer-facing page and add prominent trust-badge bars at the highest-intent conversion points.
+
+### What Was Done
+1. **Standardized refund guarantee to 14 days site-wide**
+   - The original Gumroad Lifetime Pro product was configured with a 14-day money-back guarantee (`marketing/gumroad-product.md`).
+   - The site had drifted into a mix of 14-day and 30-day promises, creating a potential false-advertising risk.
+   - Updated every HTML page mentioning the guarantee to 14 days: `app.html`, `pricing.html`, `index.html`, `pricing-b.html`, `launch-special.html`, `pro-tour.html`, `founding-customer.html`, `product-hunt.html`, `show-hn.html`, `indiehackers.html`, `open.html`, `9-deal.html`, `staging-vs-production-schema-diff.html`, `team-buy.html`, `team-pitch.html`, `database-schema-sync.html`, `sql-diff-online.html`, `schema-migration-tool.html`, and `admin.html`.
+
+2. **Added trust-badge bars at key conversion points**
+   - `index.html` homepage hero: 14-day guarantee, no data sent to servers, one-time payment, instant lifetime access.
+   - `pricing.html` hero: same four trust badges directly under the H1/subtitle.
+   - `app.html` Pro preview modal: trust badges above the purchase CTA.
+   - `app.html` pre-result Pro interstitial: trust badges above the Lifetime Pro / Team CTAs, reinforcing the purchase decision.
+
+3. **Preserved existing analytics and A/B test state**
+   - No changes to paywall timing, interstitial logic, or variant assignment.
+   - Trust badges use existing design tokens and pill styles for visual consistency.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 209 passed, 14 API tests skipped in static server mode
+- ✅ No console errors on homepage, pricing, or app interstitial
+- ✅ No remaining 30-day guarantee references in customer-facing HTML
+
+### Why This Matters
+- **Trust:** User testing (Issue #61) identified "no testimonials, no logos, no trust signals" as a top-3 reason not to buy. The new badges directly address privacy, risk reversal, pricing clarity, and instant gratification.
+- **Consistency:** Aligns every page with the actual Gumroad listing, eliminating refund-policy confusion.
+- **Conversion:** Badges appear above the fold on the homepage, above pricing cards, and inside the winning interstitial purchase flow.
+
+### Next
+- Monitor `pro_interstitial_upgrade_click` and homepage CTA clicks for any lift.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
+
+---
+
 ## Day 310 — Schema Diff PR Comment Generator (July 1, 2026)
 
 ### Focus
