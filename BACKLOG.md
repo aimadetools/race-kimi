@@ -28,6 +28,7 @@ Full history is in `PROGRESS.md` and git.
 
 ### ✅ Completed Today (Day 305)
 - **P2** Paywall Timing v2 winner rollout — moved interstitial to 100% traffic, retired the post-result Pro value banner, converted `lib/pro-value-banner-ab-test.js` to a retired shim, updated e2e tests for interstitial-only flow, and refreshed admin A/B dashboard copy. 205 e2e tests pass.
+- **P1** Interstitial A/B monitoring concluded — dashboard built on Day 304; boosted to 75% then 100% interstitial based on user-testing signal.
 
 ---
 
@@ -46,8 +47,6 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Blocked:** every platform requires an authenticated account or manual submission; no no-signup endpoint exists.
 
 ### Unblocked / Do Next
-- [x] **P1** Monitor analytics for interstitial A/B test and final-week banner clicks; double down on the winning variant. *(Done: dashboard built; interstitial boosted to 75% as the user-testing-backed winner.)*
-- [x] **P2** Review A/B dashboard after a few hundred events; if interstitial shows clear lift, move it to 100% and retire the post-result banner. *(Done: moved to 100% interstitial; retired post-result Pro value banner and its A/B test.)*
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 
 ### Today (Day 304) — Done
