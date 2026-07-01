@@ -124,6 +124,46 @@
 
 ---
 
+## Day 309 — Schema Diff Pre-commit Hook Generator (July 1, 2026)
+
+### Focus
+Build a final-week CI/CD-adjacent distribution asset that helps developers catch breaking schema changes before commit, while cross-promoting the GitHub Action and Pro/Team plans.
+
+### What Was Done
+1. **Built `tools/schema-diff-precommit-hook.html`**
+   - Generates both a plain git `pre-commit` hook and a `pre-commit` framework YAML config.
+   - Configurable old/new schema file paths, SQL dialect (PostgreSQL/MySQL/SQLite/SQL Server/Oracle), output format (markdown/JSON), fail-on-breaking gate, and staged-file mode.
+   - Generated hooks call the free SchemaLens `/api/free-diff` endpoint with jq-assembled JSON payloads.
+   - Includes copy-to-clipboard, download, and shareable URL actions with analytics events.
+   - JSON-LD SoftwareApplication schema and full OpenGraph/Twitter meta tags.
+
+2. **Cross-linked and indexed**
+   - Added a card on `tools.html` in the local/CI workflow section.
+   - Linked from `github-action.html` footer, `ci-cd-integration.html` related guides, and `tools/git-branch-schema-diff.html` CTA.
+   - Added `https://schemalens.tech/tools/schema-diff-precommit-hook.html` to `sitemap.xml` (293 → 294 URLs).
+   - Added to `tests/e2e.spec.js` page-load list.
+
+3. **Final-week banner coverage**
+   - Added consistent final-week announcement bars to `team.html` and `how-it-works.html`, matching the rest of the site.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 208 passed, 14 API tests skipped in static server mode
+- ✅ New `tools/schema-diff-precommit-hook.html` page loads without console errors
+- ✅ Sitemap.xml valid and contains the new URL
+- ✅ No broken cross-links detected
+
+### Why This Matters
+- Targets high-intent keywords like "schema diff pre-commit hook", "database schema diff git hook", and "block breaking schema changes before commit" not covered by existing pages.
+- Extends SchemaLens from CI/CD pipelines into the local developer workflow, creating another organic discovery surface.
+- Every generated hook includes a CTA to the free GitHub Action and Team plan, turning local setup into a pipeline upsell.
+
+### Next
+- Monitor `precommit_hook_*` analytics events for engagement.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
+
+---
+
 ## Day 308 — Database Schema Change Checklist Micro-Tool (July 1, 2026)
 
 ### Focus

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schema Diff Pre-commit Hook Generator — Stop Breaking Changes Before They Ship | SchemaLens</title>
+<meta name="description" content="Generate a pre-commit hook or plain git hook that diffs your database schema before every commit. Catch breaking schema changes locally. Free. No signup.">
+<link rel="canonical" href="https://schemalens.tech/tools/schema-diff-precommit-hook.html">
+<meta property="og:title" content="Schema Diff Pre-commit Hook Generator — Stop Breaking Changes Before They Ship">
+<meta property="og:description" content="Generate a pre-commit hook that diffs your database schema before every commit. Catch breaking schema changes locally.">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-diff-precommit-hook.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Schema Diff Pre-commit Hook Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Generate pre-commit hooks for database schema diffs, Plain git hook support, pre-commit framework support, Breaking change gate, PostgreSQL MySQL SQLite SQL Server Oracle support",
+  "url": "https://schemalens.tech/tools/schema-diff-precommit-hook.html"
+}
+</script>
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-hover: #334155;
+  --border: #334155;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --secondary: #8b5cf6;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.announcement-bar {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: #fff;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+.announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+}
+nav a.logo {
+  font-weight: 700; font-size: 1.2rem; color: var(--text); text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+nav a.link { color: var(--text-muted); text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+nav a.link:hover { color: var(--text); }
+.container { max-width: 960px; margin: 0 auto; padding: 24px; }
+header { text-align: center; padding: 48px 24px 32px; }
+header h1 {
+  font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 12px;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 28px; margin-bottom: 20px;
+}
+.card h2 { font-size: 1.15rem; margin-bottom: 16px; }
+.card h3 { font-size: 1rem; margin: 20px 0 10px; color: var(--text-muted); }
+
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+@media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+
+.input-group { display: flex; flex-direction: column; gap: 6px; }
+.input-group.full-width { grid-column: 1 / -1; }
+.input-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+.input-group input, .input-group select, .input-group textarea {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; color: var(--text); font-size: 0.95rem; font-family: inherit;
+}
+.input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+  outline: none; border-color: var(--primary);
+}
+.input-group small { font-size: 0.8rem; color: var(--text-muted); }
+
+.checkbox-row {
+  display: flex; align-items: center; gap: 10px; margin-top: 8px;
+}
+.checkbox-row input { width: 18px; height: 18px; accent-color: var(--primary); }
+.checkbox-row label { font-size: 0.9rem; color: var(--text); }
+
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 24px; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; border: none; text-decoration: none; transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+.btn-success { background: var(--success); color: #fff; }
+
+.tab-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.tab-btn {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
+  padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 500;
+}
+.tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.code-box {
+  background: #0b1220; border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; margin-top: 12px;
+}
+.code-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border);
+}
+.code-header span { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+.copy-btn {
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+  padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 500;
+}
+.copy-btn:hover { border-color: var(--primary); }
+pre {
+  margin: 0; padding: 20px; overflow-x: auto;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; font-size: 0.82rem;
+  line-height: 1.6; color: #e2e8f0;
+}
+
+.steps {
+  display: grid; gap: 14px; margin-top: 16px;
+}
+.step {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px;
+}
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--primary);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+}
+.step-content h4 { font-size: 1rem; margin-bottom: 4px; }
+.step-content p { color: var(--text-muted); font-size: 0.9rem; }
+
+.cta-banner {
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08));
+  border: 1px solid rgba(99,102,241,0.3); border-radius: var(--radius);
+  padding: 24px; text-align: center; margin-top: 24px;
+}
+.cta-banner h3 { margin-bottom: 8px; }
+.cta-banner p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px; }
+
+.footer-note {
+  text-align: center; color: var(--text-muted); font-size: 0.85rem;
+  margin-top: 32px; padding-bottom: 40px;
+}
+
+.feature-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;
+  margin-top: 16px;
+}
+.feature-card {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px;
+}
+.feature-card h4 { font-size: 1rem; margin-bottom: 6px; }
+.feature-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+.msg { margin-top: 12px; min-height: 24px; font-weight: 500; }
+.msg.success { color: var(--success); }
+.msg.error { color: var(--danger); }
+</style>
+</head>
+<body>
+
+<div class="announcement-bar">
+  🏁 Final Week — Lifetime Pro <strong>$39</strong> until July 10. <a href="../launch-special.html">Claim yours →</a>
+</div>
+
+<nav>
+  <a href="/" class="logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="7" fill="url(#logoGrad)"/>
+      <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+    </svg>
+    SchemaLens
+  </a>
+  <div>
+    <a href="../app.html" class="link">App</a>
+    <a href="../pricing.html" class="link">Pricing</a>
+    <a href="../tools.html" class="link">Tools</a>
+    <a href="../github-action.html" class="link">GitHub Action</a>
+  </div>
+</nav>
+
+<header>
+  <h1>Schema Diff Pre-commit Hook Generator</h1>
+  <p>Stop breaking schema changes before they leave your machine. Generate a pre-commit hook that diffs your old and new schema files on every commit — locally, privately, and for free.</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>🔧 Configure your hook</h2>
+    <div class="form-grid">
+      <div class="input-group">
+        <label for="oldPath">Old schema file path</label>
+        <input type="text" id="oldPath" value="db/schema.sql" placeholder="e.g. db/schema.sql">
+        <small>The schema file at the base branch or previous state.</small>
+      </div>
+      <div class="input-group">
+        <label for="newPath">New schema file path</label>
+        <input type="text" id="newPath" value="db/schema.sql" placeholder="e.g. db/schema.sql">
+        <small>The schema file in your working tree. Can be the same path if it changes during development.</small>
+      </div>
+      <div class="input-group">
+        <label for="dialect">SQL dialect</label>
+        <select id="dialect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="format">Output format</label>
+        <select id="format">
+          <option value="markdown">Markdown summary</option>
+          <option value="json">JSON (for CI parsing)</option>
+        </select>
+      </div>
+      <div class="input-group full-width">
+        <label>Hook style</label>
+        <div class="tab-row" id="hookStyleTabs">
+          <button class="tab-btn active" data-style="plain">Plain git hook</button>
+          <button class="tab-btn" data-style="precommit-framework">pre-commit framework</button>
+        </div>
+        <small><strong>Plain git hook</strong> works in any repo. <strong>pre-commit framework</strong> is for Python/pre-commit users and keeps hooks versioned.</small>
+      </div>
+      <div class="input-group full-width">
+        <div class="checkbox-row">
+          <input type="checkbox" id="failOnBreaking" checked>
+          <label for="failOnBreaking">Fail the commit if breaking changes are detected</label>
+        </div>
+      </div>
+      <div class="input-group full-width">
+        <div class="checkbox-row">
+          <input type="checkbox" id="useStaged" checked>
+          <label for="useStaged">Use staged copies of schema files (recommended)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="generateBtn">Generate hook</button>
+      <button class="btn btn-secondary" id="copyBtn">Copy to clipboard</button>
+      <button class="btn btn-secondary" id="downloadBtn">Download file</button>
+      <button class="btn btn-secondary" id="shareBtn">Copy share URL</button>
+    </div>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="card" id="outputCard" style="display:none;">
+    <div class="code-box">
+      <div class="code-header">
+        <span id="filenameLabel">.git/hooks/pre-commit</span>
+        <button class="copy-btn" id="copyBtn2">Copy</button>
+      </div>
+      <pre><code id="hookOutput"></code></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⚡ How to install</h2>
+    <div class="steps" id="installSteps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Save the hook</h4>
+          <p>For the plain git hook, save it to <code>.git/hooks/pre-commit</code> and make it executable: <code>chmod +x .git/hooks/pre-commit</code>. For the pre-commit framework, add the YAML to <code>.pre-commit-config.yaml</code>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Commit a schema change</h4>
+          <p>The hook runs automatically when you commit any file. It diffs your configured schema paths and prints a summary to your terminal.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Block breaking changes</h4>
+          <p>With "Fail on breaking" enabled, the commit is rejected if SchemaLens detects dropped tables, columns, or other risky changes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🛡️ What it catches</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>🔴 Breaking changes</h4>
+        <p>Dropped tables, dropped columns, type changes, and removed constraints block the commit.</p>
+      </div>
+      <div class="feature-card">
+        <h4>🟡 Safe migrations</h4>
+        <p>Added tables, columns, and indexes pass through with a clear report.</p>
+      </div>
+      <div class="feature-card">
+        <h4>📊 Risk score</h4>
+        <p>Every diff gets a 0–100 risk score so reviewers know what to prioritize.</p>
+      </div>
+      <div class="feature-card">
+        <h4>🔒 Privacy first</h4>
+        <p>Schema files are sent to SchemaLens for diffing; no database connection required.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-banner">
+    <h3>Want schema diff checks on every pull request?</h3>
+    <p>The free SchemaLens GitHub Action comments schema diffs directly on PRs — no local setup required.</p>
+    <a href="../github-action.html" class="btn btn-primary">Add the GitHub Action →</a>
+    <a href="../team-buy.html" class="btn btn-secondary" style="margin-left:10px;">See Team plan</a>
+  </div>
+
+  <div class="footer-note">
+    Generated hooks use the free SchemaLens API. No API key required. <a href="../privacy-policy.html">Privacy policy</a> · <a href="../pricing.html">Pricing</a>
+  </div>
+</div>
+
+<script src="../lib/analytics-client.js"></script>
+<script>
+(function() {
+  const $ = id => document.getElementById(id);
+  const oldPathInput = $('oldPath');
+  const newPathInput = $('newPath');
+  const dialectInput = $('dialect');
+  const formatInput = $('format');
+  const failOnBreakingInput = $('failOnBreaking');
+  const useStagedInput = $('useStaged');
+  const generateBtn = $('generateBtn');
+  const copyBtn = $('copyBtn');
+  const downloadBtn = $('downloadBtn');
+  const shareBtn = $('shareBtn');
+  const copyBtn2 = $('copyBtn2');
+  const hookOutput = $('hookOutput');
+  const outputCard = $('outputCard');
+  const filenameLabel = $('filenameLabel');
+  const msgEl = $('msg');
+
+  let currentStyle = 'plain';
+  let currentOutput = '';
+  let currentFilename = '.git/hooks/pre-commit';
+
+  function setMsg(text, type) {
+    msgEl.textContent = text;
+    msgEl.className = 'msg ' + (type || '');
+    setTimeout(() => { msgEl.textContent = ''; msgEl.className = 'msg'; }, 3000);
+  }
+
+  function shellQuote(str) {
+    // Escape single quotes for shell: ' -> '\''
+    return "'" + str.replace(/'/g, "'\\''") + "'";
+  }
+
+  function generatePlainHook() {
+    const oldPath = oldPathInput.value.trim() || 'db/schema.sql';
+    const newPath = newPathInput.value.trim() || oldPath;
+    const dialect = dialectInput.value;
+    const format = formatInput.value;
+    const failOnBreaking = failOnBreakingInput.checked;
+    const useStaged = useStagedInput.checked;
+
+    const lines = [];
+    lines.push('#!/usr/bin/env bash');
+    lines.push('# SchemaLens schema diff pre-commit hook');
+    lines.push('# Generated by https://schemalens.tech/tools/schema-diff-precommit-hook.html');
+    lines.push('set -euo pipefail');
+    lines.push('');
+    lines.push('OLD_SCHEMA=' + shellQuote(oldPath));
+    lines.push('NEW_SCHEMA=' + shellQuote(newPath));
+    lines.push('');
+    if (useStaged) {
+      lines.push('# Stash unstaged changes so we diff against what is actually being committed');
+      lines.push('git stash push -q --keep-index --message "schemalens-pre-commit-stash"');
+      lines.push('cleanup() { git stash pop -q || true; }');
+      lines.push('trap cleanup EXIT');
+      lines.push('');
+    }
+    lines.push('if [ ! -f "$NEW_SCHEMA" ]; then');
+    lines.push('  echo "Schema file not found: $NEW_SCHEMA"');
+    lines.push('  exit 0');
+    lines.push('fi');
+    lines.push('');
+    lines.push('echo "🔍 Running SchemaLens schema diff..."');
+    lines.push('');
+    lines.push('RESPONSE=$(curl -s -X POST "https://schemalens.tech/api/free-diff" \\');
+    lines.push('  -H "Content-Type: application/json" \\');
+    lines.push('  -d "$(jq -n \\');
+    lines.push('    --arg schemaA "$(cat \\"$OLD_SCHEMA\\")" \\');
+    lines.push('    --arg schemaB "$(cat \\"$NEW_SCHEMA\\")" \\');
+    lines.push('    --arg dialect ' + shellQuote(dialect) + ' \\');
+    lines.push('    --arg format ' + shellQuote(format) + ' \\');
+    lines.push("    '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')\")");
+    lines.push('');
+    lines.push('# Check for API errors');
+    lines.push('if echo "$RESPONSE" | jq -e \'.error\' >/dev/null 2>&1; then');
+    lines.push('  echo "❌ SchemaLens error: $(echo "$RESPONSE" | jq -r \'.error\')"');
+    lines.push('  exit 1');
+    lines.push('fi');
+    lines.push('');
+    lines.push('# Print summary');
+    lines.push('RISK=$(echo "$RESPONSE" | jq -r \'.riskScore.label // "Unknown"\')');
+    lines.push('SCORE=$(echo "$RESPONSE" | jq -r \'.riskScore.score // 0\')');
+    lines.push('BC=$(echo "$RESPONSE" | jq -r \'(.summary.breakingChangeCount // (.breakingChanges | length) // 0)\')');
+    lines.push('TA=$(echo "$RESPONSE" | jq -r \'.summary.tablesAdded // 0\')');
+    lines.push('TR=$(echo "$RESPONSE" | jq -r \'.summary.tablesRemoved // 0\')');
+    lines.push('TM=$(echo "$RESPONSE" | jq -r \'.summary.tablesModified // 0\')');
+    lines.push('');
+    lines.push('echo ""');
+    lines.push('echo "SchemaLens diff report"');
+    lines.push('echo "======================="');
+    lines.push('echo "Tables added:    $TA"');
+    lines.push('echo "Tables removed:  $TR"');
+    lines.push('echo "Tables modified: $TM"');
+    lines.push('echo "Breaking changes: $BC"');
+    lines.push('echo "Risk score:      $SCORE/100 ($RISK)"');
+    lines.push('echo ""');
+    lines.push('');
+    lines.push('# Print markdown or migration if available');
+    lines.push('if echo "$RESPONSE" | jq -e \'.markdown\' >/dev/null 2>&1; then');
+    lines.push('  echo "$RESPONSE" | jq -r \'.markdown\'');
+    lines.push('elif echo "$RESPONSE" | jq -e \'.migration\' >/dev/null 2>&1; then');
+    lines.push('  echo "Generated migration:"');
+    lines.push('  echo "$RESPONSE" | jq -r \'.migration\'');
+    lines.push('fi');
+    lines.push('');
+    if (failOnBreaking) {
+      lines.push('# Fail commit if breaking changes are detected');
+      lines.push('if [ "$BC" -gt 0 ]; then');
+      lines.push('  echo ""');
+      lines.push('  echo "❌ Breaking schema changes detected. Commit blocked."');
+      lines.push('  echo "   Override with: git commit --no-verify"');
+      lines.push('  exit 1');
+      lines.push('fi');
+      lines.push('');
+    }
+    lines.push('echo "✅ No breaking schema changes detected."');
+    return lines.join('\n');
+  }
+
+  function generatePrecommitFramework() {
+    const oldPath = oldPathInput.value.trim() || 'db/schema.sql';
+    const newPath = newPathInput.value.trim() || oldPath;
+    const dialect = dialectInput.value;
+    const format = formatInput.value;
+    const failOnBreaking = failOnBreakingInput.checked;
+    const useStaged = useStagedInput.checked;
+
+    const entry = [];
+    entry.push('set -euo pipefail;');
+    entry.push('OLD_SCHEMA=' + shellQuote(oldPath) + ';');
+    entry.push('NEW_SCHEMA=' + shellQuote(newPath) + ';');
+    if (useStaged) {
+      entry.push('git stash push -q --keep-index --message "schemalens-pre-commit-stash"; trap "git stash pop -q || true" EXIT;');
+    }
+    entry.push('[ ! -f "$NEW_SCHEMA" ] && exit 0;');
+    entry.push('RESPONSE=$(curl -s -X POST "https://schemalens.tech/api/free-diff" \\');
+    entry.push('  -H "Content-Type: application/json" \\');
+    entry.push('  -d "$(jq -n \\');
+    entry.push('    --arg schemaA "$(cat \\"$OLD_SCHEMA\\")" \\');
+    entry.push('    --arg schemaB "$(cat \\"$NEW_SCHEMA\\")" \\');
+    entry.push('    --arg dialect ' + shellQuote(dialect) + ' \\');
+    entry.push('    --arg format ' + shellQuote(format) + ' \\');
+    entry.push("    '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')\")");
+    entry.push('if echo "$RESPONSE" | jq -e \'.error\' >/dev/null 2>&1; then');
+    entry.push('  echo "SchemaLens error: $(echo "$RESPONSE" | jq -r \'.error\')";');
+    entry.push('  exit 1;');
+    entry.push('fi;');
+    entry.push('BC=$(echo "$RESPONSE" | jq -r \'(.summary.breakingChangeCount // (.breakingChanges | length) // 0)\');');
+    entry.push('SCORE=$(echo "$RESPONSE" | jq -r \'.riskScore.score // 0\');');
+    entry.push('RISK=$(echo "$RESPONSE" | jq -r \'.riskScore.label // "Unknown"\');');
+    entry.push('echo "SchemaLens: $BC breaking changes, risk $SCORE/100 ($RISK)";');
+    if (failOnBreaking) {
+      entry.push('if [ "$BC" -gt 0 ]; then echo "Breaking schema changes detected. Commit blocked."; exit 1; fi;');
+    }
+    entry.push('echo "No breaking schema changes detected."');
+
+    const lines = [];
+    lines.push('# SchemaLens schema diff pre-commit hook');
+    lines.push('# Generated by https://schemalens.tech/tools/schema-diff-precommit-hook.html');
+    lines.push('repos:');
+    lines.push('  - repo: local');
+    lines.push('    hooks:');
+    lines.push('      - id: schemalens-schema-diff');
+    lines.push('        name: SchemaLens schema diff');
+    lines.push('        entry: bash -c \'' + entry.join(' ') + '\'');
+    lines.push('        language: system');
+    lines.push('        pass_filenames: false');
+    lines.push('        always_run: true');
+    return lines.join('\n');
+  }
+
+  function generate() {
+    if (currentStyle === 'precommit-framework') {
+      currentOutput = generatePrecommitFramework();
+      currentFilename = '.pre-commit-config.yaml';
+      filenameLabel.textContent = '.pre-commit-config.yaml';
+    } else {
+      currentOutput = generatePlainHook();
+      currentFilename = '.git/hooks/pre-commit';
+      filenameLabel.textContent = '.git/hooks/pre-commit';
+    }
+    hookOutput.textContent = currentOutput;
+    outputCard.style.display = 'block';
+    if (window.SchemaLensAnalytics) {
+      window.SchemaLensAnalytics.track('precommit_hook_generated', {
+        style: currentStyle,
+        dialect: dialectInput.value,
+        failOnBreaking: failOnBreakingInput.checked
+      });
+    }
+  }
+
+  function copyToClipboard() {
+    if (!currentOutput) return;
+    navigator.clipboard.writeText(currentOutput).then(() => {
+      setMsg('Copied to clipboard!', 'success');
+      if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('precommit_hook_copy');
+    }).catch(() => setMsg('Failed to copy.', 'error'));
+  }
+
+  function downloadFile() {
+    if (!currentOutput) return;
+    const blob = new Blob([currentOutput], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = currentFilename.replace(/\//g, '-');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setMsg('Downloaded ' + currentFilename.replace(/\//g, '-'), 'success');
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('precommit_hook_download');
+  }
+
+  function shareUrl() {
+    const params = new URLSearchParams();
+    params.set('old', oldPathInput.value);
+    params.set('new', newPathInput.value);
+    params.set('dialect', dialectInput.value);
+    params.set('format', formatInput.value);
+    params.set('style', currentStyle);
+    if (failOnBreakingInput.checked) params.set('failBreaking', '1');
+    if (useStagedInput.checked) params.set('staged', '1');
+    const url = window.location.origin + window.location.pathname + '?' + params.toString();
+    navigator.clipboard.writeText(url).then(() => {
+      setMsg('Share URL copied!', 'success');
+      if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('precommit_hook_share');
+    }).catch(() => setMsg('Failed to copy URL.', 'error'));
+  }
+
+  document.querySelectorAll('#hookStyleTabs .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#hookStyleTabs .tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentStyle = btn.dataset.style;
+      if (currentOutput) generate();
+    });
+  });
+
+  generateBtn.addEventListener('click', generate);
+  copyBtn.addEventListener('click', copyToClipboard);
+  copyBtn2.addEventListener('click', copyToClipboard);
+  downloadBtn.addEventListener('click', downloadFile);
+  shareBtn.addEventListener('click', shareUrl);
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('old')) oldPathInput.value = params.get('old');
+  if (params.get('new')) newPathInput.value = params.get('new');
+  if (params.get('dialect')) dialectInput.value = params.get('dialect');
+  if (params.get('format')) formatInput.value = params.get('format');
+  if (params.get('style')) {
+    currentStyle = params.get('style');
+    document.querySelectorAll('#hookStyleTabs .tab-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.style === currentStyle);
+    });
+  }
+  if (params.has('failBreaking')) failOnBreakingInput.checked = params.get('failBreaking') === '1';
+  if (params.has('staged')) useStagedInput.checked = params.get('staged') === '1';
+
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('precommit_hook_page_view');
+})();
+</script>
+</body>
+</html>

@@ -23,6 +23,7 @@ Days 1–305: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 306:** Built `tools/migration-test-plan-generator.html` — a dialect/table-size-aware test plan generator for SQL migrations; added to `tools.html`, sitemap, e2e tests, and cross-linked from migration/CI/CD pages. sitemap: 292 URLs.
 - **Day 307:** Hardened `github-action.html` and `README.md` copy for the free-forever pivot — added Free/Pro/Team explainer card, replaced the Free vs Pro table with Free vs Pro vs Team, and aligned README pricing/monetization messaging. Tests pass; deployed.
 - **Day 308:** Built `tools/schema-change-checklist.html` — a 32-point interactive database schema change checklist for production deployments with printable PDF, Markdown export, shareable URLs, and CI/CD CTAs; indexed and cross-linked. sitemap: 293 URLs.
+- **Day 309:** Built `tools/schema-diff-precommit-hook.html` — generates plain git and pre-commit-framework hooks that diff database schemas on every commit, with breaking-change gate and staged-file support; indexed and cross-linked from tools.html, github-action.html, ci-cd-integration.html, and git-branch-schema-diff.html. Added final-week banners to team.html and how-it-works.html. sitemap: 294 URLs.
 
 Full history is in `PROGRESS.md` and git.
 
