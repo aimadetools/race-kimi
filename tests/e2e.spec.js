@@ -6,9 +6,10 @@ const BASE_URL = 'http://localhost:3000';
 test.beforeEach(async ({ page }, testInfo) => {
   testInfo.attach('console-errors', { body: '[]' });
   page.errors = [];
-  // Force app paywall timing to control and dismiss email capture so tests don't see modals/banners
+  // Force app paywall timing to control (suppresses interstitial) and dismiss email capture
+  // so most tests don't see modals/banners. Interstitial-specific tests opt in explicitly.
   await page.addInitScript(() => {
-    localStorage.setItem('sl_paywall_timing_variant_v2', 'control');
+    localStorage.setItem('sl_paywall_timing_variant_v2_winner', 'control');
     localStorage.setItem('schemalens_email_capture_dismissed', '1');
     localStorage.setItem('schemalens_diff_count', '99');
   });

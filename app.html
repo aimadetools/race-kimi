@@ -1597,17 +1597,16 @@ function getFreeTierLimit() {
 </script>
 <script>
 (function() {
-  const PAYWALL_KEY_V2 = 'sl_paywall_timing_variant_v2';
+  // Paywall Timing v2 ended: interstitial is the clear winner based on user-testing
+  // ("show Pro value before the free result") and dashboard data. All users now see
+  // the pre-result Pro preview interstitial; the post-result Pro value banner is retired.
+  const PAYWALL_KEY_V2 = 'sl_paywall_timing_variant_v2_winner';
   let variant = localStorage.getItem(PAYWALL_KEY_V2);
   if (!variant) {
-    // A/B test: control (post-result banner) vs interstitial (pre-result Pro preview).
-    // User-testing said showing Pro value before the free result is the right timing,
-    // so we are doubling down on the interstitial variant (75%) while keeping control
-    // as a holdout to measure the lift.
-    variant = Math.random() < 0.75 ? 'interstitial' : 'control';
+    variant = 'interstitial';
     localStorage.setItem(PAYWALL_KEY_V2, variant);
     if (window.SchemaLensAnalytics) {
-      window.SchemaLensAnalytics.track('paywall_timing_v2_assigned', { variant, test: 'paywall_timing_v2_june2026' });
+      window.SchemaLensAnalytics.track('paywall_timing_v2_assigned', { variant, test: 'paywall_timing_v2_june2026', winner: 'interstitial' });
     }
   }
   window.SchemaLensPaywallVariantV2 = variant;
@@ -5247,42 +5246,11 @@ function removeProValueBannerFromVisual() {
 }
 
 function renderProValueBanner() {
+  // Retired: the post-result Pro value banner lost to the pre-result interstitial.
+  // All Pro value messaging now happens inside openProPreviewInterstitial().
   const topContainer = document.getElementById('proValueBanner');
-  if (!topContainer) return;
-
-  if (isProUnlocked() || localStorage.getItem(PRO_VALUE_BANNER_KEY)) {
-    topContainer.innerHTML = '';
-    removeProValueBannerFromVisual();
-    return;
-  }
-
-  const variant = getProValueBannerVariant();
-  const insideVisual = variant === 'v2' || variant === 'v3';
-  const placement = insideVisual ? 'inside_visual' : 'above_tabs';
-
-  if (insideVisual) {
-    topContainer.innerHTML = '';
-    removeProValueBannerFromVisual();
-    const visualContainer = document.getElementById('visualDiff');
-    if (visualContainer) {
-      visualContainer.insertAdjacentHTML('afterbegin', buildProValueBannerHTML(variant, placement));
-    }
-  } else {
-    removeProValueBannerFromVisual();
-    topContainer.innerHTML = buildProValueBannerHTML(variant, placement);
-  }
-
-  setTimeout(function () {
-    if (window.SchemaLensAnalytics) {
-      window.SchemaLensAnalytics.track('pro_value_banner_impression', {
-        variant: variant,
-        placement: placement,
-        framing: (window.ProValueBannerAB && window.ProValueBannerAB.getCopy) ? window.ProValueBannerAB.getCopy(variant).framing : 'export_share',
-        paywall_variant: window.SchemaLensPaywallVariant || 'banner',
-        test: 'pro_value_banner_june2026_v2'
-      });
-    }
-  }, 0);
+  if (topContainer) topContainer.innerHTML = '';
+  removeProValueBannerFromVisual();
 }
 
 function dismissProValueBanner() {
