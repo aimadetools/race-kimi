@@ -80,6 +80,7 @@
     .cta-section p { color: var(--text-muted); max-width: 560px; margin: 0 auto 24px; }
     .cta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
   </style>
+<script src="lib/analytics-client.js"></script>
 </head>
 <body>
 
@@ -293,8 +294,8 @@
     <h2>Ready to diff without the trust trade-off?</h2>
     <p>Try the free web diff, add SchemaLens to your CI/CD pipeline, or request a Team invoice for your organization.</p>
     <div class="cta-row">
-      <a href="app.html?example=staging-vs-production" class="btn btn-primary btn-lg">▶ Try Sample Schema Diff</a>
-      <a href="github-action.html" class="btn btn-secondary btn-lg">Add GitHub Action — Free</a>
+      <a href="app.html?example=staging-vs-production" class="btn btn-primary btn-lg" data-event="trust_try_sample">▶ Try Sample Schema Diff</a>
+      <a href="github-action.html" class="btn btn-secondary btn-lg" data-event="trust_github_action">Add GitHub Action — Free</a>
       <a href="tools/request-team-invoice.html" class="btn btn-secondary btn-lg">Request Team Invoice</a>
     </div>
   </div>

@@ -139,6 +139,7 @@
     }
     .announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
   </style>
+<script src="lib/analytics-client.js"></script>
 </head>
 <body>
 
@@ -179,7 +180,7 @@
       <h1>Catch breaking schema changes<br><span>in every PR — as a team.</span></h1>
       <p>SchemaLens Team adds shared migration reports, breaking change gates, and pipeline-native schema review to your engineering workflow. No more "oops, that column drop was production."</p>
       <div class="hero-actions">
-        <a href="team-buy.html" class="btn btn-primary btn-lg">Start Team Plan — $29/mo</a>
+        <a href="team-buy.html" class="btn btn-primary btn-lg" data-event="team_hero_start_team">Start Team Plan — $29/mo</a>
         <a href="team/workspace-preview.html" class="btn btn-secondary btn-lg">Preview Workspace</a>
       </div>
       <p class="hero-note">The web diff is free forever — unlimited tables, full migration generation, and all dialects included. Upgrade to Team for shared workspaces, drift alerts, and admin controls. <a href="team/workspace-preview.html" style="color: var(--primary);">See the workspace preview →</a> · <a href="tools/team-plan-one-pager.html" style="color: var(--primary);">Print manager one-pager →</a> · <a href="book-demo.html" style="color: var(--primary);">Book a demo →</a></p>
@@ -195,7 +196,7 @@
           <div class="icon">🐙</div>
           <h4>GitHub Action <span class="badge-free">Free</span></h4>
           <p>PR comments, Check Run status, risk scores, and migration previews directly in your pull request.</p>
-          <a href="github-action.html" class="btn btn-secondary" style="width:100%; font-size: 0.85rem;">Setup Guide →</a>
+          <a href="github-action.html" class="btn btn-secondary" style="width:100%; font-size: 0.85rem;" data-event="team_github_action_setup">Setup Guide →</a>
         </div>
         <div class="platform-card">
           <div class="icon">🦊</div>
@@ -285,7 +286,7 @@
         </div>
       </div>
       <div class="text-center" style="margin-top: 32px;">
-        <a href="github-action.html" class="btn btn-primary btn-lg">See GitHub Action Setup →</a>
+        <a href="github-action.html" class="btn btn-primary btn-lg" data-event="team_github_action_setup_bottom">See GitHub Action Setup →</a>
       </div>
     </div>
   </section>
@@ -368,8 +369,8 @@
         </div>
       </div>
       <div class="text-center" style="margin-top: 24px;">
-        <a href="team-buy.html" class="btn btn-primary">Start Team Plan — $29/mo →</a>
-        <a href="pricing.html" class="btn btn-secondary" style="margin-left: 8px;">View Full Pricing</a>
+        <a href="team-buy.html" class="btn btn-primary" data-event="team_bottom_start_team">Start Team Plan — $29/mo →</a>
+        <a href="pricing.html" class="btn btn-secondary" style="margin-left: 8px;" data-event="team_view_pricing">View Full Pricing</a>
       </div>
       <p class="text-center" style="margin-top: 16px; font-size: 0.9rem; color: var(--text-muted);">Evaluating enterprise alternatives? <a href="tools/team-plan-comparison.html" style="color: var(--primary);">See SchemaLens Team vs Liquibase, Flyway, Redgate, Bytebase, and Atlas →</a> · <a href="tools/team-plan-one-pager.html" style="color: var(--primary);">Print manager one-pager →</a></p>
     </div>

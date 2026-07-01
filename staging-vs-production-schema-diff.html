@@ -31,6 +31,7 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="lib/analytics-client.js"></script>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f0f0f">
   <link rel="apple-touch-icon" href="/favicon.svg">
@@ -395,5 +396,26 @@ function copyCmd(id) {
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 <script src="lib/ref-tracking.js"></script>
+<script>
+(function() {
+  const map = {
+    'Try Live Demo →': 'staging_try_live_demo',
+    'Open SchemaLens': 'staging_open_app',
+    'Try URL Diff →': 'staging_try_url_diff',
+    'Connect Database →': 'staging_connect_db',
+    'Run Live Demo →': 'staging_run_live_demo',
+    'Set Up GitHub Action →': 'staging_github_action',
+    'See PR Comment Demo': 'staging_see_pr_demo',
+    'Setup Wizard': 'staging_setup_wizard',
+    '⚡ Get Lifetime Pro — $39': 'staging_buy_lifetime'
+  };
+  document.querySelectorAll('a.btn').forEach(function(a) {
+    const text = a.textContent.trim();
+    if (map[text] && !a.hasAttribute('data-event')) {
+      a.setAttribute('data-event', map[text]);
+    }
+  });
+})();
+</script>
 </body>
 </html>

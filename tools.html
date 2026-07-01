@@ -1129,5 +1129,15 @@
 })();
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+<script>
+(function() {
+  document.querySelectorAll('.tool-card a.btn').forEach(function(link) {
+    if (link.hasAttribute('data-event')) return;
+    const href = link.getAttribute('href') || '';
+    const slug = href.replace(/^https?:\/\//, '').replace(/^[^/]+\//, '').replace(/\.html$/, '').replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '').toLowerCase() || 'tool_link';
+    link.setAttribute('data-event', 'tools_card_' + slug);
+  });
+})();
+</script>
 </body>
 </html>

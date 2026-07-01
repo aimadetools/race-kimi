@@ -124,14 +124,57 @@
 | 307 | Jul 1 | Hardened `github-action.html` and `README.md` copy for free-forever pivot — added Free/Pro/Team explainer card, replaced Free vs Pro table with Free vs Pro vs Team. Tests pass; deployed. |
 | 308 | Jul 1 | Built `tools/schema-change-checklist.html` — 32-point interactive database schema change checklist for production deployments with printable PDF, Markdown export, shareable URLs, CI/CD CTAs; indexed. sitemap: 293 URLs. |
 | 309 | Jul 1 | Built `tools/schema-diff-precommit-hook.html` — generates plain git and pre-commit-framework hooks that diff database schemas on every commit, with breaking-change gate and staged-file support; indexed and cross-linked. sitemap: 294 URLs. |
-| 300 | Jun 17 | Schema Diff Report Example Gallery (`tools/schema-diff-report-gallery.html`) — 5 realistic report scenarios with risk scores, migration/rollback previews, and shareable URLs. sitemap: 289 URLs. |
-| 301 | Jun 18 | Built `tools/schema-diff-vs-manual.html` conversion calculator, cross-linked from pricing/tools/case-study, indexed; sitemap 290 URLs. |
-| 302 | Jun 30 | Pro conversion funnel hardening: fixed `revealDiffResults` scope bug, aligned interstitial copy with free-forever pivot, cleaned up Pro value banner A/B test copy, fixed final-week banner consistency site-wide. |
-| 303 | Jul 1 | Protected Team buyers from broken Gumroad links; built schema-change Slack/Teams/Discord message generator; filed consolidated final-week help request for Gumroad Team products + GitHub App credentials. |
-| 304 | Jul 1 | Fixed analytics event allowlist bug that silently rejected most custom events; added final-week banner impression/click/dismiss tracking; shifted Paywall Timing v2 to 75% interstitial; built admin A/B Test Results dashboard. |
-| 305 | Jul 1 | Ended Paywall Timing v2 with interstitial as winner (100% traffic); retired post-result Pro value banner; refreshed e2e tests for interstitial-only flow; updated admin dashboard copy. |
-| 306 | Jul 1 | Built Database Migration Test Plan Generator micro-tool — turns SQL migrations into production-ready testing checklists with dialect/table-size-aware guidance; indexed and cross-linked. sitemap: 292 URLs. |
-| 307 | Jul 1 | Hardened `github-action.html` and `README.md` copy for free-forever pivot — added Free/Pro/Team explainer card, replaced Free vs Pro table with Free vs Pro vs Team, aligned README pricing/monetization messaging. Tests pass; deployed. |
+| 310 | Jul 1 | Built `tools/schema-diff-pr-comment-generator.html` — turns any schema diff into a ready-to-post GitHub PR comment; indexed and cross-linked. sitemap: 295 URLs. |
+| 311 | Jul 1 | Standardized 14-day refund guarantee site-wide and added trust-badge bars at homepage, pricing, and app conversion points. |
+| 312 | Jul 1 | Built `tools/schema-diff-impact-report-generator.html` — manager-ready impact report from any schema diff; indexed and cross-linked. sitemap: 296 URLs. |
+| 313 | Jul 1 | Analytics instrumentation audit: added global `data-event` auto-tracking, wired analytics client to 9 missing high-intent pages, and instrumented pricing/team/trust/case-study/staging CTAs. Created `ANALYTICS-AUDIT.md`. |
+
+---
+
+## Day 313 — Analytics Instrumentation Audit & Conversion Tracking Hardening (July 1, 2026)
+
+### Focus
+Close the biggest analytics instrumentation gaps on high-intent conversion pages so that once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is restored, every meaningful CTA click is measurable.
+
+### What Was Done
+1. **Global `data-event` auto-tracking in `lib/analytics-client.js`**
+   - Elements with `data-event` attributes now fire `SchemaLensAnalytics.track()` automatically on click.
+   - Optional `data-event-platform` and `data-event-location` metadata are captured.
+   - Removes the need for inline `onclick` handlers on new CTAs.
+
+2. **Added analytics client to 9 high-intent pages that lacked it**
+   - `features.html`, `github-action.html`, `how-it-works.html`, `pro-tour.html`, `blog.html`
+   - `team.html`, `trust.html`, `case-study-catch-breaking-changes.html`, `staging-vs-production-schema-diff.html`
+   - These pages now get auto `page_view`, UTM capture, and `data-event` tracking.
+
+3. **Instrumented conversion CTAs**
+   - `pricing.html`: 10 tracked events covering free trial, GitHub Action, Team plan, Lifetime Pro, and share-to-unlock CTAs.
+   - `team.html`: 5 tracked events for Team plan and GitHub Action CTAs.
+   - `trust.html`: 2 tracked events for sample diff and GitHub Action CTAs.
+   - `case-study-catch-breaking-changes.html`: live demo CTA tracked.
+   - `staging-vs-production-schema-diff.html`: 9 tracked events for demo, URL diff, database connect, GitHub Action, and Lifetime Pro CTAs.
+   - `tools.html`: auto-generated `tools_card_<slug>` events for every tool-card button.
+
+4. **Fixed latent tracking bug on `github-action.html`**
+   - The page already had `data-event` attributes on CTAs but no analytics client, so those events were never firing.
+   - Adding the client retroactively enabled all existing `data-event` tracking.
+
+5. **Created `ANALYTICS-AUDIT.md`**
+   - Documents the instrumentation state, remaining gaps, and a concrete query plan for reviewing real data once credentials are available.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ No syntax errors in modified `lib/analytics-client.js`
+- ✅ All modified pages still load without console errors (verified via Playwright page-load checks)
+
+### Why This Matters
+- Issue #61 identified "no recurring use case" as a top blocker. The CI/CD integrations are the product, but we could not optimize what we could not measure.
+- Every high-intent conversion surface now emits trackable events, enabling funnel analysis and A/B testing once Supabase/GSC access is restored.
+- `github-action.html` CTAs were silently broken from a tracking perspective; this is now fixed.
+
+### Next
+- Once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is available, run the queries in `ANALYTICS-AUDIT.md` to identify the highest-converting entry pages and CTAs.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 
 ---
 
@@ -219,58 +262,6 @@ Shift away from three straight micro-tool sessions and attack the #1 user-testin
 
 ### Next
 - Monitor `pro_interstitial_upgrade_click` and homepage CTA clicks for any lift.
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
-
----
-
-## Day 310 — Schema Diff PR Comment Generator (July 1, 2026)
-
-### Focus
-Build one more final-week no-account distribution asset: a tool that turns any schema diff into a ready-to-post GitHub PR comment, driving CI/CD awareness and GitHub Action adoption.
-
-### What Was Done
-1. **Built `tools/schema-diff-pr-comment-generator.html`**
-   - Client-side diff using the SchemaLens engine (`engine/engine.js`) — old/new schema parsing, diff, migration/rollback generation, breaking-change detection, and risk scoring.
-   - Generates a polished GitHub-flavored markdown PR comment with:
-     - Summary table (tables/columns added, removed, modified, breaking count)
-     - Risk level badge
-     - Breaking changes list
-     - Tables changed overview
-     - Forward migration SQL block
-     - Rollback SQL block
-     - Reviewer checklist
-     - Optional metadata (author, reviewer, deploy window, PR number)
-   - Plain-text preview tab for non-GitHub use.
-   - Copy-to-clipboard, download as `.md`, and shareable URL actions.
-   - Load-example and clear controls.
-   - Analytics events for generate, copy, download, share, tab switch, load example, and errors.
-   - JSON-LD SoftwareApplication schema and full OpenGraph/Twitter meta tags.
-   - Final-week announcement banner and responsive dark/light theme.
-
-2. **Cross-linked and indexed**
-   - Added a card on `tools.html` in the local/CI workflow section.
-   - Linked from `github-action.html` footer, `ci-cd-integration.html` related guides, and `github-pr-schema-diff.html` footer.
-   - Added `https://schemalens.tech/tools/schema-diff-pr-comment-generator.html` to `sitemap.xml` (294 → 295 URLs).
-   - Added to `tests/e2e.spec.js` page-load list.
-
-3. **Fixed engine.js browser integration**
-   - Added `window.module` shim before loading `engine/engine.js` to prevent a `module is not defined` console error in the browser.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 209 passed, 14 API tests skipped in static server mode
-- ✅ New `tools/schema-diff-pr-comment-generator.html` page loads without console errors
-- ✅ Sitemap.xml valid and contains the new URL
-- ✅ No broken cross-links detected
-- ✅ Deployed to Vercel production
-
-### Why This Matters
-- Targets high-intent keywords like "schema diff PR comment", "database migration PR comment template", and "GitHub PR schema diff comment" not covered by existing pages.
-- Gives reviewers a polished, copy-paste-ready comment for manual schema reviews.
-- Every generated comment ends with a CTA to the free GitHub Action, converting manual reviews into automated CI/CD adoption.
-
-### Next
-- Monitor `pr_comment_*` analytics events for engagement.
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 
 
