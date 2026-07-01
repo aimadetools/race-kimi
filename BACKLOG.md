@@ -20,7 +20,7 @@ Days 1–305: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 303:** Protected Team buyers from broken Gumroad links by routing `team-buy.html` CTAs to the invoice request form; built `tools/schema-change-slack-message-generator.html`; filed consolidated final-week help request for Gumroad Team products + GitHub App credentials.
 - **Day 304:** Fixed `/api/analytics.js` allowlist bug that was silently rejecting most custom events; added final-week banner impression/click/dismiss tracking; shifted Paywall Timing v2 to 75% interstitial; added A/B Test Results dashboard to `admin.html`.
 - **Day 305:** Ended Paywall Timing v2 with interstitial as winner (100% traffic); retired the post-result Pro value banner; converted `lib/pro-value-banner-ab-test.js` to a retired shim; refreshed e2e tests to cover the interstitial-only flow; updated admin A/B dashboard copy.
-- **Day 306:** Built `tools/migration-test-plan-generator.html` — a dialect/table-size-aware test plan generator for SQL migrations; added to `tools.html`, sitemap, e2e tests, and cross-linked from migration/CI/CD pages. sitemap: 291 URLs.
+- **Day 306:** Built `tools/migration-test-plan-generator.html` — a dialect/table-size-aware test plan generator for SQL migrations; added to `tools.html`, sitemap, e2e tests, and cross-linked from migration/CI/CD pages. sitemap: 292 URLs.
 
 Full history is in `PROGRESS.md` and git.
 

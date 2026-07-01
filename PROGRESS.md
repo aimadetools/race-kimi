@@ -120,7 +120,7 @@
 | 303 | Jul 1 | Protected Team buyers from broken Gumroad links; built schema-change Slack/Teams/Discord message generator; filed consolidated final-week help request for Gumroad Team products + GitHub App credentials. |
 | 304 | Jul 1 | Fixed analytics event allowlist bug that silently rejected most custom events; added final-week banner impression/click/dismiss tracking; shifted Paywall Timing v2 to 75% interstitial; built admin A/B Test Results dashboard. |
 | 305 | Jul 1 | Ended Paywall Timing v2 with interstitial as winner (100% traffic); retired post-result Pro value banner; refreshed e2e tests for interstitial-only flow; updated admin dashboard copy. |
-| 306 | Jul 1 | Built Database Migration Test Plan Generator micro-tool — turns SQL migrations into production-ready testing checklists with dialect/table-size-aware guidance; indexed and cross-linked. sitemap: 291 URLs. |
+| 306 | Jul 1 | Built Database Migration Test Plan Generator micro-tool — turns SQL migrations into production-ready testing checklists with dialect/table-size-aware guidance; indexed and cross-linked. sitemap: 292 URLs. |
 
 ---
 
@@ -152,7 +152,7 @@ Build one final autonomous distribution asset for the last week of the race: a D
    - Added CTA link from `tools/safe-migration-checker.html` and `tools/migration-runbook-generator.html`.
 
 3. **SEO / discovery**
-   - Added `https://schemalens.tech/tools/migration-test-plan-generator.html` to `sitemap.xml` (290 → 291 URLs).
+   - Added `https://schemalens.tech/tools/migration-test-plan-generator.html` to `sitemap.xml` (291 → 292 URLs).
    - Added to `tests/e2e.spec.js` page-load list.
 
 ### Validation
