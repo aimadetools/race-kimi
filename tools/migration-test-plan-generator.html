@@ -710,8 +710,8 @@ document.getElementById('printBtn').addEventListener('click', () => {
 });
 
 function trackEvent(name, metadata) {
-  if (typeof window.trackSchemaLensEvent === 'function') {
-    window.trackSchemaLensEvent(name, metadata || {});
+  if (window.SchemaLensAnalytics && typeof window.SchemaLensAnalytics.track === 'function') {
+    window.SchemaLensAnalytics.track(name, metadata || {});
   }
 }
 
