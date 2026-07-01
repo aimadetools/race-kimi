@@ -134,6 +134,7 @@ const pages = [
   { path: '/tools/schema-diff-vs-manual.html', name: 'Schema Diff vs Manual Comparison' },
   { path: '/tools/schema-change-slack-message-generator.html', name: 'Schema Change Slack Message Generator' },
   { path: '/tools/migration-test-plan-generator.html', name: 'Migration Test Plan Generator' },
+  { path: '/tools/schema-change-checklist.html', name: 'Database Schema Change Checklist' },
   { path: '/tools/embed-generator.html', name: 'Embed Generator' },
   // Note: Badge Generator is tested separately — it loads /api/badge images which 404 on static server
   // { path: '/tools/badge-generator.html', name: 'Badge Generator' },
