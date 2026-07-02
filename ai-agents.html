@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens for AI Agents — Automate Database Migration Reviews</title>
+  <meta name="description" content="Build AI agents that review SQL schema diffs, generate migrations, and catch breaking changes in pull requests using the SchemaLens MCP server.">
+  <link rel="canonical" href="https://schemalens.tech/ai-agents.html">
+  <meta property="og:title" content="SchemaLens for AI Agents — Automate Database Migration Reviews">
+  <meta property="og:description" content="Give your AI coding assistant the ability to diff SQL schemas and flag breaking changes before they ship.">
+  <meta property="og:url" content="https://schemalens.tech/ai-agents.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SchemaLens for AI Agents — Automate Database Migration Reviews">
+  <meta name="twitter:description" content="Give your AI coding assistant the ability to diff SQL schemas and flag breaking changes before they ship.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens for AI Agents",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "MCP server tools for AI agents to diff SQL schemas, generate migrations, and detect breaking changes. Works with Claude, Cursor, VS Code, Cline, and any MCP client.",
+    "url": "https://schemalens.tech/ai-agents.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+    .badge-free { display:inline-block; background: #10b981; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; vertical-align: middle; margin-left: 6px; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9rem; line-height: 1.6; margin: 16px 0; position: relative; }
+    .code-block .comment { color: #64748b; }
+    .code-block .key { color: #7dd3fc; }
+    .code-block .str { color: #86efac; }
+    .code-block .num { color: #fca5a5; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin: 32px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .agent-flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 32px 0; }
+    .agent-step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; position: relative; }
+    .agent-step::after {
+      content: '→'; position: absolute; right: -14px; top: 50%; transform: translateY(-50%);
+      color: var(--primary); font-size: 1.2rem; font-weight: 700;
+    }
+    .agent-step:last-child::after { display: none; }
+    @media (max-width: 640px) {
+      .agent-step::after { display: none; }
+    }
+    .agent-step .num { width: 28px; height: 28px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; margin-bottom: 12px; }
+    .agent-step h4 { font-size: 1rem; margin-bottom: 6px; }
+    .agent-step p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 0; }
+    .chat-mock { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0; }
+    .chat-msg { margin-bottom: 16px; }
+    .chat-msg:last-child { margin-bottom: 0; }
+    .chat-msg .label { font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; color: var(--text-muted); }
+    .chat-msg.user .label { color: var(--primary); }
+    .chat-msg.agent .label { color: var(--success); }
+    .chat-msg .bubble { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; font-size: 0.95rem; line-height: 1.5; }
+    .chat-msg.agent .bubble { background: rgba(99,102,241,0.06); border-color: rgba(99,102,241,0.25); }
+    .cta-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; margin: 32px 0; }
+    .cta-bar h2 { font-size: 1.3rem; margin-bottom: 8px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 16px; }
+    .tool-list { list-style: none; padding: 0; margin: 16px 0; }
+    .tool-list li { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+    .tool-list li strong { display: block; font-size: 1rem; margin-bottom: 4px; }
+    .tool-list li span { color: var(--text-muted); font-size: 0.9rem; }
+    .prompt-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin: 10px 0; font-size: 0.92rem; }
+    .prompt-card strong { color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px; font-size: 0.8rem; cursor: pointer; }
+    .btn-copy:hover { border-color: var(--primary); }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+    .announcement-bar {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
+    .dialect-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+    .dialect-tags span { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; color: var(--text-muted); }
+    .client-tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 20px 0; }
+    .client-tabs a { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.85rem; color: var(--text-muted); text-decoration: none; }
+    .client-tabs a:hover { border-color: var(--primary); color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="announcement-bar">
+    🏁 Final Week — Lifetime Pro <strong>$39</strong> until July 10. <a href="launch-special.html">Claim yours →</a>
+  </div>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem; flex-wrap:wrap;">
+      <a href="index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="mcp-server.html">MCP Server</a>
+      <a href="github-action.html">GitHub Action</a>
+      <a href="ci-cd-integration.html">CI/CD</a>
+    </nav>
+
+    <div class="page-header">
+      <h1>SchemaLens for AI Agents <span class="badge-free">MCP</span></h1>
+      <p>Build autonomous coding agents that review database migrations, diff SQL schemas, and catch breaking changes — without leaving the chat.</p>
+      <div class="dialect-tags">
+        <span>Claude</span><span>Cursor</span><span>VS Code</span><span>Cline</span><span>Windsurf</span>
+      </div>
+      <div class="client-tabs">
+        <a href="mcp-server-claude.html">Claude Desktop</a>
+        <a href="mcp-server-cursor.html">Cursor</a>
+        <a href="mcp-server-vscode.html">VS Code</a>
+        <a href="mcp-server.html">All clients</a>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <h2>🤖 Give your agent a schema diff tool</h2>
+      <p>The SchemaLens MCP server exposes semantic schema diff, migration generation, and breaking-change detection as tools any MCP-compatible agent can call.</p>
+      <a href="tools/mcp-config-generator.html" class="btn btn-primary" data-event="ai_agents_config_generator">Generate MCP config →</a>
+      <a href="https://github.com/aimadetools/race-kimi/blob/main/mcp-server.js" class="btn btn-secondary" target="_blank" rel="noopener" data-event="ai_agents_view_source">View source on GitHub</a>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🔍 Autonomous Schema Review</h3>
+        <p>Your agent can compare two CREATE TABLE dumps and return a structured summary of added, removed, and modified tables, columns, indexes, and constraints.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🛡️ Breaking-Change Gate</h3>
+        <p>Agents flag risky changes before they ship: dropped columns, type changes, NOT NULL additions, dropped foreign keys, and removed indexes.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📝 Migration Generation</h3>
+        <p>Generate forward and rollback migration scripts in PostgreSQL, MySQL, SQLite, SQL Server, or Oracle — automatically, on demand.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔒 Local & Private</h3>
+        <p>The MCP server uses the same client-side engine as the web app. Schemas never leave the machine the agent is running on.</p>
+      </div>
+    </div>
+
+    <section style="margin: 48px 0;">
+      <h2 style="font-size: 1.4rem; text-align: center; margin-bottom: 8px;">What an agent-powered migration review looks like</h2>
+      <p style="text-align: center; color: var(--text-muted); max-width: 640px; margin: 0 auto 24px;">Drop the MCP server into your agent's config and ask it to review a migration PR.</p>
+
+      <div class="chat-mock">
+        <div class="chat-msg user">
+          <div class="label">You</div>
+          <div class="bubble">Review this PR's schema change. Old schema is in <code>migrations/001_initial.sql</code>, new schema is in <code>migrations/002_add_orders.sql</code>. Tell me if it's safe to deploy.</div>
+        </div>
+        <div class="chat-msg agent">
+          <div class="label">Agent · calling schemalens_diff_schemas</div>
+          <div class="bubble">I'll compare the two schemas and check for breaking changes.</div>
+        </div>
+        <div class="chat-msg agent">
+          <div class="label">Agent · result</div>
+          <div class="bubble">
+            <strong>Summary:</strong> 1 table added (<code>orders</code>), 1 column added (<code>users.email_verified_at</code>), 1 index added.<br><br>
+            <strong>Risk score: 2/10 — Low risk.</strong><br>
+            No dropped columns, no type changes, no removed constraints. The new <code>orders</code> table references <code>users(id)</code> with a foreign key and ON DELETE SET NULL, which is safe. Recommend adding the migration during a low-traffic window.
+          </div>
+        </div>
+        <div class="chat-msg user">
+          <div class="label">You</div>
+          <div class="bubble">Generate the PostgreSQL migration and rollback SQL.</div>
+        </div>
+        <div class="chat-msg agent">
+          <div class="label">Agent · calling schemalens_generate_migration</div>
+          <div class="bubble">Done. Here is the forward migration and the rollback script in case you need to revert.</div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin: 48px 0;">
+      <h2 style="font-size: 1.4rem; text-align: center; margin-bottom: 8px;">Agent workflow</h2>
+      <p style="text-align: center; color: var(--text-muted); max-width: 640px; margin: 0 auto 24px;">Plug SchemaLens into any agentic pipeline in four steps.</p>
+
+      <div class="agent-flow">
+        <div class="agent-step">
+          <div class="num">1</div>
+          <h4>Detect schema change</h4>
+          <p>Agent reads the PR, branch diff, or migration file and identifies that a schema changed.</p>
+        </div>
+        <div class="agent-step">
+          <div class="num">2</div>
+          <h4>Call SchemaLens MCP</h4>
+          <p>Agent invokes <code>schemalens_diff_schemas</code> with the old and new CREATE TABLE dumps.</p>
+        </div>
+        <div class="agent-step">
+          <div class="num">3</div>
+          <h4>Analyze risk</h4>
+          <p>Agent uses <code>schemalens_detect_breaking_changes</code> to surface high, medium, and low severity issues.</p>
+        </div>
+        <div class="agent-step">
+          <div class="num">4</div>
+          <h4>Post review</h4>
+          <p>Agent comments on the PR, Slack, or ticket with the diff summary, risk score, and migration SQL.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="step" style="display: flex; gap: 16px; margin: 24px 0; align-items: flex-start;">
+      <div style="flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">1</div>
+      <div style="flex: 1;">
+        <h3 style="font-size: 1.05rem; margin-bottom: 6px;">Install the MCP server</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 8px;">Clone the repo or download <code>mcp-server.js</code>. Use the config generator to build the exact JSON for your agent's client.</p>
+        <div class="code-block">
+          <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+<code>git clone https://github.com/aimadetools/race-kimi.git
+cd race-kimi
+<span class="comment"># Generate the exact MCP config for your agent's client:</span>
+open https://schemalens.tech/tools/mcp-config-generator.html</code>
+        </div>
+      </div>
+    </div>
+
+    <div class="step" style="display: flex; gap: 16px; margin: 24px 0; align-items: flex-start;">
+      <div style="flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">2</div>
+      <div style="flex: 1;">
+        <h3 style="font-size: 1.05rem; margin-bottom: 6px;">Choose a prompt pattern</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 8px;">Use these prompts to guide your agent toward useful schema review behavior.</p>
+        <div class="prompt-card"><strong>PR Review:</strong> "Review the schema changes in this PR. Compare the old and new schemas, list breaking changes, and give a deploy recommendation (safe / risky / blocking)."</div>
+        <div class="prompt-card"><strong>Migration Author:</strong> "Generate the migration SQL to go from schema A to schema B in [dialect]. Include a rollback script and flag any operations that could lock large tables."</div>
+        <div class="prompt-card"><strong>Drift Detective:</strong> "Compare the production schema dump to the schema in this branch. Highlight any drift that isn't reflected in the migration files."</div>
+      </div>
+    </div>
+
+    <div class="step" style="display: flex; gap: 16px; margin: 24px 0; align-items: flex-start;">
+      <div style="flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">3</div>
+      <div style="flex: 1;">
+        <h3 style="font-size: 1.05rem; margin-bottom: 6px;">Connect to CI/CD for autonomous checks</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 8px;">Pair the MCP server with the SchemaLens GitHub Action so agents and pipelines both use the same diff engine.</p>
+        <a href="github-action.html" class="btn btn-primary" data-event="ai_agents_github_action">SchemaLens GitHub Action →</a>
+        <a href="ci-cd-integration.html" class="btn btn-secondary" data-event="ai_agents_cicd">All CI/CD integrations →</a>
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 32px 0;">
+      <h2 style="font-size: 1.2rem; margin-bottom: 16px;">🧰 Tools your agent can call</h2>
+      <ul class="tool-list">
+        <li>
+          <strong>schemalens_diff_schemas</strong>
+          <span>Compare two SQL schemas and return a semantic diff summary with risk score.</span>
+        </li>
+        <li>
+          <strong>schemalens_generate_migration</strong>
+          <span>Generate forward and rollback migration SQL for the detected changes.</span>
+        </li>
+        <li>
+          <strong>schemalens_detect_breaking_changes</strong>
+          <span>List breaking changes with severity levels (high, medium, low) and explanations.</span>
+        </li>
+      </ul>
+    </div>
+
+    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius); padding: 18px 20px; margin: 24px 0; color: #166534;">
+      <strong>Built for the agent era:</strong> SchemaLens MCP runs locally, needs no API key, and works with any assistant that speaks the Model Context Protocol. Your schemas are never sent to a third party.
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 32px 0; text-align: center;">
+      <h2 style="font-size: 1.2rem; margin-bottom: 10px;">Ready to ship an agent that reviews migrations?</h2>
+      <p style="color: var(--text-muted); margin-bottom: 16px;">Start with the MCP config generator, then wire the same engine into your CI/CD pipeline.</p>
+      <a href="tools/mcp-config-generator.html" class="btn btn-primary" data-event="ai_agents_bottom_config">Generate MCP config →</a>
+      <a href="mcp-server.html" class="btn btn-secondary" data-event="ai_agents_bottom_mcp">MCP Server docs →</a>
+      <a href="team-buy.html" class="btn btn-secondary" data-event="ai_agents_bottom_team">Team plan →</a>
+    </div>
+
+    <footer style="border-top:1px solid var(--border); padding: 32px 0; margin-top: 32px; font-size: 0.85rem; color: var(--text-muted);">
+      <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-bottom: 16px;">
+        <a href="index.html">Home</a>
+        <a href="app.html">App</a>
+        <a href="tools.html">Tools</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="mcp-server.html">MCP Server</a>
+        <a href="github-action.html">GitHub Action</a>
+        <a href="community.html">Community</a>
+      </div>
+      <p style="text-align:center;">© 2026 SchemaLens. Built for developers who ship database changes.</p>
+    </footer>
+  </div>
+
+  <script>
+  function copyCode(btn) {
+    const code = btn.parentElement.querySelector('code');
+    const text = code ? code.innerText : btn.parentElement.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1500);
+    });
+  }
+  </script>
+</body>
+</html>
