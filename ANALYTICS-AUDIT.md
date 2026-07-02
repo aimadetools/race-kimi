@@ -1,7 +1,7 @@
 # SchemaLens Analytics Instrumentation Audit
 
-**Date:** July 1, 2026  
-**Status:** Instrumentation hardened on high-intent conversion pages. Real usage review remains blocked pending `SUPABASE_SERVICE_ROLE_KEY` / GSC access.
+**Date:** July 2, 2026  
+**Status:** Homepage hero CTA instrumentation fixed and legacy `data-analytics` attributes now auto-tracked. Real usage review remains blocked pending `SUPABASE_SERVICE_ROLE_KEY` / GSC access.
 
 ## Why This Matters
 
@@ -29,7 +29,24 @@ The lightweight `lib/analytics-client.js` (auto page_view + UTM capture + data-e
 
 These pages previously had no client-side analytics at all or relied only on Vercel Web Analytics.
 
-### 3. Conversion CTA tracking added
+### 3. Homepage hero CTA tracking fixed (`index.html`)
+
+The homepage previously had broken CTA tracking: an inline script referenced an undefined `track()` function, and the exit-intent modal referenced an undefined `window.trackEvent`. These are now fixed:
+
+- Hero action links (`Try Sample Schema Diff`, `Compare Your Schemas`, `Add GitHub Action — Free`) use `data-event="homepage_hero_cta_click"` with `data-event-location` metadata.
+- Hero badge links (CLI docs/copy, VS Code, GitHub Action, Chrome) use `data-event="homepage_hero_badge_click"`.
+- Founding Member, share-to-unlock, star-on-GitHub, and checklist links are now instrumented.
+- Sample-schema cards rely on auto-tracked `data-analytics` + `data-example` attributes; the redundant inline `SchemaLensAnalytics.track()` handler was removed to prevent double tracking.
+
+### 4. Legacy `data-analytics` auto-tracking restored (`lib/analytics-client.js`)
+
+Many CI/CD landing pages and micro-tools used `data-analytics="..."` attributes, but the analytics client only auto-tracked `data-event`. The client now tracks both selectors and captures `data-example` as metadata. This fixes CTA tracking across the CI/CD 60-second pages, `add-schema-diff-to-any-repo.html`, and other generated pages without requiring markup changes.
+
+### 5. Global `trackEvent` alias for backward compatibility
+
+`lib/analytics-client.js` now exposes `window.trackEvent` as an alias for `SchemaLensAnalytics.track`. This unblocks legacy tracking calls in `index.html` (exit-intent modal), `migration-checklist.html`, `migration-mastery.html`, `team-plan-comparison.html`, and `team-plan-one-pager.html`.
+
+### 6. Conversion CTA tracking added
 
 | Page | Tracked CTAs |
 |------|--------------|
@@ -61,7 +78,6 @@ Micro-tools (PR comment generator, impact report generator, migration test plan 
 
 The following high-traffic or high-intent pages still have only auto page_view (no custom CTA events):
 
-- `index.html` — tracks sample-schema clicks and exit-intent modal, but main hero CTAs are not instrumented.
 - `launch-special.html` — has `final_week_buy_click` but only on Gumroad links; share/secondary CTAs not tracked.
 - SEO landing pages (`postgres-schema-diff.html`, `mysql-schema-diff.html`, etc.) — analytics client present on some, but no custom events.
 - `open.html`, `product-hunt.html`, `show-hn.html`, `indiehackers.html` — no analytics client.
@@ -87,4 +103,4 @@ Once `SUPABASE_SERVICE_ROLE_KEY` is available:
 1. **Verify events are arriving** — check Vercel function logs for `ANALYTICS_EVENT` and ensure Supabase writes succeed.
 2. **Build a conversion dashboard** — show weekly `diff_run` → `license_activate` rate and CTA click-through rates by page.
 3. **Run A/B tests** — with instrumentation now complete, test headline/CTA variants on `pricing.html` and `team.html`.
-4. **Add index.html hero tracking** — the homepage is the top entry point; instrument primary hero CTAs next.
+4. **Add analytics clients to `open.html` / `product-hunt.html` / `show-hn.html` / `indiehackers.html`** — these distribution landing pages currently have no event tracking.

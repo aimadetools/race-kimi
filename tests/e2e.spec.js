@@ -239,6 +239,26 @@ test('Homepage shows second sample-schema row with CI/CD entry points', async ({
 });
 
 // ───────────────────────────────────────────────
+// Homepage Analytics Instrumentation
+// ───────────────────────────────────────────────
+
+test('Homepage hero CTAs and sample schemas are instrumented for analytics', async ({ page }) => {
+  await page.goto(`${BASE_URL}/`);
+  // Hero CTAs use data-event auto-tracking
+  await expect(page.locator('header.hero .hero-actions a[data-event="homepage_hero_cta_click"]')).toHaveCount(3);
+  await expect(page.locator('header.hero #hero-cta[data-event-location="try_sample"]')).toBeVisible();
+  // Hero badge CTAs use data-event auto-tracking (CLI copy + docs, VS Code, GitHub Action, Chrome)
+  await expect(page.locator('header.hero [data-event="homepage_hero_badge_click"]')).toHaveCount(5);
+  // Sample schemas use legacy data-analytics auto-tracking
+  const sampleCards = page.locator('a.sample-schema-card[data-analytics="sample_schema_clicked"]');
+  await expect(sampleCards).toHaveCount(10);
+  await expect(page.locator('a.sample-schema-card[data-example="staging-vs-production"]')).toBeVisible();
+  // Global trackEvent alias is exposed for legacy exit-intent tracking
+  const hasTrackEvent = await page.evaluate(() => typeof window.trackEvent === 'function');
+  expect(hasTrackEvent).toBe(true);
+});
+
+// ───────────────────────────────────────────────
 // GitHub PR Schema Diff Shareable URLs
 // ───────────────────────────────────────────────
 
