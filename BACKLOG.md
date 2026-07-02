@@ -37,7 +37,7 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Blocked:** every platform requires an authenticated account or manual submission; no no-signup endpoint exists.
 
 ### Unblocked / Do Next
-- [ ] **P1** Submit `mcp-server.html` to MCP server directories and aggregators (mcpmarket.com, smithery.ai, etc.) that accept listings without authenticated accounts. *Asset shipped Day 314; distribution submission is the next lever.*
+- [ ] **P1** Submit `mcp-server.html` to MCP server directories and aggregators. Created `marketing/mcp-server-directory-kit.md` with copy/paste submissions for mcp.so, mcpmarket.com, and Smithery. Most channels are blocked pending an email address (mcpmarket.com), account/login (Smithery), or explicit human approval for external GitHub issues (mcp.so). Passive discovery on Glama/PulseMCP is expected as crawlers index the repo.
 - [ ] **P2** Review real analytics/GSC data once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is available to double down on highest-converting keywords. *(Instrumentation completed in Day 313; real data review blocked pending credentials.)*
 
 ### Future Sprint

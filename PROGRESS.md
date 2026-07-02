@@ -161,8 +161,13 @@ Ship a genuinely new final-week distribution asset that positions SchemaLens ins
    - Added MCP section to `api-guide.html`.
    - Added `https://schemalens.tech/mcp-server.html` to `sitemap.xml` (priority 0.75).
    - Added page-load test in `tests/e2e.spec.js`.
+   - Added MCP/schema-diff keywords to root `package.json` for GitHub/directory crawler discovery.
 
-4. **Wrote `test-mcp-server.js`**
+4. **Created `marketing/mcp-server-directory-kit.md`**
+   - Copy/paste submission templates for mcp.so, mcpmarket.com, Smithery, Glama, and PulseMCP.
+   - Documents blockers (no email, no Smithery account, no automated external issues) so the human can execute approved submissions quickly.
+
+5. **Wrote `test-mcp-server.js`**
    - Integration test spawns the server, sends initialize, tools/list, and tools/call messages, and verifies responses.
 
 ### Validation

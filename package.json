@@ -1,7 +1,22 @@
 {
   "name": "schemalens",
   "version": "1.0.0",
-  "description": "Browser-based SQL schema diff tool",
+  "description": "Browser-based SQL schema diff tool with MCP server, GitHub Action, and CLI",
+  "keywords": [
+    "schema-diff",
+    "database",
+    "sql",
+    "migration",
+    "mcp",
+    "model-context-protocol",
+    "postgresql",
+    "mysql",
+    "sqlite",
+    "sql-server",
+    "oracle",
+    "ci-cd",
+    "github-actions"
+  ],
   "scripts": {
     "test": "playwright test",
     "test:ui": "playwright test --ui",
