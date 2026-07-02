@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>MCP Config Generator for SchemaLens — Claude, Cursor, VS Code | SchemaLens</title>
+  <meta name="description" content="Generate the correct MCP client config to connect SchemaLens to Claude Desktop, Cursor, VS Code, Cline, or Windsurf. Paste it into your editor and diff SQL schemas from chat.">
+  <link rel="canonical" href="https://schemalens.tech/tools/mcp-config-generator.html">
+  <meta property="og:title" content="MCP Config Generator for SchemaLens — Claude, Cursor, VS Code">
+  <meta property="og:description" content="Generate the correct MCP client config to connect SchemaLens to Claude Desktop, Cursor, VS Code, Cline, or Windsurf.">
+  <meta property="og:url" content="https://schemalens.tech/tools/mcp-config-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MCP Config Generator for SchemaLens — Claude, Cursor, VS Code">
+  <meta name="twitter:description" content="Generate the correct MCP client config to connect SchemaLens to Claude Desktop, Cursor, VS Code, Cline, or Windsurf.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens MCP Config Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates MCP client configuration JSON for Claude Desktop, Cursor, VS Code, Cline, and Windsurf. Connects SchemaLens schema diff tools to any MCP-compatible AI assistant.",
+    "url": "https://schemalens.tech/tools/mcp-config-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 720px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 960px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    .field input:focus, .field select:focus { outline: none; border-color: var(--primary); }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .path-hint { background: var(--bg); border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; }
+    .path-hint code { color: var(--text); background: transparent; padding: 0; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; min-height: 260px; }
+    .output .comment { color: #64748b; }
+    .output .key { color: #7dd3fc; }
+    .output .str { color: #86efac; }
+    .output .num { color: #fca5a5; }
+
+    .client-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .client-tabs button { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+    .client-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>MCP Config Generator</h1>
+      <p>Generate the exact Model Context Protocol config to connect SchemaLens to Claude Desktop, Cursor, VS Code, Cline, or Windsurf. Paste, restart, and start diffing schemas from chat.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Your setup</h2>
+          <div class="field">
+            <label for="client">MCP client</label>
+            <select id="client">
+              <option value="claude">Claude Desktop</option>
+              <option value="cursor">Cursor</option>
+              <option value="vscode">VS Code</option>
+              <option value="cline">Cline (VS Code extension)</option>
+              <option value="windsurf">Windsurf</option>
+            </select>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="serverPath">Path to <code>mcp-server.js</code></label>
+              <input type="text" id="serverPath" placeholder="/path/to/race-kimi/mcp-server.js" value="">
+            </div>
+            <div class="field">
+              <label for="serverName">Server name</label>
+              <input type="text" id="serverName" value="schemalens" placeholder="schemalens">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="nodeCommand">Node command / path</label>
+            <input type="text" id="nodeCommand" value="node" placeholder="node">
+          </div>
+
+          <div class="path-hint" id="pathHint">
+            <strong>Config file:</strong> <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>
+          </div>
+
+          <div class="upsell" style="margin-top: 20px;">
+            <h3>📥 Don't have the server yet?</h3>
+            <ul>
+              <li>Download <code>mcp-server.js</code> from the SchemaLens repo.</li>
+              <li>Requires Node.js 18+. No npm install needed.</li>
+              <li>Your schemas stay local — nothing is uploaded.</li>
+            </ul>
+            <a href="../mcp-server.html" class="btn btn-primary" data-event="mcp_config_view_server_landing">View MCP Server docs →</a>
+            <span style="margin-left:12px;">or <a href="https://github.com/aimadetools/race-kimi/blob/main/mcp-server.js" target="_blank" rel="noopener" data-event="mcp_config_view_source">view source</a></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel" style="position:sticky;top:80px;">
+          <h2>2. Generated config</h2>
+          <div class="client-tabs" id="clientTabs">
+            <button class="active" data-client="claude">Claude</button>
+            <button data-client="cursor">Cursor</button>
+            <button data-client="vscode">VS Code</button>
+            <button data-client="cline">Cline</button>
+            <button data-client="windsurf">Windsurf</button>
+          </div>
+          <div class="output-wrap">
+            <button class="btn btn-secondary btn-copy" id="copyBtn">Copy</button>
+            <div class="output" id="output" tabindex="0" aria-label="Generated MCP config"></div>
+          </div>
+          <div class="share-row">
+            <button class="btn btn-secondary" id="copyLinkBtn">Copy Share Link</button>
+            <a href="../mcp-server.html" class="btn btn-secondary" data-event="mcp_config_server_landing">MCP Server</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Built with 💜 by <a href="../index.html">SchemaLens</a> ·
+        <a href="../open.html">Open Startup</a> ·
+        <a href="../privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const client = document.getElementById('client');
+    const serverPath = document.getElementById('serverPath');
+    const serverName = document.getElementById('serverName');
+    const nodeCommand = document.getElementById('nodeCommand');
+    const pathHint = document.getElementById('pathHint');
+    const output = document.getElementById('output');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    const clientTabs = document.getElementById('clientTabs');
+
+    const clients = {
+      claude: {
+        label: 'Claude Desktop',
+        configPath: '~/Library/Application Support/Claude/claude_desktop_config.json',
+        windowsPath: '%APPDATA%\\Claude\\claude_desktop_config.json',
+        rootKey: 'mcpServers',
+        nested: true
+      },
+      cursor: {
+        label: 'Cursor',
+        configPath: '~/.cursor/mcp.json',
+        windowsPath: '%USERPROFILE%\\.cursor\\mcp.json',
+        rootKey: 'mcpServers',
+        nested: true
+      },
+      vscode: {
+        label: 'VS Code',
+        configPath: '.vscode/mcp.json',
+        windowsPath: '.vscode/mcp.json',
+        rootKey: 'servers',
+        nested: false
+      },
+      cline: {
+        label: 'Cline',
+        configPath: '.vscode/mcp_settings.json',
+        windowsPath: '.vscode/mcp_settings.json',
+        rootKey: 'mcpServers',
+        nested: true
+      },
+      windsurf: {
+        label: 'Windsurf',
+        configPath: '~/.windsurf/mcp.json',
+        windowsPath: '%USERPROFILE%\\.windsurf\\mcp.json',
+        rootKey: 'mcpServers',
+        nested: true
+      }
+    };
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function highlightJson(obj) {
+      const raw = JSON.stringify(obj, null, 2);
+      return escapeHtml(raw)
+        .replace(/(\/\/[^\n]*)/g, '<span class="comment">$1</span>')
+        .replace(/"([^"]+)":/g, '<span class="key">"$1"</span>:')
+        .replace(/: "([^"]*)"/g, ': <span class="str">"$1"</span>')
+        .replace(/: (true|false|null)/g, ': <span class="num">$1</span>')
+        .replace(/: ([0-9]+)/g, ': <span class="num">$1</span>');
+    }
+
+    function generateConfig(clientKey) {
+      const info = clients[clientKey];
+      const path = serverPath.value.trim() || '/path/to/race-kimi/mcp-server.js';
+      const name = serverName.value.trim() || 'schemalens';
+      const node = nodeCommand.value.trim() || 'node';
+
+      const serverBlock = info.nested
+        ? { command: node, args: [path] }
+        : { type: 'stdio', command: node, args: [path] };
+
+      const obj = {};
+      obj[info.rootKey] = {};
+      obj[info.rootKey][name] = serverBlock;
+      return obj;
+    }
+
+    function renderOutput() {
+      const key = client.value;
+      const info = clients[key];
+      const obj = generateConfig(key);
+      const raw = JSON.stringify(obj, null, 2);
+      const lines = raw.split('\n');
+      lines.unshift(`// ${info.label} config`);
+      lines.unshift(`// Save to: ${info.configPath}`);
+      const displayObj = JSON.parse(lines.slice(2).join('\n'));
+      let html = `<span class="comment">// ${info.label} config</span>\n`;
+      html += `<span class="comment">// Save to: ${info.configPath}</span>\n`;
+      html += highlightJson(displayObj);
+      output.innerHTML = html;
+    }
+
+    function updatePathHint() {
+      const info = clients[client.value];
+      const isWindows = navigator.platform && navigator.platform.toLowerCase().includes('win');
+      const configPath = isWindows && info.windowsPath ? info.windowsPath : info.configPath;
+      pathHint.innerHTML = `<strong>Config file:</strong> <code>${escapeHtml(configPath)}</code>`;
+    }
+
+    function updateTabs() {
+      clientTabs.querySelectorAll('button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.client === client.value);
+      });
+    }
+
+    // Prefill from URL params
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('client') && clients[params.get('client')]) client.value = params.get('client');
+      if (params.get('path')) serverPath.value = decodeURIComponent(params.get('path'));
+      if (params.get('name')) serverName.value = decodeURIComponent(params.get('name'));
+      if (params.get('node')) nodeCommand.value = decodeURIComponent(params.get('node'));
+    } catch (e) {}
+
+    client.addEventListener('change', () => {
+      updatePathHint();
+      updateTabs();
+      renderOutput();
+      if (window.SchemaLensAnalytics && window.SchemaLensAnalytics.track) {
+        window.SchemaLensAnalytics.track('mcp_config_client_changed', { client: client.value });
+      }
+    });
+
+    [serverPath, serverName, nodeCommand].forEach(el => {
+      el.addEventListener('input', renderOutput);
+    });
+
+    clientTabs.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        client.value = btn.dataset.client;
+        updatePathHint();
+        updateTabs();
+        renderOutput();
+        if (window.SchemaLensAnalytics && window.SchemaLensAnalytics.track) {
+          window.SchemaLensAnalytics.track('mcp_config_client_changed', { client: client.value });
+        }
+      });
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        const key = client.value;
+        const obj = generateConfig(key);
+        await navigator.clipboard.writeText(JSON.stringify(obj, null, 2));
+        copyBtn.textContent = 'Copied!';
+        copyBtn.classList.add('copied');
+        setTimeout(() => { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 1500);
+        if (window.SchemaLensAnalytics && window.SchemaLensAnalytics.track) {
+          window.SchemaLensAnalytics.track('mcp_config_copy', { client: key });
+        }
+      } catch (e) {
+        copyBtn.textContent = 'Copy failed';
+      }
+    });
+
+    copyLinkBtn.addEventListener('click', async () => {
+      try {
+        const params = new URLSearchParams();
+        params.set('client', client.value);
+        if (serverPath.value) params.set('path', encodeURIComponent(serverPath.value));
+        if (serverName.value && serverName.value !== 'schemalens') params.set('name', encodeURIComponent(serverName.value));
+        if (nodeCommand.value && nodeCommand.value !== 'node') params.set('node', encodeURIComponent(nodeCommand.value));
+        const url = location.origin + location.pathname + '?' + params.toString();
+        await navigator.clipboard.writeText(url);
+        copyLinkBtn.textContent = 'Link Copied!';
+        setTimeout(() => { copyLinkBtn.textContent = 'Copy Share Link'; }, 1500);
+        if (window.SchemaLensAnalytics && window.SchemaLensAnalytics.track) {
+          window.SchemaLensAnalytics.track('mcp_config_share_link', { client: client.value });
+        }
+      } catch (e) {
+        copyLinkBtn.textContent = 'Copy failed';
+      }
+    });
+
+    // Initialize
+    updatePathHint();
+    updateTabs();
+    renderOutput();
+  })();
+  </script>
+  <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

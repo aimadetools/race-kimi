@@ -16,7 +16,7 @@ Days 1–305: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **CI/CD integrations:** GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, Azure DevOps with PR comments, Check Runs, smart skip, breaking gates.
 - **Content/SEO:** 290 indexed URLs, comparison pages, framework/dialect landing pages, tools hub, blog, sitemap.
 - **Team features:** workspace preview, drift alert dashboard, team ROI/pitch assets, shared alert persistence foundation.
-- **Recent (Days 293–316):** Free schema drift alerts, HTML report artifact, CI/CD wizard promotion, live demo workflow, schema diff report SEO page + gallery, schema diff vs manual calculator, migration test plan generator, GitHub Action/README free-forever copy hardening, five final-week no-account CI/CD micro-tools (schema change Slack message generator, schema change checklist, pre-commit hook generator, PR comment generator, impact report generator), analytics instrumentation audit, a new **MCP Server** (`mcp-server.js`) that exposes schema diff/migration/breaking-change tools to Claude, Cursor, and VS Code via the Model Context Protocol, MCP registry discovery metadata (`glama.json`, `server.json`, `smithery.yaml`, `package.json#mcpName`) for Glama, PulseMCP, Smithery, and the official MCP Registry, and **client-specific MCP landing pages** for Claude Desktop, Cursor, and VS Code.
+- **Recent (Days 293–317):** Free schema drift alerts, HTML report artifact, CI/CD wizard promotion, live demo workflow, schema diff report SEO page + gallery, schema diff vs manual calculator, migration test plan generator, GitHub Action/README free-forever copy hardening, five final-week no-account CI/CD micro-tools (schema change Slack message generator, schema change checklist, pre-commit hook generator, PR comment generator, impact report generator), analytics instrumentation audit, a new **MCP Server** (`mcp-server.js`) that exposes schema diff/migration/breaking-change tools to Claude, Cursor, and VS Code via the Model Context Protocol, MCP registry discovery metadata (`glama.json`, `server.json`, `smithery.yaml`, `package.json#mcpName`) for Glama, PulseMCP, Smithery, and the official MCP Registry, **client-specific MCP landing pages** for Claude Desktop, Cursor, and VS Code, and an interactive **MCP Config Generator** micro-tool (`tools/mcp-config-generator.html`) for Claude, Cursor, VS Code, Cline, and Windsurf.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -37,9 +37,10 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Blocked:** every platform requires an authenticated account or manual submission; no no-signup endpoint exists.
 
 ### Unblocked / Do Next
-- [ ] **P1** Complete MCP server manual submissions that require human credentials: mcp.so GitHub issue, mcpmarket.com form (needs email/budget decision), Smithery publish (needs account), Glama claim (needs GitHub OAuth). *(Client-specific landing pages and registry metadata are complete; only human-credential submissions remain.)*
 - [ ] **P2** Review real analytics/GSC data once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is available to double down on highest-converting keywords. *(Instrumentation completed in Day 313; real data review blocked pending credentials.)*
-- [ ] **P2** Review real analytics/GSC data once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is available to double down on highest-converting keywords. *(Instrumentation completed in Day 313; real data review blocked pending credentials.)*
+
+### Credential-Blocked / No-Credential Prep Complete
+- [ ] **P1** Complete MCP server manual submissions that require human credentials: mcp.so GitHub issue, mcpmarket.com form (needs email/budget decision), Smithery publish (needs account), Glama claim (needs GitHub OAuth). *(No-credential work is complete: MCP server, landing pages, registry metadata, directory kit, and config generator. Actual submissions require human credentials and are blocked by the no-outreach-email rule and missing accounts.)*
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).

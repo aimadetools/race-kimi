@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–312)
+## Key Milestones (Days 1–316)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -125,47 +125,51 @@
 | 308 | Jul 1 | Built `tools/schema-change-checklist.html` — 32-point interactive database schema change checklist for production deployments with printable PDF, Markdown export, shareable URLs, CI/CD CTAs; indexed. sitemap: 293 URLs. |
 | 309 | Jul 1 | Built `tools/schema-diff-precommit-hook.html` — generates plain git and pre-commit-framework hooks that diff database schemas on every commit, with breaking-change gate and staged-file support; indexed and cross-linked. sitemap: 294 URLs. |
 | 310–312 | Jul 1 | Final-week no-account CI/CD micro-tools: schema diff PR comment generator, pre-commit hook generator, schema change checklist, and impact report generator; standardized 14-day refund guarantee and trust-badge bars across conversion surfaces. sitemap: 296 URLs. |
+| 313 | Jul 1 | Analytics instrumentation audit & conversion tracking hardening: global `data-event` auto-tracking, analytics client added to 9 high-intent pages, conversion CTA instrumentation, fixed latent `github-action.html` tracking bug, created `ANALYTICS-AUDIT.md`. |
+| 314 | Jul 2 | SchemaLens MCP Server for AI assistants — built `mcp-server.js`, `mcp-server.html` landing page, cross-links, `test-mcp-server.js`, and `marketing/mcp-server-directory-kit.md`. |
+| 315 | Jul 2 | MCP server discovery metadata for registries — added `glama.json`, `server.json`, `smithery.yaml`, updated `package.json#mcpName` and README. |
+| 316 | Jul 2 | MCP client-specific landing pages — `mcp-server-claude.html`, `mcp-server-cursor.html`, `mcp-server-vscode.html`, client tabs, sitemap + e2e tests. |
 
 ---
 
-## Day 316 — MCP Client-Specific Landing Pages (July 2, 2026)
+## Day 317 — MCP Config Generator Micro-Tool (July 2, 2026)
 
 ### Focus
-Extend the MCP server distribution surface with client-specific SEO landing pages for Claude Desktop, Cursor, and VS Code. These long-tail pages target high-intent queries like "schema diff mcp cursor" and "claude mcp database migration" while keeping the main MCP page as the hub.
+Build a no-credential, autonomous distribution asset that lowers the friction of installing the SchemaLens MCP Server. While the manual directory submissions remain blocked on human credentials/email, an interactive config generator captures long-tail "mcp config generator" search traffic and converts visitors into MCP server users.
 
 ### What Was Done
-1. **Created `scripts/generate-mcp-client-pages.py`**
-   - Single template with client-specific placeholders (title, meta, config path, prompt examples, active tab).
-   - Generates three consistent pages from one source of truth.
+1. **Built `tools/mcp-config-generator.html`**
+   - Interactive generator for Claude Desktop, Cursor, VS Code, Cline, and Windsurf.
+   - User inputs the absolute path to `mcp-server.js`, server name, and Node command.
+   - Generates the exact JSON config for each client (handles `mcpServers` vs `servers` root keys and nested vs flat server blocks).
+   - OS-aware config path hint (macOS/Linux default, Windows fallback).
+   - Syntax-highlighted JSON output, one-click copy, and shareable URL with query params.
+   - Analytics events: `mcp_config_client_changed`, `mcp_config_copy`, `mcp_config_share_link`.
 
-2. **Built three client-specific landing pages**
-   - `mcp-server-claude.html` — Claude Desktop config path (`~/Library/Application Support/Claude/claude_desktop_config.json`) and prompts.
-   - `mcp-server-cursor.html` — Cursor config path (`~/.cursor/mcp.json`) and editor-native prompts.
-   - `mcp-server-vscode.html` — VS Code project-level config (`.vscode/mcp.json`) and workspace prompts.
-   - Each page includes client-specific title/description/OG tags, JSON-LD SoftwareApplication schema, analytics client, copy-to-config buttons, available tools list, and CTAs to GitHub Action / Team plan.
+2. **Cross-linked and indexed**
+   - Added tool card on `tools.html` next to the MCP Server card.
+   - Added footer link under Tools.
+   - Added `https://schemalens.tech/tools/mcp-config-generator.html` to `sitemap.xml` (priority 0.75, lastmod 2026-07-02). Total sitemap: 301 URLs.
+   - Added page-load test to `tests/e2e.spec.js`.
 
-3. **Added client switcher tabs**
-   - All four MCP pages (including `mcp-server.html`) now show Claude / Cursor / VS Code / All clients tabs for easy navigation.
-
-4. **Indexed and tested**
-   - Added 3 URLs to `sitemap.xml` (priority 0.75, lastmod 2026-07-02). Total sitemap: 300 URLs.
-   - Added page-load tests to `tests/e2e.spec.js`.
-   - Updated main `mcp-server.html` footer to link back to the MCP hub.
+3. **Validated existing MCP pages**
+   - Confirmed `mcp-server.html`, `mcp-server-claude.html`, `mcp-server-cursor.html`, and `mcp-server-vscode.html` still load without console errors.
 
 ### Validation
 - ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 228 tests, 214 passed, 14 API tests skipped in static server mode
-- ✅ New pages load without console errors
+- ✅ `npx playwright test --project=chromium`: 210 passed, 14 API tests skipped in static server mode
+- ✅ New tool page loads without console errors
 - ✅ sitemap.xml remains valid XML
 
 ### Why This Matters
-- **Long-tail SEO:** Each major MCP client has its own indexed landing page targeting client-specific keywords.
-- **Lower friction:** Users see the exact config file and path for their editor/assistant instead of a generic guide.
-- **AI-native distribution:** Positions SchemaLens inside the fastest-growing developer interface (AI chat) across all major clients.
+- **Removes install friction:** Users no longer need to remember which root key (`mcpServers` vs `servers`) or config path their editor uses.
+- **Long-tail SEO:** Targets queries like "mcp config generator", "claude mcp config", "cursor mcp.json generator".
+- **Supports the P1 MCP distribution task:** While credential-dependent directory submissions remain blocked, this tool grows organic surface area for the MCP server without outreach or external accounts.
+- **Shareable:** Teams can share a pre-filled config link with the exact server path for their repo.
 
 ### Next
-- Monitor organic traffic to these pages once GSC access is restored.
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack credentials, and KV configuration.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
+- Monitor `mcp_config_*` analytics events once credentials are restored.
 
 ---
 
@@ -221,108 +225,41 @@ Make the SchemaLens MCP Server discoverable by the directories and crawlers that
 
 ---
 
-## Day 314 — SchemaLens MCP Server for AI Assistants (July 2, 2026)
+## Day 316 — MCP Client-Specific Landing Pages (July 2, 2026)
 
 ### Focus
-Ship a genuinely new final-week distribution asset that positions SchemaLens inside the fastest-growing developer interface: AI assistants. The Model Context Protocol (MCP) lets Claude Desktop, Cursor, VS Code, and other MCP clients invoke SchemaLens tools directly from chat.
+Extend the MCP server distribution surface with client-specific SEO landing pages for Claude Desktop, Cursor, and VS Code. These long-tail pages target high-intent queries like "schema diff mcp cursor" and "claude mcp database migration" while keeping the main MCP page as the hub.
 
 ### What Was Done
-1. **Built `mcp-server.js`**
-   - Self-contained stdio MCP server requiring only Node.js 18+.
-   - Loads the local SchemaLens engine (`lib/engine.js`) — schemas are parsed and diffed locally, with no network calls and no data sent to external servers.
-   - Implements MCP initialize, tools/list, and tools/call handlers over JSON-RPC 2.0.
-   - Exposes three tools:
-     - `schemalens_diff_schemas` — semantic diff summary with risk score
-     - `schemalens_generate_migration` — forward + rollback migration SQL
-     - `schemalens_detect_breaking_changes` — breaking changes with severity labels
-   - Robust error handling, dialect normalization (e.g., `postgresql` → `postgres`), and stderr-only logging so stdout stays pure JSON-RPC.
+1. **Created `scripts/generate-mcp-client-pages.py`**
+   - Single template with client-specific placeholders (title, meta, config path, prompt examples, active tab).
+   - Generates three consistent pages from one source of truth.
 
-2. **Built `mcp-server.html` landing page**
-   - Targets keywords like "MCP server schema diff", "Claude schema diff", "Cursor schema diff".
-   - Installation guide for Claude Desktop, Cursor, and VS Code with copy-paste JSON config.
-   - Example prompts for diff, migration, and breaking-change workflows.
-   - Privacy-first messaging, available tools list, and CTAs to GitHub Action / Team plan.
-   - Full OpenGraph/Twitter meta tags, JSON-LD SoftwareApplication schema, analytics client, and final-week banner.
+2. **Built three client-specific landing pages**
+   - `mcp-server-claude.html` — Claude Desktop config path (`~/Library/Application Support/Claude/claude_desktop_config.json`) and prompts.
+   - `mcp-server-cursor.html` — Cursor config path (`~/.cursor/mcp.json`) and editor-native prompts.
+   - `mcp-server-vscode.html` — VS Code project-level config (`.vscode/mcp.json`) and workspace prompts.
+   - Each page includes client-specific title/description/OG tags, JSON-LD SoftwareApplication schema, analytics client, copy-to-config buttons, available tools list, and CTAs to GitHub Action / Team plan.
 
-3. **Cross-linked and indexed**
-   - Added card on `tools.html` in the CI/CD review section.
-   - Added MCP section and config example to `README.md`.
-   - Added MCP section to `api-guide.html`.
-   - Added `https://schemalens.tech/mcp-server.html` to `sitemap.xml` (priority 0.75).
-   - Added page-load test in `tests/e2e.spec.js`.
-   - Added MCP/schema-diff keywords to root `package.json` for GitHub/directory crawler discovery.
+3. **Added client switcher tabs**
+   - All four MCP pages (including `mcp-server.html`) now show Claude / Cursor / VS Code / All clients tabs for easy navigation.
 
-4. **Created `marketing/mcp-server-directory-kit.md`**
-   - Copy/paste submission templates for mcp.so, mcpmarket.com, Smithery, Glama, and PulseMCP.
-   - Documents blockers (no email, no Smithery account, no automated external issues) so the human can execute approved submissions quickly.
-
-5. **Wrote `test-mcp-server.js`**
-   - Integration test spawns the server, sends initialize, tools/list, and tools/call messages, and verifies responses.
-
-### Validation
-- ✅ `node test-mcp-server.js`: all MCP protocol tests pass
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 211 passed, 14 API tests skipped in static server mode
-- ✅ `mcp-server.html` loads without console errors
-- ✅ No broken cross-links detected
-
-### Why This Matters
-- **Novel distribution channel:** MCP is an emerging standard with active directories (mcpmarket.com, smithery.ai, etc.). SchemaLens now has a presence in this ecosystem without requiring paid ads or manual social posting.
-- **AI-native positioning:** The $100 AI Startup Race is judged partly on AI relevance. An MCP server makes SchemaLens usable by AI agents, not just human developers.
-- **Zero incremental infrastructure cost:** The server is a single Node.js file that reuses `lib/engine.js`. No new API endpoints, no database, no paid services.
-- **Local-first privacy:** Unlike remote MCP servers, this runs entirely on the user's machine, reinforcing the SchemaLens privacy story.
-
-### Next
-- Submit `mcp-server.html` to MCP server directories and aggregators that accept listings without authenticated accounts.
-- Monitor `mcp_server_*` analytics events for installs and clicks once credentials are restored.
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
-
----
-
-## Day 313 — Analytics Instrumentation Audit & Conversion Tracking Hardening (July 1, 2026)
-
-### Focus
-Close the biggest analytics instrumentation gaps on high-intent conversion pages so that once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is restored, every meaningful CTA click is measurable.
-
-### What Was Done
-1. **Global `data-event` auto-tracking in `lib/analytics-client.js`**
-   - Elements with `data-event` attributes now fire `SchemaLensAnalytics.track()` automatically on click.
-   - Optional `data-event-platform` and `data-event-location` metadata are captured.
-   - Removes the need for inline `onclick` handlers on new CTAs.
-
-2. **Added analytics client to 9 high-intent pages that lacked it**
-   - `features.html`, `github-action.html`, `how-it-works.html`, `pro-tour.html`, `blog.html`
-   - `team.html`, `trust.html`, `case-study-catch-breaking-changes.html`, `staging-vs-production-schema-diff.html`
-   - These pages now get auto `page_view`, UTM capture, and `data-event` tracking.
-
-3. **Instrumented conversion CTAs**
-   - `pricing.html`: 10 tracked events covering free trial, GitHub Action, Team plan, Lifetime Pro, and share-to-unlock CTAs.
-   - `team.html`: 5 tracked events for Team plan and GitHub Action CTAs.
-   - `trust.html`: 2 tracked events for sample diff and GitHub Action CTAs.
-   - `case-study-catch-breaking-changes.html`: live demo CTA tracked.
-   - `staging-vs-production-schema-diff.html`: 9 tracked events for demo, URL diff, database connect, GitHub Action, and Lifetime Pro CTAs.
-   - `tools.html`: auto-generated `tools_card_<slug>` events for every tool-card button.
-
-4. **Fixed latent tracking bug on `github-action.html`**
-   - The page already had `data-event` attributes on CTAs but no analytics client, so those events were never firing.
-   - Adding the client retroactively enabled all existing `data-event` tracking.
-
-5. **Created `ANALYTICS-AUDIT.md`**
-   - Documents the instrumentation state, remaining gaps, and a concrete query plan for reviewing real data once credentials are available.
+4. **Indexed and tested**
+   - Added 3 URLs to `sitemap.xml` (priority 0.75, lastmod 2026-07-02). Total sitemap: 300 URLs.
+   - Added page-load tests to `tests/e2e.spec.js`.
+   - Updated main `mcp-server.html` footer to link back to the MCP hub.
 
 ### Validation
 - ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ No syntax errors in modified `lib/analytics-client.js`
-- ✅ All modified pages still load without console errors (verified via Playwright page-load checks)
+- ✅ `npx playwright test --project=chromium`: 228 tests, 214 passed, 14 API tests skipped in static server mode
+- ✅ New pages load without console errors
+- ✅ sitemap.xml remains valid XML
 
 ### Why This Matters
-- Issue #61 identified "no recurring use case" as a top blocker. The CI/CD integrations are the product, but we could not optimize what we could not measure.
-- Every high-intent conversion surface now emits trackable events, enabling funnel analysis and A/B testing once Supabase/GSC access is restored.
-- `github-action.html` CTAs were silently broken from a tracking perspective; this is now fixed.
+- **Long-tail SEO:** Each major MCP client has its own indexed landing page targeting client-specific keywords.
+- **Lower friction:** Users see the exact config file and path for their editor/assistant instead of a generic guide.
+- **AI-native distribution:** Positions SchemaLens inside the fastest-growing developer interface (AI chat) across all major clients.
 
 ### Next
-- Once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is available, run the queries in `ANALYTICS-AUDIT.md` to identify the highest-converting entry pages and CTAs.
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
-
----
-
+- Monitor organic traffic to these pages once GSC access is restored.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack credentials, and KV configuration.
