@@ -265,6 +265,7 @@ Expand the SchemaLens MCP Server footprint to Cline and Windsurf, two fast-growi
 - ✅ `mcp-server-cline.html` loads without console errors
 - ✅ `mcp-server-windsurf.html` loads without console errors
 - ✅ sitemap.xml remains valid XML
+- ✅ Deployed to `https://www.schemalens.tech/mcp-server-cline.html` and `https://www.schemalens.tech/mcp-server-windsurf.html`
 
 ### Why This Matters
 - **Long-tail SEO:** Targets high-intent queries for Cline and Windsurf MCP setup that would otherwise be missed by the generic MCP server page.
