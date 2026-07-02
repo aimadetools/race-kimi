@@ -282,6 +282,12 @@
   </div>
 
   <main class="container">
+    <div class="guide-section" style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.04)); border-color: rgba(99,102,241,0.25);">
+      <h2>🎮 Try the API Playground</h2>
+      <p>Want to see the API response before writing code? Paste two schemas and click send — no API key required.</p>
+      <a href="tools/api-playground.html" class="btn btn-primary" data-event="api_guide_open_playground">Open API Playground →</a>
+    </div>
+
     <div class="guide-section">
       <h2>🎯 What You Can Build</h2>
       <div class="pattern-card">
@@ -880,6 +886,7 @@ async function runPlayground() {
   }
 }
 </script>
+<script src="lib/analytics-client.js"></script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

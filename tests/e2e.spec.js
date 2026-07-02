@@ -203,6 +203,7 @@ const pages = [
   { path: '/blog/schema-diff-for-ai-agents.html', name: 'Schema Diff for AI Agents Blog Post' },
   { path: '/trust.html', name: 'Trust Center' },
   { path: '/schema-diff-newsletter.html', name: 'Newsletter Ad Landing Page' },
+  { path: '/tools/api-playground.html', name: 'API Playground' },
 ];
 
 for (const { path, name } of pages) {
