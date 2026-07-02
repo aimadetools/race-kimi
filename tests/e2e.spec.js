@@ -54,6 +54,8 @@ const pages = [
   { path: '/mcp-server-claude.html', name: 'MCP Server Claude Landing' },
   { path: '/mcp-server-cursor.html', name: 'MCP Server Cursor Landing' },
   { path: '/mcp-server-vscode.html', name: 'MCP Server VS Code Landing' },
+  { path: '/mcp-server-cline.html', name: 'MCP Server Cline Landing' },
+  { path: '/mcp-server-windsurf.html', name: 'MCP Server Windsurf Landing' },
   { path: '/ai-agents.html', name: 'AI Agents Landing' },
   { path: '/postgres-schema-diff.html', name: 'PostgreSQL Diff Landing' },
   { path: '/mysql-schema-diff.html', name: 'MySQL Diff Landing' },
