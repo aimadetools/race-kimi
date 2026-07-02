@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SchemaLens MCP Server — AI Schema Diff for Claude, Cursor & VS Code</title>
-  <meta name="description" content="Connect SchemaLens to Claude Desktop, Cursor, or any MCP client. Diff SQL schemas, generate migrations, and detect breaking changes directly inside your AI assistant.">
+  <title>SchemaLens MCP Server — AI Schema Diff for Claude, Cursor, VS Code, Cline & Windsurf</title>
+  <meta name="description" content="Connect SchemaLens to Claude Desktop, Cursor, VS Code, Cline, Windsurf, or any MCP client. Diff SQL schemas, generate migrations, and detect breaking changes directly inside your AI assistant.">
   <link rel="canonical" href="https://schemalens.tech/mcp-server.html">
-  <meta property="og:title" content="SchemaLens MCP Server — AI Schema Diff for Claude, Cursor & VS Code">
+  <meta property="og:title" content="SchemaLens MCP Server — AI Schema Diff for Claude, Cursor, VS Code, Cline & Windsurf">
   <meta property="og:description" content="Add SchemaLens schema diff tools to your AI assistant via the Model Context Protocol. Free, local, no API keys.">
   <meta property="og:url" content="https://schemalens.tech/mcp-server.html">
   <meta property="og:type" content="website">
@@ -113,7 +113,7 @@
 
     <div class="page-header">
       <h1>SchemaLens MCP Server <span class="badge-free">Free</span></h1>
-      <p>Give Claude, Cursor, and any MCP-compatible assistant the power to diff SQL schemas, generate migrations, and catch breaking changes — without leaving the chat.</p>
+      <p>Give Claude, Cursor, VS Code, Cline, Windsurf, and any MCP-compatible assistant the power to diff SQL schemas, generate migrations, and catch breaking changes — without leaving the chat.</p>
       <div class="dialect-tags">
         <span>PostgreSQL</span><span>MySQL</span><span>SQLite</span><span>SQL Server</span><span>Oracle</span>
       </div>
@@ -121,6 +121,8 @@
         <a href="mcp-server-claude.html">Claude Desktop</a>
         <a href="mcp-server-cursor.html">Cursor</a>
         <a href="mcp-server-vscode.html">VS Code</a>
+        <a href="mcp-server-cline.html">Cline</a>
+        <a href="mcp-server-windsurf.html">Windsurf</a>
         <a href="mcp-server.html" style="background:var(--primary);color:#fff;border-color:var(--primary);">All clients</a>
       </div>
     </div>
@@ -174,6 +176,8 @@
 <span class="comment">// Claude Desktop: ~/Library/Application Support/Claude/claude_desktop_config.json</span>
 <span class="comment">// Cursor: ~/.cursor/mcp.json</span>
 <span class="comment">// VS Code: .vscode/mcp.json</span>
+<span class="comment">// Cline: .vscode/mcp_settings.json</span>
+<span class="comment">// Windsurf: ~/.windsurf/mcp.json</span>
 {
   <span class="key">"mcpServers"</span>: {
     <span class="key">"schemalens"</span>: {

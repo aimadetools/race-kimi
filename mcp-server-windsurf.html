@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SchemaLens MCP Server for Claude Desktop — Diff SQL Schemas in Claude</title>
-  <meta name="description" content="Add SchemaLens schema diff, migration generation, and breaking-change detection to Claude Desktop via MCP. Local, free, no API keys.">
-  <link rel="canonical" href="https://schemalens.tech/mcp-server-claude.html">
-  <meta property="og:title" content="SchemaLens MCP Server for Claude Desktop">
-  <meta property="og:description" content="Diff SQL schemas and generate migrations inside Claude Desktop with the SchemaLens MCP server. Free and local.">
-  <meta property="og:url" content="https://schemalens.tech/mcp-server-claude.html">
+  <title>SchemaLens MCP Server for Windsurf — Diff SQL Schemas in Windsurf</title>
+  <meta name="description" content="Add SchemaLens schema diff, migration generation, and breaking-change detection to Windsurf via MCP. Local, free, no API keys.">
+  <link rel="canonical" href="https://schemalens.tech/mcp-server-windsurf.html">
+  <meta property="og:title" content="SchemaLens MCP Server for Windsurf">
+  <meta property="og:description" content="Diff SQL schemas and generate migrations inside Windsurf with the SchemaLens MCP server. Free and local.">
+  <meta property="og:url" content="https://schemalens.tech/mcp-server-windsurf.html">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="SchemaLens MCP Server for Claude Desktop">
-  <meta name="twitter:description" content="Diff SQL schemas and generate migrations inside Claude Desktop with the SchemaLens MCP server. Free and local.">
+  <meta name="twitter:title" content="SchemaLens MCP Server for Windsurf">
+  <meta name="twitter:description" content="Diff SQL schemas and generate migrations inside Windsurf with the SchemaLens MCP server. Free and local.">
   <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "SchemaLens MCP Server for Claude Desktop",
+    "name": "SchemaLens MCP Server for Windsurf",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -27,8 +27,8 @@
       "price": "0",
       "priceCurrency": "USD"
     },
-    "featureList": "MCP server for SQL schema diff, migration generation, and breaking change detection inside Claude Desktop. Runs locally.",
-    "url": "https://schemalens.tech/mcp-server-claude.html"
+    "featureList": "MCP server for SQL schema diff, migration generation, and breaking change detection inside Windsurf. Runs locally.",
+    "url": "https://schemalens.tech/mcp-server-windsurf.html"
   }
   </script>
   <link rel="stylesheet" href="style.css">
@@ -110,29 +110,29 @@
     </nav>
 
     <div class="page-header">
-      <h1>SchemaLens MCP Server for Claude Desktop <span class="badge-free">Free</span></h1>
-      <p>Diff SQL schemas, generate migrations, and catch breaking changes inside Claude Desktop — without switching windows.</p>
+      <h1>SchemaLens MCP Server for Windsurf <span class="badge-free">Free</span></h1>
+      <p>Diff SQL schemas, generate migrations, and catch breaking changes inside Windsurf — the agentic IDE by Codeium.</p>
       <div class="client-tabs">
-        <a href="mcp-server-claude.html" class="active">Claude</a>
+        <a href="mcp-server-claude.html" >Claude</a>
         <a href="mcp-server-cursor.html" >Cursor</a>
         <a href="mcp-server-vscode.html" >VS Code</a>
         <a href="mcp-server-cline.html" >Cline</a>
-        <a href="mcp-server-windsurf.html" >Windsurf</a>
+        <a href="mcp-server-windsurf.html" class="active">Windsurf</a>
         <a href="mcp-server.html">All clients</a>
       </div>
     </div>
 
     <div class="cta-bar">
-      <h2>🤖 Add SchemaLens to Claude Desktop in 60 seconds</h2>
+      <h2>🤖 Add SchemaLens to Windsurf in 60 seconds</h2>
       <p>Free, open-source MCP server. No account. No API key. Your schemas never leave your machine.</p>
-      <a href="https://github.com/aimadetools/race-kimi/blob/main/mcp-server.js" class="btn btn-secondary" target="_blank" rel="noopener" data-event="mcp_claude_view_source">View source on GitHub</a>
-      <a href="app.html" class="btn btn-primary" data-event="mcp_claude_try_web_app">Try the web app →</a>
+      <a href="https://github.com/aimadetools/race-kimi/blob/main/mcp-server.js" class="btn btn-secondary" target="_blank" rel="noopener" data-event="mcp_windsurf_view_source">View source on GitHub</a>
+      <a href="app.html" class="btn btn-primary" data-event="mcp_windsurf_try_web_app">Try the web app →</a>
     </div>
 
     <div class="feature-grid">
       <div class="feature-card">
         <h3>🔍 Semantic Schema Diff</h3>
-        <p>Ask Claude Desktop to compare two schemas and get a structured summary of added, removed, and modified tables, columns, indexes, and constraints.</p>
+        <p>Ask Windsurf to compare two schemas and get a structured summary of added, removed, and modified tables, columns, indexes, and constraints.</p>
       </div>
       <div class="feature-card">
         <h3>🛡️ Breaking Change Detection</h3>
@@ -152,7 +152,7 @@
       <div class="step-num">1</div>
       <div class="step-body">
         <h3>Clone the SchemaLens repo</h3>
-        <p>Claude Desktop will run <code>mcp-server.js</code> directly from your local copy. Open a terminal and clone the repo.</p>
+        <p>Windsurf will run <code>mcp-server.js</code> directly from your local copy. Open a terminal and clone the repo.</p>
         <div class="code-block">
           <button class="btn-copy" onclick="copyCode(this)">Copy</button>
           <code>git clone https://github.com/aimadetools/race-kimi.git<br>cd race-kimi</code>
@@ -163,11 +163,11 @@
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-body">
-        <h3>Add to Claude Desktop's MCP config</h3>
-        <p>Open <code>~/Library/Application Support/Claude/claude_desktop_config.json</code> (macOS) or the equivalent config path on your OS. Add the schemalens server under <code>mcpServers</code>.</p>
+        <h3>Add to Windsurf's MCP config</h3>
+        <p>Open Windsurf Settings → MCP, or create <code>~/.windsurf/mcp.json</code>. Add the schemalens server under <code>mcpServers</code>.</p>
         <div class="code-block">
           <button class="btn-copy" onclick="copyCode(this)">Copy</button>
-<span class="comment">// ~/Library/Application Support/Claude/claude_desktop_config.json</span>
+<span class="comment">// ~/.windsurf/mcp.json</span>
 {
   <span class="key">"mcpServers"</span>: {
     <span class="key">"schemalens"</span>: {
@@ -183,9 +183,9 @@
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-body">
-        <h3>Restart Claude Desktop and start chatting</h3>
-        <p>Close and reopen Claude Desktop so it picks up the new MCP server, then try these prompts:</p>
-        <div class="prompt-card"><strong>Diff:</strong> "Compare these two PostgreSQL schemas and tell me what changed. [paste schema A] [paste schema B]"</div>
+        <h3>Restart Windsurf and start chatting</h3>
+        <p>Close and reopen Windsurf so it picks up the new MCP server, then try these prompts:</p>
+        <div class="prompt-card"><strong>Diff:</strong> "Compare these two schemas and show me what changed."</div>
         <div class="prompt-card"><strong>Migration:</strong> "Generate the MySQL migration to go from schema A to schema B."</div>
         <div class="prompt-card"><strong>Breaking changes:</strong> "Are there any breaking changes between these two schemas?"</div>
       </div>
@@ -216,9 +216,9 @@
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 32px 0; text-align: center;">
       <h2 style="font-size: 1.2rem; margin-bottom: 10px;">Ready to automate schema reviews?</h2>
       <p style="color: var(--text-muted); margin-bottom: 16px;">Add SchemaLens to your CI/CD pipeline for free and catch breaking changes in every pull request.</p>
-      <a href="github-action.html" class="btn btn-primary" data-event="mcp_claude_github_action_cta">SchemaLens GitHub Action →</a>
-      <a href="ci-cd-integration.html" class="btn btn-secondary" data-event="mcp_claude_cicd_cta">All CI/CD integrations →</a>
-      <a href="team-buy.html" class="btn btn-secondary" data-event="mcp_claude_team_cta">Team plan →</a>
+      <a href="github-action.html" class="btn btn-primary" data-event="mcp_windsurf_github_action_cta">SchemaLens GitHub Action →</a>
+      <a href="ci-cd-integration.html" class="btn btn-secondary" data-event="mcp_windsurf_cicd_cta">All CI/CD integrations →</a>
+      <a href="team-buy.html" class="btn btn-secondary" data-event="mcp_windsurf_team_cta">Team plan →</a>
     </div>
 
     <footer style="border-top:1px solid var(--border); padding: 32px 0; margin-top: 32px; font-size: 0.85rem; color: var(--text-muted);">
@@ -228,6 +228,7 @@
         <a href="tools.html">Tools</a>
         <a href="pricing.html">Pricing</a>
         <a href="mcp-server.html">MCP Server</a>
+        <a href="ai-agents.html">AI Agents</a>
         <a href="api-guide.html">API</a>
         <a href="github-action.html">GitHub Action</a>
         <a href="community.html">Community</a>
