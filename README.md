@@ -12,7 +12,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://schemalens.tech)
 
-**[🌐 Try the Web App](https://schemalens.tech)** · **[🔀 Diff a Public GitHub PR](https://schemalens.tech/github-pr-schema-diff.html)** · **[📦 Install CLI](https://schemalens.tech/cli/)** · **[⚡ Add GitHub Action](https://schemalens.tech/github-action.html)** · **[📖 API Docs](https://schemalens.tech/api-guide.html)** · **[💰 Get Pro — $39 Lifetime](https://schemalens.tech/pricing.html)**
+**[🌐 Try the Web App](https://schemalens.tech)** · **[🔀 Diff a Public GitHub PR](https://schemalens.tech/github-pr-schema-diff.html)** · **[📦 Install CLI](https://schemalens.tech/cli/)** · **[⚡ Add GitHub Action](https://schemalens.tech/github-action.html)** · **[🤖 Use with AI Agents](https://schemalens.tech/ai-agents.html)** · **[📖 API Docs](https://schemalens.tech/api-guide.html)** · **[💰 Get Pro — $39 Lifetime](https://schemalens.tech/pricing.html)**
 
 > 🔔 **NEW — Free schema drift alerts:** Add one line to the GitHub Action and get Slack/Teams notifications + shareable alert pages for every diff. [See setup →](https://schemalens.tech/github-action.html#-schema-drift-alerts)
 
@@ -25,7 +25,7 @@ Also available as:
 - **CLI** — `npx schemalens-cli diff old.sql new.sql`
 - **CI-native CLI** — `npx schema-diff old.sql new.sql` (GitHub Actions, GitLab CI, JUnit XML)
 - **Core engine** — `npm install schemalens-engine`
-- **MCP Server** — use SchemaLens inside Claude, Cursor, VS Code, or any MCP client ([setup →](https://schemalens.tech/mcp-server.html))
+- **MCP Server / AI Agents** — let Claude, Cursor, VS Code, or any MCP client review migration PRs and diff schemas ([setup →](https://schemalens.tech/mcp-server.html) · [AI Agents →](https://schemalens.tech/ai-agents.html))
 - **VS Code Extension** — [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
 - **Chrome Extension** — [Install from Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
 - **Bookmarklet** — [Get Bookmarklet](https://schemalens.tech/tools/bookmarklet.html) — diff any SQL you see on the web
@@ -149,9 +149,11 @@ Add one input to the SchemaLens GitHub Action and every diff result becomes a Sl
 
 ---
 
-## 🤖 MCP Server — Schema Diff Inside Your AI Assistant
+## 🤖 MCP Server — Schema Diff for AI Agents
 
-Add SchemaLens to Claude Desktop, Cursor, VS Code, or any MCP-compatible client and diff schemas without leaving the chat.
+Add SchemaLens to Claude Desktop, Cursor, VS Code, Cline, Windsurf, or any MCP-compatible client and give your AI assistant the ability to review database migration PRs, detect breaking changes, and generate migration SQL — without leaving the chat.
+
+Agents work best when they can call deterministic tools instead of guessing. The SchemaLens MCP server exposes the same semantic diff engine used by the web app and the GitHub Action, so your agent can reason about real schema changes instead of producing unverifiable opinions.
 
 ```json
 {
@@ -171,7 +173,7 @@ Add SchemaLens to Claude Desktop, Cursor, VS Code, or any MCP-compatible client 
 
 **Runs locally.** The MCP server loads `lib/engine.js` from the repo, so your schemas never leave your machine.
 
-**[→ Setup guide and install instructions](https://schemalens.tech/mcp-server.html)**
+**[→ AI Agents landing page](https://schemalens.tech/ai-agents.html)** · **[→ Setup guide](https://schemalens.tech/mcp-server.html)** · **[→ Blog: Schema Diff for AI Agents](https://schemalens.tech/blog/schema-diff-for-ai-agents.html)** · **[→ MCP Config Generator](https://schemalens.tech/tools/mcp-config-generator.html)**
 
 ---
 
