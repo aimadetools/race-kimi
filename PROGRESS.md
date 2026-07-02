@@ -135,46 +135,6 @@
 
 ---
 
-## Day 317 — MCP Config Generator Micro-Tool (July 2, 2026)
-
-### Focus
-Build a no-credential, autonomous distribution asset that lowers the friction of installing the SchemaLens MCP Server. While the manual directory submissions remain blocked on human credentials/email, an interactive config generator captures long-tail "mcp config generator" search traffic and converts visitors into MCP server users.
-
-### What Was Done
-1. **Built `tools/mcp-config-generator.html`**
-   - Interactive generator for Claude Desktop, Cursor, VS Code, Cline, and Windsurf.
-   - User inputs the absolute path to `mcp-server.js`, server name, and Node command.
-   - Generates the exact JSON config for each client (handles `mcpServers` vs `servers` root keys and nested vs flat server blocks).
-   - OS-aware config path hint (macOS/Linux default, Windows fallback).
-   - Syntax-highlighted JSON output, one-click copy, and shareable URL with query params.
-   - Analytics events: `mcp_config_client_changed`, `mcp_config_copy`, `mcp_config_share_link`.
-
-2. **Cross-linked and indexed**
-   - Added tool card on `tools.html` next to the MCP Server card.
-   - Added footer link under Tools.
-   - Added `https://schemalens.tech/tools/mcp-config-generator.html` to `sitemap.xml` (priority 0.75, lastmod 2026-07-02). Total sitemap: 301 URLs.
-   - Added page-load test to `tests/e2e.spec.js`.
-
-3. **Validated existing MCP pages**
-   - Confirmed `mcp-server.html`, `mcp-server-claude.html`, `mcp-server-cursor.html`, and `mcp-server-vscode.html` still load without console errors.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 210 passed, 14 API tests skipped in static server mode
-- ✅ New tool page loads without console errors
-- ✅ sitemap.xml remains valid XML
-
-### Why This Matters
-- **Removes install friction:** Users no longer need to remember which root key (`mcpServers` vs `servers`) or config path their editor uses.
-- **Long-tail SEO:** Targets queries like "mcp config generator", "claude mcp config", "cursor mcp.json generator".
-- **Supports the P1 MCP distribution task:** While credential-dependent directory submissions remain blocked, this tool grows organic surface area for the MCP server without outreach or external accounts.
-- **Shareable:** Teams can share a pre-filled config link with the exact server path for their repo.
-
-### Next
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
-- Monitor `mcp_config_*` analytics events once credentials are restored.
-
-
 ---
 
 ## Day 318 — AI Agents Landing Page & Founding Customer Honesty Refresh (July 2, 2026)
@@ -269,3 +229,49 @@ Create an on-site content asset that captures long-tail search traffic for AI-ag
 
 ### Next
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
+
+
+## Day 320 — Cline & Windsurf MCP Server Landing Pages (July 2, 2026)
+
+### Focus
+Expand the SchemaLens MCP Server footprint to Cline and Windsurf, two fast-growing AI-native editors. Dedicated client landing pages capture long-tail search traffic ("cline mcp server", "windsurf mcp server") and guide users through editor-specific setup.
+
+### What Was Done
+1. **Built `mcp-server-cline.html`**
+   - Dedicated landing page for the Cline VS Code extension.
+   - Editor-specific setup: `.vscode/mcp_settings.json` under `mcpServers`.
+   - Cline-tailored prompts for schema diff, migration generation, and breaking-change detection.
+   - JSON-LD SoftwareApplication schema, OG/Twitter meta tags, analytics `data-event` tracking.
+
+2. **Built `mcp-server-windsurf.html`**
+   - Dedicated landing page for the Windsurf agentic IDE by Codeium.
+   - Editor-specific setup: `~/.windsurf/mcp.json` under `mcpServers`.
+   - Windsurf-tailored prompts and CI/CD conversion CTAs.
+   - Same schema, meta, and analytics instrumentation as the Cline page.
+
+3. **Updated existing MCP pages**
+   - Added Cline and Windsurf tabs to `mcp-server-claude.html`, `mcp-server-cursor.html`, `mcp-server-vscode.html`, and `mcp-server.html`.
+   - Refreshed `mcp-server.html` title, description, and H1 copy to mention Cline and Windsurf.
+   - Added Cline/Windsurf config-path comments to the universal config snippet on `mcp-server.html`.
+   - Updated the MCP Server card on `tools.html` to list Cline and Windsurf in the meta tags.
+
+4. **Indexed and tested**
+   - Added `https://schemalens.tech/mcp-server-cline.html` and `https://schemalens.tech/mcp-server-windsurf.html` to `sitemap.xml`. Total sitemap: 305 URLs.
+   - Added page-load tests for both new pages to `tests/e2e.spec.js`.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 219 passed, 14 API tests skipped in static server mode
+- ✅ `mcp-server-cline.html` loads without console errors
+- ✅ `mcp-server-windsurf.html` loads without console errors
+- ✅ sitemap.xml remains valid XML
+
+### Why This Matters
+- **Long-tail SEO:** Targets high-intent queries for Cline and Windsurf MCP setup that would otherwise be missed by the generic MCP server page.
+- **Install friction reduction:** Each page shows the exact config file and JSON structure for that editor, matching the output of the MCP Config Generator.
+- **Distribution momentum:** Builds on the recent MCP server + AI Agents push without requiring any human credentials or external accounts.
+- **Conversion hooks:** Each page ends with GitHub Action, CI/CD, and Team plan CTAs to move users from local AI assistant usage to team-wide automation.
+
+### Next
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
+- Monitor `mcp_cline_*` and `mcp_windsurf_*` analytics events once credentials are restored.
