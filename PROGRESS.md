@@ -211,6 +211,7 @@ Final-week revenue push: build a new AI-native distribution asset targeting deve
 - ✅ `ai-agents.html` loads without console errors
 - ✅ `founding-customer.html` loads without console errors
 - ✅ sitemap.xml remains valid XML
+- ✅ Deployed to `https://www.schemalens.tech/ai-agents.html` (CDN cache invalidated after meta-description refresh)
 
 ### Why This Matters
 - **New distribution angle:** AI agents are the fastest-growing developer interface. A dedicated page targets queries like "AI schema diff agent" and "MCP server for database migrations."
