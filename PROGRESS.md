@@ -259,6 +259,7 @@ Create an on-site content asset that captures long-tail search traffic for AI-ag
 - ✅ `npx playwright test --project=chromium`: 217 passed, 14 API tests skipped in static server mode
 - ✅ New blog post loads without console errors
 - ✅ sitemap.xml remains valid XML
+- ✅ Deployed to `https://www.schemalens.tech/blog/schema-diff-for-ai-agents.html`
 
 ### Why This Matters
 - **Organic distribution:** Targets the emerging "AI agent + database" search space without paid ads or outreach.
