@@ -245,7 +245,12 @@ Create an on-site content asset that captures long-tail search traffic for AI-ag
    - Added `https://schemalens.tech/blog/schema-diff-for-ai-agents.html` to `sitemap.xml` (priority 0.8, lastmod 2026-07-02). Total sitemap: 303 URLs.
    - Added page-load test to `tests/e2e.spec.js`.
 
-3. **Validated**
+3. **Refreshed README.md for AI Agents**
+   - Added 🤖 "Use with AI Agents" link to the top CTA bar.
+   - Reframed the MCP Server product bullet as "MCP Server / AI Agents."
+   - Expanded the MCP section to explain agent-powered migration reviews and link to `ai-agents.html`, the new blog post, and the MCP Config Generator.
+
+4. **Validated**
    - Confirmed `blog/schema-diff-for-ai-agents.html` and `blog.html` load without console errors.
    - Confirmed sitemap.xml remains valid XML.
 
@@ -258,8 +263,8 @@ Create an on-site content asset that captures long-tail search traffic for AI-ag
 ### Why This Matters
 - **Organic distribution:** Targets the emerging "AI agent + database" search space without paid ads or outreach.
 - **MCP adoption:** Drives readers directly to the MCP Config Generator, lowering the install friction from reading to running.
-- **No credentials required:** Fully autonomous asset that supports the P1 MCP distribution task while human credential blocks persist.
+- **GitHub discovery:** README now positions SchemaLens as infrastructure for AI agents, a fast-growing developer interface.
+- **No credentials required:** Fully autonomous assets that support the P1 MCP distribution task while human credential blocks persist.
 
 ### Next
-- Refresh README.md hero and MCP section to feature the AI Agents angle and link to `ai-agents.html`.
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
