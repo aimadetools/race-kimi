@@ -1,25 +1,30 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+"""Generate client-specific MCP server landing pages from a shared template."""
+
+import os
+
+TEMPLATE = '''<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SchemaLens MCP Server — AI Schema Diff for Claude, Cursor & VS Code</title>
-  <meta name="description" content="Connect SchemaLens to Claude Desktop, Cursor, or any MCP client. Diff SQL schemas, generate migrations, and detect breaking changes directly inside your AI assistant.">
-  <link rel="canonical" href="https://schemalens.tech/mcp-server.html">
-  <meta property="og:title" content="SchemaLens MCP Server — AI Schema Diff for Claude, Cursor & VS Code">
-  <meta property="og:description" content="Add SchemaLens schema diff tools to your AI assistant via the Model Context Protocol. Free, local, no API keys.">
-  <meta property="og:url" content="https://schemalens.tech/mcp-server.html">
+  <title>{{TITLE}}</title>
+  <meta name="description" content="{{DESCRIPTION}}">
+  <link rel="canonical" href="https://schemalens.tech/{{FILENAME}}">
+  <meta property="og:title" content="{{OG_TITLE}}">
+  <meta property="og:description" content="{{OG_DESCRIPTION}}">
+  <meta property="og:url" content="https://schemalens.tech/{{FILENAME}}">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="SchemaLens MCP Server — AI Schema Diff for Claude, Cursor & VS Code">
-  <meta name="twitter:description" content="Add SchemaLens schema diff tools to your AI assistant via the Model Context Protocol. Free, local, no API keys.">
+  <meta name="twitter:title" content="{{OG_TITLE}}">
+  <meta name="twitter:description" content="{{OG_DESCRIPTION}}">
   <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "SchemaLens MCP Server",
+    "name": "SchemaLens MCP Server for {{CLIENT}}",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -27,8 +32,8 @@
       "price": "0",
       "priceCurrency": "USD"
     },
-    "featureList": "MCP server for SQL schema diff, migration generation, and breaking change detection. Works with Claude Desktop, Cursor, and any MCP-compatible client. Runs locally.",
-    "url": "https://schemalens.tech/mcp-server.html"
+    "featureList": "MCP server for SQL schema diff, migration generation, and breaking change detection inside {{CLIENT}}. Runs locally.",
+    "url": "https://schemalens.tech/{{FILENAME}}"
   }
   </script>
   <link rel="stylesheet" href="style.css">
@@ -89,11 +94,9 @@
       font-weight: 500;
     }
     .announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
-    .dialect-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
-    .dialect-tags span { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; color: var(--text-muted); }
     .client-tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 20px 0; }
     .client-tabs a { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.85rem; color: var(--text-muted); text-decoration: none; }
-    .client-tabs a:hover { border-color: var(--primary); color: var(--text); }
+    .client-tabs a.active { background: var(--primary); color: #fff; border-color: var(--primary); }
   </style>
 </head>
 <body>
@@ -112,30 +115,27 @@
     </nav>
 
     <div class="page-header">
-      <h1>SchemaLens MCP Server <span class="badge-free">Free</span></h1>
-      <p>Give Claude, Cursor, and any MCP-compatible assistant the power to diff SQL schemas, generate migrations, and catch breaking changes — without leaving the chat.</p>
-      <div class="dialect-tags">
-        <span>PostgreSQL</span><span>MySQL</span><span>SQLite</span><span>SQL Server</span><span>Oracle</span>
-      </div>
+      <h1>SchemaLens MCP Server for {{CLIENT}} <span class="badge-free">Free</span></h1>
+      <p>{{HERO}}</p>
       <div class="client-tabs">
-        <a href="mcp-server-claude.html">Claude Desktop</a>
-        <a href="mcp-server-cursor.html">Cursor</a>
-        <a href="mcp-server-vscode.html">VS Code</a>
-        <a href="mcp-server.html" style="background:var(--primary);color:#fff;border-color:var(--primary);">All clients</a>
+        <a href="mcp-server-claude.html" {{CLAUDE_ACTIVE}}>Claude</a>
+        <a href="mcp-server-cursor.html" {{CURSOR_ACTIVE}}>Cursor</a>
+        <a href="mcp-server-vscode.html" {{VSCODE_ACTIVE}}>VS Code</a>
+        <a href="mcp-server.html">All clients</a>
       </div>
     </div>
 
     <div class="cta-bar">
-      <h2>🤖 Add SchemaLens to your AI assistant in 60 seconds</h2>
+      <h2>🤖 Add SchemaLens to {{CLIENT}} in 60 seconds</h2>
       <p>Free, open-source MCP server. No account. No API key. Your schemas never leave your machine.</p>
-      <a href="https://github.com/aimadetools/race-kimi/blob/main/mcp-server.js" class="btn btn-secondary" target="_blank" rel="noopener" data-event="mcp_server_view_source">View source on GitHub</a>
-      <a href="app.html" class="btn btn-primary" data-event="mcp_server_try_web_app">Try the web app →</a>
+      <a href="https://github.com/aimadetools/race-kimi/blob/main/mcp-server.js" class="btn btn-secondary" target="_blank" rel="noopener" data-event="mcp_{{SLUG}}_view_source">View source on GitHub</a>
+      <a href="app.html" class="btn btn-primary" data-event="mcp_{{SLUG}}_try_web_app">Try the web app →</a>
     </div>
 
     <div class="feature-grid">
       <div class="feature-card">
         <h3>🔍 Semantic Schema Diff</h3>
-        <p>Ask your assistant to compare two schemas and get a structured summary of added, removed, and modified tables, columns, indexes, and constraints.</p>
+        <p>Ask {{CLIENT}} to compare two schemas and get a structured summary of added, removed, and modified tables, columns, indexes, and constraints.</p>
       </div>
       <div class="feature-card">
         <h3>🛡️ Breaking Change Detection</h3>
@@ -154,8 +154,8 @@
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-body">
-        <h3>Download the server</h3>
-        <p>Save <code>mcp-server.js</code> from the SchemaLens repo, or clone the repository.</p>
+        <h3>Clone the SchemaLens repo</h3>
+        <p>{{CLIENT}} will run <code>mcp-server.js</code> directly from your local copy. Open a terminal and clone the repo.</p>
         <div class="code-block">
           <button class="btn-copy" onclick="copyCode(this)">Copy</button>
           <code>git clone https://github.com/aimadetools/race-kimi.git<br>cd race-kimi</code>
@@ -166,21 +166,11 @@
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-body">
-        <h3>Add to your MCP client config</h3>
-        <p>Requires Node.js 18+. Update the path to wherever you saved <code>mcp-server.js</code>.</p>
+        <h3>Add to {{CLIENT}}'s MCP config</h3>
+        <p>{{CONFIG_INSTRUCTIONS}}</p>
         <div class="code-block">
           <button class="btn-copy" onclick="copyCode(this)">Copy</button>
-<span class="comment">// Claude Desktop: ~/Library/Application Support/Claude/claude_desktop_config.json</span>
-<span class="comment">// Cursor: ~/.cursor/mcp.json</span>
-<span class="comment">// VS Code: .vscode/mcp.json</span>
-{
-  <span class="key">"mcpServers"</span>: {
-    <span class="key">"schemalens"</span>: {
-      <span class="key">"command"</span>: <span class="str">"node"</span>,
-      <span class="key">"args"</span>: [<span class="str">"/path/to/race-kimi/mcp-server.js"</span>]
-    }
-  }
-}
+{{CONFIG_CODE}}
         </div>
       </div>
     </div>
@@ -188,11 +178,9 @@
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-body">
-        <h3>Start chatting</h3>
-        <p>Restart your AI client, then ask questions like:</p>
-        <div class="prompt-card"><strong>Diff:</strong> "Compare these two PostgreSQL schemas and tell me what changed. [paste schema A] [paste schema B]"</div>
-        <div class="prompt-card"><strong>Migration:</strong> "Generate the migration SQL to go from schema A to schema B in MySQL."</div>
-        <div class="prompt-card"><strong>Breaking changes:</strong> "Are there any breaking changes between these two schemas?"</div>
+        <h3>Restart {{CLIENT}} and start chatting</h3>
+        <p>Close and reopen {{CLIENT}} so it picks up the new MCP server, then try these prompts:</p>
+{{PROMPTS}}
       </div>
     </div>
 
@@ -221,9 +209,9 @@
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 32px 0; text-align: center;">
       <h2 style="font-size: 1.2rem; margin-bottom: 10px;">Ready to automate schema reviews?</h2>
       <p style="color: var(--text-muted); margin-bottom: 16px;">Add SchemaLens to your CI/CD pipeline for free and catch breaking changes in every pull request.</p>
-      <a href="github-action.html" class="btn btn-primary" data-event="mcp_server_github_action_cta">SchemaLens GitHub Action →</a>
-      <a href="ci-cd-integration.html" class="btn btn-secondary" data-event="mcp_server_cicd_cta">All CI/CD integrations →</a>
-      <a href="team-buy.html" class="btn btn-secondary" data-event="mcp_server_team_cta">Team plan →</a>
+      <a href="github-action.html" class="btn btn-primary" data-event="mcp_{{SLUG}}_github_action_cta">SchemaLens GitHub Action →</a>
+      <a href="ci-cd-integration.html" class="btn btn-secondary" data-event="mcp_{{SLUG}}_cicd_cta">All CI/CD integrations →</a>
+      <a href="team-buy.html" class="btn btn-secondary" data-event="mcp_{{SLUG}}_team_cta">Team plan →</a>
     </div>
 
     <footer style="border-top:1px solid var(--border); padding: 32px 0; margin-top: 32px; font-size: 0.85rem; color: var(--text-muted);">
@@ -232,6 +220,7 @@
         <a href="app.html">App</a>
         <a href="tools.html">Tools</a>
         <a href="pricing.html">Pricing</a>
+        <a href="mcp-server.html">MCP Server</a>
         <a href="api-guide.html">API</a>
         <a href="github-action.html">GitHub Action</a>
         <a href="community.html">Community</a>
@@ -254,3 +243,101 @@
   </script>
 </body>
 </html>
+'''
+
+CLIENTS = {
+    'claude': {
+        'FILENAME': 'mcp-server-claude.html',
+        'CLIENT': 'Claude Desktop',
+        'SLUG': 'claude',
+        'TITLE': 'SchemaLens MCP Server for Claude Desktop — Diff SQL Schemas in Claude',
+        'DESCRIPTION': 'Add SchemaLens schema diff, migration generation, and breaking-change detection to Claude Desktop via MCP. Local, free, no API keys.',
+        'OG_TITLE': 'SchemaLens MCP Server for Claude Desktop',
+        'OG_DESCRIPTION': 'Diff SQL schemas and generate migrations inside Claude Desktop with the SchemaLens MCP server. Free and local.',
+        'HERO': 'Diff SQL schemas, generate migrations, and catch breaking changes inside Claude Desktop — without switching windows.',
+        'CONFIG_INSTRUCTIONS': 'Open <code>~/Library/Application Support/Claude/claude_desktop_config.json</code> (macOS) or the equivalent config path on your OS. Add the schemalens server under <code>mcpServers</code>.',
+        'CONFIG_CODE': '''<span class="comment">// ~/Library/Application Support/Claude/claude_desktop_config.json</span>
+{
+  <span class="key">"mcpServers"</span>: {
+    <span class="key">"schemalens"</span>: {
+      <span class="key">"command"</span>: <span class="str">"node"</span>,
+      <span class="key">"args"</span>: [<span class="str">"/path/to/race-kimi/mcp-server.js"</span>]
+    }
+  }
+}''',
+        'PROMPTS': '''        <div class="prompt-card"><strong>Diff:</strong> "Compare these two PostgreSQL schemas and tell me what changed. [paste schema A] [paste schema B]"</div>
+        <div class="prompt-card"><strong>Migration:</strong> "Generate the MySQL migration to go from schema A to schema B."</div>
+        <div class="prompt-card"><strong>Breaking changes:</strong> "Are there any breaking changes between these two schemas?"</div>''',
+        'CLAUDE_ACTIVE': 'class="active"',
+        'CURSOR_ACTIVE': '',
+        'VSCODE_ACTIVE': '',
+    },
+    'cursor': {
+        'FILENAME': 'mcp-server-cursor.html',
+        'CLIENT': 'Cursor',
+        'SLUG': 'cursor',
+        'TITLE': 'SchemaLens MCP Server for Cursor — Diff SQL Schemas in Your Editor',
+        'DESCRIPTION': 'Add SchemaLens schema diff, migration generation, and breaking-change detection to Cursor via MCP. Local, free, no API keys.',
+        'OG_TITLE': 'SchemaLens MCP Server for Cursor',
+        'OG_DESCRIPTION': 'Diff SQL schemas and generate migrations inside Cursor with the SchemaLens MCP server. Free and local.',
+        'HERO': 'Diff SQL schemas, generate migrations, and catch breaking changes inside Cursor — right next to your code.',
+        'CONFIG_INSTRUCTIONS': 'Open Cursor Settings → MCP, or edit <code>~/.cursor/mcp.json</code> directly. Add the schemalens server under <code>mcpServers</code>.',
+        'CONFIG_CODE': '''<span class="comment">// ~/.cursor/mcp.json</span>
+{
+  <span class="key">"mcpServers"</span>: {
+    <span class="key">"schemalens"</span>: {
+      <span class="key">"command"</span>: <span class="str">"node"</span>,
+      <span class="key">"args"</span>: [<span class="str">"/path/to/race-kimi/mcp-server.js"</span>]
+    }
+  }
+}''',
+        'PROMPTS': '''        <div class="prompt-card"><strong>Diff:</strong> "Compare these two schemas and show me what changed."</div>
+        <div class="prompt-card"><strong>Migration:</strong> "Generate the PostgreSQL ALTER statements to migrate from schema A to schema B."</div>
+        <div class="prompt-card"><strong>Breaking changes:</strong> "Will deploying this migration break anything?"</div>''',
+        'CLAUDE_ACTIVE': '',
+        'CURSOR_ACTIVE': 'class="active"',
+        'VSCODE_ACTIVE': '',
+    },
+    'vscode': {
+        'FILENAME': 'mcp-server-vscode.html',
+        'CLIENT': 'VS Code',
+        'SLUG': 'vscode',
+        'TITLE': 'SchemaLens MCP Server for VS Code — Diff SQL Schemas in VS Code',
+        'DESCRIPTION': 'Add SchemaLens schema diff, migration generation, and breaking-change detection to VS Code via MCP. Local, free, no API keys.',
+        'OG_TITLE': 'SchemaLens MCP Server for VS Code',
+        'OG_DESCRIPTION': 'Diff SQL schemas and generate migrations inside VS Code with the SchemaLens MCP server. Free and local.',
+        'HERO': 'Diff SQL schemas, generate migrations, and catch breaking changes inside VS Code — without leaving your editor.',
+        'CONFIG_INSTRUCTIONS': 'Create or edit <code>.vscode/mcp.json</code> in your project root. Add the schemalens server under <code>mcpServers</code>.',
+        'CONFIG_CODE': '''<span class="comment">// .vscode/mcp.json</span>
+{
+  <span class="key">"mcpServers"</span>: {
+    <span class="key">"schemalens"</span>: {
+      <span class="key">"command"</span>: <span class="str">"node"</span>,
+      <span class="key">"args"</span>: [<span class="str">"/path/to/race-kimi/mcp-server.js"</span>]
+    }
+  }
+}''',
+        'PROMPTS': '''        <div class="prompt-card"><strong>Diff:</strong> "Diff these two SQL schemas and summarize the changes."</div>
+        <div class="prompt-card"><strong>Migration:</strong> "Generate the SQLite migration script from schema A to schema B."</div>
+        <div class="prompt-card"><strong>Breaking changes:</strong> "List any breaking changes in this schema diff."</div>''',
+        'CLAUDE_ACTIVE': '',
+        'CURSOR_ACTIVE': '',
+        'VSCODE_ACTIVE': 'class="active"',
+    },
+}
+
+
+def main():
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for slug, ctx in CLIENTS.items():
+        html = TEMPLATE
+        for key, value in ctx.items():
+            html = html.replace('{{' + key + '}}', value)
+        path = os.path.join(root, ctx['FILENAME'])
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(html)
+        print(f'Wrote {path}')
+
+
+if __name__ == '__main__':
+    main()
