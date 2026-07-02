@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Schema Diff for AI Agents — Automate Database Migration Reviews with MCP</title>
+  <meta name="description" content="Give your AI coding assistant the ability to review database migration PRs, diff SQL schemas, and catch breaking changes using the SchemaLens MCP server.">
+  <meta property="og:title" content="Schema Diff for AI Agents — Automate Database Migration Reviews with MCP">
+  <meta property="og:description" content="AI agents can now review database migrations, detect breaking changes, and generate rollback SQL. Here's how to wire SchemaLens into Claude, Cursor, or VS Code.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/schema-diff-for-ai-agents.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Schema Diff for AI Agents — Automate Database Migration Reviews with MCP",
+  "description": "Give your AI coding assistant the ability to review database migration PRs, diff SQL schemas, and catch breaking changes using the SchemaLens MCP server.",
+  "url": "https://schemalens.tech/blog/schema-diff-for-ai-agents.html",
+  "datePublished": "2026-07-02",
+  "dateModified": "2026-07-02",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/schema-diff-for-ai-agents.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--text); }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--text); }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: var(--text); }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: var(--text); }
+    .blog-post pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: var(--code-bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: var(--text); }
+    .blog-post .keyword { color: #ff7b72; }
+    .blog-post .string { color: #a5d6ff; }
+    .blog-post .comment { color: #8b949e; }
+    .blog-post .callout {
+      background: var(--code-bg);
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: var(--text); }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-muted); text-decoration: none; }
+    .back-link:hover { color: var(--text); }
+    .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .tool-card { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+    .tool-card strong { display: block; margin-bottom: 0.25rem; color: var(--text); }
+    .tool-card span { font-size: 0.9rem; color: var(--text-muted); }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 40px;">
+    <div class="container blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+      <h1>Schema Diff for AI Agents — Automate Database Migration Reviews</h1>
+      <div class="blog-meta">AI · July 2, 2026 · 5 min read</div>
+
+      <p><em>AI coding assistants are great at generating migrations. They are worse at spotting the breaking changes hiding inside them. The SchemaLens MCP server closes that gap.</em></p>
+
+      <p>Large language models can write <code>ALTER TABLE</code> statements in seconds, but they still miss the second-order risks: a dropped column used by legacy code, a <code>NOT NULL</code> constraint added to a table that still contains null rows, a type change that truncates existing data. Those mistakes slip into production because no one gave the agent a structured way to compare the before-and-after schema.</p>
+
+      <p>SchemaLens now exposes its schema diff engine as an <a href="../mcp-server.html">MCP server</a>. Any agent that speaks the Model Context Protocol — Claude Desktop, Cursor, VS Code, Cline, Windsurf — can call SchemaLens tools to diff schemas, detect breaking changes, and generate migration and rollback SQL. The agent does not guess. It measures.</p>
+
+      <div class="callout">
+        <p><strong>What MCP adds:</strong> instead of asking an agent "is this migration safe?", you give it three tools — <code>schemalens_diff_schemas</code>, <code>schemalens_detect_breaking_changes</code>, and <code>schemalens_generate_migration</code> — and let it answer with structured data, risk scores, and ready-to-run SQL.</p>
+      </div>
+
+      <h2>Why migration review is a perfect MCP use case</h2>
+
+      <p>Most agent workflows today are text-in, text-out. You paste a migration and ask the agent to review it. The result is a paragraph of opinion. It might be right, but it is hard to verify and easy to ignore.</p>
+
+      <p>A tool-based review is different. The agent receives a structured diff result — tables added, columns removed, indexes modified, risk score, breaking-change list — and can reason about it the same way a senior engineer would. It can then:</p>
+
+      <ul>
+        <li>Compare the old and new schema objectively</li>
+        <li>Flag changes that match known breaking patterns</li>
+        <li>Generate forward and rollback SQL on demand</li>
+        <li>Post a formatted review comment to a pull request</li>
+        <li>Block a merge when the risk score is too high</li>
+      </ul>
+
+      <p>The agent becomes a specialized migration reviewer that works in the chat, in the IDE, or in CI.</p>
+
+      <h2>What the SchemaLens MCP server exposes</h2>
+
+      <div class="tool-grid">
+        <div class="tool-card">
+          <strong>schemalens_diff_schemas</strong>
+          <span>Semantic diff of two CREATE TABLE dumps with summary, risk score, and per-object changes.</span>
+        </div>
+        <div class="tool-card">
+          <strong>schemalens_detect_breaking_changes</strong>
+          <span>Returns dropped columns, type changes, NOT NULL additions, removed indexes, and dropped foreign keys.</span>
+        </div>
+        <div class="tool-card">
+          <strong>schemalens_generate_migration</strong>
+          <span>Generates forward and rollback migration SQL in PostgreSQL, MySQL, SQLite, SQL Server, or Oracle.</span>
+        </div>
+      </div>
+
+      <p>Each tool accepts raw SQL strings as arguments, so the agent can read schema files from disk, extract SQL from a PR diff, or compare schemas fetched from two branches. There is no database connection, no cloud upload, and no API key.</p>
+
+      <h2>How to install it</h2>
+
+      <p>Add the server to your MCP client config. The only requirement is a local copy of the SchemaLens repo and Node.js.</p>
+
+<pre><code><span class="comment">// Claude Desktop — ~/Library/Application Support/Claude/claude_desktop_config.json</span>
+{
+  <span class="string">"mcpServers"</span>: {
+    <span class="string">"schemalens"</span>: {
+      <span class="string">"command"</span>: <span class="string">"node"</span>,
+      <span class="string">"args"</span>: [<span class="string">"/path/to/race-kimi/mcp-server.js"</span>]
+    }
+  }
+}</code></pre>
+
+      <p>If you are unsure which config format your editor needs, use the <a href="../tools/mcp-config-generator.html">MCP Config Generator</a> to generate the exact JSON for Claude, Cursor, VS Code, Cline, or Windsurf.</p>
+
+      <h2>A real agent-powered migration review</h2>
+
+      <p>Once the server is configured, you can ask your agent to review a migration PR in plain English:</p>
+
+<pre><code>Review the schema change in this PR. The old schema is in
+migrations/001_initial.sql and the new schema is in
+migrations/002_add_orders.sql. Tell me if it is safe to deploy
+and generate the PostgreSQL migration and rollback SQL.</code></pre>
+
+      <p>The agent will call <code>schemalens_diff_schemas</code>, receive a structured result, and respond with something like:</p>
+
+      <div class="callout">
+        <p><strong>Risk score: 2/10 — Low risk.</strong><br>1 table added (<code>orders</code>), 1 column added (<code>users.email_verified_at</code>), 1 index added. No dropped columns, no type changes, no removed constraints. The new <code>orders</code> table references <code>users(id)</code> with a foreign key and <code>ON DELETE SET NULL</code>, which is safe.</p>
+      </div>
+
+      <p>If you then ask for the migration SQL, the agent calls <code>schemalens_generate_migration</code> and returns the exact <code>ALTER TABLE</code> and <code>CREATE TABLE</code> statements needed to apply the change, plus the rollback script to reverse it.</p>
+
+      <h2>From chat to CI/CD</h2>
+
+      <p>The same review logic can run unattended. The <a href="../github-action.html">SchemaLens GitHub Action</a> posts schema diff summaries, risk scores, and breaking-change checks on every PR. A team can combine the two layers:</p>
+
+      <ul>
+        <li><strong>Local development:</strong> the developer uses the MCP server inside Cursor or Claude to sanity-check a migration before committing.</li>
+        <li><strong>Pull request:</strong> the GitHub Action runs the same diff and posts a public review comment.</li>
+        <li><strong>Merge gate:</strong> the action fails the build if any breaking change is detected.</li>
+      </ul>
+
+      <p>The agent is the fast feedback loop. CI is the enforcement layer. Both use the same engine, so they never disagree.</p>
+
+      <h2>Privacy and local execution</h2>
+
+      <p>The MCP server loads SchemaLens's client-side diff engine from the local repo. Your schemas are parsed and compared on the same machine the agent runs on. They are never sent to a SchemaLens server or to a third-party API. This matters for production schemas, regulated environments, and any team that treats schema files as sensitive.</p>
+
+      <h2>Use cases beyond migration review</h2>
+
+      <ul>
+        <li><strong>Schema refactoring:</strong> ask the agent to compare a legacy schema against a proposed redesign and highlight every breaking change.</li>
+        <li><strong>Multi-tenant drift checks:</strong> pass two tenant dumps and let the agent flag schema drift between them.</li>
+        <li><strong>ORM sync verification:</strong> compare a Prisma/Drizzle migration against the target database dump to confirm the generated SQL matches reality.</li>
+        <li><strong>Rollback planning:</strong> generate rollback SQL for every migration in a release and attach it to the deployment ticket.</li>
+      </ul>
+
+      <h2>Try it now</h2>
+
+      <p>You can get a working AI agent migration reviewer in about two minutes:</p>
+
+      <ol>
+        <li><a href="https://github.com/aimadetools/race-kimi">Clone or download the SchemaLens repo</a></li>
+        <li>Open the <a href="../tools/mcp-config-generator.html">MCP Config Generator</a> and pick your client</li>
+        <li>Paste the generated config into your MCP client settings</li>
+        <li>Ask your agent to review a migration PR</li>
+      </ol>
+
+      <div class="cta-box">
+        <h3>Give your agent a schema diff tool</h3>
+        <p>Generate the exact MCP config for Claude, Cursor, VS Code, Cline, or Windsurf.</p>
+        <a href="../tools/mcp-config-generator.html" class="btn btn-primary btn-lg">Open MCP Config Generator</a>
+      </div>
+
+      <p><em>SchemaLens is a browser-based SQL schema diff tool with a free GitHub Action, GitLab/CircleCI/Jenkins/Bitbucket/Azure DevOps support, an MCP server for AI agents, 80+ micro-tools, and a Team plan for shared workspaces. Built in public.</em></p>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="../index.html" class="logo" style="margin-bottom: 12px; display: inline-block;">
+          <span class="logo-mark">SL</span>
+          SchemaLens
+        </a>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="../app.html">Web App</a></li>
+          <li><a href="../pricing.html">Pricing</a></li>
+          <li><a href="../cli/">CLI</a></li>
+          <li><a href="../mcp-server.html">MCP Server</a></li>
+          <li><a href="../github-action.html">GitHub Action</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="../blog.html">Blog</a></li>
+          <li><a href="../tools.html">Tools</a></li>
+          <li><a href="../api-guide.html">API Docs</a></li>
+          <li><a href="../open.html">Open Startup</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="../about.html">About</a></li>
+          <li><a href="../community.html">Community</a></li>
+          <li><a href="../affiliate.html">Affiliate</a></li>
+          <li><a href="mailto:hello@schemalens.tech">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container" style="text-align: center; padding-top: 24px; color: var(--text-muted); font-size: 0.85rem;">
+      © 2026 SchemaLens. Built in public for the $100 AI Startup Race.
+    </div>
+  </footer>
+
+</body>
+</html>
