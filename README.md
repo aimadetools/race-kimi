@@ -7,6 +7,7 @@
 [![npm](https://img.shields.io/npm/v/schemalens-engine?label=engine&style=flat-square)](https://www.npmjs.com/package/schemalens-engine)
 [![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?style=flat-square&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
+[![MCP Server](https://img.shields.io/badge/MCP-Server-purple?style=flat-square&logo=anthropic)](https://schemalens.tech/mcp-server.html)
 [![GitHub Action](https://img.shields.io/badge/GitHub%20Action-Marketplace-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/aimadetools/race-kimi)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://schemalens.tech)
@@ -24,7 +25,7 @@ Also available as:
 - **CLI** — `npx schemalens-cli diff old.sql new.sql`
 - **CI-native CLI** — `npx schema-diff old.sql new.sql` (GitHub Actions, GitLab CI, JUnit XML)
 - **Core engine** — `npm install schemalens-engine`
-- **MCP Server** — use SchemaLens inside Claude, Cursor, or any MCP client ([setup →](https://schemalens.tech/mcp-server.html))
+- **MCP Server** — use SchemaLens inside Claude, Cursor, VS Code, or any MCP client ([setup →](https://schemalens.tech/mcp-server.html))
 - **VS Code Extension** — [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
 - **Chrome Extension** — [Install from Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
 - **Bookmarklet** — [Get Bookmarklet](https://schemalens.tech/tools/bookmarklet.html) — diff any SQL you see on the web

@@ -132,6 +132,58 @@
 
 ---
 
+## Day 315 — MCP Server Discovery Metadata for Registries (July 2, 2026)
+
+### Focus
+Make the SchemaLens MCP Server discoverable by the directories and crawlers that will list it, without sending outreach emails or creating external accounts. This executes the unblocked portion of the MCP directory submission backlog.
+
+### What Was Done
+1. **Added `glama.json`**
+   - Glama discovery/claim metadata at repo root.
+   - Sets `maintainers: ["aimadetools"]` so the repo owner can claim the listing once signed in.
+
+2. **Added `server.json`**
+   - Official MCP Registry manifest format.
+   - Namespace `io.github.aimadetools/schemalens` matches the repo owner and future `package.json#mcpName`.
+   - Includes title, description, version, website URL, and repository metadata (GitHub repo ID `1199463805`).
+   - No `packages` yet because the npm token is blocked and no MCP-specific npm package exists; the manifest is ready to add a package once npm publishing is unblocked.
+
+3. **Added `smithery.yaml`**
+   - Smithery auto-configuration for local stdio execution.
+   - Defines `startCommand` that runs `node mcp-server.js`.
+   - Enables one-click publishing when a Smithery account is available.
+
+4. **Updated `package.json`**
+   - Added `mcpName: "io.github.aimadetools/schemalens"` so npm-based MCP Registry publishing can verify namespace ownership once the token is restored.
+
+5. **Updated `README.md`**
+   - Added an MCP Server badge next to VS Code and Chrome Web Store badges.
+   - Clarified the MCP bullet lists VS Code as a supported client.
+
+6. **Updated `marketing/mcp-server-directory-kit.md`**
+   - Marked repository discovery metadata as complete.
+   - Documented remaining blockers (mcp.so GitHub issue, mcpmarket.com email, Smithery account, Glama/PulseMCP passive indexing).
+
+### Validation
+- ✅ `glama.json` valid JSON
+- ✅ `server.json` valid JSON and conforms to MCP Registry schema intent
+- ✅ `package.json` valid JSON
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `node test-mcp-server.js`: all MCP protocol tests pass
+
+### Why This Matters
+- Glama, PulseMCP, and other crawlers now have authoritative machine-readable metadata to index SchemaLens as an MCP server.
+- The `glama.json` file is the prerequisite for the repo owner to claim the Glama listing and control the description/links.
+- The `server.json` + `mcpName` setup removes the metadata setup step once the npm token is restored; only `mcp-publisher publish` remains.
+- Smithery configuration is ready, so publishing there becomes a single login + click instead of a new integration task.
+
+### Next
+- Once npm token is refreshed, publish an MCP-specific npm package and add it to `server.json#packages`, then run `mcp-publisher publish`.
+- Once a Glama account is available, claim the listing and verify the crawl result.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
+
+---
+
 ## Day 314 — SchemaLens MCP Server for AI Assistants (July 2, 2026)
 
 ### Focus

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.aimadetools/schemalens",
+  "title": "SchemaLens MCP Server",
+  "description": "Diff SQL schemas, generate migrations, and detect breaking changes inside Claude, Cursor, VS Code, or any MCP client.",
+  "version": "1.0.0",
+  "websiteUrl": "https://schemalens.tech/mcp-server.html",
+  "repository": {
+    "url": "https://github.com/aimadetools/race-kimi",
+    "source": "github",
+    "id": "1199463805"
+  }
+}

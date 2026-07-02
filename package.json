@@ -1,6 +1,7 @@
 {
   "name": "schemalens",
   "version": "1.0.0",
+  "mcpName": "io.github.aimadetools/schemalens",
   "description": "Browser-based SQL schema diff tool with MCP server, GitHub Action, and CLI",
   "keywords": [
     "schema-diff",

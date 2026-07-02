@@ -136,10 +136,11 @@ npx smithery@latest mcp publish https://schemalens.tech/mcp-server.html -n aimad
 - [x] Mentioned in README.md
 - [x] Added to sitemap.xml
 - [x] Added to e2e page-load tests
+- [x] Repository discovery metadata in place (`glama.json`, `server.json`, `smithery.yaml`, `package.json#mcpName`)
 - [ ] Submitted to mcp.so (blocked: external GitHub issue)
 - [ ] Submitted to mcpmarket.com (blocked: no email)
 - [ ] Submitted to Smithery (blocked: stdio-only, needs account)
-- [ ] Claimed on Glama/PulseMCP if indexed (passive)
+- [ ] Claimed on Glama/PulseMCP if indexed (passive; `glama.json` enables claim flow)
 
 ---
 
