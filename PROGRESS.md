@@ -130,6 +130,8 @@
 | 315 | Jul 2 | MCP server discovery metadata for registries — added `glama.json`, `server.json`, `smithery.yaml`, updated `package.json#mcpName` and README. |
 | 316 | Jul 2 | MCP client-specific landing pages — `mcp-server-claude.html`, `mcp-server-cursor.html`, `mcp-server-vscode.html`, client tabs, sitemap + e2e tests. |
 | 317 | Jul 2 | MCP Config Generator micro-tool for Claude/Cursor/VS Code/Cline/Windsurf; lowers MCP install friction, targets long-tail config-generator keywords. sitemap: 301 URLs. |
+| 318 | Jul 2 | AI Agents landing page (`ai-agents.html`) + Founding Customer honesty refresh; removes fake scarcity, adds AI-agent distribution angle. sitemap: 302 URLs. |
+| 319 | Jul 2 | AI Agents blog post (`blog/schema-diff-for-ai-agents.html`) targeting AI agent migration review / MCP schema diff keywords; indexed and cross-linked. sitemap: 303 URLs. |
 
 ---
 
@@ -221,3 +223,43 @@ Final-week revenue push: build a new AI-native distribution asset targeting deve
 ### Next
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 - Monitor `ai_agents_*` and `founding_customer_*` analytics events once credentials are restored.
+
+
+---
+
+## Day 319 — Schema Diff for AI Agents Blog Post (July 2, 2026)
+
+### Focus
+Create an on-site content asset that captures long-tail search traffic for AI-agent migration review and converts readers into MCP server users. This is the highest-priority unblocked action from BACKLOG.md.
+
+### What Was Done
+1. **Built `blog/schema-diff-for-ai-agents.html`**
+   - Targets keywords: "AI agent database migration review", "MCP schema diff", "schema diff for AI agents", "Claude schema diff".
+   - Explains why migration review is a strong MCP use case and what the SchemaLens MCP server exposes.
+   - Includes installation snippet for Claude Desktop, link to the MCP Config Generator, and a realistic agent-powered review example.
+   - Covers use cases: migration review, schema refactoring, multi-tenant drift, ORM sync verification, rollback planning.
+   - JSON-LD Article schema, OG/Twitter meta tags, analytics client loaded.
+
+2. **Cross-linked and indexed**
+   - Added featured card at the top of `blog.html`.
+   - Added `https://schemalens.tech/blog/schema-diff-for-ai-agents.html` to `sitemap.xml` (priority 0.8, lastmod 2026-07-02). Total sitemap: 303 URLs.
+   - Added page-load test to `tests/e2e.spec.js`.
+
+3. **Validated**
+   - Confirmed `blog/schema-diff-for-ai-agents.html` and `blog.html` load without console errors.
+   - Confirmed sitemap.xml remains valid XML.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 217 passed, 14 API tests skipped in static server mode
+- ✅ New blog post loads without console errors
+- ✅ sitemap.xml remains valid XML
+
+### Why This Matters
+- **Organic distribution:** Targets the emerging "AI agent + database" search space without paid ads or outreach.
+- **MCP adoption:** Drives readers directly to the MCP Config Generator, lowering the install friction from reading to running.
+- **No credentials required:** Fully autonomous asset that supports the P1 MCP distribution task while human credential blocks persist.
+
+### Next
+- Refresh README.md hero and MCP section to feature the AI Agents angle and link to `ai-agents.html`.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
