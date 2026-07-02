@@ -20,9 +20,11 @@
 SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CREATE TABLE` dumps, get an instant visual semantic diff (tables added/removed, columns changed, indexes modified, constraints compared) and generate ready-to-run migration scripts in your dialect.
 
 Also available as:
+- **Web app** — [schemalens.tech](https://schemalens.tech)
 - **CLI** — `npx schemalens-cli diff old.sql new.sql`
 - **CI-native CLI** — `npx schema-diff old.sql new.sql` (GitHub Actions, GitLab CI, JUnit XML)
 - **Core engine** — `npm install schemalens-engine`
+- **MCP Server** — use SchemaLens inside Claude, Cursor, or any MCP client ([setup →](https://schemalens.tech/mcp-server.html))
 - **VS Code Extension** — [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
 - **Chrome Extension** — [Install from Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
 - **Bookmarklet** — [Get Bookmarklet](https://schemalens.tech/tools/bookmarklet.html) — diff any SQL you see on the web
@@ -143,6 +145,32 @@ Add one input to the SchemaLens GitHub Action and every diff result becomes a Sl
 - **Team tier** — 90-day server-side alert history, higher rate limits, and admin controls.
 
 [View a sample alert →](https://schemalens.tech/schema-drift-alert.html) · [Open the Team dashboard →](https://schemalens.tech/team/schema-drift-dashboard.html)
+
+---
+
+## 🤖 MCP Server — Schema Diff Inside Your AI Assistant
+
+Add SchemaLens to Claude Desktop, Cursor, VS Code, or any MCP-compatible client and diff schemas without leaving the chat.
+
+```json
+{
+  "mcpServers": {
+    "schemalens": {
+      "command": "node",
+      "args": ["/path/to/race-kimi/mcp-server.js"]
+    }
+  }
+}
+```
+
+**Tools exposed:**
+- `schemalens_diff_schemas` — semantic diff with risk score
+- `schemalens_generate_migration` — forward + rollback migration SQL
+- `schemalens_detect_breaking_changes` — breaking changes with severity
+
+**Runs locally.** The MCP server loads `lib/engine.js` from the repo, so your schemas never leave your machine.
+
+**[→ Setup guide and install instructions](https://schemalens.tech/mcp-server.html)**
 
 ---
 

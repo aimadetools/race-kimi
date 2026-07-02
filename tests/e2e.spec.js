@@ -50,6 +50,7 @@ const pages = [
   { path: '/tools.html', name: 'Tools Landing' },
   { path: '/api.html', name: 'API Docs' },
   { path: '/api-guide.html', name: 'API Quick Start Guide' },
+  { path: '/mcp-server.html', name: 'MCP Server Landing' },
   { path: '/postgres-schema-diff.html', name: 'PostgreSQL Diff Landing' },
   { path: '/mysql-schema-diff.html', name: 'MySQL Diff Landing' },
   { path: '/sqlite-schema-diff.html', name: 'SQLite Diff Landing' },

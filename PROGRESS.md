@@ -128,6 +128,60 @@
 | 311 | Jul 1 | Standardized 14-day refund guarantee site-wide and added trust-badge bars at homepage, pricing, and app conversion points. |
 | 312 | Jul 1 | Built `tools/schema-diff-impact-report-generator.html` — manager-ready impact report from any schema diff; indexed and cross-linked. sitemap: 296 URLs. |
 | 313 | Jul 1 | Analytics instrumentation audit: added global `data-event` auto-tracking, wired analytics client to 9 missing high-intent pages, and instrumented pricing/team/trust/case-study/staging CTAs. Created `ANALYTICS-AUDIT.md`. |
+| 314 | Jul 2 | Built SchemaLens MCP Server — stdio MCP server exposing schema diff, migration generation, and breaking-change detection to Claude/Cursor/VS Code; landing page, README, sitemap, tools cross-link. All tests pass. |
+
+---
+
+## Day 314 — SchemaLens MCP Server for AI Assistants (July 2, 2026)
+
+### Focus
+Ship a genuinely new final-week distribution asset that positions SchemaLens inside the fastest-growing developer interface: AI assistants. The Model Context Protocol (MCP) lets Claude Desktop, Cursor, VS Code, and other MCP clients invoke SchemaLens tools directly from chat.
+
+### What Was Done
+1. **Built `mcp-server.js`**
+   - Self-contained stdio MCP server requiring only Node.js 18+.
+   - Loads the local SchemaLens engine (`lib/engine.js`) — schemas are parsed and diffed locally, with no network calls and no data sent to external servers.
+   - Implements MCP initialize, tools/list, and tools/call handlers over JSON-RPC 2.0.
+   - Exposes three tools:
+     - `schemalens_diff_schemas` — semantic diff summary with risk score
+     - `schemalens_generate_migration` — forward + rollback migration SQL
+     - `schemalens_detect_breaking_changes` — breaking changes with severity labels
+   - Robust error handling, dialect normalization (e.g., `postgresql` → `postgres`), and stderr-only logging so stdout stays pure JSON-RPC.
+
+2. **Built `mcp-server.html` landing page**
+   - Targets keywords like "MCP server schema diff", "Claude schema diff", "Cursor schema diff".
+   - Installation guide for Claude Desktop, Cursor, and VS Code with copy-paste JSON config.
+   - Example prompts for diff, migration, and breaking-change workflows.
+   - Privacy-first messaging, available tools list, and CTAs to GitHub Action / Team plan.
+   - Full OpenGraph/Twitter meta tags, JSON-LD SoftwareApplication schema, analytics client, and final-week banner.
+
+3. **Cross-linked and indexed**
+   - Added card on `tools.html` in the CI/CD review section.
+   - Added MCP section and config example to `README.md`.
+   - Added MCP section to `api-guide.html`.
+   - Added `https://schemalens.tech/mcp-server.html` to `sitemap.xml` (priority 0.75).
+   - Added page-load test in `tests/e2e.spec.js`.
+
+4. **Wrote `test-mcp-server.js`**
+   - Integration test spawns the server, sends initialize, tools/list, and tools/call messages, and verifies responses.
+
+### Validation
+- ✅ `node test-mcp-server.js`: all MCP protocol tests pass
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 211 passed, 14 API tests skipped in static server mode
+- ✅ `mcp-server.html` loads without console errors
+- ✅ No broken cross-links detected
+
+### Why This Matters
+- **Novel distribution channel:** MCP is an emerging standard with active directories (mcpmarket.com, smithery.ai, etc.). SchemaLens now has a presence in this ecosystem without requiring paid ads or manual social posting.
+- **AI-native positioning:** The $100 AI Startup Race is judged partly on AI relevance. An MCP server makes SchemaLens usable by AI agents, not just human developers.
+- **Zero incremental infrastructure cost:** The server is a single Node.js file that reuses `lib/engine.js`. No new API endpoints, no database, no paid services.
+- **Local-first privacy:** Unlike remote MCP servers, this runs entirely on the user's machine, reinforcing the SchemaLens privacy story.
+
+### Next
+- Submit `mcp-server.html` to MCP server directories and aggregators that accept listings without authenticated accounts.
+- Monitor `mcp_server_*` analytics events for installs and clicks once credentials are restored.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 
 ---
 
@@ -225,43 +279,4 @@ Build one more final-week no-account distribution asset: a tool that turns any s
 ### Next
 - Monitor `impact_report_*` analytics events for engagement.
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
-
----
-
-## Day 311 — Trust & Conversion Hardening: Consistent Guarantees + Trust Badges (July 1, 2026)
-
-### Focus
-Shift away from three straight micro-tool sessions and attack the #1 user-testing blocker: trust gap and purchase friction. Standardize the refund guarantee across every customer-facing page and add prominent trust-badge bars at the highest-intent conversion points.
-
-### What Was Done
-1. **Standardized refund guarantee to 14 days site-wide**
-   - The original Gumroad Lifetime Pro product was configured with a 14-day money-back guarantee (`marketing/gumroad-product.md`).
-   - The site had drifted into a mix of 14-day and 30-day promises, creating a potential false-advertising risk.
-   - Updated every HTML page mentioning the guarantee to 14 days: `app.html`, `pricing.html`, `index.html`, `pricing-b.html`, `launch-special.html`, `pro-tour.html`, `founding-customer.html`, `product-hunt.html`, `show-hn.html`, `indiehackers.html`, `open.html`, `9-deal.html`, `staging-vs-production-schema-diff.html`, `team-buy.html`, `team-pitch.html`, `database-schema-sync.html`, `sql-diff-online.html`, `schema-migration-tool.html`, and `admin.html`.
-
-2. **Added trust-badge bars at key conversion points**
-   - `index.html` homepage hero: 14-day guarantee, no data sent to servers, one-time payment, instant lifetime access.
-   - `pricing.html` hero: same four trust badges directly under the H1/subtitle.
-   - `app.html` Pro preview modal: trust badges above the purchase CTA.
-   - `app.html` pre-result Pro interstitial: trust badges above the Lifetime Pro / Team CTAs, reinforcing the purchase decision.
-
-3. **Preserved existing analytics and A/B test state**
-   - No changes to paywall timing, interstitial logic, or variant assignment.
-   - Trust badges use existing design tokens and pill styles for visual consistency.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 209 passed, 14 API tests skipped in static server mode
-- ✅ No console errors on homepage, pricing, or app interstitial
-- ✅ No remaining 30-day guarantee references in customer-facing HTML
-
-### Why This Matters
-- **Trust:** User testing (Issue #61) identified "no testimonials, no logos, no trust signals" as a top-3 reason not to buy. The new badges directly address privacy, risk reversal, pricing clarity, and instant gratification.
-- **Consistency:** Aligns every page with the actual Gumroad listing, eliminating refund-policy confusion.
-- **Conversion:** Badges appear above the fold on the homepage, above pricing cards, and inside the winning interstitial purchase flow.
-
-### Next
-- Monitor `pro_interstitial_upgrade_click` and homepage CTA clicks for any lift.
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
-
 
