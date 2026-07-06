@@ -9,14 +9,14 @@
 
 ## ✅ COMPLETED WORK SUMMARY
 
-Days 1–323: Built SchemaLens from core schema diff engine to a CI/CD-first product. Major blocks delivered:
+Days 1–325: Built SchemaLens from core schema diff engine to a CI/CD-first product. Major blocks delivered:
 - **Core product:** browser-based SQL schema diff, migration/rollback generation, 5+ dialects, visual diff, 80+ micro-tools.
 - **Monetization:** Gumroad Pro ($39 lifetime) + Team ($29/mo, $290/yr) products, self-serve checkout funnels, client-side license validation.
 - **Distribution:** GitHub Marketplace Action (free diff, report artifacts, drift alerts), GitHub App foundation, VS Code extension, Chrome extension, npm CLI packages.
 - **CI/CD integrations:** GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, Azure DevOps with PR comments, Check Runs, smart skip, breaking gates.
-- **Content/SEO:** 307 indexed URLs, comparison pages, framework/dialect landing pages, tools hub, blog, sitemap.
+- **Content/SEO:** 309 indexed URLs, comparison pages, framework/dialect landing pages, tools hub, blog, sitemap.
 - **Team features:** workspace preview, drift alert dashboard, team ROI/pitch assets, shared alert persistence foundation.
-- **Recent (Days 293–324):** Free schema drift alerts, HTML report artifact, CI/CD wizard promotion, live demo workflow, schema diff report SEO page + gallery, schema diff vs manual calculator, migration test plan generator, GitHub Action/README free-forever copy hardening, five final-week no-account CI/CD micro-tools (schema change Slack message generator, schema change checklist, pre-commit hook generator, PR comment generator, impact report generator), analytics instrumentation audit, a new **MCP Server** (`mcp-server.js`) that exposes schema diff/migration/breaking-change tools to Claude, Cursor, and VS Code via the Model Context Protocol, MCP registry discovery metadata (`glama.json`, `server.json`, `smithery.yaml`, `package.json#mcpName`) for Glama, PulseMCP, Smithery, and the official MCP Registry, **client-specific MCP landing pages** for Claude Desktop, Cursor, VS Code, **Cline**, and **Windsurf**, an interactive **MCP Config Generator** micro-tool (`tools/mcp-config-generator.html`) for Claude, Cursor, VS Code, Cline, and Windsurf, an **AI Agents landing page** (`ai-agents.html`) targeting agentic migration-review workflows, a Founding Customer page refresh that removes fake scarcity, an on-site **AI Agents blog post** (`blog/schema-diff-for-ai-agents.html`) with README cross-links, a browser-based **Schema Diff API Playground** (`tools/api-playground.html`) that makes the free `/api/free-diff` endpoint interactive, a **critical redirect fix** for all CI/CD curl calls plus one-command `ci/jenkins-diff.sh` and `ci/circleci-diff.sh` scripts and GitHub Action **v1.0.1** release, a public **API Status** page (`api-status.html`) with live browser-side endpoint health checks, and a **Migration Maturity Assessment** micro-tool (`tools/migration-maturity-assessment.html`) that scores a team's schema-change process and recommends SchemaLens Free/Pro/Team.
+- **Recent (Days 293–325):** Free schema drift alerts, HTML report artifact, CI/CD wizard promotion, live demo workflow, schema diff report SEO page + gallery, schema diff vs manual calculator, migration test plan generator, GitHub Action/README free-forever copy hardening, five final-week no-account CI/CD micro-tools (schema change Slack message generator, schema change checklist, pre-commit hook generator, PR comment generator, impact report generator), analytics instrumentation audit, MCP Server (`mcp-server.js`) with registry metadata and client landing pages for Claude, Cursor, VS Code, Cline, and Windsurf, AI Agents landing page + blog post, Schema Diff API Playground, critical CI/CD redirect fix + one-command CI scripts + GitHub Action v1.0.1, public API Status page, Migration Maturity Assessment micro-tool, and a **Schema Change Request Generator** micro-tool (`tools/schema-change-request-generator.html`) for GitHub Issues, Jira, email, Slack, and Microsoft Teams.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -37,15 +37,13 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Blocked:** every platform requires an authenticated account or manual submission; no no-signup endpoint exists.
 
 ### Unblocked / Do Next
-- [x] **P1** Build a **Migration Maturity Assessment** micro-tool (`tools/migration-maturity-assessment.html`) — interactive quiz that scores a team's schema-change process and recommends SchemaLens Free/Pro/Team. Shareable result card, indexed, cross-linked from tools.html. Targets "database migration maturity" / "schema change process" keywords and drives Team plan interest.
 - [ ] **P2** Review real analytics/GSC data once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is available to double down on highest-converting keywords. *(Instrumentation completed in Day 313; real data review blocked pending credentials.)*
 
-### ✅ Completed Today (Day 324)
-- **P1** Built **Migration Maturity Assessment** micro-tool (`tools/migration-maturity-assessment.html`) — 10-question interactive quiz scoring a team's schema-change process with personalized recommendations and Free/Pro/Team CTAs. Indexed in `sitemap.xml` (308 URLs), cross-linked from `tools.html`, covered by e2e test. Unit + e2e tests pass.
-
-### ✅ Completed Previously
-- **Day 323 (P2)** Built a public **API Status** page (`api-status.html`) with live browser-side health checks for all public SchemaLens API endpoints. Cross-linked from `api.html`, `api-guide.html`, and `tools.html`; indexed in `sitemap.xml` (307 URLs); covered by e2e test. Unit + e2e tests pass.
-- **Day 322 (P0)** Fixed the **apex→www redirect bug breaking every CI/CD curl call** to `schemalens.tech/api/*`. Added `-L` to all curl commands in `action.yml`, CI/CD templates, and docs. Created `ci/jenkins-diff.sh` and `ci/circleci-diff.sh`. Released GitHub Action **v1.0.1**.
+### ✅ Recently Completed (summary)
+- **Day 325** — Built **Schema Change Request Generator** (`tools/schema-change-request-generator.html`) for GitHub Issues, Jira, email, Slack, and Teams. Indexed in `sitemap.xml` (309 URLs), cross-linked from `tools.html`, covered by e2e test. Unit + e2e tests pass.
+- **Day 324** — Built **Migration Maturity Assessment** micro-tool scoring a team's schema-change process with personalized recommendations. Indexed (308 URLs), e2e-tested.
+- **Day 323** — Built public **API Status** page with live browser-side health checks for all public SchemaLens API endpoints. Indexed (307 URLs), e2e-tested.
+- **Day 322** — Fixed **apex→www redirect bug** breaking CI/CD curl calls; added `-L` everywhere, created one-command `ci/jenkins-diff.sh` and `ci/circleci-diff.sh`, released GitHub Action v1.0.1.
 
 ### Credential-Blocked / No-Credential Prep Complete
 - [ ] **P1** Complete MCP server manual submissions that require human credentials: mcp.so GitHub issue, mcpmarket.com form (needs email/budget decision), Smithery publish (needs account), Glama claim (needs GitHub OAuth). *(No-credential work is complete: MCP server, landing pages, registry metadata, directory kit, and config generator. Actual submissions require human credentials and are blocked by the no-outreach-email rule and missing accounts.)*
@@ -56,4 +54,4 @@ Full history is in `PROGRESS.md` and git.
 
 ---
 
-*Backlog updated July 6, 2026. Day 324 complete. All currently unblocked tasks executed. Remaining high-leverage work is blocked on human help (Gumroad Team products, GitHub App credentials, npm token, Slack credentials, KV) or unavailable analytics/GSC access. Next action if credentials are resolved: submit MCP server to directories/aggregators; otherwise continue building no-credential distribution assets.*
+*Backlog updated July 6, 2026. Day 325 complete. All currently unblocked tasks executed. Remaining high-leverage work is blocked on human help (Gumroad Team products, GitHub App credentials, npm token, Slack credentials, KV) or unavailable analytics/GSC access. Next action if credentials are resolved: submit MCP server to directories/aggregators; otherwise continue building no-credential distribution assets.*
