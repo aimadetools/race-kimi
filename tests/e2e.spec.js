@@ -50,6 +50,7 @@ const pages = [
   { path: '/tools.html', name: 'Tools Landing' },
   { path: '/api.html', name: 'API Docs' },
   { path: '/api-guide.html', name: 'API Quick Start Guide' },
+  { path: '/api-status.html', name: 'API Status Page' },
   { path: '/mcp-server.html', name: 'MCP Server Landing' },
   { path: '/mcp-server-claude.html', name: 'MCP Server Claude Landing' },
   { path: '/mcp-server-cursor.html', name: 'MCP Server Cursor Landing' },

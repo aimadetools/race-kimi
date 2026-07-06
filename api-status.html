@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SchemaLens API Status — Live Health & Uptime</title>
+  <meta name="description" content="Real-time status page for the SchemaLens schema diff API. Check uptime, latency, and response health for the free diff endpoint, drift webhooks, report generator, and badge API.">
+  <meta property="og:title" content="SchemaLens API Status — Live Health & Uptime">
+  <meta property="og:description" content="Check the real-time health of the SchemaLens schema diff API. Free endpoint monitoring with live latency and copy-paste curl commands.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/api-status.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://schemalens.tech/api-status.html">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "SchemaLens API Status",
+    "description": "Real-time status page for the SchemaLens schema diff API. Check uptime, latency, and response health for the free diff endpoint, drift webhooks, report generator, and badge API.",
+    "url": "https://schemalens.tech/api-status.html",
+    "publisher": { "@type": "Organization", "name": "SchemaLens", "logo": { "@type": "ImageObject", "url": "https://schemalens.tech/favicon.svg" } }
+  }
+  </script>
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .status-hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .status-hero .indicator {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      transition: all 0.3s ease;
+    }
+    .status-hero .indicator.operational { background: rgba(16,185,129,0.15); color: #22c55e; }
+    .status-hero .indicator.degraded { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .status-hero .indicator.down { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .status-hero .indicator.checking { background: rgba(99,102,241,0.1); color: var(--primary); animation: pulse 1.5s infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .status-hero h2 { font-size: 1.4rem; margin-bottom: 6px; }
+    .status-hero .meta { color: var(--text-muted); font-size: 0.9rem; }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .status-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      transition: border-color 0.2s;
+    }
+    .status-card:hover { border-color: var(--hover-border); }
+    .status-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .status-card-header h3 {
+      font-size: 1rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .status-badge.operational { background: rgba(16,185,129,0.15); color: #22c55e; }
+    .status-badge.degraded { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .status-badge.down { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .status-badge.checking { background: rgba(99,102,241,0.1); color: var(--primary); }
+    .status-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .status-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .metric {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      text-align: center;
+    }
+    .metric .value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .metric .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .status-card pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text-muted);
+    }
+    .status-card .details {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: none;
+    }
+    .status-card .details.open { display: block; }
+    .status-card .toggle-details {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 0;
+      margin-top: 10px;
+    }
+    .status-card .toggle-details:hover { text-decoration: underline; }
+    .actions-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .info-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .info-section h2 {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+    }
+    .info-section p, .info-section li {
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+    .info-section ul { padding-left: 20px; margin: 10px 0; }
+    .info-section li { margin-bottom: 8px; }
+    .endpoint-url {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .last-updated {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: -16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 600px) {
+      .status-grid { grid-template-columns: 1fr; }
+      .status-metrics { grid-template-columns: 1fr; }
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="tools.html">Tools</a>
+        <a href="api.html">API Docs</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>SchemaLens API Status</h1>
+      <p>Live health checks for every public SchemaLens API endpoint. Refresh this page or click <strong>Run checks</strong> to see current latency and response times from your browser.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="status-hero" id="statusHero">
+      <div class="indicator checking" id="heroIndicator">⟳</div>
+      <h2 id="heroTitle">Checking API health…</h2>
+      <p class="meta" id="heroMeta">Testing endpoints from your current location.</p>
+    </div>
+
+    <p class="last-updated" id="lastUpdated"></p>
+
+    <div class="actions-bar">
+      <button class="btn btn-primary" id="runChecks" onclick="runAllChecks()" data-event="api_status_run_checks">🔄 Run checks again</button>
+      <a href="tools/api-playground.html" class="btn btn-secondary" data-event="api_status_open_playground">Open API Playground →</a>
+      <a href="api-guide.html" class="btn btn-secondary" data-event="api_status_open_guide">API Quick Start →</a>
+    </div>
+
+    <div class="status-grid" id="statusGrid"></div>
+
+    <div class="info-section">
+      <h2>📡 What we monitor</h2>
+      <ul>
+        <li><span class="endpoint-url">POST /api/free-diff</span> — The free schema diff endpoint. Returns full migration SQL, rollback SQL, breaking changes, and risk score without a license key.</li>
+        <li><span class="endpoint-url">POST /api/diff</span> — The Pro/Team diff endpoint. Same output as the free endpoint, accessed with a license key for higher rate limits.</li>
+        <li><span class="endpoint-url">POST /api/schema-drift-webhook</span> — Generates shareable schema drift alert pages and forwards Slack/Teams notifications.</li>
+        <li><span class="endpoint-url">POST /api/schema-diff-report</span> — Builds a self-contained HTML diff report artifact for CI/CD pipelines.</li>
+        <li><span class="endpoint-url">GET /api/badge</span> — Returns an SVG migration-safety badge for READMEs and dashboards.</li>
+      </ul>
+    </div>
+
+    <div class="info-section">
+      <h2>🛡️ Why this matters for CI/CD</h2>
+      <p>SchemaLens is designed to run inside your CI/CD pipeline. If an endpoint is slow or unavailable, your pull-request checks can fail. This page uses the same public endpoints your GitHub Action, GitLab CI, Jenkins, CircleCI, and Bitbucket Pipelines use — so the numbers here reflect what your builds see.</p>
+      <p style="margin-top:12px;">All copy-paste snippets include <code>-L</code> so they follow the apex→www redirect automatically. If you see a non-200 status, check the <strong>Response</strong> panel for the exact server message.</p>
+    </div>
+
+    <div class="info-section">
+      <h2>📋 Incident history</h2>
+      <p>SchemaLens runs on Vercel's edge network. There are no scheduled maintenance windows. Historical uptime is tracked independently by this page only; for a third-party view you can monitor <a href="https://schemalens.tech/api/free-diff" target="_blank" rel="noopener">/api/free-diff</a> from your own uptime tool.</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="api.html">API</a>
+          <a href="api-guide.html">API Quick Start</a>
+          <a href="api-status.html">API Status</a>
+          <a href="team.html">Team</a>
+        </div>
+        <div class="footer-col">
+          <h4>Integrations</h4>
+          <a href="github-action.html">GitHub Action</a>
+          <a href="gitlab-schema-diff.html">GitLab CI</a>
+          <a href="jenkins-schema-diff.html">Jenkins</a>
+          <a href="circleci-schema-diff.html">CircleCI</a>
+          <a href="bitbucket-schema-diff.html">Bitbucket</a>
+          <a href="ci-cd-integration.html">CI/CD Hub</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="tools/api-playground.html">API Playground</a>
+          <a href="schema-examples.html">Schema Examples</a>
+          <a href="migration-recipes.html">Migration Recipes</a>
+          <a href="database-schema-design-patterns.html">Design Patterns</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+
+const BASE_URL = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://schemalens.tech';
+
+const ENDPOINTS = [
+  {
+    id: 'free-diff',
+    name: 'Free Diff API',
+    method: 'POST',
+    path: '/api/free-diff',
+    description: 'Full schema diff, migration SQL, rollback SQL, and breaking changes with no license key.',
+    body: {
+      schemaA: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));',
+      schemaB: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));',
+      dialect: 'postgres',
+      format: 'json'
+    },
+    expectOk: true
+  },
+  {
+    id: 'pro-diff',
+    name: 'Pro Diff API',
+    method: 'POST',
+    path: '/api/diff',
+    description: 'Same diff output as the free endpoint. Requires a Pro license key.',
+    body: {
+      schemaA: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));',
+      schemaB: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));',
+      dialect: 'postgres',
+      format: 'json',
+      licenseKey: 'SL-TEST-KEY-0000-0000'
+    },
+    expectOk: false,
+    expectedStatus: 401
+  },
+  {
+    id: 'drift-webhook',
+    name: 'Schema Drift Webhook',
+    method: 'POST',
+    path: '/api/schema-drift-webhook',
+    description: 'Generates shareable drift alert pages and forwards Slack/Teams notifications.',
+    body: {
+      oldSchema: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));',
+      newSchema: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) NOT NULL);',
+      dialect: 'postgres',
+      metadata: { repo: 'schemalens/status-check', branch: 'main', commit: 'status', ciProvider: 'browser' }
+    },
+    expectOk: true
+  },
+  {
+    id: 'schema-diff-report',
+    name: 'HTML Report API',
+    method: 'POST',
+    path: '/api/schema-diff-report',
+    description: 'Builds a self-contained HTML schema diff report artifact for CI/CD.',
+    body: {
+      response: JSON.stringify({
+        diff: { tablesAdded: [], tablesRemoved: [], tablesModified: [] },
+        migration: 'ALTER TABLE "users" ADD "email" VARCHAR ( 255 );',
+        rollback: 'ALTER TABLE "users" DROP COLUMN "email";',
+        breakingChanges: [],
+        riskScore: { score: 0, label: 'Safe', icon: '🟢' },
+        summary: { tablesAdded: 0, tablesRemoved: 0, tablesModified: 1, breakingChangeCount: 0 }
+      }),
+      title: 'SchemaLens Status Check'
+    },
+    expectOk: true
+  },
+  {
+    id: 'badge',
+    name: 'Migration Safety Badge',
+    method: 'GET',
+    path: '/api/badge?score=45&style=flat',
+    description: 'SVG badge showing migration risk score for READMEs and dashboards.',
+    body: null,
+    expectOk: true
+  }
+];
+
+function formatCurl(endpoint) {
+  const url = `${BASE_URL}${endpoint.path}`;
+  if (endpoint.method === 'GET') {
+    return `curl -sL "${url}"`;
+  }
+  return `curl -sL -X POST "${url}" \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(endpoint.body).replace(/'/g, "'\\''")}'`;
+}
+
+function statusFromResult(result) {
+  if (!result.completed) return 'checking';
+  if (result.error) return 'down';
+  if (result.expectedStatus && result.status === result.expectedStatus) return 'operational';
+  if (result.status >= 200 && result.status < 300) return 'operational';
+  if (result.status >= 500) return 'down';
+  return 'degraded';
+}
+
+function statusLabel(status) {
+  return { operational: 'Operational', degraded: 'Degraded', down: 'Down', checking: 'Checking' }[status];
+}
+
+function statusIcon(status) {
+  return { operational: '●', degraded: '◐', down: '●', checking: '⟳' }[status];
+}
+
+async function checkEndpoint(endpoint) {
+  const start = performance.now();
+  const options = {
+    method: endpoint.method,
+    headers: { 'Content-Type': 'application/json' }
+  };
+  if (endpoint.body && endpoint.method !== 'GET') {
+    options.body = JSON.stringify(endpoint.body);
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}${endpoint.path}`, options);
+    const latency = Math.round(performance.now() - start);
+    let responseText = '';
+    try {
+      responseText = await res.text();
+    } catch (e) {
+      responseText = '(could not read body)';
+    }
+    return {
+      completed: true,
+      status: res.status,
+      latency,
+      responseText: responseText.slice(0, 600),
+      error: null,
+      expectedStatus: endpoint.expectedStatus || null
+    };
+  } catch (err) {
+    return {
+      completed: true,
+      status: 0,
+      latency: Math.round(performance.now() - start),
+      responseText: '',
+      error: err.message,
+      expectedStatus: endpoint.expectedStatus || null
+    };
+  }
+}
+
+function renderCard(endpoint, result) {
+  const status = statusFromResult(result);
+  const label = statusLabel(status);
+  const icon = statusIcon(status);
+  const curl = formatCurl(endpoint);
+  const detailsId = `details-${endpoint.id}`;
+
+  return `
+    <div class="status-card">
+      <div class="status-card-header">
+        <h3><span>${endpoint.method}</span> ${endpoint.name}</span></h3>
+        <span class="status-badge ${status}">${icon} ${label}</span>
+      </div>
+      <p>${endpoint.description}</p>
+      <div class="status-metrics">
+        <div class="metric">
+          <div class="value">${result.completed ? (result.status || 'ERR') : '—'}</div>
+          <div class="label">HTTP Status</div>
+        </div>
+        <div class="metric">
+          <div class="value">${result.completed ? result.latency + ' ms' : '—'}</div>
+          <div class="label">Latency</div>
+        </div>
+      </div>
+      <pre>${escapeHtml(curl)}</pre>
+      <button class="toggle-details" onclick="document.getElementById('${detailsId}').classList.toggle('open')">Show response</button>
+      <div class="details" id="${detailsId}">
+        ${result.error ? `<p style="color:#ef4444;">Error: ${escapeHtml(result.error)}</p>` : ''}
+        <pre>${escapeHtml(result.responseText || '(no body)')}</pre>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+}
+
+function updateHero(results) {
+  const allCompleted = results.every(r => r.completed);
+  const anyDown = results.some(r => statusFromResult(r) === 'down');
+  const anyDegraded = results.some(r => statusFromResult(r) === 'degraded');
+  const hero = document.getElementById('statusHero');
+  const indicator = document.getElementById('heroIndicator');
+  const title = document.getElementById('heroTitle');
+  const meta = document.getElementById('heroMeta');
+
+  indicator.classList.remove('checking');
+  if (!allCompleted) {
+    indicator.classList.add('checking');
+    indicator.textContent = '⟳';
+    title.textContent = 'Checking API health…';
+    meta.textContent = 'Testing endpoints from your current location.';
+  } else if (anyDown) {
+    indicator.classList.add('down');
+    indicator.textContent = '✕';
+    title.textContent = 'Some endpoints are down';
+    meta.textContent = 'Check the cards below for details and retry in a few seconds.';
+  } else if (anyDegraded) {
+    indicator.classList.add('degraded');
+    indicator.textContent = '◐';
+    title.textContent = 'All endpoints reachable with warnings';
+    meta.textContent = 'One or more endpoints returned an unexpected status.';
+  } else {
+    indicator.classList.add('operational');
+    indicator.textContent = '✓';
+    title.textContent = 'All endpoints operational';
+    const avg = Math.round(results.reduce((a, r) => a + r.latency, 0) / results.length);
+    meta.textContent = `Average latency ${avg} ms from your current location.`;
+  }
+}
+
+async function runAllChecks() {
+  const grid = document.getElementById('statusGrid');
+  const lastUpdated = document.getElementById('lastUpdated');
+  const runBtn = document.getElementById('runChecks');
+  runBtn.disabled = true;
+  runBtn.textContent = '⏳ Running checks…';
+
+  // Reset hero to checking state
+  const indicator = document.getElementById('heroIndicator');
+  indicator.className = 'indicator checking';
+  indicator.textContent = '⟳';
+  document.getElementById('heroTitle').textContent = 'Checking API health…';
+  document.getElementById('heroMeta').textContent = 'Testing endpoints from your current location.';
+
+  grid.innerHTML = ENDPOINTS.map(ep => renderCard(ep, { completed: false })).join('');
+
+  const results = [];
+  for (let i = 0; i < ENDPOINTS.length; i++) {
+    const result = await checkEndpoint(ENDPOINTS[i]);
+    results.push(result);
+    // Re-render all cards with current results
+    grid.innerHTML = ENDPOINTS.map((ep, idx) => renderCard(ep, results[idx] || { completed: false })).join('');
+    updateHero(results);
+  }
+
+  const now = new Date();
+  lastUpdated.textContent = `Last checked: ${now.toLocaleString()} · from your browser · refresh to retest`;
+  runBtn.disabled = false;
+  runBtn.textContent = '🔄 Run checks again';
+}
+
+document.addEventListener('DOMContentLoaded', runAllChecks);
+</script>
+<script src="lib/analytics-client.js"></script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
