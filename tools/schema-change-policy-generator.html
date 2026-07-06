@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Database Schema Change Management Policy Generator | SchemaLens</title>
+  <meta name="description" content="Generate a production-ready database schema change management policy. Define review workflows, approval gates, CI/CD checks, rollback rules, and compliance standards for your team.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-change-policy-generator.html">
+  <meta property="og:title" content="Database Schema Change Management Policy Generator">
+  <meta property="og:description" content="Generate a schema change management policy with review workflows, approval gates, CI/CD checks, and rollback rules.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-change-policy-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Database Schema Change Management Policy Generator">
+  <meta name="twitter:description" content="Generate a schema change management policy with review workflows, approval gates, CI/CD checks, and rollback rules.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Database Schema Change Management Policy Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates markdown schema change management policies with roles, review workflows, CI/CD gates, breaking-change handling, rollback procedures, communication plans, and compliance sections.",
+    "url": "https://schemalens.tech/tools/schema-change-policy-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 960px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 80px; resize: vertical; font-family: inherit; font-size: 0.95rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; }
+    .checkbox-group label { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; cursor: pointer; font-size: 0.9rem; font-weight: 400; }
+    .checkbox-group label:has(input:checked) { border-color: var(--primary); background: rgba(99,102,241,0.08); }
+    .checkbox-group input { width: auto; margin: 0; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; min-height: 320px; }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Database Schema Change Management Policy</h1>
+      <p>Generate a ready-to-adopt policy for reviewing, approving, and deploying database schema changes. Align your team around CI/CD checks, rollback rules, and compliance standards.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Policy context</h2>
+          <div class="field-row">
+            <div class="field">
+              <label for="orgName">Organization or team name</label>
+              <input type="text" id="orgName" placeholder="e.g. Acme Platform Engineering">
+            </div>
+            <div class="field">
+              <label for="policyOwner">Policy owner</label>
+              <input type="text" id="policyOwner" placeholder="e.g. Head of Platform Engineering">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="effectiveDate">Effective date</label>
+              <input type="text" id="effectiveDate" placeholder="e.g. July 6, 2026">
+            </div>
+            <div class="field">
+              <label for="reviewCycle">Review cycle</label>
+              <select id="reviewCycle">
+                <option value="quarterly">Quarterly</option>
+                <option value="semiannually">Semiannually</option>
+                <option value="annually">Annually</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="scope">Scope <span class="hint">(systems, environments, teams covered)</span></label>
+            <textarea id="scope" placeholder="e.g. All production and staging databases owned by Platform Engineering, including PostgreSQL, MySQL, and data warehouse schemas."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Database dialects in scope</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" class="dialect" value="PostgreSQL" checked> PostgreSQL</label>
+              <label><input type="checkbox" class="dialect" value="MySQL"> MySQL</label>
+              <label><input type="checkbox" class="dialect" value="SQLite"> SQLite</label>
+              <label><input type="checkbox" class="dialect" value="SQL Server"> SQL Server</label>
+              <label><input type="checkbox" class="dialect" value="Oracle"> Oracle</label>
+              <label><input type="checkbox" class="dialect" value="Other"> Other</label>
+            </div>
+          </div>
+
+          <h2 style="margin-top:28px;">2. Change workflow</h2>
+
+          <div class="field">
+            <label for="workflow">Primary review workflow</label>
+            <select id="workflow">
+              <option value="pr">Pull-request review in the repository</option>
+              <option value="cab">Change Advisory Board (CAB)</option>
+              <option value="ticket">Ticketing system (Jira / Linear / etc.)</option>
+              <option value="chat">Chat ops (Slack / Teams approval)</option>
+              <option value="hybrid">Hybrid (PR + CAB for high-risk changes)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Required approvers</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" class="approver" value="DBA / platform engineer" checked> DBA / platform engineer</label>
+              <label><input type="checkbox" class="approver" value="Application engineer"> Application engineer</label>
+              <label><input type="checkbox" class="approver" value="Engineering manager"> Engineering manager</label>
+              <label><input type="checkbox" class="approver" value="Security / data governance"> Security / data governance</label>
+              <label><input type="checkbox" class="approver" value="Product owner"> Product owner</label>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="minApprovers">Minimum number of approvals</label>
+              <select id="minApprovers">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="highRiskApprovers">Extra approvers for high-risk changes</label>
+              <select id="highRiskApprovers">
+                <option value="same" selected>Same as standard</option>
+                <option value="senior">Senior engineer / staff required</option>
+                <option value="cab">CAB approval required</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Automation requirements</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" class="automation" value="Schema diff in CI/CD" checked> Schema diff in CI/CD</label>
+              <label><input type="checkbox" class="automation" value="Breaking-change detection gate" checked> Breaking-change detection gate</label>
+              <label><input type="checkbox" class="automation" value="Migration SQL generation" checked> Migration SQL generation</label>
+              <label><input type="checkbox" class="automation" value="Rollback SQL verification"> Rollback SQL verification</label>
+              <label><input type="checkbox" class="automation" value="Drift alerts"> Production drift alerts</label>
+              <label><input type="checkbox" class="automation" value="Report artifact archiving"> Report artifact archiving</label>
+            </div>
+          </div>
+
+          <h2 style="margin-top:28px;">3. Risk & rollback</h2>
+
+          <div class="field">
+            <label for="breakingPolicy">Breaking change policy</label>
+            <select id="breakingPolicy">
+              <option value="avoid">Avoid breaking changes; use expand/contract</option>
+              <option value="coordinate">Allowed with cross-team coordination</option>
+              <option value="window">Allowed only in scheduled maintenance windows</option>
+              <option value="forbid">Forbidden without executive exception</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="rollbackPolicy">Rollback policy</label>
+            <select id="rollbackPolicy">
+              <option value="required">Rollback plan required for every production change</option>
+              <option value="highrisk">Rollback plan required for medium/high-risk changes</option>
+              <option value="automated">Automated rollback within 5 minutes of failure</option>
+              <option value="runbook">Runbook-based rollback with on-call approval</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="maintenanceWindows">Maintenance windows</label>
+            <select id="maintenanceWindows">
+              <option value="none">No dedicated windows (continuous deployment)</option>
+              <option value="weekly">Weekly low-traffic window</option>
+              <option value="monthly">Monthly scheduled maintenance</option>
+              <option value="oncall">On-call scheduled windows only</option>
+            </select>
+          </div>
+
+          <h2 style="margin-top:28px;">4. Communication & compliance</h2>
+
+          <div class="field">
+            <label>Notification channels</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" class="channel" value="#deployments Slack channel" checked> #deployments Slack</label>
+              <label><input type="checkbox" class="channel" value="Email to stakeholders"> Email</label>
+              <label><input type="checkbox" class="channel" value="Microsoft Teams"> Teams</label>
+              <label><input type="checkbox" class="channel" value="PagerDuty / on-call"> PagerDuty</label>
+              <label><input type="checkbox" class="channel" value="Internal status page"> Status page</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Compliance requirements</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" class="compliance" value="SOC 2"> SOC 2</label>
+              <label><input type="checkbox" class="compliance" value="HIPAA"> HIPAA</label>
+              <label><input type="checkbox" class="compliance" value="GDPR"> GDPR</label>
+              <label><input type="checkbox" class="compliance" value="PCI-DSS"> PCI-DSS</label>
+              <label><input type="checkbox" class="compliance" value="ISO 27001"> ISO 27001</label>
+              <label><input type="checkbox" class="compliance" value="SOX"> SOX</label>
+              <label><input type="checkbox" class="compliance" value="None"> None</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="auditRetention">Audit log retention</label>
+            <select id="auditRetention">
+              <option value="90 days">90 days</option>
+              <option value="1 year" selected>1 year</option>
+              <option value="3 years">3 years</option>
+              <option value="7 years">7 years</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="additionalNotes">Additional notes <span class="hint">(optional)</span></label>
+            <textarea id="additionalNotes" placeholder="e.g. Contact platform-oncall@example.com for exceptions. All policies are subject to change with 30 days notice."></textarea>
+          </div>
+
+          <button class="btn btn-primary" id="generateBtn" style="width:100%;" data-event="scp_generate">Generate Policy</button>
+        </div>
+
+        <div class="upsell">
+          <h3>🚀 Put this policy into practice</h3>
+          <ul>
+            <li>Run schema diff checks automatically on every PR with the SchemaLens GitHub Action.</li>
+            <li>Post change summaries and risk scores directly to Slack, Teams, or PR comments.</li>
+            <li>Gate production deploys on approval and breaking-change detection.</li>
+          </ul>
+          <a href="../github-action.html" class="btn btn-primary" data-event="scp_upsell_cicd">Add SchemaLens to CI/CD →</a>
+          <span style="margin-left:12px;">or <a href="../tools/cicd-setup-wizard.html" data-event="scp_upsell_wizard">use the setup wizard</a>.</span>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel" style="position:sticky;top:80px;">
+          <h2>Generated policy</h2>
+          <div class="output-wrap">
+            <button class="btn btn-secondary btn-copy" id="copyBtn">Copy</button>
+            <div class="output" id="output" tabindex="0" aria-label="Generated policy"></div>
+          </div>
+          <div class="share-row">
+            <button class="btn btn-secondary" id="copyLinkBtn" data-event="scp_copy_link">Copy Share Link</button>
+            <button class="btn btn-secondary" id="downloadBtn" data-event="scp_download">Download .md</button>
+            <a href="../app.html" class="btn btn-secondary" data-event="scp_open_app">Open Schema Diff App</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Built with 💜 by <a href="../index.html">SchemaLens</a> ·
+        <a href="../open.html">Open Startup</a> ·
+        <a href="../privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const getValues = (selector) => Array.from(document.querySelectorAll(selector))
+      .filter(el => el.checked).map(el => el.value);
+
+    const els = {
+      orgName: document.getElementById('orgName'),
+      policyOwner: document.getElementById('policyOwner'),
+      effectiveDate: document.getElementById('effectiveDate'),
+      reviewCycle: document.getElementById('reviewCycle'),
+      scope: document.getElementById('scope'),
+      workflow: document.getElementById('workflow'),
+      minApprovers: document.getElementById('minApprovers'),
+      highRiskApprovers: document.getElementById('highRiskApprovers'),
+      breakingPolicy: document.getElementById('breakingPolicy'),
+      rollbackPolicy: document.getElementById('rollbackPolicy'),
+      maintenanceWindows: document.getElementById('maintenanceWindows'),
+      auditRetention: document.getElementById('auditRetention'),
+      additionalNotes: document.getElementById('additionalNotes'),
+      generateBtn: document.getElementById('generateBtn'),
+      copyBtn: document.getElementById('copyBtn'),
+      copyLinkBtn: document.getElementById('copyLinkBtn'),
+      downloadBtn: document.getElementById('downloadBtn'),
+      output: document.getElementById('output'),
+    };
+
+    let currentText = '';
+
+    const workflowLabels = {
+      pr: 'Pull-request review in the repository',
+      cab: 'Change Advisory Board (CAB)',
+      ticket: 'Ticketing system (Jira / Linear / etc.)',
+      chat: 'Chat ops (Slack / Teams approval)',
+      hybrid: 'Hybrid (PR + CAB for high-risk changes)',
+    };
+
+    const highRiskLabels = {
+      same: 'same approvers as standard changes',
+      senior: 'senior engineer or staff engineer approval required',
+      cab: 'Change Advisory Board (CAB) approval required',
+    };
+
+    function defaultVal(val, fallback) {
+      return (val || '').trim() || fallback;
+    }
+
+    function buildData() {
+      const dialects = getValues('.dialect');
+      const approvers = getValues('.approver');
+      const automation = getValues('.automation');
+      const channels = getValues('.channel');
+      const compliance = getValues('.compliance');
+      return {
+        orgName: defaultVal(els.orgName.value, 'Your Organization'),
+        policyOwner: defaultVal(els.policyOwner.value, 'Engineering Leadership'),
+        effectiveDate: defaultVal(els.effectiveDate.value, new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })),
+        reviewCycle: els.reviewCycle.value,
+        scope: defaultVal(els.scope.value, 'All production and staging database schemas.'),
+        dialects: dialects.length ? dialects : ['All supported database engines'],
+        workflow: workflowLabels[els.workflow.value],
+        approvers: approvers.length ? approvers : ['Engineering manager'],
+        minApprovers: els.minApprovers.value,
+        highRiskApprovers: highRiskLabels[els.highRiskApprovers.value],
+        automation: automation.length ? automation : ['Schema diff in CI/CD'],
+        breakingPolicy: els.breakingPolicy.value,
+        rollbackPolicy: els.rollbackPolicy.value,
+        maintenanceWindows: els.maintenanceWindows.value,
+        channels: channels.length ? channels : ['#deployments Slack channel'],
+        compliance: compliance.length ? compliance : ['None'],
+        auditRetention: els.auditRetention.value,
+        additionalNotes: els.additionalNotes.value.trim(),
+      };
+    }
+
+    function sentenceCase(str) {
+      if (!str) return '';
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function generatePolicy(d) {
+      const lines = [];
+      lines.push(`# Database Schema Change Management Policy`);
+      lines.push('');
+      lines.push(`**Organization:** ${d.orgName}  `);
+      lines.push(`**Policy owner:** ${d.policyOwner}  `);
+      lines.push(`**Effective date:** ${d.effectiveDate}  `);
+      lines.push(`**Review cycle:** ${sentenceCase(d.reviewCycle)}  `);
+      lines.push('');
+      lines.push('---');
+      lines.push('');
+
+      lines.push('## 1. Purpose and scope');
+      lines.push('');
+      lines.push('This policy defines how database schema changes are proposed, reviewed, approved, and deployed at ' + d.orgName + '. Its goal is to protect data integrity, reduce production incidents, and make schema changes traceable, reversible, and repeatable.');
+      lines.push('');
+      lines.push('### Scope');
+      lines.push(d.scope);
+      lines.push('');
+      lines.push('### Database engines covered');
+      d.dialects.forEach(x => lines.push(`- ${x}`));
+      lines.push('');
+
+      lines.push('## 2. Roles and responsibilities');
+      lines.push('');
+      d.approvers.forEach(role => {
+        lines.push(`- **${role}** — reviews schema changes for correctness, risk, and alignment with standards.`);
+      });
+      lines.push(`- **Change author** — writes the migration, tests it in a non-production environment, and supplies a rollback plan.`);
+      lines.push(`- **On-call engineer** — executes or supports rollback if an incident occurs.`);
+      lines.push('');
+
+      lines.push('## 3. Change classification');
+      lines.push('');
+      lines.push('Every schema change must be classified by risk:');
+      lines.push('');
+      lines.push('| Risk | Examples | Approval | Automation |');
+      lines.push('|---|---|---|---|');
+      lines.push('| 🟢 **Low** | Additive changes: new tables, nullable columns, non-unique indexes | ' + d.minApprovers + ' approval(s) | Schema diff in CI/CD |');
+      lines.push('| 🟡 **Medium** | Type changes, new constraints, indexed columns on large tables | ' + d.minApprovers + ' approval(s) | Schema diff + breaking-change check |');
+      lines.push('| 🔴 **High** | Breaking changes, destructive changes, renames, drops | ' + d.highRiskApprovers + ' | Full diff, rollback rehearsal, and drift alert |');
+      lines.push('');
+
+      lines.push('## 4. Review and approval workflow');
+      lines.push('');
+      lines.push(`All schema changes follow this workflow: **${d.workflow}**.`);
+      lines.push('');
+      lines.push('Before approval, every change must include:');
+      lines.push('- A clear description of the change and business reason.');
+      lines.push('- A schema diff generated from the target environment.');
+      lines.push('- Migration SQL and, when applicable, rollback SQL.');
+      lines.push('- Identification of breaking changes and consumer impact.');
+      lines.push('- A testing plan that covers happy path and rollback.');
+      lines.push('');
+      lines.push('Minimum approvals required: **' + d.minApprovers + '**. High-risk changes require **' + d.highRiskApprovers + '**.');
+      lines.push('');
+
+      lines.push('## 5. CI/CD and automation');
+      lines.push('');
+      lines.push('The following automation must be in place for every schema change:');
+      lines.push('');
+      d.automation.forEach(x => lines.push(`- ${x}`));
+      lines.push('');
+      lines.push('Recommended tooling:');
+      lines.push('- [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) for PR schema diff and breaking-change detection.');
+      lines.push('- [SchemaLens GitLab CI / Bitbucket / Jenkins / CircleCI / Azure DevOps](https://schemalens.tech/ci-cd-integration.html) guides for other platforms.');
+      lines.push('- [Schema Change Checklist](https://schemalens.tech/tools/schema-change-checklist.html) for manual review steps.');
+      lines.push('- [Migration Runbook Generator](https://schemalens.tech/tools/migration-runbook-generator.html) for runbook templates.');
+      lines.push('');
+
+      lines.push('## 6. Breaking changes');
+      lines.push('');
+      lines.push('Policy: **' + d.breakingPolicy + '**.');
+      lines.push('');
+      lines.push('When a breaking change is unavoidable:');
+      lines.push('1. Prefer the expand/contract pattern over in-place destructive changes.');
+      lines.push('2. Document all affected consumers, APIs, and downstream pipelines.');
+      lines.push('3. Coordinate deployment timing with dependent teams.');
+      lines.push('4. Classify the change as high risk and obtain required approvals.');
+      lines.push('5. Add a breaking-change gate in CI/CD to prevent accidental merges.');
+      lines.push('');
+
+      lines.push('## 7. Rollback and incident response');
+      lines.push('');
+      lines.push('Policy: **' + d.rollbackPolicy + '**.');
+      lines.push('');
+      lines.push('Rollback requirements:');
+      lines.push('- Rollback SQL must be written and reviewed before production deployment.');
+      lines.push('- Rollback steps must be tested in staging when feasible.');
+      lines.push('- On-call rotation must be notified before high-risk deployments.');
+      lines.push('- Post-incident reviews are required for any schema change that triggers a rollback or SEV.');
+      lines.push('');
+      lines.push('Maintenance windows: **' + d.maintenanceWindows.replace('none', 'No dedicated windows — continuous deployment').replace('weekly', 'Weekly low-traffic window').replace('monthly', 'Monthly scheduled maintenance').replace('oncall', 'On-call scheduled windows only') + '**.');
+      lines.push('');
+
+      lines.push('## 8. Communication');
+      lines.push('');
+      lines.push('Stakeholders must be notified through the following channels:');
+      lines.push('');
+      d.channels.forEach(x => lines.push(`- ${x}`));
+      lines.push('');
+      lines.push('Communication must include: change summary, risk level, affected environments, expected impact, rollback plan, and contact person.');
+      lines.push('');
+
+      lines.push('## 9. Audit and compliance');
+      lines.push('');
+      if (d.compliance.includes('None')) {
+        lines.push('No formal external compliance framework is required. Audit logs and change history are retained for operational review.');
+      } else {
+        lines.push('This policy supports the following compliance frameworks: ' + d.compliance.join(', ') + '.');
+        lines.push('');
+        lines.push('Controls:');
+        lines.push('- All schema changes are tracked in version control.');
+        lines.push('- Approval records are preserved in the review workflow.');
+        lines.push('- Schema diff reports and migration artifacts are retained.');
+      }
+      lines.push('');
+      lines.push(`Audit log and artifact retention: **${d.auditRetention}**.`);
+      lines.push('');
+
+      if (d.additionalNotes) {
+        lines.push('## 10. Additional notes');
+        lines.push('');
+        lines.push(d.additionalNotes);
+        lines.push('');
+      }
+
+      lines.push('---');
+      lines.push('');
+      lines.push(`_Generated with [SchemaLens](https://schemalens.tech) — free schema diff and migration tools for engineering teams._`);
+      return lines.join('\n');
+    }
+
+    function generate() {
+      currentText = generatePolicy(buildData());
+      els.output.textContent = currentText;
+      els.output.style.whiteSpace = 'pre-wrap';
+    }
+
+    function trackEvent(name, props) {
+      if (window.analytics && typeof window.analytics.track === 'function') {
+        window.analytics.track(name, props || {});
+      }
+      if (window.va) {
+        try { window.va('event', { name, ...props }); } catch (e) {}
+      }
+    }
+
+    function getAllInputs() {
+      return [
+        els.orgName, els.policyOwner, els.effectiveDate, els.reviewCycle, els.scope,
+        els.workflow, els.minApprovers, els.highRiskApprovers, els.breakingPolicy,
+        els.rollbackPolicy, els.maintenanceWindows, els.auditRetention, els.additionalNotes,
+        ...document.querySelectorAll('.dialect, .approver, .automation, .channel, .compliance')
+      ];
+    }
+
+    function buildShareParams() {
+      const params = new URLSearchParams();
+      const set = (k, v) => { if (v) params.set(k, encodeURIComponent(v)); };
+      set('orgName', els.orgName.value);
+      set('policyOwner', els.policyOwner.value);
+      set('effectiveDate', els.effectiveDate.value);
+      params.set('reviewCycle', els.reviewCycle.value);
+      set('scope', els.scope.value);
+      getValues('.dialect').forEach(v => params.append('dialect', v));
+      params.set('workflow', els.workflow.value);
+      getValues('.approver').forEach(v => params.append('approver', v));
+      params.set('minApprovers', els.minApprovers.value);
+      params.set('highRiskApprovers', els.highRiskApprovers.value);
+      getValues('.automation').forEach(v => params.append('automation', v));
+      params.set('breakingPolicy', els.breakingPolicy.value);
+      params.set('rollbackPolicy', els.rollbackPolicy.value);
+      params.set('maintenanceWindows', els.maintenanceWindows.value);
+      getValues('.channel').forEach(v => params.append('channel', v));
+      getValues('.compliance').forEach(v => params.append('compliance', v));
+      params.set('auditRetention', els.auditRetention.value);
+      set('additionalNotes', els.additionalNotes.value);
+      return params;
+    }
+
+    function loadFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const get = (k) => {
+        const v = params.get(k);
+        return v === null ? null : decodeURIComponent(v);
+      };
+      const getAll = (k) => params.getAll(k).map(decodeURIComponent);
+      if (params.has('orgName')) els.orgName.value = get('orgName');
+      if (params.has('policyOwner')) els.policyOwner.value = get('policyOwner');
+      if (params.has('effectiveDate')) els.effectiveDate.value = get('effectiveDate');
+      if (params.has('reviewCycle')) els.reviewCycle.value = get('reviewCycle');
+      if (params.has('scope')) els.scope.value = get('scope');
+      if (params.has('workflow')) els.workflow.value = get('workflow');
+      if (params.has('minApprovers')) els.minApprovers.value = get('minApprovers');
+      if (params.has('highRiskApprovers')) els.highRiskApprovers.value = get('highRiskApprovers');
+      if (params.has('breakingPolicy')) els.breakingPolicy.value = get('breakingPolicy');
+      if (params.has('rollbackPolicy')) els.rollbackPolicy.value = get('rollbackPolicy');
+      if (params.has('maintenanceWindows')) els.maintenanceWindows.value = get('maintenanceWindows');
+      if (params.has('auditRetention')) els.auditRetention.value = get('auditRetention');
+      if (params.has('additionalNotes')) els.additionalNotes.value = get('additionalNotes');
+
+      document.querySelectorAll('.dialect, .approver, .automation, .channel, .compliance').forEach(el => el.checked = false);
+      getAll('dialect').forEach(v => {
+        const el = document.querySelector(`.dialect[value="${v}"]`);
+        if (el) el.checked = true;
+      });
+      getAll('approver').forEach(v => {
+        const el = document.querySelector(`.approver[value="${v}"]`);
+        if (el) el.checked = true;
+      });
+      getAll('automation').forEach(v => {
+        const el = document.querySelector(`.automation[value="${v}"]`);
+        if (el) el.checked = true;
+      });
+      getAll('channel').forEach(v => {
+        const el = document.querySelector(`.channel[value="${v}"]`);
+        if (el) el.checked = true;
+      });
+      getAll('compliance').forEach(v => {
+        const el = document.querySelector(`.compliance[value="${v}"]`);
+        if (el) el.checked = true;
+      });
+    }
+
+    els.generateBtn.addEventListener('click', () => {
+      trackEvent('scp_generate');
+      generate();
+    });
+
+    els.copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(currentText);
+        els.copyBtn.textContent = 'Copied!';
+        els.copyBtn.classList.add('copied');
+        setTimeout(() => { els.copyBtn.textContent = 'Copy'; els.copyBtn.classList.remove('copied'); }, 1500);
+        trackEvent('scp_copy');
+      } catch (e) {
+        els.copyBtn.textContent = 'Copy failed';
+      }
+    });
+
+    els.copyLinkBtn.addEventListener('click', async () => {
+      try {
+        const url = location.origin + location.pathname + '?' + buildShareParams().toString();
+        await navigator.clipboard.writeText(url);
+        els.copyLinkBtn.textContent = 'Link Copied!';
+        setTimeout(() => { els.copyLinkBtn.textContent = 'Copy Share Link'; }, 1500);
+        trackEvent('scp_copy_link');
+      } catch (e) {
+        els.copyLinkBtn.textContent = 'Copy failed';
+      }
+    });
+
+    els.downloadBtn.addEventListener('click', () => {
+      const blob = new Blob([currentText], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'schema-change-policy.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      trackEvent('scp_download');
+    });
+
+    getAllInputs().forEach(el => el.addEventListener('input', generate));
+    getAllInputs().forEach(el => el.addEventListener('change', generate));
+
+    loadFromUrl();
+    generate();
+  })();
+  </script>
+  <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
