@@ -144,6 +144,7 @@ const pages = [
   { path: '/tools/migration-test-plan-generator.html', name: 'Migration Test Plan Generator' },
   { path: '/tools/schema-change-checklist.html', name: 'Database Schema Change Checklist' },
   { path: '/tools/migration-maturity-assessment.html', name: 'Migration Maturity Assessment' },
+  { path: '/tools/schema-change-request-generator.html', name: 'Schema Change Request Generator' },
   { path: '/tools/mcp-config-generator.html', name: 'MCP Config Generator' },
   { path: '/tools/schema-diff-precommit-hook.html', name: 'Schema Diff Pre-commit Hook Generator' },
   { path: '/tools/schema-diff-pr-comment-generator.html', name: 'Schema Diff PR Comment Generator' },

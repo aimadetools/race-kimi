@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Schema Change Request Generator — GitHub/Jira/Email | SchemaLens</title>
+  <meta name="description" content="Generate a production-ready database schema change request for GitHub Issues, Jira, or email. Includes risk assessment, rollback plan, testing steps, and approval checklist.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-change-request-generator.html">
+  <meta property="og:title" content="Schema Change Request Generator — GitHub/Jira/Email">
+  <meta property="og:description" content="Generate a production-ready database schema change request with risk, rollback, testing, and approval sections.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-change-request-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Schema Change Request Generator — GitHub/Jira/Email">
+  <meta name="twitter:description" content="Generate a production-ready database schema change request with risk, rollback, testing, and approval sections.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Schema Change Request Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates schema change request templates for GitHub Issues, Jira, email, Slack, and Microsoft Teams. Includes risk assessment, rollback plan, testing checklist, and approval workflow.",
+    "url": "https://schemalens.tech/tools/schema-change-request-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 960px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 90px; resize: vertical; font-family: inherit; font-size: 0.95rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; }
+    .checkbox-group label { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; cursor: pointer; font-size: 0.9rem; font-weight: 400; }
+    .checkbox-group label:has(input:checked) { border-color: var(--primary); background: rgba(99,102,241,0.08); }
+    .checkbox-group input { width: auto; margin: 0; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; min-height: 280px; }
+
+    .preview-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .preview-tabs button { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+    .preview-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .risk-options { display: flex; gap: 12px; flex-wrap: wrap; }
+    .risk-options label { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; cursor: pointer; font-size: 0.9rem; }
+    .risk-options input { margin: 0; }
+    .risk-options label:has(input:checked) { border-color: var(--primary); background: rgba(99,102,241,0.08); }
+
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Schema Change Request Generator</h1>
+      <p>Generate a production-ready database schema change request for GitHub Issues, Jira, email, or Slack. Make every migration reviewable, traceable, and safe.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Change details</h2>
+          <div class="field-row">
+            <div class="field">
+              <label for="changeTitle">Change title</label>
+              <input type="text" id="changeTitle" placeholder="e.g. Add user_preferences table and index">
+            </div>
+            <div class="field">
+              <label for="requester">Requester / author</label>
+              <input type="text" id="requester" placeholder="e.g. @alice">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="team">Team</label>
+              <input type="text" id="team" placeholder="e.g. Platform Engineering">
+            </div>
+            <div class="field">
+              <label for="targetDate">Target deploy date <span class="hint">(optional)</span></label>
+              <input type="text" id="targetDate" placeholder="e.g. July 10, 2026">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="dialect">Database dialect</label>
+              <select id="dialect">
+                <option value="PostgreSQL">PostgreSQL</option>
+                <option value="MySQL">MySQL</option>
+                <option value="SQLite">SQLite</option>
+                <option value="SQL Server">SQL Server</option>
+                <option value="Oracle">Oracle</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="changeType">Change type</label>
+              <select id="changeType">
+                <option value="Add table(s)">Add table(s)</option>
+                <option value="Add column(s)">Add column(s)</option>
+                <option value="Add index / constraint">Add index / constraint</option>
+                <option value="Modify column(s)">Modify column(s)</option>
+                <option value="Rename table / column">Rename table / column</option>
+                <option value="Drop table / column">Drop table / column</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Affected environments</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="envStaging" checked> Staging</label>
+              <label><input type="checkbox" id="envProduction"> Production</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="summary">What is changing?</label>
+            <textarea id="summary" placeholder="e.g. Add user_preferences table with JSONB settings column, foreign key to users(id), and idx_user_prefs_settings GIN index."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="reason">Why is this change needed?</label>
+            <textarea id="reason" placeholder="e.g. Product needs per-user notification preferences before the new mobile app launches."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Risk level</label>
+            <div class="risk-options">
+              <label><input type="radio" name="risk" value="low" checked> 🟢 Low — additive only</label>
+              <label><input type="radio" name="risk" value="medium"> 🟡 Medium — indexes or type changes</label>
+              <label><input type="radio" name="risk" value="high"> 🔴 High — breaking or destructive</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="breaking">Breaking changes <span class="hint">(apps, consumers, or downstream pipelines)</span></label>
+            <textarea id="breaking" placeholder="e.g. None — new table only. OR: Existing API response now includes preferences JSON; mobile client must handle null."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="rollback">Rollback plan</label>
+            <textarea id="rollback" placeholder="e.g. Drop user_preferences table and remove foreign key constraint if error rate > 0.1% for 5 minutes."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="testing">Testing plan</label>
+            <textarea id="testing" placeholder="e.g. 1) Run migration against staging copy. 2) Verify app can read/write preferences. 3) Rollback rehearsal."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="communication">Communication plan <span class="hint">(channels / stakeholders)</span></label>
+            <input type="text" id="communication" placeholder="e.g. #deployments Slack channel, #mobile-team, on-call DBA">
+          </div>
+
+          <div class="field">
+            <label>Approval required</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="needDba" checked> DBA / platform review</label>
+              <label><input type="checkbox" id="needSecurity"> Security / data review</label>
+              <label><input type="checkbox" id="needManager"> Engineering manager</label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="generateBtn" style="width:100%;" data-event="scr_generate">Generate Request</button>
+        </div>
+
+        <div class="upsell">
+          <h3>🔁 Make this request part of every PR</h3>
+          <ul>
+            <li>Auto-generate schema diff reports and risk scores for every migration PR.</li>
+            <li>Post change summaries to Slack, Teams, or as a PR comment.</li>
+            <li>Gate production deploys on approval and breaking-change checks.</li>
+          </ul>
+          <a href="../github-action.html" class="btn btn-primary" data-event="scr_upsell_cicd">Add SchemaLens to CI/CD →</a>
+          <span style="margin-left:12px;">or <a href="../tools/schema-change-checklist.html" data-event="scr_upsell_checklist">use the 32-point checklist</a>.</span>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel" style="position:sticky;top:80px;">
+          <h2>2. Generated request</h2>
+          <div class="preview-tabs">
+            <button class="active" data-tab="github">GitHub Issue</button>
+            <button data-tab="jira">Jira</button>
+            <button data-tab="email">Email</button>
+            <button data-tab="slack">Slack / Teams</button>
+          </div>
+          <div class="output-wrap">
+            <button class="btn btn-secondary btn-copy" id="copyBtn">Copy</button>
+            <div class="output" id="output" tabindex="0" aria-label="Generated request"></div>
+          </div>
+          <div class="share-row">
+            <button class="btn btn-secondary" id="copyLinkBtn" data-event="scr_copy_link">Copy Share Link</button>
+            <a href="../app.html" class="btn btn-secondary" data-event="scr_open_app">Open Schema Diff App</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Built with 💜 by <a href="../index.html">SchemaLens</a> ·
+        <a href="../open.html">Open Startup</a> ·
+        <a href="../privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const els = {
+      changeTitle: document.getElementById('changeTitle'),
+      requester: document.getElementById('requester'),
+      team: document.getElementById('team'),
+      targetDate: document.getElementById('targetDate'),
+      dialect: document.getElementById('dialect'),
+      changeType: document.getElementById('changeType'),
+      envStaging: document.getElementById('envStaging'),
+      envProduction: document.getElementById('envProduction'),
+      summary: document.getElementById('summary'),
+      reason: document.getElementById('reason'),
+      breaking: document.getElementById('breaking'),
+      rollback: document.getElementById('rollback'),
+      testing: document.getElementById('testing'),
+      communication: document.getElementById('communication'),
+      needDba: document.getElementById('needDba'),
+      needSecurity: document.getElementById('needSecurity'),
+      needManager: document.getElementById('needManager'),
+      generateBtn: document.getElementById('generateBtn'),
+      copyBtn: document.getElementById('copyBtn'),
+      copyLinkBtn: document.getElementById('copyLinkBtn'),
+      output: document.getElementById('output'),
+    };
+
+    let currentText = '';
+    let currentTab = 'github';
+
+    const riskEmoji = { low: '🟢', medium: '🟡', high: '🔴' };
+    const riskLabel = { low: 'Low', medium: 'Medium', high: 'High' };
+
+    function getRisk() {
+      return document.querySelector('input[name="risk"]:checked')?.value || 'low';
+    }
+
+    function getEnvironments() {
+      const envs = [];
+      if (els.envStaging.checked) envs.push('Staging');
+      if (els.envProduction.checked) envs.push('Production');
+      return envs.length ? envs.join(', ') : 'TBD';
+    }
+
+    function getApprovers() {
+      const approvers = [];
+      if (els.needDba.checked) approvers.push('DBA / platform review');
+      if (els.needSecurity.checked) approvers.push('Security / data review');
+      if (els.needManager.checked) approvers.push('Engineering manager');
+      return approvers.length ? approvers : ['None specified'];
+    }
+
+    function defaultVal(val, fallback) {
+      return (val || '').trim() || fallback;
+    }
+
+    function buildData() {
+      return {
+        title: defaultVal(els.changeTitle.value, 'Schema change request'),
+        requester: defaultVal(els.requester.value, 'Not specified'),
+        team: defaultVal(els.team.value, 'Not specified'),
+        targetDate: els.targetDate.value.trim(),
+        dialect: els.dialect.value,
+        changeType: els.changeType.value,
+        environments: getEnvironments(),
+        summary: defaultVal(els.summary.value, '_No summary provided._'),
+        reason: defaultVal(els.reason.value, '_No business reason provided._'),
+        risk: getRisk(),
+        breaking: defaultVal(els.breaking.value, '_No breaking changes identified._'),
+        rollback: defaultVal(els.rollback.value, '_No rollback plan provided._'),
+        testing: defaultVal(els.testing.value, '_No testing plan provided._'),
+        communication: defaultVal(els.communication.value, '_No communication plan provided._'),
+        approvers: getApprovers(),
+      };
+    }
+
+    function generateGitHub(d) {
+      const lines = [];
+      lines.push(`## Schema Change Request: ${d.title}`);
+      lines.push('');
+      lines.push(`| Field | Value |`);
+      lines.push(`|---|---|`);
+      lines.push(`| **Requester** | ${d.requester} |`);
+      lines.push(`| **Team** | ${d.team} |`);
+      if (d.targetDate) lines.push(`| **Target deploy** | ${d.targetDate} |`);
+      lines.push(`| **Database** | ${d.dialect} |`);
+      lines.push(`| **Change type** | ${d.changeType} |`);
+      lines.push(`| **Environments** | ${d.environments} |`);
+      lines.push(`| **Risk level** | ${riskEmoji[d.risk]} ${riskLabel[d.risk]} |`);
+      lines.push('');
+      lines.push('### Summary of change');
+      lines.push(d.summary);
+      lines.push('');
+      lines.push('### Business reason');
+      lines.push(d.reason);
+      lines.push('');
+      lines.push('### Breaking changes / consumer impact');
+      lines.push(d.breaking);
+      lines.push('');
+      lines.push('### Rollback plan');
+      lines.push(d.rollback);
+      lines.push('');
+      lines.push('### Testing plan');
+      lines.push(d.testing);
+      lines.push('');
+      lines.push('### Communication plan');
+      lines.push(d.communication);
+      lines.push('');
+      lines.push('### Approval checklist');
+      d.approvers.forEach(a => lines.push(`- [ ] ${a}`));
+      lines.push('- [ ] Schema diff reviewed with SchemaLens');
+      lines.push('- [ ] Migration SQL and rollback SQL verified');
+      lines.push('');
+      lines.push('---');
+      lines.push('_Generated with [SchemaLens](https://schemalens.tech)_');
+      return lines.join('\n');
+    }
+
+    function generateJira(d) {
+      const lines = [];
+      lines.push(`*Schema Change Request: ${d.title}*`);
+      lines.push('');
+      lines.push(`*Requester:* ${d.requester}`);
+      lines.push(`*Team:* ${d.team}`);
+      if (d.targetDate) lines.push(`*Target deploy:* ${d.targetDate}`);
+      lines.push(`*Database:* ${d.dialect}`);
+      lines.push(`*Change type:* ${d.changeType}`);
+      lines.push(`*Environments:* ${d.environments}`);
+      lines.push(`*Risk level:* ${riskEmoji[d.risk]} ${riskLabel[d.risk]}`);
+      lines.push('');
+      lines.push('*Summary of change*');
+      lines.push(d.summary);
+      lines.push('');
+      lines.push('*Business reason*');
+      lines.push(d.reason);
+      lines.push('');
+      lines.push('*Breaking changes / consumer impact*');
+      lines.push(d.breaking);
+      lines.push('');
+      lines.push('*Rollback plan*');
+      lines.push(d.rollback);
+      lines.push('');
+      lines.push('*Testing plan*');
+      lines.push(d.testing);
+      lines.push('');
+      lines.push('*Communication plan*');
+      lines.push(d.communication);
+      lines.push('');
+      lines.push('*Approval checklist*');
+      d.approvers.forEach(a => lines.push(`- [ ] ${a}`));
+      lines.push('- [ ] Schema diff reviewed with SchemaLens');
+      lines.push('- [ ] Migration SQL and rollback SQL verified');
+      lines.push('');
+      lines.push('---');
+      lines.push('Generated with SchemaLens: https://schemalens.tech');
+      return lines.join('\n');
+    }
+
+    function generateEmail(d) {
+      const lines = [];
+      lines.push(`Subject: Schema Change Request — ${d.title}`);
+      lines.push('');
+      lines.push(`Hi team,`);
+      lines.push('');
+      lines.push(`I am requesting approval to deploy the following schema change:`);
+      lines.push('');
+      lines.push(`Title: ${d.title}`);
+      lines.push(`Requester: ${d.requester}`);
+      lines.push(`Team: ${d.team}`);
+      if (d.targetDate) lines.push(`Target deploy: ${d.targetDate}`);
+      lines.push(`Database: ${d.dialect}`);
+      lines.push(`Change type: ${d.changeType}`);
+      lines.push(`Environments: ${d.environments}`);
+      lines.push(`Risk level: ${riskLabel[d.risk]}`);
+      lines.push('');
+      lines.push('What is changing:');
+      lines.push(d.summary);
+      lines.push('');
+      lines.push('Why:');
+      lines.push(d.reason);
+      lines.push('');
+      lines.push('Breaking changes / consumer impact:');
+      lines.push(d.breaking);
+      lines.push('');
+      lines.push('Rollback plan:');
+      lines.push(d.rollback);
+      lines.push('');
+      lines.push('Testing plan:');
+      lines.push(d.testing);
+      lines.push('');
+      lines.push('Communication plan:');
+      lines.push(d.communication);
+      lines.push('');
+      lines.push('Approvals needed:');
+      d.approvers.forEach(a => lines.push(`- ${a}`));
+      lines.push('');
+      lines.push('Please review and reply with any concerns or approval.');
+      lines.push('');
+      lines.push('Thanks,');
+      lines.push(d.requester);
+      lines.push('');
+      lines.push('---');
+      lines.push('Generated with SchemaLens: https://schemalens.tech');
+      return lines.join('\n');
+    }
+
+    function generateSlack(d) {
+      const lines = [];
+      lines.push(`:schema: *Schema Change Request*`);
+      lines.push(`*${d.title}*`);
+      lines.push(`${riskEmoji[d.risk]} Risk: *${riskLabel[d.risk]}*`);
+      lines.push('');
+      lines.push(`*Requester:* ${d.requester}`);
+      lines.push(`*Team:* ${d.team}`);
+      if (d.targetDate) lines.push(`*Target deploy:* ${d.targetDate}`);
+      lines.push(`*Database:* ${d.dialect}`);
+      lines.push(`*Change type:* ${d.changeType}`);
+      lines.push(`*Environments:* ${d.environments}`);
+      lines.push('');
+      lines.push('*What is changing:*');
+      lines.push(...d.summary.split('\n').filter(Boolean).map(s => `• ${s}`));
+      lines.push('');
+      lines.push('*Rollback:* ' + d.rollback.split('\n')[0]);
+      lines.push('*Testing:* ' + d.testing.split('\n')[0]);
+      lines.push('');
+      lines.push('*Approvals needed:* ' + d.approvers.join(', '));
+      lines.push('');
+      lines.push('_Generated with <https://schemalens.tech|SchemaLens>_');
+      return lines.join('\n');
+    }
+
+    function generateRequest() {
+      const d = buildData();
+      if (currentTab === 'github') currentText = generateGitHub(d);
+      else if (currentTab === 'jira') currentText = generateJira(d);
+      else if (currentTab === 'email') currentText = generateEmail(d);
+      else currentText = generateSlack(d);
+      renderOutput();
+    }
+
+    function renderOutput() {
+      output.textContent = currentText;
+      output.style.whiteSpace = 'pre-wrap';
+    }
+
+    function setTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.preview-tabs button').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.preview-tabs button[data-tab="${tab}"]`).classList.add('active');
+      generateRequest();
+    }
+
+    document.querySelectorAll('.preview-tabs button').forEach(btn => {
+      btn.addEventListener('click', () => setTab(btn.dataset.tab));
+    });
+
+    els.generateBtn.addEventListener('click', () => {
+      trackEvent('scr_generate', { tab: currentTab, risk: getRisk() });
+      generateRequest();
+    });
+
+    els.copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(currentText);
+        els.copyBtn.textContent = 'Copied!';
+        els.copyBtn.classList.add('copied');
+        setTimeout(() => { els.copyBtn.textContent = 'Copy'; els.copyBtn.classList.remove('copied'); }, 1500);
+        trackEvent('scr_copy', { tab: currentTab });
+      } catch (e) {
+        els.copyBtn.textContent = 'Copy failed';
+      }
+    });
+
+    els.copyLinkBtn.addEventListener('click', async () => {
+      try {
+        const params = new URLSearchParams();
+        const set = (k, v) => { if (v) params.set(k, encodeURIComponent(v)); };
+        set('title', els.changeTitle.value);
+        set('requester', els.requester.value);
+        set('team', els.team.value);
+        set('targetDate', els.targetDate.value);
+        params.set('dialect', els.dialect.value);
+        params.set('changeType', els.changeType.value);
+        params.set('envStaging', els.envStaging.checked ? '1' : '0');
+        params.set('envProduction', els.envProduction.checked ? '1' : '0');
+        set('summary', els.summary.value);
+        set('reason', els.reason.value);
+        params.set('risk', getRisk());
+        set('breaking', els.breaking.value);
+        set('rollback', els.rollback.value);
+        set('testing', els.testing.value);
+        set('communication', els.communication.value);
+        params.set('needDba', els.needDba.checked ? '1' : '0');
+        params.set('needSecurity', els.needSecurity.checked ? '1' : '0');
+        params.set('needManager', els.needManager.checked ? '1' : '0');
+        params.set('tab', currentTab);
+        const url = location.origin + location.pathname + '?' + params.toString();
+        await navigator.clipboard.writeText(url);
+        els.copyLinkBtn.textContent = 'Link Copied!';
+        setTimeout(() => { els.copyLinkBtn.textContent = 'Copy Share Link'; }, 1500);
+        trackEvent('scr_copy_link');
+      } catch (e) {
+        els.copyLinkBtn.textContent = 'Copy failed';
+      }
+    });
+
+    function loadFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const get = (k) => {
+        const v = params.get(k);
+        return v === null ? null : decodeURIComponent(v);
+      };
+      if (params.has('title')) els.changeTitle.value = get('title');
+      if (params.has('requester')) els.requester.value = get('requester');
+      if (params.has('team')) els.team.value = get('team');
+      if (params.has('targetDate')) els.targetDate.value = get('targetDate');
+      if (params.has('dialect')) els.dialect.value = get('dialect');
+      if (params.has('changeType')) els.changeType.value = get('changeType');
+      if (params.has('envStaging')) els.envStaging.checked = params.get('envStaging') === '1';
+      if (params.has('envProduction')) els.envProduction.checked = params.get('envProduction') === '1';
+      if (params.has('summary')) els.summary.value = get('summary');
+      if (params.has('reason')) els.reason.value = get('reason');
+      const risk = params.get('risk');
+      if (risk && ['low','medium','high'].includes(risk)) {
+        document.querySelector(`input[name="risk"][value="${risk}"]`).checked = true;
+      }
+      if (params.has('breaking')) els.breaking.value = get('breaking');
+      if (params.has('rollback')) els.rollback.value = get('rollback');
+      if (params.has('testing')) els.testing.value = get('testing');
+      if (params.has('communication')) els.communication.value = get('communication');
+      if (params.has('needDba')) els.needDba.checked = params.get('needDba') === '1';
+      if (params.has('needSecurity')) els.needSecurity.checked = params.get('needSecurity') === '1';
+      if (params.has('needManager')) els.needManager.checked = params.get('needManager') === '1';
+      if (params.has('tab')) currentTab = params.get('tab');
+    }
+
+    // Live update
+    const inputs = [els.changeTitle, els.requester, els.team, els.targetDate, els.dialect, els.changeType, els.summary, els.reason, els.breaking, els.rollback, els.testing, els.communication];
+    inputs.forEach(el => el.addEventListener('input', generateRequest));
+    [els.envStaging, els.envProduction, els.needDba, els.needSecurity, els.needManager].forEach(el => el.addEventListener('change', generateRequest));
+    document.querySelectorAll('input[name="risk"]').forEach(el => el.addEventListener('change', generateRequest));
+
+    function trackEvent(name, props) {
+      if (window.analytics && typeof window.analytics.track === 'function') {
+        window.analytics.track(name, props || {});
+      }
+      if (window.va) {
+        try { window.va('event', { name, ...props }); } catch (e) {}
+      }
+    }
+
+    loadFromUrl();
+    setTab(currentTab);
+  })();
+  </script>
+  <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
