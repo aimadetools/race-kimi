@@ -133,8 +133,47 @@
 | 318 | Jul 2 | AI Agents landing page (`ai-agents.html`) + Founding Customer honesty refresh; removes fake scarcity, adds AI-agent distribution angle. sitemap: 302 URLs. |
 | 319 | Jul 2 | AI Agents blog post (`blog/schema-diff-for-ai-agents.html`) targeting AI agent migration review / MCP schema diff keywords; indexed and cross-linked. sitemap: 303 URLs. |
 | 320 | Jul 2 | Cline & Windsurf MCP server landing pages + editor tabs + sitemap/e2e. sitemap: 305 URLs. |
+| 321 | Jul 6 | Schema Diff API Playground — interactive browser tool for `/api/free-diff` with code snippets, indexed and cross-linked. |
+| 322 | Jul 6 | Critical CI/CD redirect fix — added `-L` to all curl calls, released GitHub Action v1.0.1, created one-command CI scripts. |
+| 323 | Jul 6 | Public API Status page with live browser-side health checks for all SchemaLens API endpoints; indexed and cross-linked. |
 
 ---
+
+## Day 324 — Migration Maturity Assessment Micro-tool (July 6, 2026)
+
+### Focus
+Continue building no-credential conversion assets in the final week. A Migration Maturity Assessment turns the "CI/CD is the product" insight into an interactive lead-gen tool: teams score their schema-change process and get a tailored recommendation for SchemaLens Free, Pro, or Team.
+
+### What Was Done
+1. **Built `tools/migration-maturity-assessment.html`**
+   - 10-question interactive quiz covering PR review, CI/CD automation, rollback planning, breaking-change detection, documentation, collaboration, drift monitoring, downtime planning, testing, and tooling.
+   - Score 0-100 with four maturity levels: Reactive, Developing, Managed, Optimized.
+   - Personalized recommendations that surface low-scoring areas and highlight strengths.
+   - Dynamic CTA copy based on maturity level (Free diff → CI/CD → Team plan).
+   - Shareable result URL with URL-encoded answers; copy-to-clipboard, Twitter, LinkedIn, and print/PDF buttons.
+   - SEO meta tags, JSON-LD SoftwareApplication schema, analytics `data-event` tracking, responsive styling, and theme toggle.
+
+2. **Indexed and cross-linked**
+   - Added tool card on `tools.html` with analytics-tagged CTA.
+   - Added `https://schemalens.tech/tools/migration-maturity-assessment.html` to `sitemap.xml`. Total sitemap: **308 URLs**.
+   - Added page-load test to `tests/e2e.spec.js`.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 223 passed, 14 API tests skipped in static server mode
+- ✅ `tools/migration-maturity-assessment.html` loads without console errors
+- ✅ sitemap.xml remains valid XML
+
+### Why This Matters
+- **Conversion:** The assessment gives teams a reason to engage and surfaces the gap between their current process and an optimized SchemaLens workflow.
+- **SEO:** Targets "database migration maturity", "schema change process", and "migration assessment" long-tail keywords.
+- **Shareability:** Result URLs and social buttons make it easy for engineering leads to share with their teams.
+- **No credentials required:** Fully autonomous asset that supports the CI/CD-first positioning while human credential blocks persist.
+
+### Next
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
+- Monitor `maturity_*` analytics events once credentials are restored.
+
 
 ## Day 323 — Public API Status Page + API Discovery Cross-links (July 6, 2026)
 
@@ -217,42 +256,4 @@ Fix a silent, revenue-blocking bug: every server-side `curl` call to `https://sc
 - Monitor GitHub Action usage and any new error reports after the v1.0.1 release.
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 
-
-## Day 321 — Schema Diff API Playground (July 2, 2026)
-
-### Focus
-Final-week distribution push: make the free SchemaLens diff API tangible for developers who want to test before integrating. A browser-based playground turns the API from documentation into a product experience and captures high-intent "schema diff API" search traffic.
-
-### What Was Done
-1. **Built `tools/api-playground.html`**
-   - Interactive playground for the free `/api/free-diff` endpoint.
-   - Two schema editors, dialect selector (PostgreSQL, MySQL, SQLite, SQL Server, Oracle), and JSON/Markdown format selector.
-   - One-click sample schemas, live API request, and tabbed output: Summary, Migration, Rollback, Breaking Changes, Code Snippets, Raw JSON.
-   - Auto-generated copy-paste snippets for cURL, JavaScript, Python, and Node.js.
-   - JSON-LD SoftwareApplication schema, OG/Twitter meta tags, analytics client, and `data-event` tracking on CTAs.
-
-2. **Cross-linked and indexed**
-   - Added tool card on `tools.html`.
-   - Added "Open API Playground" CTAs to `api.html` and `api-guide.html`.
-   - Added `https://schemalens.tech/tools/api-playground.html` to `sitemap.xml`. Total sitemap: 306 URLs.
-   - Added page-load test to `tests/e2e.spec.js`.
-
-3. **Analytics hardening on API pages**
-   - Added `lib/analytics-client.js` to `api.html` and `api-guide.html` so the new playground CTAs are trackable.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 220 passed, 14 API tests skipped in static server mode
-- ✅ `tools/api-playground.html`, `api.html`, and `api-guide.html` load without console errors
-- ✅ sitemap.xml remains valid XML
-
-### Why This Matters
-- **API adoption:** Developers can see the exact request and response in seconds, lowering the barrier to using SchemaLens in CI/CD scripts.
-- **SEO footprint:** Targets "schema diff API", "test schema diff API", and long-tail programmatic-diff keywords.
-- **Conversion path:** Code snippets lead directly to CI/CD wizard, Pro, and Team CTAs — turning API testers into pipeline users.
-- **No credentials required:** Fully autonomous asset that supports the CI/CD-first product positioning while human credential blocks persist.
-
-### Next
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
-- Monitor `api_playground_*` analytics events once credentials are restored.
 

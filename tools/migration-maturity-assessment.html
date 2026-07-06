@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Database Migration Maturity Assessment — SchemaLens</title>
+  <meta name="description" content="Score your team's database migration maturity in 60 seconds. Get a personalized report with actionable recommendations for safer schema changes.">
+  <meta property="og:title" content="Database Migration Maturity Assessment — SchemaLens">
+  <meta property="og:description" content="Score your team's schema-change process and get a tailored improvement plan.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/migration-maturity-assessment.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header {
+      padding: 64px 0 32px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      background: linear-gradient(90deg, var(--text), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+    .assessment-wrap {
+      max-width: 760px;
+      margin: 0 auto 80px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .progress-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.3s ease;
+    }
+    .question {
+      margin-bottom: 28px;
+    }
+    .question h3 {
+      font-size: 1.15rem;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .option:hover {
+      border-color: var(--hover-border);
+      background: var(--surface-hover);
+    }
+    .option input {
+      accent-color: var(--primary);
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .option.selected {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.08);
+    }
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      color: #fff;
+    }
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      border-color: var(--hover-border);
+      background: var(--surface-hover);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .result-score {
+      text-align: center;
+      padding: 32px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(34, 211, 238, 0.08));
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+    .score-number {
+      font-size: 4rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .score-label {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .score-desc {
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .recommendation {
+      display: flex;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      background: var(--bg);
+    }
+    .recommendation .icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .recommendation h4 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .recommendation p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin: 0;
+    }
+    .cta-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin-top: 28px;
+    }
+    .cta-box h3 {
+      margin-bottom: 8px;
+    }
+    .cta-box p {
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .cta-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .share-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .hidden { display: none !important; }
+    .level-reactive { color: var(--danger); }
+    .level-developing { color: var(--warning); }
+    .level-managed { color: var(--primary); }
+    .level-optimized { color: var(--success); }
+    @media (max-width: 560px) {
+      .page-header h1 { font-size: 1.7rem; }
+      .card { padding: 22px; }
+      .score-number { font-size: 3rem; }
+      .nav-buttons { flex-direction: column; }
+      .nav-buttons .btn { width: 100%; }
+    }
+    @media print {
+      .nav, .announcement-bar, .share-row, .nav-buttons, .cta-buttons .btn-secondary { display: none !important; }
+      body { background: #fff; color: #000; }
+      .card { border: 1px solid #ddd; }
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Database Migration Maturity Assessment",
+  "applicationCategory": "DeveloperApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "operatingSystem": "Any",
+  "url": "https://schemalens.tech/tools/migration-maturity-assessment.html"
+}
+</script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../features.html">Features</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="container">
+      <h1>Database Migration Maturity Assessment</h1>
+      <p>Score your team's schema-change process in 60 seconds and get a personalized plan to ship safer database migrations.</p>
+    </div>
+  </header>
+
+  <main class="container assessment-wrap">
+
+    <!-- Intro -->
+    <section id="intro" class="card">
+      <p style="color: var(--text-muted); margin-bottom: 20px;">Teams that manage schema changes well ship faster, break production less, and sleep better. This 10-question assessment covers the practices that separate reactive teams from optimized ones.</p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <button class="btn btn-primary" onclick="startAssessment()" data-event="maturity_start">Start Assessment</button>
+        <a href="../app.html" class="btn btn-secondary" data-event="maturity_skip_to_app">Skip to Free Diff</a>
+      </div>
+      <div style="margin-top: 20px; display: flex; gap: 20px; flex-wrap: wrap; color: var(--text-muted); font-size: 0.9rem;">
+        <span>⏱️ 60 seconds</span>
+        <span>🔒 No signup required</span>
+        <span>📤 Shareable result</span>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz" class="card hidden">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div id="questionContainer"></div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>← Previous</button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next →</button>
+      </div>
+    </section>
+
+    <!-- Result -->
+    <section id="result" class="hidden">
+      <div class="result-score" id="resultScoreBox">
+        <div class="score-number" id="scoreNumber">0</div>
+        <div class="score-label" id="scoreLabel">Reactive</div>
+        <div class="score-desc" id="scoreDesc">Description here.</div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-bottom: 16px;">Your personalized recommendations</h2>
+        <div id="recommendations"></div>
+      </div>
+
+      <div class="cta-box">
+        <h3>Ready to level up your schema changes?</h3>
+        <p id="ctaText">Start with the free schema diff tool and add CI/CD checks when your team is ready.</p>
+        <div class="cta-buttons">
+          <a href="../app.html" class="btn btn-primary" data-event="maturity_cta_free">Compare Schemas Free</a>
+          <a href="../github-action.html" class="btn btn-secondary" data-event="maturity_cta_cicd">Add to CI/CD</a>
+          <a href="../team.html" class="btn btn-secondary" data-event="maturity_cta_team">Explore Team Plan</a>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 24px;">
+        <h3 style="margin-bottom: 12px;">Share your result</h3>
+        <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 0.95rem;">Copy your unique result URL or share it directly.</p>
+        <div class="share-row">
+          <button class="btn btn-secondary" onclick="copyResultUrl()" data-event="maturity_copy_url">📋 Copy Result URL</button>
+          <button class="btn btn-secondary" onclick="shareTwitter()" data-event="maturity_share_twitter">𝕏 Share on X</button>
+          <button class="btn btn-secondary" onclick="shareLinkedIn()" data-event="maturity_share_linkedin">💼 Share on LinkedIn</button>
+          <button class="btn btn-secondary" onclick="window.print()" data-event="maturity_print">🖨️ Print / PDF</button>
+        </div>
+        <p id="copyFeedback" style="color: var(--success); font-size: 0.9rem; text-align: center; margin-top: 12px; opacity: 0; transition: opacity 0.3s;">URL copied to clipboard.</p>
+      </div>
+
+      <div class="nav-buttons" style="margin-top: 24px;">
+        <button class="btn btn-secondary" onclick="restartAssessment()" data-event="maturity_restart">↺ Retake Assessment</button>
+        <a href="../tools.html" class="btn btn-secondary" data-event="maturity_more_tools">More free tools →</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer style="border-top: 1px solid var(--border); padding: 40px 0; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+    <div class="container">
+      <p><strong>SchemaLens</strong> — Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      <p style="margin-top: 8px;"><a href="../privacy-policy.html">Privacy</a> · <a href="../pricing.html">Pricing</a> · <a href="../api.html">API</a> · <a href="../open.html">Open Startup</a></p>
+    </div>
+  </footer>
+
+<script>
+const questions = [
+  {
+    id: 'pr_review',
+    text: 'How do you review schema changes before merging?',
+    options: [
+      { label: 'We do not formally review schema changes', value: 0 },
+      { label: 'A teammate eyeballs the migration file', value: 2 },
+      { label: 'We use a PR template and manual line-by-line review', value: 5 },
+      { label: 'Automated schema diff + risk score in every PR', value: 10 }
+    ]
+  },
+  {
+    id: 'ci_integration',
+    text: 'Is schema diff automated in your CI/CD pipeline?',
+    options: [
+      { label: 'No automation', value: 0 },
+      { label: 'We run tests, but no schema diff', value: 2 },
+      { label: 'Schema diff runs in CI but does not block merges', value: 5 },
+      { label: 'Automated diff with breaking-change gate in CI', value: 10 }
+    ]
+  },
+  {
+    id: 'rollback_plan',
+    text: 'How often do you generate rollback scripts for migrations?',
+    options: [
+      { label: 'Rarely or never', value: 0 },
+      { label: 'For risky migrations only', value: 2 },
+      { label: 'Most migrations have a rollback plan', value: 5 },
+      { label: 'Every migration ships with a generated rollback', value: 10 }
+    ]
+  },
+  {
+    id: 'breaking_detection',
+    text: 'How do you detect breaking schema changes?',
+    options: [
+      { label: 'We find out in production', value: 0 },
+      { label: 'Engineers manually flag potential breakages', value: 2 },
+      { label: 'We maintain a breaking-change checklist', value: 5 },
+      { label: 'Automated breaking-change detection in PR/CI', value: 10 }
+    ]
+  },
+  {
+    id: 'documentation',
+    text: 'How do you document schema changes for your team?',
+    options: [
+      { label: 'No formal documentation', value: 0 },
+      { label: 'Migration file comments only', value: 2 },
+      { label: 'Changelog or wiki updated manually', value: 5 },
+      { label: 'Auto-generated changelogs tied to migrations', value: 10 }
+    ]
+  },
+  {
+    id: 'collaboration',
+    text: 'How do backend, DevOps, and data teams share schema context?',
+    options: [
+      { label: 'Siloed — each team figures it out', value: 0 },
+      { label: 'Ad-hoc Slack threads or meetings', value: 2 },
+      { label: 'Shared docs and scheduled syncs', value: 5 },
+      { label: 'Shared workspace with alerts and reports', value: 10 }
+    ]
+  },
+  {
+    id: 'drift_monitoring',
+    text: 'Do you monitor for schema drift between environments?',
+    options: [
+      { label: 'No monitoring', value: 0 },
+      { label: 'Manual checks before releases', value: 2 },
+      { label: 'Periodic scheduled comparisons', value: 5 },
+      { label: 'Real-time drift alerts to Slack/Teams', value: 10 }
+    ]
+  },
+  {
+    id: 'downtime_planning',
+    text: 'How do you handle downtime for large schema changes?',
+    options: [
+      { label: 'Accept downtime during maintenance windows', value: 0 },
+      { label: 'Try to avoid it, but no formal process', value: 2 },
+      { label: 'We plan expand/contract migrations manually', value: 5 },
+      { label: 'Zero-downtime patterns are standard practice', value: 10 }
+    ]
+  },
+  {
+    id: 'testing',
+    text: 'How do you test migrations before production?',
+    options: [
+      { label: 'Production is the test', value: 0 },
+      { label: 'Run against a local database', value: 2 },
+      { label: 'Test against a production-like staging copy', value: 5 },
+      { label: 'Staging + shadow database + rollback rehearsal', value: 10 }
+    ]
+  },
+  {
+    id: 'tooling',
+    text: 'What best describes your current schema-diff tooling?',
+    options: [
+      { label: 'Text editor side-by-side comparison', value: 0 },
+      { label: 'Database IDE or CLI diff', value: 2 },
+      { label: 'Purpose-built diff tool with export', value: 5 },
+      { label: 'Integrated diff in CI/CD, IDE, and alerts', value: 10 }
+    ]
+  }
+];
+
+const levels = [
+  { max: 30, key: 'reactive', label: 'Reactive', class: 'level-reactive', desc: 'Schema changes are handled ad-hoc. Most issues are found late or in production. Focus on adding visibility and a review checklist first.' },
+  { max: 60, key: 'developing', label: 'Developing', class: 'level-developing', desc: 'You have some process, but it relies heavily on manual effort. The next step is automation: diff in CI and generated rollback scripts.' },
+  { max: 85, key: 'managed', label: 'Managed', class: 'level-managed', desc: 'Schema changes are reviewed and partly automated. To reach the next level, add breaking-change gates, drift alerts, and a shared team workspace.' },
+  { max: 100, key: 'optimized', label: 'Optimized', class: 'level-optimized', desc: 'You have a mature, automated schema-change process. Keep refining with observability, incident review, and cross-team standards.' }
+];
+
+const recommendations = {
+  pr_review: {
+    low: { icon: '👀', title: 'Add a schema review step', text: 'Create a PR checklist for migrations. Use SchemaLens to diff schemas and attach the report to every migration PR.' },
+    high: { icon: '✅', title: 'Keep reviewing automatically', text: 'You already review well. Consider adding a schema diff report comment to every PR with the SchemaLens GitHub Action.' }
+  },
+  ci_integration: {
+    low: { icon: '⚙️', title: 'Automate diff in CI/CD', text: 'Add the SchemaLens GitHub Action or one-command CI script to run schema diff on every migration PR.' },
+    high: { icon: '🚀', title: 'Gate merges on breaking changes', text: 'Upgrade your CI gate to fail builds when breaking schema changes are detected.' }
+  },
+  rollback_plan: {
+    low: { icon: '↩️', title: 'Generate rollback scripts', text: 'Use SchemaLens to generate rollback SQL for every migration before you deploy.' },
+    high: { icon: '🛡️', title: 'Automate rollback generation', text: 'Make rollback SQL a required artifact in your migration process.' }
+  },
+  breaking_detection: {
+    low: { icon: '💥', title: 'Detect breakages earlier', text: 'Build a breaking-change checklist and use SchemaLens breaking-change detection in your diff workflow.' },
+    high: { icon: '🧪', title: 'Enforce breaking-change policy', text: 'Require explicit approval for breaking changes and document migration guidance for downstream consumers.' }
+  },
+  documentation: {
+    low: { icon: '📝', title: 'Document every schema change', text: 'Start a schema changelog. SchemaLens can export diff summaries in Markdown for easy copy-paste.' },
+    high: { icon: '📚', title: 'Auto-generate changelogs', text: 'Use the Schema Changelog Generator to produce release-ready migration notes.' }
+  },
+  collaboration: {
+    low: { icon: '🤝', title: 'Share schema context', text: 'Create a shared channel or doc for schema changes. Consider SchemaLens Team for a shared workspace.' },
+    high: { icon: '🏢', title: 'Unify team workflows', text: 'Adopt a shared workspace with drift alerts and admin controls so every team sees the same schema state.' }
+  },
+  drift_monitoring: {
+    low: { icon: '🔍', title: 'Watch for schema drift', text: 'Schedule periodic comparisons between staging and production. Use SchemaLens drift alerts for free.' },
+    high: { icon: '🔔', title: 'Add real-time drift alerts', text: 'Connect schema drift alerts to Slack or Teams so the team knows the moment environments diverge.' }
+  },
+  downtime_planning: {
+    low: { icon: '⏳', title: 'Plan for zero downtime', text: 'Study expand/contract patterns. Use the Zero-Downtime Migration Guide to plan safer large changes.' },
+    high: { icon: '⚡', title: 'Standardize safe patterns', text: 'Document your zero-downtime playbook and require it for high-traffic tables.' }
+  },
+  testing: {
+    low: { icon: '🧪', title: 'Test against realistic data', text: 'Run migrations on a production-like staging database before deploying.' },
+    high: { icon: '✔️', title: 'Rehearse rollbacks', text: 'Add rollback rehearsals to your release process and measure migration duration under load.' }
+  },
+  tooling: {
+    low: { icon: '🧰', title: 'Use a purpose-built diff tool', text: 'Replace text-editor comparison with SchemaLens for semantic schema diff and migration generation.' },
+    high: { icon: '🔌', title: 'Integrate everywhere', text: 'Use SchemaLens in the browser, VS Code, CI/CD, and via API for a unified workflow.' }
+  }
+};
+
+let current = 0;
+const answers = {};
+
+function startAssessment() {
+  trackEvent('maturity_start');
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const container = document.getElementById('questionContainer');
+  container.innerHTML = `
+    <div class="question">
+      <h3><span style="color: var(--text-muted);">${current + 1}/${questions.length}.</span> ${escapeHtml(q.text)}</h3>
+      <div class="options" id="options_${current}">
+        ${q.options.map((opt, idx) => `
+          <label class="option ${answers[q.id] === opt.value ? 'selected' : ''}" data-index="${idx}">
+            <input type="radio" name="q_${q.id}" value="${opt.value}" ${answers[q.id] === opt.value ? 'checked' : ''} onchange="selectOption('${q.id}', ${opt.value}, this)">
+            <span>${escapeHtml(opt.label)}</span>
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  updateProgress();
+  document.getElementById('prevBtn').disabled = current === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.disabled = answers[q.id] === undefined;
+  nextBtn.textContent = current === questions.length - 1 ? 'See Results →' : 'Next →';
+}
+
+function selectOption(qid, value, input) {
+  answers[qid] = value;
+  const labels = input.closest('.options').querySelectorAll('.option');
+  labels.forEach(l => l.classList.remove('selected'));
+  input.closest('.option').classList.add('selected');
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  if (answers[questions[current].id] === undefined) return;
+  trackEvent('maturity_next', { question: current + 1 });
+  if (current < questions.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function prevQuestion() {
+  if (current > 0) {
+    current--;
+    renderQuestion();
+  }
+}
+
+function updateProgress() {
+  const pct = ((current + 1) / questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function calculateScore() {
+  let total = 0;
+  questions.forEach(q => total += (answers[q.id] || 0));
+  return total;
+}
+
+function getLevel(score) {
+  return levels.find(l => score <= l.max) || levels[levels.length - 1];
+}
+
+function showResult() {
+  const score = calculateScore();
+  const level = getLevel(score);
+  trackEvent('maturity_result', { score, level: level.key });
+
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('result').classList.remove('hidden');
+
+  const scoreNumber = document.getElementById('scoreNumber');
+  scoreNumber.textContent = score;
+  scoreNumber.className = 'score-number ' + level.class;
+  document.getElementById('scoreLabel').textContent = level.label;
+  document.getElementById('scoreLabel').className = 'score-label ' + level.class;
+  document.getElementById('scoreDesc').textContent = level.desc;
+
+  // Recommendations: show low-scoring areas first, then a high note for strengths
+  const recContainer = document.getElementById('recommendations');
+  const lowIds = questions.filter(q => (answers[q.id] || 0) < 5).map(q => q.id);
+  const highIds = questions.filter(q => (answers[q.id] || 0) >= 7).map(q => q.id);
+
+  let html = '';
+  if (lowIds.length === 0) {
+    html += `<div class="recommendation"><div class="icon">🎉</div><div><h4>Outstanding</h4><p>Your team is doing well across all areas. Keep investing in observability and cross-team standards.</p></div></div>`;
+  } else {
+    lowIds.slice(0, 4).forEach(id => {
+      const rec = recommendations[id].low;
+      html += `<div class="recommendation"><div class="icon">${rec.icon}</div><div><h4>${escapeHtml(rec.title)}</h4><p>${escapeHtml(rec.text)}</p></div></div>`;
+    });
+  }
+  if (highIds.length > 0) {
+    const id = highIds[0];
+    const rec = recommendations[id].high;
+    html += `<div class="recommendation"><div class="icon">${rec.icon}</div><div><h4>${escapeHtml(rec.title)}</h4><p>${escapeHtml(rec.text)}</p></div></div>`;
+  }
+  recContainer.innerHTML = html;
+
+  // CTA text based on level
+  const ctaText = document.getElementById('ctaText');
+  if (level.key === 'reactive') {
+    ctaText.textContent = 'Start with the free schema diff tool and a simple review checklist. Upgrade when you are ready for CI/CD automation.';
+  } else if (level.key === 'developing') {
+    ctaText.textContent = 'Add SchemaLens to your CI/CD pipeline to automate diff reports and rollback generation for every migration PR.';
+  } else {
+    ctaText.textContent = 'You are ready for the Team plan: shared workspace, drift alerts, admin controls, and org-wide billing.';
+  }
+
+  updateUrlParams();
+}
+
+function updateUrlParams() {
+  const params = new URLSearchParams();
+  Object.entries(answers).forEach(([k, v]) => params.set(k, v));
+  const url = window.location.pathname + '?' + params.toString();
+  window.history.replaceState({}, '', url);
+}
+
+function loadFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  let hasAny = false;
+  questions.forEach(q => {
+    const v = params.get(q.id);
+    if (v !== null) {
+      answers[q.id] = parseInt(v, 10);
+      hasAny = true;
+    }
+  });
+  return hasAny;
+}
+
+function restartAssessment() {
+  current = 0;
+  Object.keys(answers).forEach(k => delete answers[k]);
+  window.history.replaceState({}, '', window.location.pathname);
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('intro').classList.remove('hidden');
+  trackEvent('maturity_restart');
+}
+
+function copyResultUrl() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const fb = document.getElementById('copyFeedback');
+    fb.style.opacity = '1';
+    setTimeout(() => fb.style.opacity = '0', 2000);
+  });
+  trackEvent('maturity_copy_url');
+}
+
+function shareTwitter() {
+  const score = calculateScore();
+  const level = getLevel(score);
+  const text = encodeURIComponent(`I scored ${score}/100 (${level.label}) on the Database Migration Maturity Assessment by SchemaLens. How mature is your team?`);
+  window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${text}`, '_blank');
+  trackEvent('maturity_share_twitter');
+}
+
+function shareLinkedIn() {
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+  trackEvent('maturity_share_linkedin');
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function trackEvent(name, props) {
+  if (window.analytics && typeof window.analytics.track === 'function') {
+    window.analytics.track(name, props || {});
+  }
+  if (window.va) {
+    try { window.va('event', { name, ...props }); } catch (e) {}
+  }
+}
+
+// On load: if URL has answers, skip to result
+document.addEventListener('DOMContentLoaded', () => {
+  if (loadFromUrl()) {
+    document.getElementById('intro').classList.add('hidden');
+    document.getElementById('quiz').classList.add('hidden');
+    showResult();
+  }
+});
+</script>
+
+</body>
+</html>
