@@ -391,7 +391,7 @@
       }
     }
     function copyCurl() {
-      const text = `curl -X POST -H "Content-Type: application/json" -d '{
+      const text = `curl -L -X POST -H "Content-Type: application/json" -d '{
   "schemaA": "CREATE TABLE users (id INT PRIMARY KEY);",
   "schemaB": "CREATE TABLE users (id INT PRIMARY KEY, email VARCHAR(255) NOT NULL);",
   "dialect": "postgres",
@@ -400,7 +400,7 @@
       copyToClipboard(text, document.querySelector('.copy-btn'));
     }
     function copyPipe() {
-      const text = `curl -X POST -H "Content-Type: application/json" -d '{
+      const text = `curl -L -X POST -H "Content-Type: application/json" -d '{
   "schemaA": '$(cat schema-v1.sql)',
   "schemaB": '$(cat schema-v2.sql)',
   "dialect": "mysql"
@@ -408,7 +408,7 @@
       copyToClipboard(text, document.querySelectorAll('.copy-btn')[1]);
     }
     function copyCi() {
-      const text = `curl -X POST -H "Content-Type: application/json" -d '{
+      const text = `curl -L -X POST -H "Content-Type: application/json" -d '{
   "schemaA": '$(cat before.sql)',
   "schemaB": '$(cat after.sql)',
   "format": "markdown"

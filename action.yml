@@ -150,7 +150,7 @@ runs:
         # Call API with retries
         HTTP_STATUS=0
         for attempt in 1 2 3; do
-          HTTP_STATUS=$(curl -s -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+          HTTP_STATUS=$(curl -sL -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
             -H "Content-Type: application/json" \
             ${LICENSE_KEY:+-H "X-License-Key: $LICENSE_KEY"} \
             -d "$BODY" || echo "000")
@@ -295,7 +295,7 @@ runs:
           --argjson metadata "$METADATA" \
           '{response: $response, metadata: $metadata}')
 
-        HTTP_STATUS=$(curl -s -o /tmp/schemalens_report.html -w "%{http_code}" -X POST "https://schemalens.tech/api/schema-diff-report" \
+        HTTP_STATUS=$(curl -sL -o /tmp/schemalens_report.html -w "%{http_code}" -X POST "https://schemalens.tech/api/schema-diff-report" \
           -H "Content-Type: application/json" \
           -d "$PAYLOAD" || echo "000")
 
@@ -399,7 +399,7 @@ The full migration SQL is available in the [SchemaLens diff report](https://sche
 💡 **Want a shared workspace with 90-day persisted history?** [Upgrade to SchemaLens Team](https://schemalens.tech/team-buy.html)."
 
         PAYLOAD=$(jq -n --arg body "$BODY" '{body: $body}')
-        COMMENT_STATUS=$(curl -s -o /tmp/schemalens_comment.json -w "%{http_code}" -X POST \
+        COMMENT_STATUS=$(curl -sL -o /tmp/schemalens_comment.json -w "%{http_code}" -X POST \
           -H "Authorization: token $GH_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
           "${{ github.event.pull_request.comments_url }}" \
@@ -499,7 +499,7 @@ ${UPGRADE_NOTE}
             }
           }')
 
-        CHECK_STATUS=$(curl -s -o /tmp/schemalens_check.json -w "%{http_code}" -X POST \
+        CHECK_STATUS=$(curl -sL -o /tmp/schemalens_check.json -w "%{http_code}" -X POST \
           -H "Authorization: Bearer $GH_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
           "https://api.github.com/repos/${{ github.repository }}/check-runs" \
@@ -596,7 +596,7 @@ ${UPGRADE_NOTE}
           PAYLOAD="$PAYLOAD_BASE"
         fi
 
-        HTTP_STATUS=$(curl -s -o /tmp/schemalens_drift.json -w "%{http_code}" -X POST "$WEBHOOK_URL" \
+        HTTP_STATUS=$(curl -sL -o /tmp/schemalens_drift.json -w "%{http_code}" -X POST "$WEBHOOK_URL" \
           -H "Content-Type: application/json" \
           -d "$PAYLOAD" || echo "000")
 

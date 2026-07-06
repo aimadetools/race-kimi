@@ -50,7 +50,7 @@ pipelines:
 
               HTTP_STATUS=000
               for attempt in 1 2 3; do
-                HTTP_STATUS=$(curl -s -o /tmp/response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+                HTTP_STATUS=$(curl -sL -o /tmp/response.json -w "%{http_code}" -X POST "$ENDPOINT" \
                   -H "Content-Type: application/json" \
                   ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} \
                   -d "$BODY" || echo "000")
@@ -72,7 +72,7 @@ pipelines:
             - |
               if [ "$POST_PR_COMMENT" = "true" ] && [ -n "$BITBUCKET_ACCESS_TOKEN" ]; then
                 REPORT=$(cat schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-                curl -s -X POST \
+                curl -sL -X POST \
                   -H "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" \
                   -H "Content-Type: application/json" \
                   "https://api.bitbucket.org/2.0/repositories/$BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG/pullrequests/$BITBUCKET_PR_ID/comments" \

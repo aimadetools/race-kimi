@@ -290,7 +290,7 @@ CircleCI integration options:
 • Free tier for schemas up to 15 tables
 
 A typical CircleCI config adds two lines:
-  - run: curl -X POST https://schemalens.tech/api/diff ...
+  - run: curl -L -X POST https://schemalens.tech/api/diff ...
   - store_artifacts: path: schema-diff-report.md
 
 Would you be open to a guest post about adding schema-review gates to
@@ -324,7 +324,7 @@ single API call, which makes it trivial to add to any Jenkins Pipeline stage:
 ```groovy
 stage('Schema Review') {
   steps {
-    sh 'curl -X POST https://schemalens.tech/api/diff -d @schemas.json'
+    sh 'curl -L -X POST https://schemalens.tech/api/diff -d @schemas.json'
   }
 }
 ```

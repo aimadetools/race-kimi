@@ -164,7 +164,7 @@
 
             HTTP_STATUS=0
             for attempt in 1 2 3; do
-              HTTP_STATUS=$(curl -s -o /tmp/schemalens_response.json -w &quot;%{http_code}&quot; -X POST &quot;$ENDPOINT&quot; \
+              HTTP_STATUS=$(curl -sL -o /tmp/schemalens_response.json -w &quot;%{http_code}&quot; -X POST &quot;$ENDPOINT&quot; \
                 -H &quot;Content-Type: application/json&quot; \
                 ${LICENSE_HEADER} \
                 -d &quot;$BODY&quot; || echo &quot;000&quot;)

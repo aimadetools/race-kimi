@@ -75,7 +75,7 @@ schema-diff:
       # Call SchemaLens API with retries
       HTTP_STATUS=0
       for attempt in 1 2 3; do
-        HTTP_STATUS=$(curl -s -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+        HTTP_STATUS=$(curl -sL -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
           -H "Content-Type: application/json" \
           ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} \
           -d "$BODY" || echo "000")
@@ -149,7 +149,7 @@ schema-diff:
       # Post MR comment (optional)
       if [ "$POST_MR_COMMENT" = "true" ] && [ -n "$GITLAB_TOKEN" ] && [ -n "$CI_MERGE_REQUEST_IID" ]; then
         REPORT=$(cat /tmp/schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-        COMMENT_STATUS=$(curl -s -o /tmp/schemalens_comment.json -w "%{http_code}" -X POST \
+        COMMENT_STATUS=$(curl -sL -o /tmp/schemalens_comment.json -w "%{http_code}" -X POST \
           -H "PRIVATE-TOKEN: $GITLAB_TOKEN" \
           -H "Content-Type: application/json" \
           "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes" \

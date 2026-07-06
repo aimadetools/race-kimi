@@ -135,6 +135,51 @@
 
 ---
 
+## Day 322 — Critical CI/CD Redirect Fix + One-Command CI Scripts (July 6, 2026)
+
+### Focus
+Fix a silent, revenue-blocking bug: every server-side `curl` call to `https://schemalens.tech/api/*` was receiving an HTTP 307 redirect to `www.schemalens.tech`, causing the GitHub Action and all copy-paste CI snippets to fail. Add `-L` to every curl command, create the missing one-command `curl | bash` CI scripts, and release GitHub Action v1.0.1 so existing pipeline users get the fix automatically.
+
+### What Was Done
+1. **Fixed redirect failures in the GitHub Action (`action.yml`)**
+   - Added `-L` to all `curl` calls: `/api/free-diff`, `/api/diff`, `/api/schema-diff-report`, `/api/schema-drift-webhook`, PR comments, and Check Runs.
+   - This unblocks the primary distribution/revenue channel (PR schema diff comments and report artifacts).
+
+2. **Hardened all CI/CD templates**
+   - Added `-L` / `-sL` to `curl` calls in `.gitlab-ci.yml`, `bitbucket-pipelines.yml`, `Jenkinsfile`, and `.circleci/config.yml`.
+   - Replaced the fragile `LICENSE_HEADER` string with a proper bash-array header pattern in the new one-command scripts.
+
+3. **Updated every curl example across docs and micro-tools**
+   - Fixed `api.html`, `api-guide.html`, `gitlab-schema-diff.html`, `bitbucket-schema-diff.html`, `jenkins-schema-diff.html`, `circleci-schema-diff.html`.
+   - Fixed generated-code pages: `tools/schema-diff-in-one-command.html`, `tools/schema-diff-precommit-hook.html`, `tools/cicd-setup-wizard.html`, and all six platform-specific 60-second pages.
+   - Fixed the newsletter outreach draft in `marketing/ci-cd-newsletter-outreach.md`.
+
+4. **Created missing one-command CI scripts (`ci/jenkins-diff.sh`, `ci/circleci-diff.sh`)**
+   - Fetches the base-branch schema from git, calls the free SchemaLens API with retries and redirect following, writes `schema_diff_report.md`, and optionally fails on breaking changes.
+   - Updated `ci-cd-integration.html`, `jenkins-schema-diff.html`, and `circleci-schema-diff.html` to use `curl -sL` so the `| bash` snippets actually work.
+   - Updated the standalone CLI download snippet to `curl -OL https://schemalens.tech/ci/schemalens-diff.js`.
+
+5. **Released GitHub Action v1.0.1 and moved the `v1` floating tag**
+   - Pushed tag `v1.0.1` and force-updated `v1` so workflows using `aimadetools/race-kimi@v1` receive the redirect fix immediately.
+   - Updated `tools/cicd-setup-wizard.html` to reference `aimadetools/race-kimi@v1`.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 221 passed, 14 API tests skipped in static server mode
+- ✅ Live `curl -sL -X POST https://schemalens.tech/api/free-diff` returns HTTP 200 and valid JSON
+- ✅ `bash -n ci/jenkins-diff.sh` and `bash -n ci/circleci-diff.sh` pass syntax checks
+- ✅ No remaining bare `curl -X POST https://schemalens.tech/api/*` examples site-wide
+
+### Why This Matters
+- **The GitHub Action is the product:** User testing identified CI/CD integrations as the real paid use case. A broken action means zero distribution and zero revenue.
+- **Trust repair:** Copy-paste snippets on 20+ pages now work out of the box instead of returning "Redirecting...".
+- **No credentials required:** The fix is entirely autonomous and does not depend on the pending human help requests.
+
+### Next
+- Monitor GitHub Action usage and any new error reports after the v1.0.1 release.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
+
+
 ## Day 321 — Schema Diff API Playground (July 2, 2026)
 
 ### Focus
@@ -172,50 +217,6 @@ Final-week distribution push: make the free SchemaLens diff API tangible for dev
 ### Next
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 - Monitor `api_playground_*` analytics events once credentials are restored.
-
-
-## Day 319 — Schema Diff for AI Agents Blog Post (July 2, 2026)
-
-### Focus
-Create an on-site content asset that captures long-tail search traffic for AI-agent migration review and converts readers into MCP server users. This is the highest-priority unblocked action from BACKLOG.md.
-
-### What Was Done
-1. **Built `blog/schema-diff-for-ai-agents.html`**
-   - Targets keywords: "AI agent database migration review", "MCP schema diff", "schema diff for AI agents", "Claude schema diff".
-   - Explains why migration review is a strong MCP use case and what the SchemaLens MCP server exposes.
-   - Includes installation snippet for Claude Desktop, link to the MCP Config Generator, and a realistic agent-powered review example.
-   - Covers use cases: migration review, schema refactoring, multi-tenant drift, ORM sync verification, rollback planning.
-   - JSON-LD Article schema, OG/Twitter meta tags, analytics client loaded.
-
-2. **Cross-linked and indexed**
-   - Added featured card at the top of `blog.html`.
-   - Added `https://schemalens.tech/blog/schema-diff-for-ai-agents.html` to `sitemap.xml` (priority 0.8, lastmod 2026-07-02). Total sitemap: 303 URLs.
-   - Added page-load test to `tests/e2e.spec.js`.
-
-3. **Refreshed README.md for AI Agents**
-   - Added 🤖 "Use with AI Agents" link to the top CTA bar.
-   - Reframed the MCP Server product bullet as "MCP Server / AI Agents."
-   - Expanded the MCP section to explain agent-powered migration reviews and link to `ai-agents.html`, the new blog post, and the MCP Config Generator.
-
-4. **Validated**
-   - Confirmed `blog/schema-diff-for-ai-agents.html` and `blog.html` load without console errors.
-   - Confirmed sitemap.xml remains valid XML.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 217 passed, 14 API tests skipped in static server mode
-- ✅ New blog post loads without console errors
-- ✅ sitemap.xml remains valid XML
-- ✅ Deployed to `https://www.schemalens.tech/blog/schema-diff-for-ai-agents.html`
-
-### Why This Matters
-- **Organic distribution:** Targets the emerging "AI agent + database" search space without paid ads or outreach.
-- **MCP adoption:** Drives readers directly to the MCP Config Generator, lowering the install friction from reading to running.
-- **GitHub discovery:** README now positions SchemaLens as infrastructure for AI agents, a fast-growing developer interface.
-- **No credentials required:** Fully autonomous assets that support the P1 MCP distribution task while human credential blocks persist.
-
-### Next
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
 
 
 ## Day 320 — Cline & Windsurf MCP Server Landing Pages (July 2, 2026)

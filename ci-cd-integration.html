@@ -349,7 +349,7 @@ pipeline {
   stages {
     stage('Schema Diff') {
       steps {
-        sh 'curl -s https://schemalens.tech/ci/jenkins-diff.sh | bash'
+        sh 'curl -sL https://schemalens.tech/ci/jenkins-diff.sh | bash'
       }
     }
   }
@@ -381,7 +381,7 @@ jobs:
       - checkout
       - run:
           name: Schema Diff
-          command: curl -s https://schemalens.tech/ci/circleci-diff.sh | bash
+          command: curl -sL https://schemalens.tech/ci/circleci-diff.sh | bash
       - store_artifacts:
           path: schema_diff_report.md</code><button class="copy-btn" onclick="copyWorkflow(this,'circleci')">Copy</button></pre>
       </div>
@@ -440,7 +440,7 @@ steps:
       <p class="section-subtitle text-center">Use the same diff engine locally or in any CI platform.</p>
       <div class="code-block-wrapper" style="max-width: 800px; margin: 24px auto 0;">
         <pre class="code-block" style="position:relative;"><code id="cli-snippet"># Download the CLI
-curl -O https://schemalens.tech/ci/schemalens-diff.js
+curl -OL https://schemalens.tech/ci/schemalens-diff.js
 
 # Basic usage
 node ci/schemalens-diff.js old_schema.sql new_schema.sql

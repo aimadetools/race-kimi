@@ -103,7 +103,7 @@
   <span class="key">stages</span> {
     <span class="key">stage</span>(<span class="str">'Schema Diff'</span>) {
       <span class="key">steps</span> {
-        <span class="key">sh</span> <span class="str">'curl -s https://schemalens.tech/ci/jenkins-diff.sh | bash'</span>
+        <span class="key">sh</span> <span class="str">'curl -sL https://schemalens.tech/ci/jenkins-diff.sh | bash'</span>
       }
     }
   }
@@ -311,7 +311,7 @@
             ENDPOINT="https://schemalens.tech/api/free-diff"
             [ -n "${SL_LICENSE_KEY:-}" ] && ENDPOINT="https://schemalens.tech/api/diff"
             BODY=$(jq -n --arg a "$(cat /tmp/schema_base.sql)" --arg b "$(cat "$SCHEMA_PATH")" --arg d "$DIALECT" --arg f "$FORMAT" '{schemaA:$a,schemaB:$b,dialect:$d,format:$f}')
-            curl -s -X POST "$ENDPOINT" -H "Content-Type: application/json" ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} -d "$BODY" > /tmp/response.json
+            curl -sL -X POST "$ENDPOINT" -H "Content-Type: application/json" ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} -d "$BODY" > /tmp/response.json
             jq -r '.markdown // .migrationTeaser' /tmp/response.json > schema_diff_report.md
           '''</span>
 

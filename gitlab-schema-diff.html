@@ -293,7 +293,7 @@
         --arg dialect "$DIALECT" \
         --arg format "markdown" \
         '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
-      curl -s -X POST "https://schemalens.tech/api/free-diff" \
+      curl -sL -X POST "https://schemalens.tech/api/free-diff" \
         -H "Content-Type: application/json" \
         -d "$BODY" > /tmp/response.json
     - <span class="comment"># Generate report</span>

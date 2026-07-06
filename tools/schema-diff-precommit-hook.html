@@ -420,7 +420,7 @@ pre {
     lines.push('');
     lines.push('echo "🔍 Running SchemaLens schema diff..."');
     lines.push('');
-    lines.push('RESPONSE=$(curl -s -X POST "https://schemalens.tech/api/free-diff" \\');
+    lines.push('RESPONSE=$(curl -sL -X POST "https://schemalens.tech/api/free-diff" \\');
     lines.push('  -H "Content-Type: application/json" \\');
     lines.push('  -d "$(jq -n \\');
     lines.push('    --arg schemaA "$(cat \\"$OLD_SCHEMA\\")" \\');
@@ -491,7 +491,7 @@ pre {
       entry.push('git stash push -q --keep-index --message "schemalens-pre-commit-stash"; trap "git stash pop -q || true" EXIT;');
     }
     entry.push('[ ! -f "$NEW_SCHEMA" ] && exit 0;');
-    entry.push('RESPONSE=$(curl -s -X POST "https://schemalens.tech/api/free-diff" \\');
+    entry.push('RESPONSE=$(curl -sL -X POST "https://schemalens.tech/api/free-diff" \\');
     entry.push('  -H "Content-Type: application/json" \\');
     entry.push('  -d "$(jq -n \\');
     entry.push('    --arg schemaA "$(cat \\"$OLD_SCHEMA\\")" \\');

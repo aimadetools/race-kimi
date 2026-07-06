@@ -165,7 +165,7 @@
 
       <p>SchemaLens exposes a single REST endpoint at <code>POST /api/diff</code>. It accepts two schema strings, a dialect, and returns a structured diff plus generated migration SQL.</p>
 
-      <pre><code>curl -X POST https://schemalens.tech/api/diff \
+      <pre><code>curl -L -X POST https://schemalens.tech/api/diff \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d <span class="string">'{
     "schemaA": "CREATE TABLE users (id SERIAL PRIMARY KEY);",
@@ -264,7 +264,7 @@ jobs:
       - name: Diff schemas
         id: diff
         run: |
-          curl -s -X POST https://schemalens.tech/api/diff \
+          curl -sL -X POST https://schemalens.tech/api/diff \
             -H "Content-Type: application/json" \
             -d "{\"schemaA\":$(jq -Rs . &lt; base-schema.sql),\"schemaB\":$(jq -Rs . &lt; db/schema.sql),\"dialect\":\"postgres\",\"format\":\"markdown\"}" \
             | jq -r '.markdown' &gt; report.md

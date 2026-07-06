@@ -342,7 +342,7 @@
       </div>
 
       <div class="code-panel active" id="panel-curl">
-        <pre class="code-block"><code>curl -X POST https://schemalens.tech/api/diff \
+        <pre class="code-block"><code>curl -L -X POST https://schemalens.tech/api/diff \
   -H "Content-Type: application/json" \
   -H "X-License-Key: SL-XXXX-XXXX-XXXX-XXXX" \
   -d '{
@@ -441,7 +441,7 @@ func main() {
       <div class="endpoint">
         <span class="method">POST</span> <span class="url">https://schemalens.tech/api/free-diff</span>
       </div>
-      <pre class="code-block"><code>curl -X POST https://schemalens.tech/api/free-diff \
+      <pre class="code-block"><code>curl -L -X POST https://schemalens.tech/api/free-diff \
   -H "Content-Type: application/json" \
   -d '{
     "schemaA": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));",
@@ -464,7 +464,7 @@ func main() {
       <div class="endpoint">
         <span class="method">POST</span> <span class="url">https://schemalens.tech/api/schema-drift-webhook</span>
       </div>
-      <pre class="code-block"><code>curl -X POST https://schemalens.tech/api/schema-drift-webhook \
+      <pre class="code-block"><code>curl -L -X POST https://schemalens.tech/api/schema-drift-webhook \
   -H "Content-Type: application/json" \
   -d '{
     "oldSchema": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));",
@@ -550,7 +550,7 @@ func main() {
       <pre class="code-block" id="playgroundResponse" style="display:none;"><code id="playgroundResponseCode">// Response will appear here</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
       <div style="margin-top:12px;">
         <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Equivalent curl command</label>
-        <pre class="code-block" id="playgroundCurl"><code id="playgroundCurlCode">curl -X POST https://schemalens.tech/api/free-diff -H "Content-Type: application/json" -d '{...}'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        <pre class="code-block" id="playgroundCurl"><code id="playgroundCurlCode">curl -L -X POST https://schemalens.tech/api/free-diff -H "Content-Type: application/json" -d '{...}'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
       </div>
     </div>
 
@@ -628,7 +628,7 @@ func main() {
       <pre class="code-block"><code>#!/bin/bash
 set -e
 
-RESPONSE=$(curl -s -X POST https://schemalens.tech/api/diff \
+RESPONSE=$(curl -sL -X POST https://schemalens.tech/api/diff \
   -H "Content-Type: application/json" \
   -H "X-License-Key: $SCHEMALENS_KEY" \
   -d "{\"schemaA\":$(cat base.sql | jq -Rs .),\"schemaB\":$(cat head.sql | jq -Rs .),\"dialect\":\"postgres\"}")
@@ -644,13 +644,13 @@ echo "✅ Schema diff passed. No breaking changes."</code><button class="copy-bt
 
       <h3>Pattern B: Post Diff Summary to Slack</h3>
       <pre class="code-block"><code># First, get the diff
-DIFF=$(curl -s -X POST https://schemalens.tech/api/diff \
+DIFF=$(curl -sL -X POST https://schemalens.tech/api/diff \
   -H "Content-Type: application/json" \
   -H "X-License-Key: $SCHEMALENS_KEY" \
   -d '{"schemaA":"...","schemaB":"...","dialect":"postgres"}')
 
 # Then, send to Slack via SchemaLens webhook proxy
-curl -X POST https://schemalens.tech/api/slack \
+curl -L -X POST https://schemalens.tech/api/slack \
   -H "Content-Type: application/json" \
   -d "{
     \"webhookUrl\": \"$SLACK_WEBHOOK_URL\",
@@ -661,7 +661,7 @@ curl -X POST https://schemalens.tech/api/slack \
   }"</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
       <h3>Pattern C: Markdown Report for PR Comments</h3>
-      <pre class="code-block"><code>curl -X POST https://schemalens.tech/api/diff \
+      <pre class="code-block"><code>curl -L -X POST https://schemalens.tech/api/diff \
   -H "Content-Type: application/json" \
   -H "X-License-Key: SL-XXXX-XXXX-XXXX-XXXX" \
   -d '{
@@ -857,7 +857,7 @@ async function runPlayground() {
   }
 
   const body = JSON.stringify({ schemaA, schemaB, dialect, format });
-  curlCode.textContent = `curl -X POST https://schemalens.tech/api/free-diff \\\n  -H "Content-Type: application/json" \\\n  -d '${body.replace(/'/g, "'\\''")}'`;
+  curlCode.textContent = `curl -L -X POST https://schemalens.tech/api/free-diff \\\n  -H "Content-Type: application/json" \\\n  -d '${body.replace(/'/g, "'\\''")}'`;
 
   btn.textContent = '⏳ Loading…';
   btn.disabled = true;

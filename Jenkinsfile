@@ -67,7 +67,7 @@ pipeline {
 
                         HTTP_STATUS=0
                         for attempt in 1 2 3; do
-                            HTTP_STATUS=$(curl -s -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+                            HTTP_STATUS=$(curl -sL -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
                                 -H "Content-Type: application/json" \
                                 ${LICENSE_HEADER} \
                                 -d "$BODY" || echo "000")
@@ -128,7 +128,7 @@ def postScmComment() {
     if (env.GITHUB_TOKEN && env.CHANGE_ID) {
         def repo = env.GIT_URL.replaceFirst(/^.*github\.com[/:]([^/]+\/[^/]+)\.git$/, '$1')
         sh '''
-            curl -s -X POST \
+            curl -sL -X POST \
                 -H "Authorization: token ''' + env.GITHUB_TOKEN + '''" \
                 -H "Accept: application/vnd.github.v3+json" \
                 "https://api.github.com/repos/''' + repo + '''/issues/''' + env.CHANGE_ID + '''/comments" \
@@ -138,7 +138,7 @@ def postScmComment() {
 
     if (env.GITLAB_TOKEN && env.CHANGE_ID) {
         sh '''
-            curl -s -X POST \
+            curl -sL -X POST \
                 -H "PRIVATE-TOKEN: ''' + env.GITLAB_TOKEN + '''" \
                 -H "Content-Type: application/json" \
                 "''' + env.CI_API_V4_URL + '''/projects/''' + env.CI_PROJECT_ID + '''/merge_requests/''' + env.CHANGE_ID + '''/notes" \

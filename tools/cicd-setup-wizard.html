@@ -617,7 +617,7 @@
       const steps = [];
       steps.push(`- uses: actions/checkout@v4`);
       steps.push(`- name: SchemaLens Schema Diff
-  uses: aimadetools/race-kimi@v1.0.0
+  uses: aimadetools/race-kimi@v1
   with:
     old-schema-path: ${state.oldPath}
     new-schema-path: ${state.newPath}
@@ -648,7 +648,7 @@ ${indent(steps.join('\n'), 6)}`;
 
     function generateGitLab() {
       const tokenLine = state.licenseKey ? `          "projectToken": "$SCHEMALENS_LICENSE_KEY",\n` : '';
-      const alertBlock = state.driftAlerts ? `\n    # Send free schema drift alert (add a Team key for persisted history)\n    - curl -X POST https://schemalens.tech/api/schema-drift-webhook \\\n        -H "Content-Type: application/json" \\\n        -d '{\n${tokenLine}          "oldSchema": "$(cat ${state.oldPath})",\n          "newSchema": "$(cat ${state.newPath})",\n          "dialect": "${state.dialect}",\n          "metadata": {"repo":"$CI_PROJECT_PATH","branch":"$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME","commit":"$CI_COMMIT_SHA","prUrl":"$CI_MERGE_REQUEST_URL","ciProvider":"gitlab-ci","runId":"$CI_PIPELINE_ID"},\n          "notify": {${state.slackUrl ? '\"slack\": \"$SCHEMALENS_SLACK_WEBHOOK\"' : ''}${state.slackUrl && state.teamsUrl ? ', ' : ''}${state.teamsUrl ? '\"teams\": \"$SCHEMALENS_TEAMS_WEBHOOK\"' : ''}}\n        }'` : '';
+      const alertBlock = state.driftAlerts ? `\n    # Send free schema drift alert (add a Team key for persisted history)\n    - curl -L -X POST https://schemalens.tech/api/schema-drift-webhook \\\n        -H "Content-Type: application/json" \\\n        -d '{\n${tokenLine}          "oldSchema": "$(cat ${state.oldPath})",\n          "newSchema": "$(cat ${state.newPath})",\n          "dialect": "${state.dialect}",\n          "metadata": {"repo":"$CI_PROJECT_PATH","branch":"$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME","commit":"$CI_COMMIT_SHA","prUrl":"$CI_MERGE_REQUEST_URL","ciProvider":"gitlab-ci","runId":"$CI_PIPELINE_ID"},\n          "notify": {${state.slackUrl ? '\"slack\": \"$SCHEMALENS_SLACK_WEBHOOK\"' : ''}${state.slackUrl && state.teamsUrl ? ', ' : ''}${state.teamsUrl ? '\"teams\": \"$SCHEMALENS_TEAMS_WEBHOOK\"' : ''}}\n        }'` : '';
 
       return `schema-diff:
   stage: test
@@ -662,7 +662,7 @@ ${indent(steps.join('\n'), 6)}`;
   script:
     - apk add --no-cache curl jq
     - |
-      RESPONSE=$(curl -s -X POST https://schemalens.tech/api/free-diff \\
+      RESPONSE=$(curl -sL -X POST https://schemalens.tech/api/free-diff \\
         -H "Content-Type: application/json" \\
         -d "{\\"schemaA\\": \\"$(cat ${state.oldPath})\\", \\"schemaB\\": \\"$(cat ${state.newPath})\\", \\"dialect\\": \\"${state.dialect}\\"}")
       echo "$RESPONSE" | jq .
@@ -729,7 +729,7 @@ jobs:
       - run:
           name: Schema Diff
           command: |
-            RESPONSE=$(curl -s -X POST https://schemalens.tech/api/free-diff \\
+            RESPONSE=$(curl -sL -X POST https://schemalens.tech/api/free-diff \\
               -H "Content-Type: application/json" \\
               -d "{\\"schemaA\\": \\"$(cat ${state.oldPath})\\", \\"schemaB\\": \\"$(cat ${state.newPath})\\", \\"dialect\\": \\"${state.dialect}\\"}")
             echo "$RESPONSE" | jq .
@@ -765,7 +765,7 @@ pipelines:
           script:
             - apt-get update && apt-get install -y jq
             - |
-              RESPONSE=$(curl -s -X POST https://schemalens.tech/api/free-diff \\
+              RESPONSE=$(curl -sL -X POST https://schemalens.tech/api/free-diff \\
                 -H "Content-Type: application/json" \\
                 -d "{\\"schemaA\\": \\"$(cat ${state.oldPath})\\", \\"schemaB\\": \\"$(cat ${state.newPath})\\", \\"dialect\\": \\"${state.dialect}\\"}")
               echo "$RESPONSE" | jq .
@@ -791,7 +791,7 @@ ${state.failBreaking ? '              if [ "$BREAKING" != "0" ]; then echo "Brea
       const alertBlock = state.driftAlerts ? `
   # Send free schema drift alert (add a Team key for persisted history)
   - script: |
-      curl -X POST https://schemalens.tech/api/schema-drift-webhook \\
+      curl -L -X POST https://schemalens.tech/api/schema-drift-webhook \\
         -H "Content-Type: application/json" \\
         -d '{
 ${tokenLineAzure}          "oldSchema": "$(cat /tmp/schema_base.sql)",

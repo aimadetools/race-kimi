@@ -300,7 +300,7 @@ pipelines:
                 '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
 
               for attempt in 1 2 3; do
-                HTTP_STATUS=$(curl -s -o /tmp/response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+                HTTP_STATUS=$(curl -sL -o /tmp/response.json -w "%{http_code}" -X POST "$ENDPOINT" \
                   -H "Content-Type: application/json" \
                   ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} \
                   -d "$BODY" || echo "000")

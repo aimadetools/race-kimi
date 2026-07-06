@@ -40,7 +40,7 @@ jobs:
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               PR_NUM=$(echo "$CIRCLE_PULL_REQUEST" | sed 's/.*\///')
               # Try to determine target branch from GitHub API
-              TARGET=$(curl -s "https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pulls/${PR_NUM}" | jq -r '.base.ref // "main"')
+              TARGET=$(curl -sL "https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pulls/${PR_NUM}" | jq -r '.base.ref // "main"')
             else
               TARGET="main"
             fi
@@ -69,7 +69,7 @@ jobs:
 
             HTTP_STATUS=0
             for attempt in 1 2 3; do
-              HTTP_STATUS=$(curl -s -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+              HTTP_STATUS=$(curl -sL -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
                 -H "Content-Type: application/json" \
                 ${LICENSE_HEADER} \
                 -d "$BODY" || echo "000")
@@ -110,7 +110,7 @@ jobs:
             if [ "$POST_PR_COMMENT" = "true" ] && [ -n "${GITHUB_TOKEN:-}" ] && [ -n "${CIRCLE_PULL_REQUEST:-}" ]; then
               PR_NUM=$(echo "$CIRCLE_PULL_REQUEST" | sed 's/.*\///')
               REPORT=$(cat /tmp/schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-              curl -s -X POST \
+              curl -sL -X POST \
                 -H "Authorization: token $GITHUB_TOKEN" \
                 -H "Accept: application/vnd.github.v3+json" \
                 "https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/issues/${PR_NUM}/comments" \

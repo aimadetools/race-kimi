@@ -101,7 +101,7 @@
       - <span class="key">checkout</span>
       - <span class="key">run</span>:
           <span class="key">name</span>: <span class="str">Schema Diff</span>
-          <span class="key">command</span>: <span class="str">curl -s https://schemalens.tech/ci/circleci-diff.sh | bash</span>
+          <span class="key">command</span>: <span class="str">curl -sL https://schemalens.tech/ci/circleci-diff.sh | bash</span>
       - <span class="key">store_artifacts</span>:
           <span class="key">path</span>: <span class="str">schema_diff_report.md</span>
       </div>
@@ -293,7 +293,7 @@
             ENDPOINT="https://schemalens.tech/api/free-diff"
             [ -n "${SL_LICENSE_KEY:-}" ] && ENDPOINT="https://schemalens.tech/api/diff"
             BODY=$(jq -n --arg a "$(cat /tmp/schema_base.sql)" --arg b "$(cat "$SCHEMA_PATH")" --arg d "$DIALECT" --arg f "$FORMAT" '{schemaA:$a,schemaB:$b,dialect:$d,format:$f}')
-            curl -s -X POST "$ENDPOINT" -H "Content-Type: application/json" ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} -d "$BODY" > /tmp/response.json
+            curl -sL -X POST "$ENDPOINT" -H "Content-Type: application/json" ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} -d "$BODY" > /tmp/response.json
             jq -r '.markdown // .migrationTeaser' /tmp/response.json > /tmp/schema_diff_report.md
             cat /tmp/schema_diff_report.md
       - <span class="key">run</span>:

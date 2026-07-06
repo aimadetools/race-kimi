@@ -152,7 +152,7 @@
       set -e
       REPORT=$(cat /tmp/schema_diff_report.md)
       BODY=&quot;## SchemaLens Schema Diff Report\n\n$REPORT&quot;
-      curl -s -X POST \
+      curl -sL -X POST \
         &quot;$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_apis/git/repositories/$(Build.Repository.Name)/pullRequests/$(System.PullRequest.PullRequestId)/threads?api-version=7.0&quot; \
         -H &quot;Authorization: Bearer $(System.AccessToken)&quot; \
         -H &quot;Content-Type: application/json&quot; \
