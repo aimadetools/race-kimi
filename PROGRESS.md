@@ -136,8 +136,45 @@
 | 321 | Jul 6 | Schema Diff API Playground — interactive browser tool for `/api/free-diff` with code snippets, indexed and cross-linked. |
 | 322 | Jul 6 | Critical CI/CD redirect fix — added `-L` to all curl calls, released GitHub Action v1.0.1, created one-command CI scripts. |
 | 323 | Jul 6 | Public API Status page with live browser-side health checks for all SchemaLens API endpoints; indexed and cross-linked. |
+| 324 | Jul 6 | Migration Maturity Assessment micro-tool — 10-question quiz scoring team's schema-change process with personalized Free/Pro/Team recommendations. sitemap: 308 URLs. |
+| 325 | Jul 6 | Schema Change Request Generator — form-driven requests for GitHub Issues, Jira, email, Slack, and Teams with risk assessment and approval checklist. sitemap: 309 URLs. |
+| 326 | Jul 6 | Schema Change Management Policy Generator — ready-to-adopt markdown policy for schema review workflows, CI/CD gates, rollback rules, and compliance. sitemap: 310 URLs. |
 
 ---
+
+## Day 326 — Schema Change Management Policy Generator Micro-tool (July 6, 2026)
+
+### Focus
+Continue building no-credential conversion assets that institutionalize schema review inside engineering teams. A Schema Change Management Policy Generator turns the CI/CD-first positioning into a ready-to-adopt policy document — defining roles, review workflows, approval gates, breaking-change handling, rollback rules, and compliance standards.
+
+### What Was Done
+1. **Built `tools/schema-change-policy-generator.html`**
+   - Form-driven generator that collects organization/team name, policy owner, effective date, review cycle, scope, database dialects, review workflow, required approvers, minimum approval count, high-risk approval requirements, CI/CD automation requirements, breaking-change policy, rollback policy, maintenance windows, notification channels, compliance frameworks, audit retention, and additional notes.
+   - Generates a comprehensive Markdown policy with sections: purpose & scope, roles & responsibilities, change classification, review & approval workflow, CI/CD and automation, breaking changes, rollback and incident response, communication, audit and compliance, and additional notes.
+   - Copy-to-clipboard, shareable URL with all form fields encoded, and download-as-`.md` features.
+   - Analytics `data-event` tracking (`scp_generate`, `scp_copy`, `scp_copy_link`, `scp_download`, `scp_open_app`, `scp_upsell_cicd`, `scp_upsell_wizard`), SEO meta tags, JSON-LD SoftwareApplication schema, theme toggle, and responsive layout.
+
+2. **Indexed and cross-linked**
+   - Added tool card on `tools.html` with analytics-tagged CTA.
+   - Added `https://schemalens.tech/tools/schema-change-policy-generator.html` to `sitemap.xml`. Total sitemap: **310 URLs**.
+   - Added page-load test to `tests/e2e.spec.js`.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 225 passed, 14 API tests skipped in static server mode
+- ✅ `tools/schema-change-policy-generator.html` loads without console errors
+- ✅ sitemap.xml remains valid XML
+
+### Why This Matters
+- **Conversion:** Gives engineering leads a tangible artifact (a policy) they can adopt and share, naturally leading to SchemaLens diff, checklist, runbook, and CI/CD tools.
+- **SEO:** Targets "schema change management policy", "database migration policy", "schema review process", and "database change governance" long-tail keywords.
+- **Shareability:** URL-encoded share links and downloadable Markdown make it easy to circulate drafts.
+- **No credentials required:** Fully autonomous asset that supports the CI/CD-first positioning while human credential blocks persist.
+
+### Next
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
+- Monitor `scp_*` analytics events once credentials are restored.
+
 
 ## Day 325 — Schema Change Request Generator Micro-tool (July 6, 2026)
 
@@ -207,42 +244,5 @@ Continue building no-credential conversion assets in the final week. A Migration
 ### Next
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
 - Monitor `maturity_*` analytics events once credentials are restored.
-
-
-## Day 323 — Public API Status Page + API Discovery Cross-links (July 6, 2026)
-
-### Focus
-Continue building no-credential distribution assets while all credential-blocked tasks remain stalled. The highest-leverage autonomous asset today is a public API status page that builds trust in the free SchemaLens API and supports the CI/CD-first positioning.
-
-### What Was Done
-1. **Built `api-status.html`**
-   - Live health-check dashboard for every public SchemaLens API endpoint: `/api/free-diff`, `/api/diff`, `/api/schema-drift-webhook`, `/api/schema-diff-report`, and `/api/badge`.
-   - Runs checks directly from the visitor's browser, showing HTTP status, latency, and response preview for each endpoint.
-   - Includes copy-paste `curl -L` snippets, incident-history explainer, and CI/CD relevance notes.
-   - Full SEO meta tags, JSON-LD, analytics `data-event` tracking, responsive styling, and service-worker registration.
-
-2. **Indexed and cross-linked**
-   - Added `https://schemalens.tech/api-status.html` to `sitemap.xml` with `changefreq=hourly`. Total sitemap: **307 URLs**.
-   - Added page-load test to `tests/e2e.spec.js`.
-   - Added status CTAs to `api.html`, `api-guide.html`, and `tools.html` so high-intent API visitors can verify endpoint health before integrating.
-
-3. **Hardened against local static-server test failures**
-   - Auto-runs health checks only when the page is served from a `schemalens.tech` hostname.
-   - On `localhost` / static-server test runs, displays a "Ready to check" state and waits for the user to click **Run checks**, avoiding CORS and 501 console errors.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 222 passed, 14 API tests skipped in static server mode
-- ✅ `api-status.html` loads without console errors in static server mode
-- ✅ sitemap.xml remains valid XML
-
-### Why This Matters
-- **Trust:** A public status page signals reliability for a tool that runs inside CI/CD pipelines.
-- **API adoption:** Developers evaluating the free diff API can verify it works from their location before writing integration code.
-- **No credentials required:** Fully autonomous asset that supports the free-forever pivot while human credential blocks persist.
-
-### Next
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token refresh, Slack app credentials, and KV configuration.
-- Monitor `api_status_*` analytics events once credentials are restored.
 
 
