@@ -3,18 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Share SchemaLens — Launch Day Kit</title>
-  <meta name="description" content="Help spread the word about SchemaLens. Copy pre-written posts for Twitter, LinkedIn, Reddit, and email.">
-  <meta property="og:title" content="Share SchemaLens — Launch Day Kit">
-  <meta property="og:description" content="Help spread the word about SchemaLens. Copy pre-written posts for Twitter, LinkedIn, Reddit, and email.">
+  <title>Share SchemaLens — Final Week Supporter Kit</title>
+  <meta name="description" content="Help SchemaLens reach the finish line of the $100 AI Startup Race. Copy pre-written posts for Twitter/X, LinkedIn, Reddit, Hacker News, and email.">
+  <meta property="og:title" content="Share SchemaLens — Final Week Supporter Kit">
+  <meta property="og:description" content="Help SchemaLens reach the finish line of the $100 AI Startup Race. Copy pre-written posts for Twitter/X, LinkedIn, Reddit, Hacker News, and email.">
+  <meta property="og:url" content="https://schemalens.tech/share-kit.html">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Share SchemaLens — Final Week Supporter Kit">
+  <meta name="twitter:description" content="Help SchemaLens reach the finish line of the $100 AI Startup Race. Copy pre-written posts for Twitter/X, LinkedIn, Reddit, Hacker News, and email.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "SchemaLens Final Week Supporter Kit",
+    "url": "https://schemalens.tech/share-kit.html",
+    "description": "Pre-written posts and one-click share links to help SchemaLens in the final days of the $100 AI Startup Race."
+  }
+  </script>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="lib/analytics-client.js"></script>
+  <script src="lib/github-stars.js" defer></script>
   <style>
-    .sk-page { max-width: 720px; margin: 0 auto; padding: 2rem 1rem 4rem; }
-    .sk-page h1 { font-size: 2.2rem; margin-bottom: 0.5rem; line-height: 1.2; }
-    .sk-page .lead { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
+    .sk-page { max-width: 760px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .sk-header { text-align: center; padding: 2.5rem 1rem 2rem; }
+    .sk-header h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); margin-bottom: 0.75rem; line-height: 1.15; }
+    .sk-header .lead { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.7; max-width: 620px; margin-left: auto; margin-right: auto; }
+    .sk-countdown {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25);
+      color: var(--danger); font-weight: 600; font-size: 0.95rem;
+      border-radius: 999px; padding: 8px 16px; margin-bottom: 1.25rem;
+    }
+    .sk-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 1.5rem 0; }
     .sk-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -38,67 +77,55 @@
     }
     .sk-card .actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .sk-card .actions a, .sk-card .actions button {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      padding: 8px 14px;
-      border-radius: 8px;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; padding: 8px 14px; border-radius: 8px;
+      text-decoration: none; cursor: pointer; border: none; font-family: inherit;
     }
-    .sk-card .actions .btn-copy {
-      background: var(--primary);
-      color: #fff;
-    }
+    .sk-card .actions .btn-copy { background: var(--primary); color: #fff; }
     .sk-card .actions .btn-copy:hover { opacity: 0.9; }
     .sk-card .actions .btn-share {
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); border: 1px solid var(--border);
     }
     .sk-card .actions .btn-share:hover { border-color: var(--primary); }
+    .sk-founder {
+      background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(139,92,246,0.04));
+      border: 1px solid rgba(99,102,241,0.18);
+    }
+    .sk-founder p { color: var(--text-muted); line-height: 1.7; margin: 0 0 0.75rem; }
+    .sk-founder p:last-child { margin-bottom: 0; }
+    .sk-stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px;
+      margin: 1.25rem 0;
+    }
+    .sk-stat { text-align: center; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 10px; }
+    .sk-stat .num { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+    .sk-stat .label { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
     .sk-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 14px;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-    .sk-header {
-      text-align: center;
-      padding: 3rem 1rem 2rem;
-    }
-    .sk-header h1 { font-size: 2.4rem; }
-    .sk-links {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 1.5rem 0;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 999px; padding: 6px 14px;
+      font-size: 0.82rem; color: var(--text-muted);
     }
     .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
+      position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%);
-      background: var(--text);
-      color: var(--bg);
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-      z-index: 1000;
+      background: var(--text); color: var(--bg);
+      padding: 10px 20px; border-radius: 8px;
+      font-size: 0.9rem; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s; z-index: 1000;
     }
     .toast.show { opacity: 1; }
+    .sk-cta-bar {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+      margin: 1.25rem 0;
+    }
+    .sk-cta-bar a {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px; border-radius: 8px; font-weight: 600;
+      text-decoration: none; font-size: 0.95rem;
+    }
+    .sk-cta-bar a.primary { background: var(--primary); color: #fff; }
+    .sk-cta-bar a.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
   </style>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f0f0f">
@@ -116,57 +143,74 @@
       <a href="index.html">Home</a>
       <a href="app.html">App</a>
       <a href="pricing.html">Pricing</a>
-      <a href="product-hunt.html">Product Hunt</a>
+      <a href="launch-special.html">Final Week Offer</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
     </div>
   </div>
 </nav>
 
 <main class="sk-page">
   <div class="sk-header">
-    <h1>Help Spread the Word 🚀</h1>
-    <p class="lead">SchemaLens launches on Product Hunt May 14. Every share helps. Copy a post below or share directly.</p>
-    <div class="sk-links">
-      <a href="https://www.producthunt.com/posts/schemalens" target="_blank" rel="noopener" class="btn btn-primary">Upvote on Product Hunt</a>
-      <a href="app.html?ref=sharekit" class="btn btn-secondary">Try the App</a>
-      <a href="founding-member.html" class="btn btn-secondary">Free Lifetime Pro</a>
+    <div class="sk-countdown">🏁 Final Week — <span id="raceCountdown">calculating…</span> left</div>
+    <h1>Help SchemaLens cross the finish line 🚀</h1>
+    <p class="lead">The $100 AI Startup Race ends <strong>July 10</strong>. Every share, star, and mention helps. Pick a platform below and copy a pre-written post — or share this kit with someone who cares about developer tools.</p>
+    <div class="sk-stats">
+      <div class="sk-stat"><div class="num">311</div><div class="label">SEO pages built</div></div>
+      <div class="sk-stat"><div class="num">80+</div><div class="label">Micro-tools</div></div>
+      <div class="sk-stat"><div class="num">12</div><div class="label">Weeks in public</div></div>
+      <div class="sk-stat"><div class="num">1</div><div class="label">Real startup</div></div>
     </div>
+    <div class="sk-cta-bar">
+      <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener" class="secondary" data-event="share_kit_star_github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+        <span data-github-stars>Star on GitHub</span>
+      </a>
+      <a href="launch-special.html" class="primary" data-event="share_kit_claim_offer">⚡ Claim $39 Lifetime Pro</a>
+      <a href="founding-member.html" class="secondary" data-event="share_kit_founding_member">🎁 Get Pro Free by Sharing</a>
+    </div>
+  </div>
+
+  <div class="sk-card sk-founder">
+    <h3>📝 Why sharing matters right now</h3>
+    <p>SchemaLens was built entirely in public as part of the <strong>$100 AI Startup Race</strong>. No paid ads, no VC funding, no growth team — just an honest tool that helps developers review database migrations before they ship.</p>
+    <p>The race ends July 10. After that, Lifetime Pro moves from $39 to $79. If SchemaLens has saved you time, helped you catch a breaking change, or made a migration review easier, a share is the single most valuable thing you can do.</p>
   </div>
 
   <div class="sk-card">
     <h3>🐦 Twitter / X</h3>
-    <pre id="tweet">Just discovered SchemaLens — a free browser-based SQL schema diff tool that generates migration scripts instantly.
+    <pre id="tweet">SchemaLens is in the final days of the $100 AI Startup Race.
 
-No install. No signup. No data leaves your machine.
+It's a free browser-based SQL schema diff tool that generates migration scripts instantly — no install, no signup, no data sent to servers.
 
-Perfect for reviewing migrations before deploying to prod.
+Lifetime Pro is $39 until July 10 (then $79). If you review DB migrations, worth bookmarking.
 
 → https://schemalens.tech
 
-#buildinpublic #postgresql #mysql #sql</pre>
+#buildinpublic #postgresql #mysql #sql #devtools</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('tweet')">📋 Copy text</button>
-      <a class="btn-share" href="https://twitter.com/intent/tweet?text=Just%20discovered%20SchemaLens%20%E2%80%94%20a%20free%20browser-based%20SQL%20schema%20diff%20tool%20that%20generates%20migration%20scripts%20instantly.%0A%0A%E2%86%92%20https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to X →</a>
+      <button class="btn-copy" onclick="copy('tweet')" data-event="share_kit_copy" data-event-platform="tweet">📋 Copy text</button>
+      <a class="btn-share" href="https://twitter.com/intent/tweet?text=SchemaLens%20is%20in%20the%20final%20days%20of%20the%20%24100%20AI%20Startup%20Race.%0A%0AFree%20browser-based%20SQL%20schema%20diff%20tool%20%E2%80%94%20no%20install%2C%20no%20signup%2C%20no%20data%20sent%20to%20servers.%0A%0ALifetime%20Pro%20is%20%2439%20until%20July%2010%20(then%20%2479).%0A%0A%E2%86%92%20https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener" data-event="share_kit_share" data-event-platform="twitter">Post to X →</a>
     </div>
   </div>
 
   <div class="sk-card">
     <h3>💼 LinkedIn</h3>
-    <pre id="linkedin">If you work with databases, this free tool will save you hours.
+    <pre id="linkedin">If your team reviews database migrations, this free tool can save you hours — and catch breaking changes before they hit production.
 
-SchemaLens compares two SQL schemas in your browser and generates the migration scripts to get from one to the other. No CLI setup, no cloud upload, no account required.
+SchemaLens compares two SQL schemas in your browser and generates the correct migration scripts. No CLI setup, no cloud upload, no account required.
 
-I just paste two CREATE TABLE dumps and get a visual diff + ready-to-run ALTER TABLE statements in seconds.
+I use it to review staging → production schema drift. It turns a tedious manual comparison into a 30-second check.
 
-They just launched on Product Hunt with a lifetime deal ($39 once) and a founding member giveaway for the first 50 developers.
+The project is in the final days of the $100 AI Startup Race. Lifetime Pro is $39 until July 10, then it moves to $79.
 
 Worth bookmarking for your next migration review.
 
 → https://schemalens.tech
 
-#database #postgresql #mysql #sql #devtools #producthunt</pre>
+#database #postgresql #mysql #sql #devtools #engineering</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('linkedin')">📋 Copy text</button>
-      <a class="btn-share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://schemalens.tech" target="_blank" rel="noopener">Share on LinkedIn →</a>
+      <button class="btn-copy" onclick="copy('linkedin')" data-event="share_kit_copy" data-event-platform="linkedin">📋 Copy text</button>
+      <a class="btn-share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://schemalens.tech" target="_blank" rel="noopener" data-event="share_kit_share" data-event-platform="linkedin">Share on LinkedIn →</a>
     </div>
   </div>
 
@@ -174,33 +218,33 @@ Worth bookmarking for your next migration review.
     <h3>📧 Email to a teammate</h3>
     <pre id="email">Hey — found a tool you might like: SchemaLens (https://schemalens.tech)
 
-It diffs two SQL schemas in the browser and generates ALTER TABLE migration scripts. I just used it to review a staging-to-prod schema drift and it caught a column type change I would have missed.
+It diffs two SQL schemas in the browser and generates ALTER TABLE migration scripts. I used it to review a schema drift and it caught a column type change I would have missed.
 
-Free tier covers most use cases. They have a lifetime Pro deal for $39 if you need unlimited tables and exports.
+Free forever for the web diff. They’re in the final days of a $100 startup race, so Lifetime Pro is $39 until July 10 (then $79).
 
 Worth keeping in your toolkit.</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('email')">📋 Copy text</button>
-      <a class="btn-share" href="mailto:?subject=Tool%20for%20database%20schema%20diffs&body=Hey%20%E2%80%94%20found%20a%20tool%20you%20might%20like%3A%20SchemaLens%20(https%3A%2F%2Fschemalens.tech)%0A%0AIt%20diffs%20two%20SQL%20schemas%20in%20the%20browser%20and%20generates%20ALTER%20TABLE%20migration%20scripts.%20Worth%20keeping%20in%20your%20toolkit.">Open in email client →</a>
+      <button class="btn-copy" onclick="copy('email')" data-event="share_kit_copy" data-event-platform="email">📋 Copy text</button>
+      <a class="btn-share" href="mailto:?subject=Tool%20for%20database%20schema%20diffs&body=Hey%20%E2%80%94%20found%20a%20tool%20you%20might%20like%3A%20SchemaLens%20(https%3A%2F%2Fschemalens.tech)%0A%0AIt%20diffs%20two%20SQL%20schemas%20in%20the%20browser%20and%20generates%20ALTER%20TABLE%20migration%20scripts.%20Worth%20keeping%20in%20your%20toolkit." data-event="share_kit_share" data-event-platform="email_client">Open in email client →</a>
     </div>
   </div>
 
   <div class="sk-card">
     <h3>🗣️ Reddit — r/PostgreSQL</h3>
-    <pre id="reddit-pg">I built a browser-based schema diff tool for PostgreSQL (and MySQL/SQLite). No signup, no upload, no backend.
+    <pre id="reddit-pg">I built a browser-based schema diff tool for PostgreSQL (and MySQL/SQLite/SQL Server/Oracle). No signup, no upload, no backend.
 
-I got tired of comparing schema dumps by hand when reviewing migration PRs. Text diffs of SQL dumps are noisy and miss semantic meaning—like whether a column was renamed vs dropped and re-added.
+I got tired of comparing schema dumps by hand when reviewing migration PRs. Text diffs are noisy and miss semantic meaning — like whether a column was renamed vs dropped and re-added.
 
-SchemaLens parses CREATE TABLE statements, shows you exactly what changed (tables, columns, types, defaults, constraints), and generates the correct ALTER TABLE script for your dialect.
+SchemaLens parses CREATE TABLE statements, shows exactly what changed, and generates the correct ALTER TABLE script for your dialect. Everything parses client-side so your schema never touches a server.
 
-Privacy-first: everything parses in your browser. Your schema never touches a server.
+Live: https://schemalens.tech
 
-Live demo: https://schemalens.tech
+The project is in the final days of the $100 AI Startup Race. Lifetime Pro is $39 until July 10, then $79. The web diff itself is free forever.
 
-Free forever for schemas of any size. Would love feedback from real PostgreSQL users—especially on edge cases like composite PKs, enums, arrays, or exotic types.</pre>
+Would love feedback from real PostgreSQL users — especially on edge cases like composite PKs, enums, arrays, or exotic types.</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('reddit-pg')">📋 Copy text</button>
-      <a class="btn-share" href="https://www.reddit.com/r/PostgreSQL/submit?title=Browser-based%20schema%20diff%20tool%20for%20PostgreSQL%20%E2%80%94%20no%20signup%2C%20no%20backend&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to r/PostgreSQL →</a>
+      <button class="btn-copy" onclick="copy('reddit-pg')" data-event="share_kit_copy" data-event-platform="reddit_pg">📋 Copy text</button>
+      <a class="btn-share" href="https://www.reddit.com/r/PostgreSQL/submit?title=Browser-based%20schema%20diff%20tool%20for%20PostgreSQL%20%E2%80%94%20no%20signup%2C%20no%20backend&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener" data-event="share_kit_share" data-event-platform="reddit_pg">Post to r/PostgreSQL →</a>
     </div>
   </div>
 
@@ -208,97 +252,99 @@ Free forever for schemas of any size. Would love feedback from real PostgreSQL u
     <h3>🗣️ Reddit — r/MySQL</h3>
     <pre id="reddit-mysql">Compare MySQL schemas in your browser and generate ALTER TABLE scripts instantly
 
-I built a tool that compares two MySQL schemas and generates the correct migration SQL—no install, no signup, no data upload.
+I built a tool that compares two MySQL schemas and generates the correct migration SQL — no install, no signup, no data upload.
 
-SchemaLens parses your CREATE TABLE dumps, detects added/removed/modified columns, type changes, nullability flips, and default value changes, then outputs MySQL-specific ALTER TABLE syntax (MODIFY COLUMN, ADD COLUMN, DROP COLUMN, etc.).
+SchemaLens parses your CREATE TABLE dumps, detects added/removed/modified columns, type changes, nullability flips, and default value changes, then outputs MySQL-specific ALTER TABLE syntax.
 
 Key features for MySQL users:
 - Handles AUTO_INCREMENT, backtick identifiers, and COLLATE
-- Detects when a column change requires MODIFY COLUMN vs simpler ALTER
+- Detects when a column change requires MODIFY COLUMN
 - Shows visual diff before you run anything
 - 100% client-side — paste your schema, it never leaves your browser
 
 Try it: https://schemalens.tech
 
-Free forever for schemas of any size. If you hit edge cases with MySQL-specific syntax (generated columns, spatial types, etc.), I'd love to know.</pre>
+Web diff is free forever. Lifetime Pro is $39 until July 10 in the $100 AI Startup Race, then $79.
+
+If you hit edge cases with MySQL-specific syntax, I'd love to know.</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('reddit-mysql')">📋 Copy text</button>
-      <a class="btn-share" href="https://www.reddit.com/r/MySQL/submit?title=Compare%20MySQL%20schemas%20in%20your%20browser%20and%20generate%20ALTER%20TABLE%20scripts%20instantly&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to r/MySQL →</a>
+      <button class="btn-copy" onclick="copy('reddit-mysql')" data-event="share_kit_copy" data-event-platform="reddit_mysql">📋 Copy text</button>
+      <a class="btn-share" href="https://www.reddit.com/r/MySQL/submit?title=Compare%20MySQL%20schemas%20in%20your%20browser%20and%20generate%20ALTER%20TABLE%20scripts%20instantly&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener" data-event="share_kit_share" data-event-platform="reddit_mysql">Post to r/MySQL →</a>
     </div>
   </div>
 
   <div class="sk-card">
     <h3>🗣️ Reddit — r/webdev</h3>
-    <pre id="reddit-webdev">Showoff Saturday: I built a zero-backend schema diff tool that runs entirely in the browser
+    <pre id="reddit-webdev">Built a zero-backend schema diff tool that runs entirely in the browser
 
-For my side project this month I built SchemaLens—a SQL schema diff tool with zero backend. No server, no database, no API. Just vanilla JS parsing CREATE TABLE statements and generating migration scripts.
+For my side project I built SchemaLens — a SQL schema diff tool with zero backend. No server, no database, no API. Just vanilla JS parsing CREATE TABLE statements and generating migration scripts.
 
 Tech stack:
-- Vanilla HTML/CSS/JS (no frameworks)
-- Custom SQL tokenizer + parser (~600 lines)
+- Vanilla HTML/CSS/JS
+- Custom SQL tokenizer + parser
 - Semantic diff engine
 - Dialect-aware migration generator (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
 
 What it does:
 - Paste two schema dumps
 - See tables added/removed/modified with color coding
-- Get per-column change details (type, nullability, default, PK, unique)
+- Get per-column change details
 - Download migration SQL or export as Markdown for PRs
 
-Why no backend?
-Your schema structure reveals a lot about your data model. I wanted a tool where privacy is the default, not a feature.
+Why no backend? Your schema structure reveals a lot about your data model. Privacy is the default.
 
 Live: https://schemalens.tech
 
-Free tier covers unlimited tables. Lifetime Pro is $39 one-time for unlimited access.
+Built in public as part of the $100 AI Startup Race. 311 SEO pages, 80+ micro-tools, 12 weeks. Race ends July 10 — Lifetime Pro is $39 until then, then $79.
 
-Happy to answer questions about the parser, the diff algorithm, or the $100 startup challenge I'm running this in.</pre>
+Happy to answer questions about the parser, the diff algorithm, or the race.</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('reddit-webdev')">📋 Copy text</button>
-      <a class="btn-share" href="https://www.reddit.com/r/webdev/submit?title=Showoff%20Saturday%3A%20Zero-backend%20schema%20diff%20tool%20that%20runs%20entirely%20in%20the%20browser&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to r/webdev →</a>
+      <button class="btn-copy" onclick="copy('reddit-webdev')" data-event="share_kit_copy" data-event-platform="reddit_webdev">📋 Copy text</button>
+      <a class="btn-share" href="https://www.reddit.com/r/webdev/submit?title=Zero-backend%20schema%20diff%20tool%20that%20runs%20entirely%20in%20the%20browser&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener" data-event="share_kit_share" data-event-platform="reddit_webdev">Post to r/webdev →</a>
     </div>
   </div>
 
   <div class="sk-card">
     <h3>🗣️ Reddit — r/SQL</h3>
-    <pre id="reddit-sql">SchemaLens (https://schemalens.tech) is a free browser-based schema diff tool I have been using. Paste two CREATE TABLE dumps, get a visual semantic diff + generated migration scripts.
+    <pre id="reddit-sql">SchemaLens (https://schemalens.tech) is a free browser-based schema diff tool I’ve been using. Paste two CREATE TABLE dumps, get a visual semantic diff + generated migration scripts.
 
 Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Runs entirely client-side so your schema never leaves the browser. Also has a CLI (`npx schemalens-cli`) if you prefer terminal workflows.
 
-They just launched on Product Hunt with a $39 lifetime deal and a founding member giveaway.</pre>
+The project is in the final days of the $100 AI Startup Race. Lifetime Pro is $39 until July 10, then $79. Web diff remains free forever.</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('reddit-sql')">📋 Copy text</button>
-      <a class="btn-share" href="https://www.reddit.com/r/SQL/submit?title=Free%20browser-based%20SQL%20schema%20diff%20tool%20%E2%80%94%20client-side%2C%20no%20signup&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to r/SQL →</a>
+      <button class="btn-copy" onclick="copy('reddit-sql')" data-event="share_kit_copy" data-event-platform="reddit_sql">📋 Copy text</button>
+      <a class="btn-share" href="https://www.reddit.com/r/SQL/submit?title=Free%20browser-based%20SQL%20schema%20diff%20tool%20%E2%80%94%20client-side%2C%20no%20signup&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener" data-event="share_kit_share" data-event-platform="reddit_sql">Post to r/SQL →</a>
     </div>
   </div>
 
   <div class="sk-card">
-    <h3>💬 Hacker News — Follow-up Comment</h3>
-    <pre id="hn-followup">Thanks for the interest! A few answers to common questions:
+    <h3>💬 Hacker News — Show HN-style post</h3>
+    <pre id="hn-post">Show HN: SchemaLens — browser-based SQL schema diff with migration generation
 
-Why not use existing tools like migra/apgdiff/Liquibase?
-They're great, but they require installation, a database connection, or Python. SchemaLens is for the "I need to check this right now" moment—paste, compare, done. If you need managed migration lifecycles, Liquibase is the better fit. SchemaLens complements it for quick ad-hoc diffs.
+SchemaLens compares two SQL CREATE TABLE dumps in the browser and generates dialect-correct migration scripts. No install, no signup, no backend.
 
-What about more complex objects?
-We parse CREATE TABLE, CREATE INDEX, views, functions, and triggers. The parser is modular and adding new statement types is straightforward.
+Built in public for the $100 AI Startup Race. 311 SEO pages, 80+ micro-tools, 12 weeks. Race ends July 10.
 
-Privacy / self-hosting?
-Everything runs client-side. Clone the repo, open app.html in a browser. The "backend" is air. Verify in DevTools → Network.
+Live: https://schemalens.tech
 
-Pricing?
-Free forever — unlimited tables. Lifetime Pro is $39 once. No subscription, no recurring charges.
+Why build this? I kept needing a quick way to check schema drift between staging and production without spinning up a CLI tool or connecting to a database. Text diffs of SQL dumps miss semantic changes (renamed column vs dropped/re-added, type widening vs narrowing). SchemaLens parses the DDL and shows the real diff.
 
-Live: https://schemalens.tech</pre>
+Tech: vanilla JS, custom SQL tokenizer/parser, semantic diff engine. Everything runs client-side.
+
+Free forever for the web diff. Lifetime Pro ($39 until July 10) adds saved history, shareable links, and the full micro-tool library.
+
+Would love feedback on parser edge cases and dialect coverage.</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('hn-followup')">📋 Copy text</button>
+      <button class="btn-copy" onclick="copy('hn-post')" data-event="share_kit_copy" data-event-platform="hn_post">📋 Copy text</button>
+      <a class="btn-share" href="https://news.ycombinator.com/submit" target="_blank" rel="noopener" data-event="share_kit_share" data-event-platform="hn">Open HN Submit →</a>
     </div>
   </div>
 
   <div class="sk-card">
     <h3>🚀 IndieHackers</h3>
-    <pre id="indiehackers">Launched SchemaLens — a privacy-first SQL schema diff tool. Built in public.
+    <pre id="indiehackers">SchemaLens — privacy-first SQL schema diff tool, built in public
 
-I just launched SchemaLens, a browser-based SQL schema diff tool for PostgreSQL, MySQL, and SQLite.
+I just launched SchemaLens, a browser-based SQL schema diff tool for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.
 
 The problem: Reviewing database migrations by comparing two SQL dumps is tedious and error-prone. Text diffs miss semantic meaning. CLI tools require installation and database connections.
 
@@ -306,31 +352,31 @@ The solution: Paste two CREATE TABLE dumps into SchemaLens. Get an instant visua
 
 Why privacy-first matters: Your schema structure reveals a lot about your business logic. SchemaLens parses everything in the browser. Your data never touches a server.
 
-Stack: Vanilla HTML/CSS/JS. Custom SQL parser. Vercel hosting. $0 infrastructure cost.
+Stack: Vanilla HTML/CSS/JS. Custom SQL parser. Vercel hosting.
 
-Monetization: Free forever — unlimited tables. Lifetime Pro at $39 one-time for unlimited access.
+Monetization: Web diff is free forever. Lifetime Pro at $39 one-time (until July 10 in the $100 AI Startup Race, then $79) for saved history, shareable links, and 80+ micro-tools.
 
 Live: https://schemalens.tech
 
-I'm building this as part of a 12-week $100 startup race (documenting everything publicly). 224 days, 72+ micro-tools, 227+ SEO pages. Would love feedback from developers and indie hackers alike.</pre>
+Built in public over 12 weeks: 311 SEO pages, 80+ micro-tools, GitHub Action, VS Code extension, Chrome extension. Would love feedback from developers and indie hackers.</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('indiehackers')">📋 Copy text</button>
-      <a class="btn-share" href="https://www.indiehackers.com/post/new" target="_blank" rel="noopener">Post on IndieHackers →</a>
+      <button class="btn-copy" onclick="copy('indiehackers')" data-event="share_kit_copy" data-event-platform="indiehackers">📋 Copy text</button>
+      <a class="btn-share" href="https://www.indiehackers.com/post/new" target="_blank" rel="noopener" data-event="share_kit_share" data-event-platform="indiehackers">Post on IndieHackers →</a>
     </div>
   </div>
 
   <div class="sk-card">
     <h3>🔗 Short Link</h3>
-    <p style="margin:0 0 0.75rem;color:var(--text-muted);font-size:0.9rem;">Share this page so others can spread the word too:</p>
+    <p style="margin:0 0 0.75rem;color:var(--text-muted);font-size:0.9rem;">Share this kit so others can spread the word too:</p>
     <pre id="shortlink">https://schemalens.tech/share-kit.html</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('shortlink')">📋 Copy link</button>
+      <button class="btn-copy" onclick="copy('shortlink')" data-event="share_kit_copy" data-event-platform="shortlink">📋 Copy link</button>
     </div>
   </div>
 
   <div style="text-align:center;margin-top:2rem;">
-    <p style="color:var(--text-muted);font-size:0.9rem;">Thank you for supporting SchemaLens. Every share matters.</p>
-    <a href="index.html" style="color:var(--primary);text-decoration:none;">← Back to home</a>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:8px;">Thank you for supporting SchemaLens. Every share matters in the final days.</p>
+    <a href="index.html" style="color:var(--primary);text-decoration:none;" data-event="share_kit_back_home">← Back to home</a>
   </div>
 </main>
 
@@ -360,6 +406,25 @@ function copy(id) {
     setTimeout(() => toast.classList.remove('show'), 2000);
   });
 }
+(function countdown() {
+  const end = new Date('2026-07-10T23:59:59Z');
+  const el = document.getElementById('raceCountdown');
+  function update() {
+    const now = new Date();
+    const diff = end - now;
+    if (diff <= 0) { el.textContent = 'race ended'; return; }
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const parts = [];
+    if (days > 0) parts.push(days + 'd');
+    if (hours > 0 || days > 0) parts.push(hours + 'h');
+    parts.push(minutes + 'm');
+    el.textContent = parts.join(' ');
+  }
+  update();
+  setInterval(update, 60000);
+})();
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>

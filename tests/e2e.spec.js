@@ -91,6 +91,7 @@ const pages = [
   { path: '/show-hn.html', name: 'Show HN Landing' },
   { path: '/founding-member.html', name: 'Founding Member Landing' },
   { path: '/launch-special.html', name: 'Launch Special Landing' },
+  { path: '/share-kit.html', name: 'Final Week Share Kit' },
   { path: '/open-source.html', name: 'Open Source Landing' },
   { path: '/open-source-sponsorship.html', name: 'Open Source Sponsorship' },
   { path: '/open-source-sponsors.html', name: 'Open Source Sponsors Wall' },
