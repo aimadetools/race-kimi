@@ -16,7 +16,7 @@ Days 1–329: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **CI/CD integrations:** GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, Azure DevOps with PR comments, Check Runs, smart skip, breaking gates.
 - **Content/SEO:** 311 indexed URLs, comparison pages, framework/dialect landing pages, tools hub, blog, sitemap.
 - **Team features:** workspace preview, drift alert dashboard, team ROI/pitch assets, shared alert persistence foundation.
-- **Final-week sprint (Days 303–330):** Analytics hardening, A/B test conclusion, five no-account CI/CD micro-tools, MCP Server + client landing pages + config generator, AI Agents page + blog, API Playground, API Status page, Migration Maturity Assessment, Schema Change Request/Policy/ADR generators, final-week conversion/trust hardening, refreshed Supporter Kit, and README/Action/extension/CLI final-week CTA push.
+- **Final-week sprint (Days 303–331):** Analytics hardening, A/B test conclusion, five no-account CI/CD micro-tools, MCP Server + client landing pages + config generator, AI Agents page + blog, API Playground, API Status page, Migration Maturity Assessment, Schema Change Request/Policy/ADR generators, final-week conversion/trust hardening, refreshed Supporter Kit, README/Action/extension/CLI final-week CTA push, and final 48-hour last-chance countdown push across app modals and high-traffic landing pages.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -39,7 +39,7 @@ Full history is in `PROGRESS.md` and git.
 ### Unblocked / Do Next (Final Week)
 - [x] **P1** Maximize final-week conversion on live revenue path (Pro $39 lifetime) — README final-week CTA, GitHub Action job summary CTA, VS Code extension and CLI landing page banners. Completed Day 330.
 - [x] **P1** Distribute the Supporter Kit / launch-special assets through no-credential channels — README, GitHub Action job summary, VS Code extension page, CLI page. Completed Day 330.
-- [ ] **P1** Final 48-hour push — add "last chance" urgency to app interstitial/license modal, refresh launch-special hero copy for final 48h, and add a dynamic countdown to any page lacking one.
+- [x] **P1** Final 48-hour push — added `lib/final-countdown.js`, last-chance urgency in app license modal / Pro interstitial, launch-special hero refresh, and live countdown banners on index/pricing/features/github-action/vscode-extension/cli pages. Completed Day 331.
 - [ ] **P2** Review real analytics/GSC data once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is available to double down on highest-converting keywords. *(Instrumentation completed Day 313; real data review blocked pending credentials.)*
 
 ### Future Sprint
@@ -48,4 +48,4 @@ Full history is in `PROGRESS.md` and git.
 
 ---
 
-*Backlog updated July 7, 2026. Day 330 complete. Race ends July 10. Strategy: final-week conversion/distribution push on unblocked Pro revenue path while credential-blocked infrastructure waits.*
+*Backlog updated July 7, 2026. Day 331 complete. Race ends July 10. Strategy: final-week conversion/distribution push on unblocked Pro revenue path while credential-blocked infrastructure waits.*
