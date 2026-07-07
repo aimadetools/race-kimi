@@ -80,7 +80,7 @@ The following high-traffic or high-intent pages still have only auto page_view (
 
 - `launch-special.html` — has `final_week_buy_click` but only on Gumroad links; share/secondary CTAs not tracked.
 - SEO landing pages (`postgres-schema-diff.html`, `mysql-schema-diff.html`, etc.) — analytics client present on some, but no custom events.
-- `open.html`, `product-hunt.html`, `show-hn.html`, `indiehackers.html` — no analytics client.
+- ~~`open.html`, `product-hunt.html`, `show-hn.html`, `indiehackers.html` — no analytics client.~~ Addressed Day 332: analytics client added and key CTAs instrumented with `data-event`.
 
 These are lower priority than the core conversion funnel addressed above.
 
