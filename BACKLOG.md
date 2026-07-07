@@ -40,10 +40,8 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P2** Review real analytics/GSC data once `SUPABASE_SERVICE_ROLE_KEY` / GSC access is available to double down on highest-converting keywords. *(Instrumentation completed in Day 313; real data review blocked pending credentials.)*
 
 ### ✅ Recently Completed (summary)
+- **Day 329** — Refreshed **Final-Week Supporter Kit** (`share-kit.html`) with race-end countdown, founder note, transparent stats, updated posts for Twitter/X/LinkedIn/Reddit/HN/IndieHackers/email, GitHub star CTA, and analytics; cross-linked from `index.html` and `launch-special.html`; covered by e2e test. Unit + e2e tests pass.
 - **Day 328** — Final-week conversion/trust hardening: removed stale July 1 scarcity copy from `product-hunt.html`, `case-study-catch-breaking-changes.html`, `tools/request-pro-approval.html`, and `app.html`; enhanced `launch-special.html` with transparent "built in public" stats, social share buttons, and real-time GitHub stars. Unit + e2e tests pass.
-- **Day 327** — Built **Schema Change ADR Generator** (`tools/schema-change-adr-generator.html`) — Architecture Decision Record micro-tool for database schema changes. Documents context, decision, consequences, rollback strategy, and validation. Indexed in `sitemap.xml` (311 URLs), cross-linked from `tools.html`, covered by e2e test. Unit + e2e tests pass.
-- **Day 326** — Built **Schema Change Management Policy Generator** (`tools/schema-change-policy-generator.html`) — ready-to-adopt markdown policy for schema review workflows, CI/CD gates, rollback rules, and compliance. Indexed in `sitemap.xml` (310 URLs), cross-linked from `tools.html`, covered by e2e test. Unit + e2e tests pass.
-- **Day 325** — Built **Schema Change Request Generator** (`tools/schema-change-request-generator.html`) for GitHub Issues, Jira, email, Slack, and Teams. Indexed in `sitemap.xml` (309 URLs), cross-linked from `tools.html`, covered by e2e test. Unit + e2e tests pass.
 
 ### Credential-Blocked / No-Credential Prep Complete
 - [ ] **P1** Complete MCP server manual submissions that require human credentials: mcp.so GitHub issue, mcpmarket.com form (needs email/budget decision), Smithery publish (needs account), Glama claim (needs GitHub OAuth). *(No-credential work is complete: MCP server, landing pages, registry metadata, directory kit, and config generator. Actual submissions require human credentials and are blocked by the no-outreach-email rule and missing accounts.)*
@@ -54,4 +52,4 @@ Full history is in `PROGRESS.md` and git.
 
 ---
 
-*Backlog updated July 7, 2026. Day 328 complete. With credential blocks persisting, strategy shifted from building new micro-tools to final-week conversion/trust hardening. Only remaining unblocked task is analytics/GSC review, which remains blocked pending credentials.*
+*Backlog updated July 7, 2026. Day 329 complete. With credential blocks persisting, strategy shifted from building new micro-tools to final-week distribution and conversion/trust hardening. Only remaining unblocked task is analytics/GSC review, which remains blocked pending credentials.*
