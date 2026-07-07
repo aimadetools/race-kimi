@@ -146,6 +146,50 @@
 | 331 | Jul 7 | Final 48-hour push — `lib/final-countdown.js`, last-chance urgency in app modals, `launch-special.html` refresh, live countdown banners on 6 high-traffic pages. |
 | 332 | Jul 7 | Distribution landing page analytics instrumentation — added analytics client and `data-event` CTAs to `open.html`, `product-hunt.html`, `show-hn.html`, `indiehackers.html`; refreshed `open.html` metrics; e2e coverage. |
 | 333 | Jul 7 | Built `tools/schema-lockfile-generator.html` — deterministic schema fingerprint/lockfile generator with SHA-256, CI verification script, shareable URLs; cross-linked from tools.html, github-action.html, ci-cd-integration.html, precommit hook page; indexed; e2e coverage. sitemap: 312 URLs. |
+| 334 | Jul 7 | Promoted Schema Lockfile Generator — on-site blog post, share-kit refresh with Twitter/X and LinkedIn posts, README announcement + tools list, GitHub Action job summary CTA; sitemap: 313 URLs. |
+
+---
+
+## Day 334 — Schema Lockfile Generator Promotion Through No-Credential Channels (July 7, 2026)
+
+### Focus
+With the race ending in ~3 days and every credential-blocked infrastructure task still stuck, the highest-impact executable work is to promote yesterday's Schema Lockfile Generator across the no-credential channels we control: the on-site blog, supporter share kit, README, and GitHub Action job summary.
+
+### What Was Done
+1. **On-site blog post**
+   - Created `blog/introducing-schema-lockfile-generator.html` targeting "schema lockfile", "database schema fingerprint", and "CI schema drift detection" keywords.
+   - Covers why text diffs make poor CI gates, how canonicalization works, example lockfile, GitHub Actions workflow, and lockfile vs full diff positioning.
+   - Added to `blog.html` as the featured top post.
+   - Indexed in `sitemap.xml` (now 313 URLs).
+   - Added page-load coverage in `tests/e2e.spec.js`.
+
+2. **Supporter share kit refresh**
+   - Added lockfile-focused Twitter/X and LinkedIn post templates to `share-kit.html`.
+   - Each template has copy-to-clipboard and one-click share buttons with analytics event attributes.
+
+3. **README.md promotion**
+   - Added a "NEW — Schema Lockfile Generator" announcement line near the top of the README.
+   - Added the tool as #81 in the micro-tools list.
+
+4. **GitHub Action job summary CTA**
+   - Added a lockfile generator link in the `action.yml` job summary output that appears on every SchemaLens Action run.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 232 passed, 14 API tests skipped in static server mode
+- ✅ New blog post loads without console errors
+- ✅ Share kit new copy blocks render and copy buttons work
+- ✅ sitemap.xml remains valid XML with 313 URLs
+
+### Why This Matters
+- **No-credential distribution:** Every channel updated is fully under our control and does not require human credentials.
+- **SEO/discovery:** The blog post targets high-intent schema lockfile keywords and funnels readers to the tool.
+- **Social amplification:** Share-kit refresh gives supporters fresh, specific copy to spread in the final days.
+- **Reinforces CI/CD positioning:** README and Action job summary CTAs funnel developers toward a practical CI workflow tool.
+
+### Next
+- Monitor `schema_lockfile_*` analytics events, share-kit copy/share events, and blog post page views.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
 
 ---
 
@@ -188,50 +232,6 @@ With all credential-blocked infrastructure tasks still stuck, the highest-impact
 
 ### Next
 - Monitor `open_*`, `ph_*`, `sh_*`, and `ih_*` analytics events in the admin dashboard.
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
-
----
-
-## Day 331 — Final 48-Hour Push: Last-Chance Urgency + Live Countdowns (July 7, 2026)
-
-### Focus
-Race ends July 10. With ~3 days left, turn every high-traffic surface into a real-time countdown and automatically shift messaging to "last chance" once we enter the final 48 hours.
-
-### What Was Done
-1. **Built reusable `lib/final-countdown.js`**
-   - Counts down to `2026-07-10T23:59:59Z`.
-   - Updates `.final-countdown-inline` (compact) and `.final-countdown-verbose` (human-readable) elements every second.
-   - Adds `.final-last-chance` to `<body>` within the last 48 hours so CSS/JS can swap copy automatically.
-   - Exposes `window.SchemaLensFinalCountdown` for page-specific logic.
-
-2. **Added last-chance urgency to `app.html` Pro surfaces**
-   - License modal: added a live countdown line (hidden by default, shown in last 48h via CSS), badge swaps to "⏰ Last Chance", and the buy button gets a subtle pulse animation.
-   - Pro preview interstitial: same last-chance countdown, badge swap, and CTA text change.
-   - New `applyLastChanceUrgency()` helper runs whenever the modal/interstitial opens, with analytics `last_chance_shown` event and `lastChance` property on existing modal events.
-
-3. **Refreshed `launch-special.html` for final 48h**
-   - Extended the existing hero countdown script to detect the last-48h window.
-   - Badge swaps to "⏰ Last 48 Hours".
-   - H1 and subtext rewrite to emphasize the remaining time.
-   - Footer subtext also updates automatically.
-
-4. **Added live countdown banners to 6 high-traffic pages lacking one**
-   - `index.html`, `pricing.html`, `features.html`, `github-action.html`, `vscode-extension.html`, `cli/index.html`.
-   - Each Final Week announcement bar now shows the live time remaining (e.g., "🏁 Final Week — 2d 14h 32m left. Lifetime Pro $39...").
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 227 passed, 14 API tests skipped in static server mode
-- ✅ Modified pages load without console errors
-- ✅ Countdown helper updates every second and switches to last-chance mode when mocked to <48h before race end
-
-### Why This Matters
-- **Urgency without deception:** The countdown is real and synchronized everywhere. It automatically becomes more urgent as the deadline approaches.
-- **No-credential distribution:** README/Action work is already done; this hardens the on-site surfaces that actually convert.
-- **Reusability:** A single shared helper keeps 8 files in sync and removes the risk of stale "Final Week" copy after July 10.
-
-### Next
-- Monitor `last_chance_shown`, `final_week_*`, and `launch_special_*` analytics events.
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
 
 ---
