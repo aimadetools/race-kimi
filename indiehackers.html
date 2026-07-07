@@ -13,6 +13,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
+  <script src="lib/analytics-client.js"></script>
   <style>
     .ih-badge { display: inline-flex; align-items: center; gap: 8px; background: #0e2439; color: #fff; font-size: 0.85rem; font-weight: 700; padding: 6px 14px; border-radius: 8px; text-decoration: none; border: 1px solid #ff6154; }
     .ih-badge:hover { background: #1a3a5c; }
@@ -71,7 +72,7 @@
       <a href="built-in-public.html">Built in Public</a>
       <a href="open-source.html">Open Source</a>
     </div>
-    <a href="app.html" class="btn btn-primary btn-sm">Open App</a>
+    <a href="app.html" class="btn btn-primary btn-sm" data-event="ih_nav_open_app">Open App</a>
   </div>
 </nav>
 
@@ -88,13 +89,13 @@
       No frameworks, no build step, no dependencies.
     </p>
     <div class="hero-actions" style="justify-content: center; margin-bottom: 20px;">
-      <a href="app.html" class="btn btn-primary btn-lg">Try It Free — No Signup</a>
-      <a href="built-in-public.html" class="btn btn-secondary btn-lg">Read the Build Log</a>
+      <a href="app.html" class="btn btn-primary btn-lg" data-event="ih_hero_try_free">Try It Free — No Signup</a>
+      <a href="built-in-public.html" class="btn btn-secondary btn-lg" data-event="ih_build_log_click">Read the Build Log</a>
     </div>
     <div class="install-box">
       <span style="color: var(--text-muted);">CLI:</span>
       <code>npx schemalens-cli diff old.sql new.sql --dialect postgres</code>
-      <button class="copy-btn" onclick="navigator.clipboard.writeText('npx schemalens-cli diff old.sql new.sql --dialect postgres')" style="background: var(--surface-hover); border: none; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: var(--text);">Copy</button>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText('npx schemalens-cli diff old.sql new.sql --dialect postgres')" data-event="ih_cli_copy" style="background: var(--surface-hover); border: none; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: var(--text);">Copy</button>
     </div>
     <p class="hero-note">MIT licensed. Your schemas never leave your browser.</p>
   </div>

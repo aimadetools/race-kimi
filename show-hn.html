@@ -13,6 +13,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
+  <script src="lib/analytics-client.js"></script>
   <style>
     .hn-badge { display: inline-flex; align-items: center; gap: 8px; background: #ff6600; color: #fff; font-size: 0.85rem; font-weight: 700; padding: 6px 14px; border-radius: 8px; text-decoration: none; }
     .hn-badge:hover { background: #e65c00; }
@@ -70,7 +71,7 @@
       <a href="open-source.html">Open Source</a>
       <a href="cli/">CLI</a>
     </div>
-    <a href="app.html" class="btn btn-primary btn-sm">Open App</a>
+    <a href="app.html" class="btn btn-primary btn-sm" data-event="sh_nav_open_app">Open App</a>
   </div>
 </nav>
 
@@ -87,13 +88,13 @@
       Zero backend. Zero signup. 100% client-side.
     </p>
     <div class="hero-actions" style="justify-content: center; margin-bottom: 20px;">
-      <a href="app.html" class="btn btn-primary btn-lg">Try It Free — No Signup</a>
-      <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener" class="btn btn-secondary btn-lg">View Source</a>
+      <a href="app.html" class="btn btn-primary btn-lg" data-event="sh_hero_try_free">Try It Free — No Signup</a>
+      <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener" class="btn btn-secondary btn-lg" data-event="sh_hero_view_source">View Source</a>
     </div>
     <div class="install-box">
       <span style="color: var(--text-muted);">CLI:</span>
       <code>npx schemalens-cli diff old.sql new.sql --dialect postgres</code>
-      <button class="copy-btn" onclick="navigator.clipboard.writeText('npx schemalens-cli diff old.sql new.sql --dialect postgres')" style="background: var(--surface-hover); border: none; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: var(--text);">Copy</button>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText('npx schemalens-cli diff old.sql new.sql --dialect postgres')" data-event="sh_cli_copy" style="background: var(--surface-hover); border: none; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: var(--text);">Copy</button>
     </div>
     <p class="hero-note">MIT licensed. Your schemas never leave your browser.</p>
   </div>
