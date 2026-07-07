@@ -152,6 +152,7 @@ const pages = [
   { path: '/tools/schema-change-adr-generator.html', name: 'Schema Change ADR Generator' },
   { path: '/tools/mcp-config-generator.html', name: 'MCP Config Generator' },
   { path: '/tools/schema-diff-precommit-hook.html', name: 'Schema Diff Pre-commit Hook Generator' },
+  { path: '/tools/schema-lockfile-generator.html', name: 'Schema Lockfile Generator' },
   { path: '/tools/schema-diff-pr-comment-generator.html', name: 'Schema Diff PR Comment Generator' },
   { path: '/tools/schema-diff-impact-report-generator.html', name: 'Schema Diff Impact Report Generator' },
   { path: '/tools/embed-generator.html', name: 'Embed Generator' },
@@ -1156,4 +1157,21 @@ test('sql joins explained blog post loads without errors', async ({ page }) => {
   const bodyText = await page.locator('body').textContent();
   expect(bodyText).toContain('SQL JOINs');
   expect(bodyText).toContain('SchemaLens');
+});
+
+
+test('schema lockfile generator loads sample and produces a SHA-256 fingerprint', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/schema-lockfile-generator.html`);
+  await page.click('text=Load sample schema');
+  await page.click('text=Generate lockfile');
+  await expect(page.locator('#hashValue')).toContainText(/[a-f0-9]{64}/);
+  await expect(page.locator('#lockfileOutput')).toContainText('"hashAlgorithm": "sha256"');
+  await expect(page.locator('#ciOutput')).toContainText('Schema Lockfile Verification');
+  await expect(page.locator('#tableCount')).toHaveText('2');
+
+  // The generated CI script must not contain backticks (they break bash execution in GitHub Actions run blocks)
+  const ciScript = await page.locator('#ciOutput').textContent();
+  expect(ciScript).not.toContain('`');
+  expect(ciScript).toContain("return 'create table '");
+  expect(ciScript).toContain('sha256sum');
 });

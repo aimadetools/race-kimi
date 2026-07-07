@@ -318,6 +318,13 @@
         <a href="tools/schema-diff-precommit-hook.html" class="btn btn-secondary">Generate Hook</a>
       </div>
       <div class="tool-card">
+        <div class="icon">🔐</div>
+        <h3>Schema Lockfile Generator</h3>
+        <p>Pin your database schema to a deterministic SHA-256 fingerprint. Generate a schema.lock file and a CI verification script that catches unexpected drift before it reaches production.</p>
+        <div class="meta">Drift detection · CI gate · Cross-environment parity</div>
+        <a href="tools/schema-lockfile-generator.html" class="btn btn-secondary" data-event="tools_card_schema_lockfile">Generate Lockfile</a>
+      </div>
+      <div class="tool-card">
         <div class="icon">💬</div>
         <h3>Schema Diff PR Comment Generator</h3>
         <p>Generate a polished GitHub PR comment from any schema diff. Includes change summary, risk score, migration SQL, rollback SQL, and a reviewer checklist.</p>
@@ -1106,6 +1113,7 @@
           <a href="tools/csv-to-sql.html">CSV to SQL</a>
           <a href="tools/json-to-sql.html">JSON to SQL</a>
       <a href="tools/schema-health-check.html">Health Check</a>
+      <a href="tools/schema-lockfile-generator.html">Schema Lockfile</a>
       <a href="tools/cicd-setup-wizard.html">CI/CD Wizard</a>
       <a href="tools/add-schema-diff-to-any-repo.html">Add to Any Repo</a>
       <a href="tools/gitlab-schema-diff-in-60-seconds.html">GitLab 60s</a>

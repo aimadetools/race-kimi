@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schema Lockfile Generator — Pin & Verify Database Schema State | SchemaLens</title>
+<meta name="description" content="Generate a deterministic schema.lock fingerprint from your SQL dump. Catch unexpected drift in CI, verify schema state across environments, and gate deployments. Free. No signup.">
+<link rel="canonical" href="https://schemalens.tech/tools/schema-lockfile-generator.html">
+<meta property="og:title" content="Schema Lockfile Generator — Pin & Verify Database Schema State">
+<meta property="og:description" content="Generate a deterministic schema.lock fingerprint from your SQL dump. Catch drift in CI and verify schema state across environments.">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-lockfile-generator.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Schema Lockfile Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Deterministic schema fingerprint, SHA-256 hash, CI verification script, Cross-environment drift detection, PostgreSQL MySQL SQLite SQL Server Oracle support",
+  "url": "https://schemalens.tech/tools/schema-lockfile-generator.html"
+}
+</script>
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-hover: #334155;
+  --border: #334155;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --secondary: #8b5cf6;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.announcement-bar {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: #fff;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+.announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+}
+nav a.logo {
+  font-weight: 700; font-size: 1.2rem; color: var(--text); text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+nav a.link { color: var(--text-muted); text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+nav a.link:hover { color: var(--text); }
+.container { max-width: 960px; margin: 0 auto; padding: 24px; }
+header { text-align: center; padding: 48px 24px 32px; }
+header h1 {
+  font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 12px;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 28px; margin-bottom: 20px;
+}
+.card h2 { font-size: 1.15rem; margin-bottom: 16px; }
+.card h3 { font-size: 1rem; margin: 20px 0 10px; color: var(--text-muted); }
+
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+@media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+
+.input-group { display: flex; flex-direction: column; gap: 6px; }
+.input-group.full-width { grid-column: 1 / -1; }
+.input-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+.input-group input, .input-group select, .input-group textarea {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; color: var(--text); font-size: 0.95rem; font-family: inherit;
+}
+.input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+  outline: none; border-color: var(--primary);
+}
+.input-group small { font-size: 0.8rem; color: var(--text-muted); }
+
+.checkbox-row {
+  display: flex; align-items: center; gap: 10px; margin-top: 8px;
+}
+.checkbox-row input { width: 18px; height: 18px; accent-color: var(--primary); }
+.checkbox-row label { font-size: 0.9rem; color: var(--text); }
+
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 24px; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; border: none; text-decoration: none; transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+.btn-success { background: var(--success); color: #fff; }
+
+.tab-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.tab-btn {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
+  padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 500;
+}
+.tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.code-box {
+  background: #0b1220; border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; margin-top: 12px;
+}
+.code-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border);
+}
+.code-header span { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+.copy-btn {
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+  padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 500;
+}
+.copy-btn:hover { border-color: var(--primary); }
+pre {
+  margin: 0; padding: 20px; overflow-x: auto;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; font-size: 0.82rem;
+  line-height: 1.6; color: #e2e8f0;
+}
+
+textarea.schema-input {
+  width: 100%; min-height: 220px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px; color: var(--text); font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  font-size: 0.85rem; line-height: 1.5;
+}
+textarea.schema-input:focus { outline: none; border-color: var(--primary); }
+
+.hash-display {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  font-size: 0.85rem; word-break: break-all; margin-top: 12px;
+}
+.hash-display .label { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 6px; display: block; }
+.hash-display .value { color: var(--success); font-weight: 600; }
+
+.steps {
+  display: grid; gap: 14px; margin-top: 16px;
+}
+.step {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px;
+}
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--primary);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+}
+.step-content h4 { font-size: 1rem; margin-bottom: 4px; }
+.step-content p { color: var(--text-muted); font-size: 0.9rem; }
+
+.cta-banner {
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08));
+  border: 1px solid rgba(99,102,241,0.3); border-radius: var(--radius);
+  padding: 24px; text-align: center; margin-top: 24px;
+}
+.cta-banner h3 { margin-bottom: 8px; }
+.cta-banner p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px; }
+
+.footer-note {
+  text-align: center; color: var(--text-muted); font-size: 0.85rem;
+  margin-top: 32px; padding-bottom: 40px;
+}
+
+.feature-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;
+  margin-top: 16px;
+}
+.feature-card {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px;
+}
+.feature-card h4 { font-size: 1rem; margin-bottom: 6px; }
+.feature-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+.msg { margin-top: 12px; min-height: 24px; font-weight: 500; }
+.msg.success { color: var(--success); }
+.msg.error { color: var(--danger); }
+
+.metric-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 16px;
+}
+.metric {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center;
+}
+.metric .num { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+.metric .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<div class="announcement-bar">
+  🏁 Final Week — Lifetime Pro <strong>$39</strong> until July 10. <a href="../launch-special.html">Claim yours →</a>
+</div>
+
+<nav>
+  <a href="/" class="logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="7" fill="url(#logoGrad)"/>
+      <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+    </svg>
+    SchemaLens
+  </a>
+  <div>
+    <a href="../app.html" class="link">App</a>
+    <a href="../pricing.html" class="link">Pricing</a>
+    <a href="../tools.html" class="link">Tools</a>
+    <a href="../github-action.html" class="link">GitHub Action</a>
+  </div>
+</nav>
+
+<header>
+  <h1>Schema Lockfile Generator</h1>
+  <p>Pin your database schema to a deterministic fingerprint. Generate a <code>schema.lock</code> file and a CI verification script that catches unexpected drift before it reaches production.</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>🔐 Generate a schema lockfile</h2>
+    <div class="form-grid">
+      <div class="input-group full-width">
+        <label for="schemaInput">SQL schema dump</label>
+        <textarea id="schemaInput" class="schema-input" placeholder="Paste your CREATE TABLE dump here..."></textarea>
+        <small>Paste a full or partial schema dump. Comments and whitespace are normalized before hashing.</small>
+      </div>
+      <div class="input-group">
+        <label for="projectName">Project / lockfile name</label>
+        <input type="text" id="projectName" value="myapp" placeholder="e.g. myapp">
+        <small>Used in the lockfile metadata and default filename.</small>
+      </div>
+      <div class="input-group">
+        <label for="dialect">SQL dialect</label>
+        <select id="dialect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </div>
+      <div class="input-group full-width">
+        <div class="checkbox-row">
+          <input type="checkbox" id="sortColumns" checked>
+          <label for="sortColumns">Sort columns alphabetically for deterministic hashing</label>
+        </div>
+      </div>
+      <div class="input-group full-width">
+        <div class="checkbox-row">
+          <input type="checkbox" id="stripDefaults" checked>
+          <label for="stripDefaults">Strip DEFAULT values that may vary by environment</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="generateBtn">Generate lockfile</button>
+      <button class="btn btn-secondary" id="loadSampleBtn">Load sample schema</button>
+      <button class="btn btn-secondary" id="copyBtn">Copy lockfile</button>
+      <button class="btn btn-secondary" id="downloadBtn">Download schema.lock</button>
+      <button class="btn btn-secondary" id="shareBtn">Copy share URL</button>
+    </div>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="card" id="resultCard" style="display:none;">
+    <div class="hash-display">
+      <span class="label">SHA-256 fingerprint</span>
+      <span class="value" id="hashValue">-</span>
+    </div>
+    <div class="metric-row">
+      <div class="metric"><div class="num" id="tableCount">0</div><div class="label">Tables</div></div>
+      <div class="metric"><div class="num" id="columnCount">0</div><div class="label">Columns</div></div>
+      <div class="metric"><div class="num" id="indexCount">0</div><div class="label">Indexes</div></div>
+      <div class="metric"><div class="num" id="normalizedSize">0</div><div class="label">Normalized bytes</div></div>
+    </div>
+
+    <h3 style="margin-top:24px;">schema.lock</h3>
+    <div class="code-box">
+      <div class="code-header">
+        <span>schema.lock</span>
+        <button class="copy-btn" id="copyBtn2">Copy</button>
+      </div>
+      <pre><code id="lockfileOutput"></code></pre>
+    </div>
+
+    <h3 style="margin-top:24px;">CI verification script</h3>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:8px;">Add this step to your GitHub Actions, GitLab CI, or other pipeline to fail the build when the schema fingerprint changes.</p>
+    <div class="code-box">
+      <div class="code-header">
+        <span>.github/workflows/schema-verify.yml</span>
+        <button class="copy-btn" id="copyCiBtn">Copy</button>
+      </div>
+      <pre><code id="ciOutput"></code></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⚡ How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Paste your schema dump</h4>
+          <p>Any <code>CREATE TABLE</code>, <code>CREATE INDEX</code>, and <code>ALTER TABLE</code> statements work. We parse and normalize them in your browser.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Generate a deterministic fingerprint</h4>
+          <p>We sort tables, columns, and indexes; strip comments; and compute a SHA-256 hash. The same schema always produces the same hash.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Commit the lockfile and verify in CI</h4>
+          <p>Save <code>schema.lock</code> in your repo. Your CI pipeline regenerates the hash and fails if it drifts from the committed value.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🛡️ What it catches</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>🔴 Unexpected schema drift</h4>
+        <p>Catch when a committed schema dump no longer matches the expected state.</p>
+      </div>
+      <div class="feature-card">
+        <h4>🟡 Missing migration files</h4>
+        <p>If the schema changes but the lockfile was not updated, the build fails.</p>
+      </div>
+      <div class="feature-card">
+        <h4>🔒 Environment parity</h4>
+        <p>Compare schema fingerprints across staging and production to detect drift.</p>
+      </div>
+      <div class="feature-card">
+        <h4>📦 No database required</h4>
+        <p>Works entirely from SQL files — no live connection needed.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-banner">
+    <h3>Want schema diff reports on every pull request?</h3>
+    <p>The free SchemaLens GitHub Action goes beyond lockfiles — it comments the full semantic diff, migration SQL, and risk score directly on PRs.</p>
+    <a href="../github-action.html" class="btn btn-primary" data-event="lockfile_github_action_cta">Add the GitHub Action →</a>
+    <a href="../tools/schema-diff-precommit-hook.html" class="btn btn-secondary" style="margin-left:10px;" data-event="lockfile_precommit_cta">Try pre-commit hook</a>
+  </div>
+
+  <div class="footer-note">
+    Lockfile hashing runs entirely in your browser. No schema data is sent to SchemaLens unless you use the optional CI script. <a href="../privacy-policy.html">Privacy policy</a> · <a href="../pricing.html">Pricing</a>
+  </div>
+</div>
+
+<script src="../lib/analytics-client.js"></script>
+<script>
+(function() {
+  const $ = id => document.getElementById(id);
+  const schemaInput = $('schemaInput');
+  const projectNameInput = $('projectName');
+  const dialectInput = $('dialect');
+  const sortColumnsInput = $('sortColumns');
+  const stripDefaultsInput = $('stripDefaults');
+  const generateBtn = $('generateBtn');
+  const loadSampleBtn = $('loadSampleBtn');
+  const copyBtn = $('copyBtn');
+  const copyBtn2 = $('copyBtn2');
+  const downloadBtn = $('downloadBtn');
+  const shareBtn = $('shareBtn');
+  const copyCiBtn = $('copyCiBtn');
+  const resultCard = $('resultCard');
+  const hashValue = $('hashValue');
+  const lockfileOutput = $('lockfileOutput');
+  const ciOutput = $('ciOutput');
+  const msgEl = $('msg');
+
+  let currentLockfile = '';
+  let currentCiScript = '';
+  let currentFilename = 'schema.lock';
+
+  const sampleSchema = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  name VARCHAR(100) NOT NULL
+);
+
+CREATE INDEX idx_users_email ON users(email);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  published_at TIMESTAMP
+);
+
+CREATE INDEX idx_posts_user_id ON posts(user_id);`;
+
+  function setMsg(text, type) {
+    msgEl.textContent = text;
+    msgEl.className = 'msg ' + (type || '');
+    setTimeout(() => { msgEl.textContent = ''; msgEl.className = 'msg'; }, 3000);
+  }
+
+  function normalizeSchema(sql) {
+    if (!sql) return '';
+    // Remove block comments /* ... */
+    let cleaned = sql.replace(/\/\*[\s\S]*?\*\//g, ' ');
+    // Remove line comments -- ...
+    cleaned = cleaned.replace(/--.*$/gm, ' ');
+    // Lowercase everything for consistency
+    cleaned = cleaned.toLowerCase();
+    // Split by statement terminator and normalize each statement
+    const statements = cleaned
+      .split(';')
+      .map(s => s.replace(/\s+/g, ' ').trim())
+      .filter(s => s.length > 0 && /^\s*create\s+(table|index)\b/.test(s));
+    // Sort alphabetically so order of tables/indexes in the dump does not matter
+    statements.sort((a, b) => a.localeCompare(b));
+    return statements.join(';\n') + (statements.length ? ';' : '');
+  }
+
+  function sortStatementColumns(stmt) {
+    if (!sortColumnsInput.checked) return stmt;
+    // Extract the CREATE TABLE body while respecting nested parentheses (e.g. REFERENCES users(id))
+    const match = stmt.match(/^create\s+table\s+(\S+)\s*\(/i);
+    if (!match) return stmt;
+    const tableName = match[1];
+    let depth = 1;
+    let i = match[0].length;
+    while (i < stmt.length && depth > 0) {
+      if (stmt[i] === '(') depth++;
+      else if (stmt[i] === ')') depth--;
+      i++;
+    }
+    if (depth !== 0) return stmt;
+    const body = stmt.slice(match[0].length, i - 1);
+
+    // Split body into column/constraint clauses, respecting nested parentheses
+    const lines = [];
+    let start = 0;
+    let d = 0;
+    for (let j = 0; j < body.length; j++) {
+      const ch = body[j];
+      if (ch === '(') d++;
+      else if (ch === ')') d--;
+      else if (ch === ',' && d === 0) {
+        lines.push(body.slice(start, j).trim());
+        start = j + 1;
+      }
+    }
+    const last = body.slice(start).trim();
+    if (last) lines.push(last);
+
+    // Keep constraints at the end; sort plain columns
+    const columns = [];
+    const constraints = [];
+    lines.forEach(line => {
+      const lower = line.toLowerCase();
+      if (lower.startsWith('primary key') || lower.startsWith('foreign key') || lower.startsWith('constraint') || lower.startsWith('unique') || lower.startsWith('check')) {
+        constraints.push(line);
+      } else {
+        columns.push(line);
+      }
+    });
+    columns.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    const sortedBody = [...columns, ...constraints].join(', ');
+    return `create table ${tableName} (${sortedBody})`;
+  }
+
+  function stripEnvironmentDefaults(stmt) {
+    if (!stripDefaultsInput.checked) return stmt;
+    // Remove DEFAULT CURRENT_TIMESTAMP / NOW() / UUID() etc. which can vary by environment
+    return stmt.replace(/\s+default\s+[^,)]+/gi, '');
+  }
+
+  function buildCanonicalSchema(sql) {
+    const normalized = normalizeSchema(sql);
+    if (!normalized) return '';
+    const statements = normalized
+      .split(';')
+      .map(s => s.trim())
+      .filter(Boolean)
+      .map(sortStatementColumns)
+      .map(stripEnvironmentDefaults)
+      .map(s => s.replace(/\s+/g, ' ').trim())
+      .sort((a, b) => a.localeCompare(b));
+    return statements.join(';\n') + (statements.length ? ';' : '');
+  }
+
+  function countTables(sql) {
+    const m = sql.match(/\bcreate\s+table\b/gi);
+    return m ? m.length : 0;
+  }
+  function countColumns(sql) {
+    // Approximate by counting lines inside CREATE TABLE parentheses
+    let count = 0;
+    const re = /create\s+table\s+\S+\s*\(([\s\S]+?)\)\s*;/gi;
+    let m;
+    while ((m = re.exec(sql)) !== null) {
+      count += m[1].split(',').length;
+    }
+    return count;
+  }
+  function countIndexes(sql) {
+    const m = sql.match(/\bcreate\s+index\b/gi);
+    return m ? m.length : 0;
+  }
+
+  async function sha256(text) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function generateCiScript(project, hash) {
+    return `name: Schema Lockfile Verification
+
+on:
+  push:
+    paths:
+      - 'db/schema.sql'
+      - 'schema.lock'
+  pull_request:
+    paths:
+      - 'db/schema.sql'
+      - 'schema.lock'
+
+jobs:
+  verify-schema-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify schema fingerprint
+        run: |
+          EXPECTED_HASH="${hash}"
+          # Canonicalize the schema exactly like SchemaLens does in the browser.
+          CANONICAL=$(node -e '
+            const fs = require("fs");
+            const sortColumns = ${sortColumnsInput.checked};
+            const stripDefaults = ${stripDefaultsInput.checked};
+
+            function normalizeSchema(sql) {
+              let cleaned = sql.replace(/\\/\\*[\\s\\S]*?\\*\\//g, " ");
+              cleaned = cleaned.replace(/--.*$/gm, " ");
+              cleaned = cleaned.toLowerCase();
+              const statements = cleaned
+                .split(";")
+                .map(s => s.replace(/\\s+/g, " ").trim())
+                .filter(s => s.length > 0 && /^\\s*create\\s+(table|index)\\b/.test(s));
+              statements.sort((a, b) => a.localeCompare(b));
+              return statements.join(";\\n") + (statements.length ? ";" : "");
+            }
+
+            function sortStatementColumns(stmt) {
+              const m = stmt.match(/^create\\s+table\\s+(\\S+)\\s*\\(/i);
+              if (!m) return stmt;
+              const tableName = m[1];
+              let depth = 1;
+              let i = m[0].length;
+              while (i < stmt.length && depth > 0) {
+                if (stmt[i] === "(") depth++;
+                else if (stmt[i] === ")") depth--;
+                i++;
+              }
+              if (depth !== 0) return stmt;
+              const body = stmt.slice(m[0].length, i - 1);
+              const lines = [];
+              let start = 0;
+              let d = 0;
+              for (let j = 0; j < body.length; j++) {
+                const ch = body[j];
+                if (ch === "(") d++;
+                else if (ch === ")") d--;
+                else if (ch === "," && d === 0) {
+                  lines.push(body.slice(start, j).trim());
+                  start = j + 1;
+                }
+              }
+              const last = body.slice(start).trim();
+              if (last) lines.push(last);
+              const columns = [];
+              const constraints = [];
+              lines.forEach(line => {
+                const lower = line.toLowerCase();
+                if (lower.startsWith("primary key") || lower.startsWith("foreign key") || lower.startsWith("constraint") || lower.startsWith("unique") || lower.startsWith("check")) {
+                  constraints.push(line);
+                } else {
+                  columns.push(line);
+                }
+              });
+              columns.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+              const sortedBody = [...columns, ...constraints].join(", ");
+              return 'create table ' + tableName + ' (' + sortedBody + ')';
+            }
+
+            function stripEnvironmentDefaults(stmt) {
+              return stmt.replace(/\\s+default\\s+[^,)]+/gi, "");
+            }
+
+            function buildCanonicalSchema(sql) {
+              const normalized = normalizeSchema(sql);
+              let statements = normalized.split(";").map(s => s.trim()).filter(Boolean);
+              if (sortColumns) statements = statements.map(sortStatementColumns);
+              if (stripDefaults) statements = statements.map(stripEnvironmentDefaults);
+              statements = statements.map(s => s.replace(/\\s+/g, " ").trim()).sort((a, b) => a.localeCompare(b));
+              return statements.join(";\\n") + (statements.length ? ";" : "");
+            }
+
+            const sql = fs.readFileSync("db/schema.sql", "utf8");
+            console.log(buildCanonicalSchema(sql));
+          ')
+          ACTUAL_HASH=$(printf '%s' "$CANONICAL" | sha256sum | awk '{print $1}')
+          echo "Expected: $EXPECTED_HASH"
+          echo "Actual:   $ACTUAL_HASH"
+          if [ "$ACTUAL_HASH" != "$EXPECTED_HASH" ]; then
+            echo "❌ Schema drift detected. Regenerate schema.lock at https://schemalens.tech/tools/schema-lockfile-generator.html"
+            exit 1
+          fi
+          echo "✅ Schema fingerprint matches."`;
+  }
+
+  async function generate() {
+    const sql = schemaInput.value.trim();
+    if (!sql) {
+      setMsg('Paste a schema dump first.', 'error');
+      return;
+    }
+    const project = projectNameInput.value.trim() || 'myapp';
+    currentFilename = `${project}.lock`;
+    const canonical = buildCanonicalSchema(sql);
+    if (!canonical) {
+      setMsg('No CREATE TABLE or CREATE INDEX statements found.', 'error');
+      return;
+    }
+    const hash = await sha256(canonical);
+    const lockfile = {
+      version: 1,
+      generator: 'https://schemalens.tech/tools/schema-lockfile-generator.html',
+      project: project,
+      dialect: dialectInput.value,
+      generatedAt: new Date().toISOString(),
+      hashAlgorithm: 'sha256',
+      hash: hash,
+      options: {
+        sortColumns: sortColumnsInput.checked,
+        stripDefaults: stripDefaultsInput.checked
+      },
+      tables: countTables(sql),
+      columns: countColumns(sql),
+      indexes: countIndexes(sql),
+      normalizedBytes: canonical.length
+    };
+    currentLockfile = JSON.stringify(lockfile, null, 2);
+    currentCiScript = generateCiScript(project, hash);
+
+    hashValue.textContent = hash;
+    $('tableCount').textContent = countTables(sql);
+    $('columnCount').textContent = countColumns(sql);
+    $('indexCount').textContent = countIndexes(sql);
+    $('normalizedSize').textContent = canonical.length.toLocaleString();
+    lockfileOutput.textContent = currentLockfile;
+    ciOutput.textContent = currentCiScript;
+    resultCard.style.display = 'block';
+
+    if (window.SchemaLensAnalytics) {
+      window.SchemaLensAnalytics.track('schema_lockfile_generated', {
+        dialect: dialectInput.value,
+        sortColumns: sortColumnsInput.checked,
+        stripDefaults: stripDefaultsInput.checked,
+        tables: lockfile.tables
+      });
+    }
+  }
+
+  function copyLockfile() {
+    if (!currentLockfile) return;
+    navigator.clipboard.writeText(currentLockfile).then(() => {
+      setMsg('Lockfile copied!', 'success');
+      if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('schema_lockfile_copy');
+    }).catch(() => setMsg('Failed to copy.', 'error'));
+  }
+
+  function copyCi() {
+    if (!currentCiScript) return;
+    navigator.clipboard.writeText(currentCiScript).then(() => {
+      setMsg('CI script copied!', 'success');
+      if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('schema_lockfile_ci_copy');
+    }).catch(() => setMsg('Failed to copy.', 'error'));
+  }
+
+  function downloadFile() {
+    if (!currentLockfile) return;
+    const blob = new Blob([currentLockfile], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = currentFilename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setMsg('Downloaded ' + currentFilename, 'success');
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('schema_lockfile_download');
+  }
+
+  function shareUrl() {
+    const params = new URLSearchParams();
+    params.set('schema', schemaInput.value);
+    params.set('project', projectNameInput.value);
+    params.set('dialect', dialectInput.value);
+    if (sortColumnsInput.checked) params.set('sortColumns', '1');
+    if (stripDefaultsInput.checked) params.set('stripDefaults', '1');
+    const url = window.location.origin + window.location.pathname + '?' + params.toString();
+    navigator.clipboard.writeText(url).then(() => {
+      setMsg('Share URL copied!', 'success');
+      if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('schema_lockfile_share');
+    }).catch(() => setMsg('Failed to copy URL.', 'error'));
+  }
+
+  function loadSample() {
+    schemaInput.value = sampleSchema;
+    projectNameInput.value = 'blog';
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('schema_lockfile_sample_load');
+    setMsg('Sample schema loaded. Click Generate lockfile.', 'success');
+  }
+
+  generateBtn.addEventListener('click', generate);
+  loadSampleBtn.addEventListener('click', loadSample);
+  copyBtn.addEventListener('click', copyLockfile);
+  copyBtn2.addEventListener('click', copyLockfile);
+  copyCiBtn.addEventListener('click', copyCi);
+  downloadBtn.addEventListener('click', downloadFile);
+  shareBtn.addEventListener('click', shareUrl);
+
+  // Restore from URL params
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('schema')) schemaInput.value = params.get('schema');
+  if (params.get('project')) projectNameInput.value = params.get('project');
+  if (params.get('dialect')) dialectInput.value = params.get('dialect');
+  if (params.has('sortColumns')) sortColumnsInput.checked = params.get('sortColumns') === '1';
+  if (params.has('stripDefaults')) stripDefaultsInput.checked = params.get('stripDefaults') === '1';
+
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('schema_lockfile_page_view');
+  }
+})();
+</script>
+</body>
+</html>

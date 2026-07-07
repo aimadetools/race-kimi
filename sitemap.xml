@@ -1384,6 +1384,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/tools/schema-lockfile-generator.html</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/tools/schema-diff-pr-comment-generator.html</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
