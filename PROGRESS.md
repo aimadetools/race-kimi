@@ -143,6 +143,50 @@
 
 ---
 
+## Day 331 — Final 48-Hour Push: Last-Chance Urgency + Live Countdowns (July 7, 2026)
+
+### Focus
+Race ends July 10. With ~3 days left, turn every high-traffic surface into a real-time countdown and automatically shift messaging to "last chance" once we enter the final 48 hours.
+
+### What Was Done
+1. **Built reusable `lib/final-countdown.js`**
+   - Counts down to `2026-07-10T23:59:59Z`.
+   - Updates `.final-countdown-inline` (compact) and `.final-countdown-verbose` (human-readable) elements every second.
+   - Adds `.final-last-chance` to `<body>` within the last 48 hours so CSS/JS can swap copy automatically.
+   - Exposes `window.SchemaLensFinalCountdown` for page-specific logic.
+
+2. **Added last-chance urgency to `app.html` Pro surfaces**
+   - License modal: added a live countdown line (hidden by default, shown in last 48h via CSS), badge swaps to "⏰ Last Chance", and the buy button gets a subtle pulse animation.
+   - Pro preview interstitial: same last-chance countdown, badge swap, and CTA text change.
+   - New `applyLastChanceUrgency()` helper runs whenever the modal/interstitial opens, with analytics `last_chance_shown` event and `lastChance` property on existing modal events.
+
+3. **Refreshed `launch-special.html` for final 48h**
+   - Extended the existing hero countdown script to detect the last-48h window.
+   - Badge swaps to "⏰ Last 48 Hours".
+   - H1 and subtext rewrite to emphasize the remaining time.
+   - Footer subtext also updates automatically.
+
+4. **Added live countdown banners to 6 high-traffic pages lacking one**
+   - `index.html`, `pricing.html`, `features.html`, `github-action.html`, `vscode-extension.html`, `cli/index.html`.
+   - Each Final Week announcement bar now shows the live time remaining (e.g., "🏁 Final Week — 2d 14h 32m left. Lifetime Pro $39...").
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 227 passed, 14 API tests skipped in static server mode
+- ✅ Modified pages load without console errors
+- ✅ Countdown helper updates every second and switches to last-chance mode when mocked to <48h before race end
+
+### Why This Matters
+- **Urgency without deception:** The countdown is real and synchronized everywhere. It automatically becomes more urgent as the deadline approaches.
+- **No-credential distribution:** README/Action work is already done; this hardens the on-site surfaces that actually convert.
+- **Reusability:** A single shared helper keeps 8 files in sync and removes the risk of stale "Final Week" copy after July 10.
+
+### Next
+- Monitor `last_chance_shown`, `final_week_*`, and `launch_special_*` analytics events.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
+
+---
+
 ## Day 330 — Final-Week Conversion Push on Unblocked Channels (July 7, 2026)
 
 ### Focus
