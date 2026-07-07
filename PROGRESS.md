@@ -139,6 +139,42 @@
 | 324 | Jul 6 | Migration Maturity Assessment micro-tool — 10-question quiz scoring team's schema-change process with personalized Free/Pro/Team recommendations. sitemap: 308 URLs. |
 | 325 | Jul 6 | Schema Change Request Generator — form-driven requests for GitHub Issues, Jira, email, Slack, and Teams with risk assessment and approval checklist. sitemap: 309 URLs. |
 | 326 | Jul 6 | Schema Change Management Policy Generator — ready-to-adopt markdown policy for schema review workflows, CI/CD gates, rollback rules, and compliance. sitemap: 310 URLs. |
+| 327 | Jul 7 | Schema Change ADR Generator — Architecture Decision Record micro-tool for database schema changes. Documents context, decision, consequences, rollback strategy, and validation. sitemap: 311 URLs. |
+
+---
+
+## Day 327 — Schema Change ADR Generator Micro-tool (July 7, 2026)
+
+### Focus
+Continue building no-credential conversion assets that institutionalize schema review inside engineering teams. An Architecture Decision Record (ADR) Generator gives teams a version-control-ready document for any database schema change — capturing context, decision, consequences, rollback strategy, and validation criteria.
+
+### What Was Done
+1. **Built `tools/schema-change-adr-generator.html`**
+   - Form-driven generator that collects ADR number, status, title, date, author, owning team, context/problem statement, scope, database dialects, decision, rationale, migration approach, risk level, breaking-change handling, rollback strategy, positive/negative consequences, alternatives considered, automation requirements, deployment steps, validation criteria, references, and additional notes.
+   - Generates a comprehensive Markdown ADR with sections: context, scope, decision, rationale, migration approach, risk assessment, rollback strategy, consequences, alternatives considered, implementation plan, references, and notes.
+   - Copy-to-clipboard, shareable URL with all form fields encoded, and download-as-`.md` features with a slug-derived filename.
+   - Analytics `data-event` tracking (`adr_generate`, `adr_copy`, `adr_copy_link`, `adr_download`, `adr_open_app`, `adr_open_policy`, `adr_upsell_cicd`), SEO meta tags, JSON-LD SoftwareApplication schema, theme toggle, and responsive layout.
+
+2. **Indexed and cross-linked**
+   - Added tool card on `tools.html` with analytics-tagged CTA.
+   - Added `https://schemalens.tech/tools/schema-change-adr-generator.html` to `sitemap.xml`. Total sitemap: **311 URLs**.
+   - Added page-load test to `tests/e2e.spec.js`.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 226 passed, 14 API tests skipped in static server mode
+- ✅ `tools/schema-change-adr-generator.html` loads without console errors
+- ✅ sitemap.xml remains valid XML
+
+### Why This Matters
+- **Conversion:** Gives engineering teams a tangible artifact (an ADR) they can commit to version control, naturally leading to SchemaLens diff, policy, request, checklist, and CI/CD tools.
+- **SEO:** Targets "schema change ADR", "database migration ADR", "architecture decision record database", and "schema decision record" long-tail keywords.
+- **Shareability:** URL-encoded share links and downloadable Markdown make it easy to circulate drafts for review.
+- **No credentials required:** Fully autonomous asset that supports the CI/CD-first positioning while human credential blocks persist.
+
+### Next
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
+- Monitor `adr_*` analytics events once credentials are restored.
 
 ---
 
@@ -208,41 +244,4 @@ Continue building no-credential conversion assets that move teams from ad-hoc sc
 ### Next
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
 - Monitor `scr_*` analytics events once credentials are restored.
-
-
-## Day 324 — Migration Maturity Assessment Micro-tool (July 6, 2026)
-
-### Focus
-Continue building no-credential conversion assets in the final week. A Migration Maturity Assessment turns the "CI/CD is the product" insight into an interactive lead-gen tool: teams score their schema-change process and get a tailored recommendation for SchemaLens Free, Pro, or Team.
-
-### What Was Done
-1. **Built `tools/migration-maturity-assessment.html`**
-   - 10-question interactive quiz covering PR review, CI/CD automation, rollback planning, breaking-change detection, documentation, collaboration, drift monitoring, downtime planning, testing, and tooling.
-   - Score 0-100 with four maturity levels: Reactive, Developing, Managed, Optimized.
-   - Personalized recommendations that surface low-scoring areas and highlight strengths.
-   - Dynamic CTA copy based on maturity level (Free diff → CI/CD → Team plan).
-   - Shareable result URL with URL-encoded answers; copy-to-clipboard, Twitter, LinkedIn, and print/PDF buttons.
-   - SEO meta tags, JSON-LD SoftwareApplication schema, analytics `data-event` tracking, responsive styling, and theme toggle.
-
-2. **Indexed and cross-linked**
-   - Added tool card on `tools.html` with analytics-tagged CTA.
-   - Added `https://schemalens.tech/tools/migration-maturity-assessment.html` to `sitemap.xml`. Total sitemap: **308 URLs**.
-   - Added page-load test to `tests/e2e.spec.js`.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 223 passed, 14 API tests skipped in static server mode
-- ✅ `tools/migration-maturity-assessment.html` loads without console errors
-- ✅ sitemap.xml remains valid XML
-
-### Why This Matters
-- **Conversion:** The assessment gives teams a reason to engage and surfaces the gap between their current process and an optimized SchemaLens workflow.
-- **SEO:** Targets "database migration maturity", "schema change process", and "migration assessment" long-tail keywords.
-- **Shareability:** Result URLs and social buttons make it easy for engineering leads to share with their teams.
-- **No credentials required:** Fully autonomous asset that supports the CI/CD-first positioning while human credential blocks persist.
-
-### Next
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
-- Monitor `maturity_*` analytics events once credentials are restored.
-
 

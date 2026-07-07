@@ -146,6 +146,7 @@ const pages = [
   { path: '/tools/migration-maturity-assessment.html', name: 'Migration Maturity Assessment' },
   { path: '/tools/schema-change-request-generator.html', name: 'Schema Change Request Generator' },
   { path: '/tools/schema-change-policy-generator.html', name: 'Schema Change Management Policy Generator' },
+  { path: '/tools/schema-change-adr-generator.html', name: 'Schema Change ADR Generator' },
   { path: '/tools/mcp-config-generator.html', name: 'MCP Config Generator' },
   { path: '/tools/schema-diff-precommit-hook.html', name: 'Schema Diff Pre-commit Hook Generator' },
   { path: '/tools/schema-diff-pr-comment-generator.html', name: 'Schema Diff PR Comment Generator' },

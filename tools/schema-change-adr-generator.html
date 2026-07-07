@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Schema Change ADR Generator — Architecture Decision Records for Database Migrations | SchemaLens</title>
+  <meta name="description" content="Generate an Architecture Decision Record (ADR) for any database schema change. Document context, decision, consequences, rollback strategy, and breaking-change handling in Markdown.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-change-adr-generator.html">
+  <meta property="og:title" content="Schema Change ADR Generator — Architecture Decision Records for Database Migrations">
+  <meta property="og:description" content="Generate an Architecture Decision Record (ADR) for database schema changes. Document context, decision, consequences, rollback strategy, and breaking-change handling.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-change-adr-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Schema Change ADR Generator — Architecture Decision Records for Database Migrations">
+  <meta name="twitter:description" content="Generate an Architecture Decision Record (ADR) for database schema changes. Document context, decision, consequences, rollback strategy, and breaking-change handling.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Schema Change ADR Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates Markdown Architecture Decision Records (ADRs) for database schema changes. Captures context, decision, consequences, migration approach, breaking-change handling, rollback strategy, and alternatives considered.",
+    "url": "https://schemalens.tech/tools/schema-change-adr-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 960px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 80px; resize: vertical; font-family: inherit; font-size: 0.95rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; }
+    .checkbox-group label { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; cursor: pointer; font-size: 0.9rem; font-weight: 400; }
+    .checkbox-group label:has(input:checked) { border-color: var(--primary); background: rgba(99,102,241,0.08); }
+    .checkbox-group input { width: auto; margin: 0; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; min-height: 320px; }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Schema Change Architecture Decision Record</h1>
+      <p>Document the why, what, and how of any database schema change. Generate a Markdown ADR your team can commit to version control and reference during incident response.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Decision overview</h2>
+          <div class="field-row">
+            <div class="field">
+              <label for="adrNumber">ADR number <span class="hint">(optional)</span></label>
+              <input type="text" id="adrNumber" placeholder="e.g. 042">
+            </div>
+            <div class="field">
+              <label for="status">Status</label>
+              <select id="status">
+                <option value="proposed">Proposed</option>
+                <option value="accepted" selected>Accepted</option>
+                <option value="deprecated">Deprecated</option>
+                <option value="superseded">Superseded</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="title">Decision title</label>
+              <input type="text" id="title" placeholder="e.g. Add user preferences table with JSONB settings">
+            </div>
+            <div class="field">
+              <label for="date">Date</label>
+              <input type="text" id="date" placeholder="e.g. July 7, 2026">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="author">Author / decider</label>
+              <input type="text" id="author" placeholder="e.g. Platform Engineering Team">
+            </div>
+            <div class="field">
+              <label for="team">Owning team</label>
+              <input type="text" id="team" placeholder="e.g. Platform">
+            </div>
+          </div>
+
+          <h2 style="margin-top:28px;">2. Context and scope</h2>
+
+          <div class="field">
+            <label for="context">Context / problem statement</label>
+            <textarea id="context" placeholder="e.g. The user model has grown to include 15 preference-related columns. This makes the table wide, slows queries, and forces unrelated application teams to coordinate schema changes."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="scope">Scope / affected systems</label>
+            <textarea id="scope" placeholder="e.g. PostgreSQL production and staging databases, user-service API, admin dashboard, and analytics pipeline."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Database dialects affected</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" class="dialect" value="PostgreSQL" checked> PostgreSQL</label>
+              <label><input type="checkbox" class="dialect" value="MySQL"> MySQL</label>
+              <label><input type="checkbox" class="dialect" value="SQLite"> SQLite</label>
+              <label><input type="checkbox" class="dialect" value="SQL Server"> SQL Server</label>
+              <label><input type="checkbox" class="dialect" value="Oracle"> Oracle</label>
+              <label><input type="checkbox" class="dialect" value="Other"> Other</label>
+            </div>
+          </div>
+
+          <h2 style="margin-top:28px;">3. Decision and rationale</h2>
+
+          <div class="field">
+            <label for="decision">Decision</label>
+            <textarea id="decision" placeholder="e.g. Introduce a dedicated user_preferences table with a one-to-one relationship to users, using JSONB for flexible settings storage and partial indexes for common lookups."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="rationale">Rationale</label>
+            <textarea id="rationale" placeholder="e.g. Separating preferences reduces table width, removes cross-team coupling, and lets new preference fields be added without altering the core user table."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="migrationApproach">Migration approach</label>
+            <select id="migrationApproach">
+              <option value="online">Online / zero-downtime with expand/contract</option>
+              <option value="maintenance">Scheduled maintenance window</option>
+              <option value="backfill">Backfill + dual-write period</option>
+              <option value="inplace">In-place DDL change</option>
+              <option value="bluegreen">Blue/green deployment</option>
+            </select>
+          </div>
+
+          <h2 style="margin-top:28px;">4. Risk and rollback</h2>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="riskLevel">Risk level</label>
+              <select id="riskLevel">
+                <option value="low">🟢 Low</option>
+                <option value="medium" selected>🟡 Medium</option>
+                <option value="high">🔴 High</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="breaking">Breaking change?</label>
+              <select id="breaking">
+                <option value="no">No breaking changes</option>
+                <option value="yes-with-compat">Yes, with backward-compatibility layer</option>
+                <option value="yes-coordinated">Yes, requires coordinated deploy</option>
+                <option value="yes">Yes, unavoidable breaking change</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="rollback">Rollback strategy</label>
+            <textarea id="rollback" placeholder="e.g. If the new table causes errors, revert application code to read from users columns and drop user_preferences. Rollback SQL is pre-generated and stored in the runbook."></textarea>
+          </div>
+
+          <h2 style="margin-top:28px;">5. Consequences and alternatives</h2>
+
+          <div class="field">
+            <label for="pros">Positive consequences</label>
+            <textarea id="pros" placeholder="e.g. Smaller user table, faster index scans, fewer cross-team blockers, flexible schema for user settings."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="cons">Negative consequences / trade-offs</label>
+            <textarea id="cons" placeholder="e.g. Additional JOIN on reads, eventual-consistency during backfill, need to update analytics pipeline."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="alternatives">Alternatives considered</label>
+            <textarea id="alternatives" placeholder="e.g. 1) Add more columns to users — rejected due to table bloat. 2) Use a key-value store — rejected due to operational complexity. 3) JSONB column on users — rejected to keep user table stable."></textarea>
+          </div>
+
+          <h2 style="margin-top:28px;">6. Implementation</h2>
+
+          <div class="field">
+            <label>Automation and gates</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" class="automation" value="Schema diff in CI/CD" checked> Schema diff in CI/CD</label>
+              <label><input type="checkbox" class="automation" value="Breaking-change detection gate" checked> Breaking-change detection gate</label>
+              <label><input type="checkbox" class="automation" value="Migration SQL review" checked> Migration SQL review</label>
+              <label><input type="checkbox" class="automation" value="Rollback SQL pre-generated"> Rollback SQL pre-generated</label>
+              <label><input type="checkbox" class="automation" value="Staging validation"> Staging validation</label>
+              <label><input type="checkbox" class="automation" value="Production drift alerts"> Production drift alerts</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="deploymentSteps">Deployment steps</label>
+            <textarea id="deploymentSteps" placeholder="1. Deploy application code to dual-write preferences.
+2. Backfill user_preferences from users table.
+3. Enable reads from new table with feature flag.
+4. Remove old columns in a follow-up migration."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="validation">Validation / success criteria</label>
+            <textarea id="validation" placeholder="e.g. 99.9% of preference reads succeed from new table, zero errors in 24h, query p95 latency under 10ms."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="references">References / related links <span class="hint">(optional)</span></label>
+            <textarea id="references" placeholder="e.g. RFC-123, Jira PROJ-456, SchemaLens diff report URL"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="notes">Additional notes <span class="hint">(optional)</span></label>
+            <textarea id="notes" placeholder="e.g. Decision reviewed in architecture review on July 7, 2026. Revisit after 90 days of production traffic."></textarea>
+          </div>
+
+          <button class="btn btn-primary" id="generateBtn" style="width:100%;" data-event="adr_generate">Generate ADR</button>
+        </div>
+
+        <div class="upsell">
+          <h3>🚀 Turn this ADR into action</h3>
+          <ul>
+            <li>Generate the schema diff and migration SQL for this change in the SchemaLens app.</li>
+            <li>Run schema diff checks automatically on every PR with the SchemaLens GitHub Action.</li>
+            <li>Generate a matching policy, request, and runbook from the schema change toolkit.</li>
+          </ul>
+          <a href="../app.html" class="btn btn-primary" data-event="adr_open_app">Open Schema Diff App →</a>
+          <span style="margin-left:12px;">or <a href="../github-action.html" data-event="adr_upsell_cicd">add to CI/CD</a>.</span>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel" style="position:sticky;top:80px;">
+          <h2>Generated ADR</h2>
+          <div class="output-wrap">
+            <button class="btn btn-secondary btn-copy" id="copyBtn">Copy</button>
+            <div class="output" id="output" tabindex="0" aria-label="Generated ADR"></div>
+          </div>
+          <div class="share-row">
+            <button class="btn btn-secondary" id="copyLinkBtn" data-event="adr_copy_link">Copy Share Link</button>
+            <button class="btn btn-secondary" id="downloadBtn" data-event="adr_download">Download .md</button>
+            <a href="../tools/schema-change-policy-generator.html" class="btn btn-secondary" data-event="adr_open_policy">Generate Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Built with 💜 by <a href="../index.html">SchemaLens</a> ·
+        <a href="../open.html">Open Startup</a> ·
+        <a href="../privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const getValues = (selector) => Array.from(document.querySelectorAll(selector))
+      .filter(el => el.checked).map(el => el.value);
+
+    const els = {
+      adrNumber: document.getElementById('adrNumber'),
+      status: document.getElementById('status'),
+      title: document.getElementById('title'),
+      date: document.getElementById('date'),
+      author: document.getElementById('author'),
+      team: document.getElementById('team'),
+      context: document.getElementById('context'),
+      scope: document.getElementById('scope'),
+      decision: document.getElementById('decision'),
+      rationale: document.getElementById('rationale'),
+      migrationApproach: document.getElementById('migrationApproach'),
+      riskLevel: document.getElementById('riskLevel'),
+      breaking: document.getElementById('breaking'),
+      rollback: document.getElementById('rollback'),
+      pros: document.getElementById('pros'),
+      cons: document.getElementById('cons'),
+      alternatives: document.getElementById('alternatives'),
+      deploymentSteps: document.getElementById('deploymentSteps'),
+      validation: document.getElementById('validation'),
+      references: document.getElementById('references'),
+      notes: document.getElementById('notes'),
+      generateBtn: document.getElementById('generateBtn'),
+      copyBtn: document.getElementById('copyBtn'),
+      copyLinkBtn: document.getElementById('copyLinkBtn'),
+      downloadBtn: document.getElementById('downloadBtn'),
+      output: document.getElementById('output'),
+    };
+
+    let currentText = '';
+
+    const statusLabels = {
+      proposed: 'Proposed',
+      accepted: 'Accepted',
+      deprecated: 'Deprecated',
+      superseded: 'Superseded',
+    };
+
+    const approachLabels = {
+      online: 'Online / zero-downtime with expand/contract',
+      maintenance: 'Scheduled maintenance window',
+      backfill: 'Backfill + dual-write period',
+      inplace: 'In-place DDL change',
+      bluegreen: 'Blue/green deployment',
+    };
+
+    const riskLabels = {
+      low: '🟢 Low',
+      medium: '🟡 Medium',
+      high: '🔴 High',
+    };
+
+    const breakingLabels = {
+      no: 'No breaking changes',
+      'yes-with-compat': 'Yes, with backward-compatibility layer',
+      'yes-coordinated': 'Yes, requires coordinated deploy',
+      yes: 'Yes, unavoidable breaking change',
+    };
+
+    function defaultVal(val, fallback) {
+      return (val || '').trim() || fallback;
+    }
+
+    function buildData() {
+      const dialects = getValues('.dialect');
+      const automation = getValues('.automation');
+      return {
+        adrNumber: defaultVal(els.adrNumber.value, 'NNN'),
+        status: els.status.value,
+        statusLabel: statusLabels[els.status.value],
+        title: defaultVal(els.title.value, 'Schema Change Decision'),
+        date: defaultVal(els.date.value, new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })),
+        author: defaultVal(els.author.value, 'Engineering Team'),
+        team: defaultVal(els.team.value, 'Platform Engineering'),
+        context: defaultVal(els.context.value, 'Describe the problem or context that led to this schema change.'),
+        scope: defaultVal(els.scope.value, 'All affected databases, services, and teams.'),
+        dialects: dialects.length ? dialects : ['All supported database engines'],
+        decision: defaultVal(els.decision.value, 'State the decision clearly.'),
+        rationale: defaultVal(els.rationale.value, 'Explain why this decision was chosen.'),
+        migrationApproach: approachLabels[els.migrationApproach.value],
+        riskLevel: els.riskLevel.value,
+        riskLabel: riskLabels[els.riskLevel.value],
+        breaking: breakingLabels[els.breaking.value],
+        rollback: defaultVal(els.rollback.value, 'Describe how to revert the change if something goes wrong.'),
+        pros: defaultVal(els.pros.value, 'List the expected benefits.'),
+        cons: defaultVal(els.cons.value, 'List the trade-offs and risks.'),
+        alternatives: defaultVal(els.alternatives.value, 'List alternatives considered and why they were rejected.'),
+        automation: automation.length ? automation : ['Schema diff in CI/CD'],
+        deploymentSteps: defaultVal(els.deploymentSteps.value, '1. Deploy migration SQL\n2. Validate in staging\n3. Deploy to production\n4. Monitor and alert'),
+        validation: defaultVal(els.validation.value, 'Define how the team will verify the change succeeded.'),
+        references: els.references.value.trim(),
+        notes: els.notes.value.trim(),
+      };
+    }
+
+    function bulletList(text) {
+      return text.split('\n').map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return '';
+        if (/^[-*•]|^\d+[.)]/.test(trimmed)) return trimmed;
+        return '- ' + trimmed;
+      }).filter(Boolean).join('\n');
+    }
+
+    function generateAdr(d) {
+      const lines = [];
+      lines.push(`# ADR-${d.adrNumber}: ${d.title}`);
+      lines.push('');
+      lines.push(`**Status:** ${d.statusLabel}  `);
+      lines.push(`**Date:** ${d.date}  `);
+      lines.push(`**Author:** ${d.author}  `);
+      lines.push(`**Owning team:** ${d.team}  `);
+      lines.push('');
+      lines.push('---');
+      lines.push('');
+
+      lines.push('## Context');
+      lines.push('');
+      lines.push(d.context);
+      lines.push('');
+      lines.push('### Scope and affected systems');
+      lines.push(d.scope);
+      lines.push('');
+      lines.push('### Database engines covered');
+      d.dialects.forEach(x => lines.push(`- ${x}`));
+      lines.push('');
+
+      lines.push('## Decision');
+      lines.push('');
+      lines.push(d.decision);
+      lines.push('');
+      lines.push('### Rationale');
+      lines.push(d.rationale);
+      lines.push('');
+      lines.push('### Migration approach');
+      lines.push(d.migrationApproach);
+      lines.push('');
+
+      lines.push('## Risk assessment');
+      lines.push('');
+      lines.push(`**Risk level:** ${d.riskLabel}  `);
+      lines.push(`**Breaking change:** ${d.breaking}`);
+      lines.push('');
+      lines.push('### Rollback strategy');
+      lines.push(d.rollback);
+      lines.push('');
+
+      lines.push('## Consequences');
+      lines.push('');
+      lines.push('### Positive');
+      lines.push(bulletList(d.pros));
+      lines.push('');
+      lines.push('### Negative / trade-offs');
+      lines.push(bulletList(d.cons));
+      lines.push('');
+
+      lines.push('## Alternatives considered');
+      lines.push('');
+      lines.push(bulletList(d.alternatives));
+      lines.push('');
+
+      lines.push('## Implementation plan');
+      lines.push('');
+      lines.push('### Automation and gates');
+      d.automation.forEach(x => lines.push(`- ${x}`));
+      lines.push('');
+      lines.push('### Deployment steps');
+      lines.push(bulletList(d.deploymentSteps));
+      lines.push('');
+      lines.push('### Validation / success criteria');
+      lines.push(d.validation);
+      lines.push('');
+
+      if (d.references) {
+        lines.push('## References');
+        lines.push('');
+        lines.push(bulletList(d.references));
+        lines.push('');
+      }
+
+      if (d.notes) {
+        lines.push('## Notes');
+        lines.push('');
+        lines.push(d.notes);
+        lines.push('');
+      }
+
+      lines.push('---');
+      lines.push('');
+      lines.push('_Generated with [SchemaLens](https://schemalens.tech) — free schema diff and migration tools for engineering teams._');
+      return lines.join('\n');
+    }
+
+    function generate() {
+      currentText = generateAdr(buildData());
+      els.output.textContent = currentText;
+      els.output.style.whiteSpace = 'pre-wrap';
+    }
+
+    function trackEvent(name, props) {
+      if (window.analytics && typeof window.analytics.track === 'function') {
+        window.analytics.track(name, props || {});
+      }
+      if (window.va) {
+        try { window.va('event', { name, ...props }); } catch (e) {}
+      }
+    }
+
+    function getAllInputs() {
+      return [
+        els.adrNumber, els.status, els.title, els.date, els.author, els.team,
+        els.context, els.scope, els.decision, els.rationale, els.migrationApproach,
+        els.riskLevel, els.breaking, els.rollback, els.pros, els.cons, els.alternatives,
+        els.deploymentSteps, els.validation, els.references, els.notes,
+        ...document.querySelectorAll('.dialect, .automation')
+      ];
+    }
+
+    function buildShareParams() {
+      const params = new URLSearchParams();
+      const set = (k, v) => { if (v) params.set(k, encodeURIComponent(v)); };
+      set('adrNumber', els.adrNumber.value);
+      params.set('status', els.status.value);
+      set('title', els.title.value);
+      set('date', els.date.value);
+      set('author', els.author.value);
+      set('team', els.team.value);
+      set('context', els.context.value);
+      set('scope', els.scope.value);
+      getValues('.dialect').forEach(v => params.append('dialect', v));
+      set('decision', els.decision.value);
+      set('rationale', els.rationale.value);
+      params.set('migrationApproach', els.migrationApproach.value);
+      params.set('riskLevel', els.riskLevel.value);
+      params.set('breaking', els.breaking.value);
+      set('rollback', els.rollback.value);
+      set('pros', els.pros.value);
+      set('cons', els.cons.value);
+      set('alternatives', els.alternatives.value);
+      getValues('.automation').forEach(v => params.append('automation', v));
+      set('deploymentSteps', els.deploymentSteps.value);
+      set('validation', els.validation.value);
+      set('references', els.references.value);
+      set('notes', els.notes.value);
+      return params;
+    }
+
+    function loadFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const get = (k) => {
+        const v = params.get(k);
+        return v === null ? null : decodeURIComponent(v);
+      };
+      const getAll = (k) => params.getAll(k).map(decodeURIComponent);
+      if (params.has('adrNumber')) els.adrNumber.value = get('adrNumber');
+      if (params.has('status')) els.status.value = get('status');
+      if (params.has('title')) els.title.value = get('title');
+      if (params.has('date')) els.date.value = get('date');
+      if (params.has('author')) els.author.value = get('author');
+      if (params.has('team')) els.team.value = get('team');
+      if (params.has('context')) els.context.value = get('context');
+      if (params.has('scope')) els.scope.value = get('scope');
+      if (params.has('decision')) els.decision.value = get('decision');
+      if (params.has('rationale')) els.rationale.value = get('rationale');
+      if (params.has('migrationApproach')) els.migrationApproach.value = get('migrationApproach');
+      if (params.has('riskLevel')) els.riskLevel.value = get('riskLevel');
+      if (params.has('breaking')) els.breaking.value = get('breaking');
+      if (params.has('rollback')) els.rollback.value = get('rollback');
+      if (params.has('pros')) els.pros.value = get('pros');
+      if (params.has('cons')) els.cons.value = get('cons');
+      if (params.has('alternatives')) els.alternatives.value = get('alternatives');
+      if (params.has('deploymentSteps')) els.deploymentSteps.value = get('deploymentSteps');
+      if (params.has('validation')) els.validation.value = get('validation');
+      if (params.has('references')) els.references.value = get('references');
+      if (params.has('notes')) els.notes.value = get('notes');
+
+      document.querySelectorAll('.dialect, .automation').forEach(el => el.checked = false);
+      getAll('dialect').forEach(v => {
+        const el = document.querySelector(`.dialect[value="${v}"]`);
+        if (el) el.checked = true;
+      });
+      getAll('automation').forEach(v => {
+        const el = document.querySelector(`.automation[value="${v}"]`);
+        if (el) el.checked = true;
+      });
+    }
+
+    els.generateBtn.addEventListener('click', () => {
+      trackEvent('adr_generate');
+      generate();
+    });
+
+    els.copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(currentText);
+        els.copyBtn.textContent = 'Copied!';
+        els.copyBtn.classList.add('copied');
+        setTimeout(() => { els.copyBtn.textContent = 'Copy'; els.copyBtn.classList.remove('copied'); }, 1500);
+        trackEvent('adr_copy');
+      } catch (e) {
+        els.copyBtn.textContent = 'Copy failed';
+      }
+    });
+
+    els.copyLinkBtn.addEventListener('click', async () => {
+      try {
+        const url = location.origin + location.pathname + '?' + buildShareParams().toString();
+        await navigator.clipboard.writeText(url);
+        els.copyLinkBtn.textContent = 'Link Copied!';
+        setTimeout(() => { els.copyLinkBtn.textContent = 'Copy Share Link'; }, 1500);
+        trackEvent('adr_copy_link');
+      } catch (e) {
+        els.copyLinkBtn.textContent = 'Copy failed';
+      }
+    });
+
+    els.downloadBtn.addEventListener('click', () => {
+      const titleSlug = els.title.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'schema-change';
+      const blob = new Blob([currentText], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `adr-${titleSlug || 'schema-change'}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      trackEvent('adr_download');
+    });
+
+    getAllInputs().forEach(el => el.addEventListener('input', generate));
+    getAllInputs().forEach(el => el.addEventListener('change', generate));
+
+    loadFromUrl();
+    generate();
+  })();
+  </script>
+</body>
+</html>
