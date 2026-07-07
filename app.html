@@ -1936,13 +1936,13 @@ function getFreeTierLimit() {
     updateInline();
     setInterval(updateInline, 60000);
   })();
-  // July 1 price increase countdown
+  // Race-end July 10 countdown (replaces stale July 1 price-increase countdown)
   (function(){
-    function updateJuly1() {
+    function updateRaceEnd() {
       const now = new Date();
-      const end = new Date('2026-07-01T00:00:00Z');
+      const end = new Date('2026-07-10T23:59:59Z');
       const diff = end - now;
-      const text = diff <= 0 ? 'Price increased' : (function(){
+      const text = diff <= 0 ? 'Race ended' : (function(){
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -1950,8 +1950,8 @@ function getFreeTierLimit() {
       })();
       document.querySelectorAll('.july1-countdown-inline').forEach(el => el.textContent = text);
     }
-    updateJuly1();
-    setInterval(updateJuly1, 60000);
+    updateRaceEnd();
+    setInterval(updateRaceEnd, 60000);
   })();
   </script>
 
@@ -5807,8 +5807,8 @@ function renderMigration(sql, rollbackSql, diff) {
         ${costBannerHTML}
         <p>You've spotted every difference. Now get the complete <code>ALTER TABLE</code> script in one click.<br>${teaserCopy} Pro generates <strong>all ${totalTables} tables</strong> — no copy-paste, no missed columns.</p>
         <div style="background:linear-gradient(90deg,rgba(239,68,68,0.12),rgba(239,68,68,0.06));border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
-          ⏰ <strong>Price increases to $79 on July 1 — <span class="july1-countdown-inline"></span> left</strong>
-          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">Lock in Lifetime Pro at <strong>$39</strong> before the price goes up. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);text-decoration:underline;">Buy now →</a></span>
+          🏁 <strong>Race ends July 10 — <span class="july1-countdown-inline"></span> left</strong>
+          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">Lock in Lifetime Pro at <strong>$39</strong> before the race ends. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);text-decoration:underline;">Buy now →</a></span>
         </div>
         ${getSocialProofHTML()}
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
@@ -7382,7 +7382,7 @@ function renderORM() {
         <p>Export your complete schema to Prisma or Drizzle models in one click.<br>Free plans are limited to ${getFreeTierLimit()} tables. Pro handles <strong>all ${totalTables} tables</strong> with perfect type mapping.</p>
         <div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
           🎉 Lifetime Pro: <strong>$39 once</strong> — pay once, keep forever
-          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">⏰ <strong>Price increases to $79 on July 1 — <span class="july1-countdown-inline"></span> left</strong> — Lock in Lifetime Pro at $39 before it goes up. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);text-decoration:underline;">Buy now →</a></span>
+          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">🏁 <strong>The $100 AI Startup Race ends July 10 — <span class="july1-countdown-inline"></span> left</strong> — Lock in Lifetime Pro at $39 before the race ends. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);text-decoration:underline;">Buy now →</a></span>
         </div>
         ${getSocialProofHTML()}
         <button class="btn btn-primary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>

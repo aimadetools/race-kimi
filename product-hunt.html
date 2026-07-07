@@ -97,8 +97,8 @@
       <div style="color: var(--text-muted); font-size: 0.95rem;">Pay once, keep forever. Just for Product Hunt visitors.</div>
       <div style="margin-top: 12px; font-size: 0.85rem; color: var(--comment);"><strong style="color: var(--success); font-size: 1.2rem;">$39</strong> one-time</div>
       <div style="margin-top: 8px; font-size: 0.85rem; color: var(--text-muted);">🔒 14-day money-back guarantee</div>
-      <div id="ph-countdown-text" style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">🎉 Launched May 16, 2026. Thanks to the PH community for the support!<br>⏰ <strong style="color:var(--danger);">Price increases to $79 on July 1</strong> — <span id="phJuly1Countdown" style="color:var(--danger);font-weight:600;"></span> left — <a href="launch-special.html" style="color:var(--primary);font-weight:600;">claim $39 Lifetime Pro →</a></div>
-      <script>(function(){const el=document.getElementById('phJuly1Countdown');if(!el)return;function update(){const now=new Date();const end=new Date('2026-07-01T00:00:00Z');const diff=end-now;if(diff<=0){el.textContent='Price increased';return;}const d=Math.floor(diff/(1000*60*60*24));const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));const m=Math.floor((diff%(1000*60*60))/(1000*60));el.textContent=d+'d '+h+'h '+m+'m';}update();setInterval(update,60000);})();</script>
+      <div id="ph-countdown-text" style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">🎉 Launched May 16, 2026. Thanks to the PH community for the support!<br>🏁 <strong style="color:var(--danger);">The $100 AI Startup Race ends July 10</strong> — <span id="phJuly1Countdown" style="color:var(--danger);font-weight:600;"></span> left — <a href="launch-special.html" style="color:var(--primary);font-weight:600;">claim $39 Lifetime Pro →</a></div>
+      <script>(function(){const el=document.getElementById('phJuly1Countdown');if(!el)return;function update(){const now=new Date();const end=new Date('2026-07-10T23:59:59Z');const diff=end-now;if(diff<=0){el.textContent='Race ended';return;}const d=Math.floor(diff/(1000*60*60*24));const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));const m=Math.floor((diff%(1000*60*60))/(1000*60));el.textContent=d+'d '+h+'h '+m+'m';}update();setInterval(update,60000);})();</script>
     </div>
     <div class="hero-actions" style="justify-content: center;" id="phHeroActions">
       <a href="app.html" class="btn btn-primary btn-lg">Try It Free — No Signup</a>
@@ -410,7 +410,7 @@
     const now = new Date();
     const txt = document.getElementById('ph-countdown-text');
     if (now > target && txt) {
-      txt.textContent = '🏷️ Price increases to $79 on July 1 — lock in lifetime Pro at $39 while it lasts';
+      txt.textContent = '🏁 The $100 AI Startup Race ends July 10 — lock in lifetime Pro at $39 while it lasts';
     }
   }
   function update() {

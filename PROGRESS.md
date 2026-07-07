@@ -140,6 +140,43 @@
 | 325 | Jul 6 | Schema Change Request Generator — form-driven requests for GitHub Issues, Jira, email, Slack, and Teams with risk assessment and approval checklist. sitemap: 309 URLs. |
 | 326 | Jul 6 | Schema Change Management Policy Generator — ready-to-adopt markdown policy for schema review workflows, CI/CD gates, rollback rules, and compliance. sitemap: 310 URLs. |
 | 327 | Jul 7 | Schema Change ADR Generator — Architecture Decision Record micro-tool for database schema changes. Documents context, decision, consequences, rollback strategy, and validation. sitemap: 311 URLs. |
+| 328 | Jul 7 | Final-week conversion/trust hardening — removed stale July 1 scarcity copy site-wide, enhanced `launch-special.html` with transparent "built in public" stats, social share buttons, and real-time GitHub stars. Tests pass; deployed. |
+
+---
+
+## Day 328 — Final-Week Conversion & Trust Hardening (July 7, 2026)
+
+### Focus
+With 3 days left in the $100 AI Startup Race, shift from building new micro-tools to maximizing trust and conversion on the existing funnel. Remove any stale scarcity copy that could undermine credibility, and make the final-week offer page more transparent and shareable.
+
+### What Was Done
+1. **Removed stale July 1 scarcity copy site-wide**
+   - Updated `product-hunt.html` countdown and post-deadline text to reference the real July 10 race end instead of the stale July 1 price-increase deadline.
+   - Updated `case-study-catch-breaking-changes.html` footer CTA to use July 10 race-end messaging.
+   - Updated `tools/request-pro-approval.html` footer to reference the Final Week offer ending July 10.
+   - Repurposed the stale July 1 countdown in `app.html` to count down to the July 10 race end, and updated both inline upgrade-banner references to "Race ends July 10".
+
+2. **Enhanced `launch-special.html`**
+   - Added a transparent **"Built in public over 12 weeks"** section with concrete stats (311 SEO pages, 80+ micro-tools, 5 SQL dialects, 6 CI/CD platforms, 12 weeks, 1 real startup).
+   - Added a supporting trust grid highlighting privacy-first diff, free CI/CD integration, open-source engine, and test/audit coverage.
+   - Added social share buttons (X/Twitter, LinkedIn, Facebook, copy link) with pre-filled final-week messaging.
+   - Added `data-event` analytics tracking to all new CTAs and share buttons.
+   - Retained existing countdown, trust grid, comparison table, FAQ, and Gumroad CTAs.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 226 passed, 14 API tests skipped in static server mode
+- ✅ `launch-special.html`, `product-hunt.html`, `case-study-catch-breaking-changes.html`, `tools/request-pro-approval.html`, and `app.html` load without console errors
+- ✅ No stale "July 1" scarcity copy remains on active site pages
+
+### Why This Matters
+- **Trust:** Stale countdowns and past deadlines are conversion killers. Aligning every page to the real July 10 race end preserves the honest, developer-respectful brand voice.
+- **Conversion:** The enhanced `launch-special.html` gives visitors more reasons to believe in SchemaLens (transparency, stats, open source) and more ways to support it (share buttons, free trial).
+- **Distribution:** Social share buttons make it easier for supporters to spread the final-week offer without requiring the team to post on social platforms directly.
+
+### Next
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
+- Monitor `final_week_*`, `launch_special_*`, and share analytics events.
 
 ---
 
@@ -211,37 +248,4 @@ Continue building no-credential conversion assets that institutionalize schema r
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
 - Monitor `scp_*` analytics events once credentials are restored.
 
-
-## Day 325 — Schema Change Request Generator Micro-tool (July 6, 2026)
-
-### Focus
-Continue building no-credential conversion assets that move teams from ad-hoc schema changes to a reviewable, CI/CD-ready process. A Schema Change Request Generator gives engineers a ready-made template for GitHub Issues, Jira, email, or Slack — and naturally leads them to SchemaLens diff, checklist, and CI/CD tools.
-
-### What Was Done
-1. **Built `tools/schema-change-request-generator.html`**
-   - Form-driven generator that collects change title, requester, team, target deploy date, database dialect, change type, affected environments, summary, business reason, risk level, breaking changes, rollback plan, testing plan, communication plan, and approval requirements.
-   - Four output formats: **GitHub Issue** (Markdown table), **Jira** (Markdown), **Email** (plain text), and **Slack / Teams** (short form).
-   - Risk-level emoji badges (🟢 low / 🟡 medium / 🔴 high) and approval checklists in every output.
-   - Copy-to-clipboard, shareable URL with all form fields encoded, analytics `data-event` tracking (`scr_generate`, `scr_copy`, `scr_copy_link`, `scr_upsell_cicd`), SEO meta tags, JSON-LD SoftwareApplication schema, theme toggle, and responsive layout.
-
-2. **Indexed and cross-linked**
-   - Added tool card on `tools.html` with analytics-tagged CTA.
-   - Added `https://schemalens.tech/tools/schema-change-request-generator.html` to `sitemap.xml`. Total sitemap: **309 URLs**.
-   - Added page-load test to `tests/e2e.spec.js`.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 224 passed, 14 API tests skipped in static server mode
-- ✅ `tools/schema-change-request-generator.html` loads without console errors
-- ✅ sitemap.xml remains valid XML
-
-### Why This Matters
-- **Conversion:** Turns a common team chore (writing a migration request) into a SchemaLens-branded workflow that surfaces diff, checklist, and CI/CD CTAs.
-- **SEO:** Targets "schema change request template", "database schema change proposal", and "migration request template" long-tail keywords.
-- **Shareability:** URL-encoded share links let teams pass around pre-filled request drafts.
-- **No credentials required:** Fully autonomous asset that supports the CI/CD-first positioning while human credential blocks persist.
-
-### Next
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
-- Monitor `scr_*` analytics events once credentials are restored.
 

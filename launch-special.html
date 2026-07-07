@@ -43,6 +43,20 @@
     .final-note { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; max-width: 720px; margin: 32px auto 0; text-align: center; font-size: 0.95rem; color: var(--text-muted); }
     .github-stars { display: inline-flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; color: var(--text); text-decoration: none; }
     .github-stars:hover { border-color: var(--primary); }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 24px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 16px; text-align: center; }
+    .stat-card .num { display: block; font-size: 2rem; font-weight: 800; color: var(--primary); line-height: 1; font-variant-numeric: tabular-nums; }
+    .stat-card .lbl { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+    .share-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+    .share-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 8px 16px; font-size: 0.85rem; color: var(--text); text-decoration: none; transition: all 0.15s; }
+    .share-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .support-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 20px; text-align: left; }
+    .support-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; align-items: flex-start; gap: 12px; }
+    .support-card .icon { font-size: 1.3rem; flex-shrink: 0; }
+    .support-card h4 { margin: 0 0 4px; font-size: 0.95rem; }
+    .support-card p { margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+    .support-card a { color: var(--primary); font-weight: 600; text-decoration: none; }
+    .support-card a:hover { text-decoration: underline; }
   </style>
   <script type="application/ld+json">
   {
@@ -131,6 +145,56 @@
 </section>
 
 <section class="section" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container" style="max-width: 880px;">
+    <div style="text-align: center; margin-bottom: 32px;">
+      <h2 class="section-title">Built in public over 12 weeks</h2>
+      <p class="section-subtitle">SchemaLens is a real startup built by an AI agent competing in the <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener" style="color:var(--primary);">$100 AI Startup Race</a>. Every commit, decision, and mistake is public. Here is what shipped so far.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><span class="num">311</span><span class="lbl">SEO landing pages</span></div>
+      <div class="stat-card"><span class="num">80+</span><span class="lbl">Free micro-tools</span></div>
+      <div class="stat-card"><span class="num">5</span><span class="lbl">SQL dialects</span></div>
+      <div class="stat-card"><span class="num">6</span><span class="lbl">CI/CD platforms</span></div>
+      <div class="stat-card"><span class="num">12</span><span class="lbl">Weeks of building</span></div>
+      <div class="stat-card"><span class="num">1</span><span class="lbl">Real startup</span></div>
+    </div>
+    <div class="support-grid" style="margin-top: 28px;">
+      <div class="support-card">
+        <div class="icon">🔒</div>
+        <div>
+          <h4>Privacy-first diff</h4>
+          <p>Your schemas never leave your browser. Verify it in DevTools → Network.</p>
+        </div>
+      </div>
+      <div class="support-card">
+        <div class="icon">⚡</div>
+        <div>
+          <h4>Free CI/CD integration</h4>
+          <p>Add the <a href="github-action.html">GitHub Action</a>, <a href="gitlab-schema-diff.html">GitLab CI</a>, or <a href="ci-cd-integration.html">5 other pipelines</a> at no cost.</p>
+        </div>
+      </div>
+      <div class="support-card">
+        <div class="icon">📖</div>
+        <div>
+          <h4>Open source engine</h4>
+          <p>The core diff logic is open source on <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener">GitHub</a>.</p>
+        </div>
+      </div>
+      <div class="support-card">
+        <div class="icon">🧪</div>
+        <div>
+          <h4>Tested &amp; audited</h4>
+          <p>226+ end-to-end tests and 41 unit tests run on every deploy.</p>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:28px;">
+      <a href="app.html" class="btn btn-secondary" data-event="launch_special_try_free">Try the Free Diff Tool →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
   <div class="container">
     <div style="text-align: center; margin-bottom: 40px;">
       <h2 class="section-title">What you get with Pro</h2>
@@ -308,7 +372,17 @@
 
     <div class="final-note">
       <p style="margin:0 0 8px;"><strong>Not ready to buy?</strong></p>
-      <p style="margin:0;">Try the <a href="app.html" style="color:var(--primary);">free schema diff tool</a> first, or <a href="founding-member.html" style="color:var(--success);">unlock Pro free for 7 days by sharing SchemaLens</a>. No pressure — the free version is genuinely useful.</p>
+      <p style="margin:0;">Try the <a href="app.html" data-event="launch_special_try_free_footer" style="color:var(--primary);">free schema diff tool</a> first, or <a href="founding-member.html" data-event="launch_special_share_unlock_footer" style="color:var(--success);">unlock Pro free for 7 days by sharing SchemaLens</a>. No pressure — the free version is genuinely useful.</p>
+    </div>
+
+    <div style="margin-top: 32px; text-align: center;">
+      <p style="margin:0 0 12px; font-size: 0.9rem; color: var(--text-muted);"><strong>Help spread the word</strong> — every share matters in the final days.</p>
+      <div class="share-row">
+        <a href="#" class="share-btn" id="shareX" data-event="launch_special_share_x" aria-label="Share on X">𝕏 Share on X</a>
+        <a href="#" class="share-btn" id="shareLinkedIn" data-event="launch_special_share_linkedin" aria-label="Share on LinkedIn">💼 LinkedIn</a>
+        <a href="#" class="share-btn" id="shareFacebook" data-event="launch_special_share_facebook" aria-label="Share on Facebook">📘 Facebook</a>
+        <a href="#" class="share-btn" id="shareCopy" data-event="launch_special_share_copy" aria-label="Copy link">🔗 Copy link</a>
+      </div>
     </div>
   </div>
 </section>
@@ -392,6 +466,29 @@
       }
     })
     .catch(() => {});
+})();
+
+// Social share buttons
+(function initShareButtons() {
+  const url = encodeURIComponent('https://schemalens.tech/launch-special.html');
+  const text = encodeURIComponent('SchemaLens is in the final days of the $100 AI Startup Race. Lifetime Pro is $39 until July 10. Compare SQL schemas and generate migrations in your browser.');
+  const x = document.getElementById('shareX');
+  if (x) x.href = 'https://twitter.com/intent/tweet?url=' + url + '&text=' + text;
+  const li = document.getElementById('shareLinkedIn');
+  if (li) li.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + url;
+  const fb = document.getElementById('shareFacebook');
+  if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+  const copy = document.getElementById('shareCopy');
+  if (copy) {
+    copy.addEventListener('click', function(e) {
+      e.preventDefault();
+      navigator.clipboard.writeText('https://schemalens.tech/launch-special.html').then(() => {
+        const original = copy.textContent;
+        copy.textContent = '✅ Copied';
+        setTimeout(() => copy.textContent = original, 2000);
+      }).catch(() => {});
+    });
+  }
 })();
 </script>
 </body>
