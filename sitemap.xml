@@ -1600,6 +1600,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/blog/introducing-schema-lockfile-generator.html</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
