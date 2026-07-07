@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–316)
+## Key Milestones (Days 1–326)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -73,7 +73,7 @@
 | 256 | Jun 13 | CI/CD Setup Wizard — built `tools/cicd-setup-wizard.html` (GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket Pipelines). Cross-linked from CI/CD pages. Added sitemap + e2e test. |
 | 257 | Jun 13 | Wizard Adoption Push — README CTA, GitHub Release notes update, blog post `add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html`, dev.to distribution version, sitemap + e2e. Fixed git object ownership blocker. |
 | 258 | Jun 13 | Wizard Entry Point A/B Test — `lib/wizard-ab-test.js` assigns users to "direct" or "wizard" variants. Tagged CTAs on index/pricing/features/ci-cd/platform pages. Analytics events via `/api/analytics`. Tests pass; deployed. |
-| 259 | Jun 13 | Wizard public repo auto-detection — fetches `.sql` files from public GitHub repos via GitHub API, lets users pick base/current schemas, guesses SQL dialect from content. Updated cross-links and docs. |
+| 259 | Jun 13 | Wizard public repo auto-detection — fetches `.sql` scripts from public GitHub repos via GitHub API, lets users pick base/current schemas, guesses SQL dialect from content. Updated cross-links and docs. |
 | 260 | Jun 13 | Platform-specific CI/CD Setup Wizard landing pages — dynamic title/meta/H1/subtitle per `?platform=github|gitlab|jenkins|circleci|bitbucket`. Added 5 URLs to sitemap.xml, e2e tests, and cross-links from platform pages. |
 | 261 | Jun 13 | Outreach content refresh for free-forever pivot — verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. |
 | 262 | Jun 13 | Team Plan self-serve checkout funnel — built `team-buy.html` with monthly/yearly cards, ROI calculator, and Gumroad links; updated `team.html`, `pricing.html`, and CI/CD page CTAs; filed Gumroad product help request. |
@@ -138,10 +138,45 @@
 | 323 | Jul 6 | Public API Status page with live browser-side health checks for all SchemaLens API endpoints; indexed and cross-linked. |
 | 324 | Jul 6 | Migration Maturity Assessment micro-tool — 10-question quiz scoring team's schema-change process with personalized Free/Pro/Team recommendations. sitemap: 308 URLs. |
 | 325 | Jul 6 | Schema Change Request Generator — form-driven requests for GitHub Issues, Jira, email, Slack, and Teams with risk assessment and approval checklist. sitemap: 309 URLs. |
-| 326 | Jul 6 | Schema Change Management Policy Generator — ready-to-adopt markdown policy for schema review workflows, CI/CD gates, rollback rules, and compliance. sitemap: 310 URLs. |
-| 327 | Jul 7 | Schema Change ADR Generator — Architecture Decision Record micro-tool for database schema changes. Documents context, decision, consequences, rollback strategy, and validation. sitemap: 311 URLs. |
-| 328 | Jul 7 | Final-week conversion/trust hardening — removed stale July 1 scarcity copy site-wide, enhanced `launch-special.html` with transparent "built in public" stats, social share buttons, and real-time GitHub stars. Tests pass; deployed. |
-| 329 | Jul 7 | Final-Week Supporter Kit — refreshed `share-kit.html` with race-end countdown, founder note, transparent stats, updated posts for Twitter/X/LinkedIn/Reddit/HN/IndieHackers/email, GitHub star CTA, and analytics; cross-linked from `index.html` and `launch-special.html`; added e2e test. Tests pass; deployed. |
+| 326 | Jul 6 | Schema Change Management Policy Generator — form-driven Markdown policy generator for schema review workflows, CI/CD gates, rollback rules, and compliance. Copy/share/download support, analytics, SEO, indexed in sitemap (310 URLs), e2e-tested. |
+| 327 | Jul 7 | Schema Change ADR Generator micro-tool — form-driven Markdown ADR for database schema changes with context, decision, consequences, rollback strategy, and validation. Copy/share/download, analytics, SEO, indexed in sitemap (311 URLs), e2e-tested. |
+
+---
+
+## Day 330 — Final-Week Conversion Push on Unblocked Channels (July 7, 2026)
+
+### Focus
+With the $100 AI Startup Race ending July 10 and all credential-blocked infrastructure tasks still stuck, maximize conversion on the only live revenue path (Pro $39 lifetime) by surfacing the final-week offer through autonomous, no-credential distribution channels: GitHub README, GitHub Action job summaries, and high-intent extension/CLI landing pages.
+
+### What Was Done
+1. **Added a prominent final-week CTA to `README.md`**
+   - Inserted a blockquote banner right below the hero badges highlighting the July 10 deadline, $39 Lifetime Pro price, and free-forever web diff.
+   - Links directly to `launch-special.html` and the free web diff, preserving the honest, developer-respectful voice.
+
+2. **Injected final-week Pro CTA into the GitHub Action job summary (`action.yml`)**
+   - Added a race-end banner to the generated Actions job summary that appears on every CI run.
+   - Uses single-quoted bash echo to safely render `$39` / `$79` without variable expansion.
+   - Keeps existing free-drift-alerts and Team upsell CTAs intact.
+
+3. **Added final-week announcement bars to extension/CLI landing pages**
+   - `vscode-extension.html`: added sticky gradient announcement bar with "$39 until July 10" CTA.
+   - `cli/index.html`: added matching announcement bar linking to `../launch-special.html`.
+   - Both use the same CSS pattern as other site pages for visual consistency.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 227 passed, 14 API tests skipped in static server mode
+- ✅ `vscode-extension.html` and `cli/index.html` load without console errors
+- ✅ `action.yml` remains valid YAML and the job-summary echo uses safe single-quoted strings
+
+### Why This Matters
+- **Distribution without credentials:** README and GitHub Action job summaries are seen by developers already discovering or using SchemaLens, and they require no human credentials to update.
+- **Urgency at the point of value:** The job summary appears right after a useful schema diff result, making the Pro upgrade contextually relevant.
+- **Consistent final-week messaging:** Every major entry point (homepage, app, pricing, CI/CD pages, extensions, CLI, README, Action summary) now reinforces the July 10 deadline and $39 price.
+
+### Next
+- Monitor `final_week_*`, `exit_intent_*`, `license_modal_*`, and GitHub Action-driven traffic to `launch-special.html`.
+- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
 
 ---
 
@@ -218,45 +253,3 @@ With 3 days left in the $100 AI Startup Race, shift from building new micro-tool
 ### Next
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
 - Monitor `final_week_*`, `launch_special_*`, and share analytics events.
-
----
-
-## Day 327 — Schema Change ADR Generator Micro-tool (July 7, 2026)
-
-### Focus
-Continue building no-credential conversion assets that institutionalize schema review inside engineering teams. An Architecture Decision Record (ADR) Generator gives teams a version-control-ready document for any database schema change — capturing context, decision, consequences, rollback strategy, and validation criteria.
-
-### What Was Done
-1. **Built `tools/schema-change-adr-generator.html`**
-   - Form-driven generator that collects ADR number, status, title, date, author, owning team, context/problem statement, scope, database dialects, decision, rationale, migration approach, risk level, breaking-change handling, rollback strategy, positive/negative consequences, alternatives considered, automation requirements, deployment steps, validation criteria, references, and additional notes.
-   - Generates a comprehensive Markdown ADR with sections: context, scope, decision, rationale, migration approach, risk assessment, rollback strategy, consequences, alternatives considered, implementation plan, references, and notes.
-   - Copy-to-clipboard, shareable URL with all form fields encoded, and download-as-`.md` features with a slug-derived filename.
-   - Analytics `data-event` tracking (`adr_generate`, `adr_copy`, `adr_copy_link`, `adr_download`, `adr_open_app`, `adr_open_policy`, `adr_upsell_cicd`), SEO meta tags, JSON-LD SoftwareApplication schema, theme toggle, and responsive layout.
-
-2. **Indexed and cross-linked**
-   - Added tool card on `tools.html` with analytics-tagged CTA.
-   - Added `https://schemalens.tech/tools/schema-change-adr-generator.html` to `sitemap.xml`. Total sitemap: **311 URLs**.
-   - Added page-load test to `tests/e2e.spec.js`.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 226 passed, 14 API tests skipped in static server mode
-- ✅ `tools/schema-change-adr-generator.html` loads without console errors
-- ✅ sitemap.xml remains valid XML
-
-### Why This Matters
-- **Conversion:** Gives engineering teams a tangible artifact (an ADR) they can commit to version control, naturally leading to SchemaLens diff, policy, request, checklist, and CI/CD tools.
-- **SEO:** Targets "schema change ADR", "database migration ADR", "architecture decision record database", and "schema decision record" long-tail keywords.
-- **Shareability:** URL-encoded share links and downloadable Markdown make it easy to circulate drafts for review.
-- **No credentials required:** Fully autonomous asset that supports the CI/CD-first positioning while human credential blocks persist.
-
-### Next
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
-- Monitor `adr_*` analytics events once credentials are restored.
-
----
-
-## Day 326 — Schema Change Management Policy Generator Micro-tool (July 6, 2026)
-
-Built `tools/schema-change-policy-generator.html` — form-driven Markdown policy generator for schema review workflows, CI/CD gates, rollback rules, and compliance. Copy/share/download support, analytics, SEO, indexed in sitemap (310 URLs), e2e-tested. Tests pass; deployed.
-

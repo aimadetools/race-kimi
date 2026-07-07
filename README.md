@@ -30,6 +30,10 @@ Also available as:
 - **Chrome Extension** — [Install from Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
 - **Bookmarklet** — [Get Bookmarklet](https://schemalens.tech/tools/bookmarklet.html) — diff any SQL you see on the web
 
+> 🏁 **Final Week — The $100 AI Startup Race ends July 10.** Lifetime Pro is **$39** until then (then $79). Support an indie developer tool and unlock saved diff history, 80+ micro-tools, shareable links, and priority support. [Claim your Lifetime Pro →](https://schemalens.tech/launch-special.html) · [Try the free web diff →](https://schemalens.tech/app.html)
+>
+> 💚 **Free forever:** unlimited visual schema diff, full migration SQL, rollback scripts, and ORM export — no account, no data leaves your browser.
+
 Built for the [$100 AI Startup Race](https://100aistartup.com) — a 12-week challenge to build a revenue-generating startup on a $90 budget.
 
 ---
