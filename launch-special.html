@@ -103,11 +103,11 @@
 
 <section class="hero" style="padding-top: 40px; padding-bottom: 40px;">
   <div class="container" style="text-align: center;">
-    <div class="hero-badge" style="margin-bottom: 16px; background: linear-gradient(90deg, rgba(239,68,68,0.15), rgba(239,68,68,0.08)); color: var(--danger); border: 1px solid rgba(239,68,68,0.3);">
+    <div id="launchHeroBadge" class="hero-badge" style="margin-bottom: 16px; background: linear-gradient(90deg, rgba(239,68,68,0.15), rgba(239,68,68,0.08)); color: var(--danger); border: 1px solid rgba(239,68,68,0.3);">
       <span class="dot" style="background: var(--danger);"></span>
       🏁 Final Week — $100 AI Startup Race ends July 10
     </div>
-    <h1>Get Lifetime Pro for <strong style="color:var(--primary)">$39</strong> once.<br><span style="font-size:0.7em; color:var(--text-muted)">Pay once, keep forever. No recurring bills.</span></h1>
+    <h1 id="launchHeroTitle">Get Lifetime Pro for <strong style="color:var(--primary)">$39</strong> once.<br><span style="font-size:0.7em; color:var(--text-muted)">Pay once, keep forever. No recurring bills.</span></h1>
     <p style="max-width: 640px; margin: 0 auto 24px;">
       SchemaLens Pro gives you unlimited schema diffs, full migration generation,
       exports (Markdown, PDF, SQL, JSON, Prisma, Drizzle), shareable links, and breaking-change detection.
@@ -415,13 +415,38 @@
 
 <script src="lib/analytics-client.js"></script>
 <script src="lib/ref-tracking.js"></script>
+<script src="lib/final-countdown.js"></script>
 <script>
 (function initCountdown() {
   const el = document.getElementById('launchCountdown');
   if (!el) return;
   const target = new Date(el.dataset.target || '2026-07-10T23:59:59Z');
+  const LAST_CHANCE_MS = 48 * 60 * 60 * 1000;
 
   function pad(n) { return n.toString().padStart(2, '0'); }
+  function formatCompact(ms) {
+    if (ms <= 0) return 'Race ended';
+    const days = Math.floor(ms / 86400000);
+    const hours = Math.floor((ms % 86400000) / 3600000);
+    const minutes = Math.floor((ms % 3600000) / 60000);
+    if (days > 0) return days + 'd ' + hours + 'h ' + minutes + 'm';
+    const seconds = Math.floor((ms % 60000) / 1000);
+    return hours + 'h ' + pad(minutes) + 'm ' + pad(seconds) + 's';
+  }
+  function updateLastChanceState() {
+    const remaining = target.getTime() - Date.now();
+    const lastChance = remaining > 0 && remaining <= LAST_CHANCE_MS;
+    const badge = document.getElementById('launchHeroBadge');
+    const title = document.getElementById('launchHeroTitle');
+    const sub = document.getElementById('launch-special-subtext');
+    const foot = document.getElementById('launch-special-footer');
+    if (lastChance) {
+      if (badge) badge.innerHTML = '<span class="dot" style="background: var(--danger);"></span> ⏰ Last 48 Hours — $100 AI Startup Race ends July 10';
+      if (title) title.innerHTML = 'Last chance: Lifetime Pro for <strong style="color:var(--primary)">$39</strong> once.<br><span style="font-size:0.7em; color:var(--text-muted)">The race ends in ' + formatCompact(remaining) + '. Lock in the price now.</span>';
+      if (sub) sub.textContent = '⏰ Only ' + formatCompact(remaining) + ' left at $39. After July 10, Lifetime Pro moves to $79.';
+      if (foot) foot.textContent = '⏰ Only ' + formatCompact(remaining) + ' left at $39. After July 10, Lifetime Pro moves to $79.';
+    }
+  }
   function updateText() {
     const now = new Date();
     const sub = document.getElementById('launch-special-subtext');
@@ -450,6 +475,7 @@
     document.getElementById('cdH').textContent = pad(h);
     document.getElementById('cdM').textContent = pad(m);
     document.getElementById('cdS').textContent = pad(s);
+    updateLastChanceState();
   }
   update();
   setInterval(update, 1000);

@@ -32,7 +32,14 @@
   }
   </script>
   <link rel="stylesheet" href="style.css">
+  <script src="lib/final-countdown.js"></script>
   <style>
+    /* Last-chance urgency styles */
+    .last-chance-pulse { animation: lastChancePulse 1.5s infinite; }
+    @keyframes lastChancePulse { 0%,100%{ box-shadow: 0 0 0 0 rgba(239,68,68,0.4); } 50%{ box-shadow: 0 0 0 8px rgba(239,68,68,0); } }
+    #licenseModalCountdown, #proInterstitialCountdown { display: none; }
+    .final-last-chance #licenseModalCountdown, .final-last-chance #proInterstitialCountdown { display: block; }
+
     /* App-specific styles */
     .app-header {
       padding: 32px 0 16px;
@@ -2209,8 +2216,9 @@ CREATE TABLE users (
 
   <div class="modal-overlay" id="licenseModal">
     <div class="modal">
-      <div style="display:inline-block;background:rgba(239,68,68,0.1);border:1px solid var(--danger);border-radius:20px;padding:4px 12px;font-size:0.75rem;color:var(--danger);font-weight:700;margin-bottom:10px;">🏁 Final Week — ends July 10</div>
+      <div id="licenseModalBadge" style="display:inline-block;background:rgba(239,68,68,0.1);border:1px solid var(--danger);border-radius:20px;padding:4px 12px;font-size:0.75rem;color:var(--danger);font-weight:700;margin-bottom:10px;">🏁 Final Week — ends July 10</div>
       <h3>🔓 Unlock SchemaLens Pro</h3>
+      <p id="licenseModalCountdown" style="font-size:0.8rem;color:var(--danger);font-weight:600;margin-bottom:10px;">⏰ Only <span class="final-countdown-verbose"></span> left at $39</p>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">The web diff is free forever. Pro adds power features for developers who live in their database. <strong>Lifetime Pro is $39 until July 10</strong>, then $79.</p>
       <ul style="font-size:0.85rem;color:var(--text);margin:0 0 14px 18px;padding:0;line-height:1.7;">
         <li>Unlimited diff history & saved diffs</li>
@@ -2302,8 +2310,9 @@ DROP TABLE audit_logs;</code></pre>
   <div class="modal-overlay" id="proPreviewInterstitial">
     <div class="modal" style="max-width: 720px; max-height: 92vh; overflow-y: auto; padding: 0;">
       <div style="padding: 28px 28px 18px;">
-        <div style="display:inline-block;background:rgba(239,68,68,0.1);border:1px solid var(--danger);border-radius:20px;padding:4px 12px;font-size:0.75rem;color:var(--danger);font-weight:700;margin-bottom:10px;">🏁 Final Week — ends July 10</div>
+        <div id="proInterstitialBadge" style="display:inline-block;background:rgba(239,68,68,0.1);border:1px solid var(--danger);border-radius:20px;padding:4px 12px;font-size:0.75rem;color:var(--danger);font-weight:700;margin-bottom:10px;">🏁 Final Week — ends July 10</div>
         <h3 style="margin-bottom:6px;">🚀 Your schema diff is ready</h3>
+        <p id="proInterstitialCountdown" style="font-size:0.85rem;color:var(--danger);font-weight:700;margin-bottom:10px;">⏰ Only <span class="final-countdown-verbose"></span> left to lock in Lifetime Pro at $39</p>
         <p style="font-size:0.95rem;color:var(--text-muted);margin-bottom:16px;">The visual diff and full migration SQL are <strong>free forever</strong>. Pro adds the power features teams rely on when shipping database changes every week. <strong style="color:var(--text);">Lifetime Pro is $39 until July 10</strong>, then it moves to $79.</p>
 
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="proInterstitialBadges">
@@ -5054,6 +5063,8 @@ function openProPreviewInterstitial(diff, migrationSQL, rollbackSQL, breakingCha
     };
   }
 
+  applyLastChanceUrgency('proInterstitialBadge', 'proInterstitialBuyBtn', 'pro_interstitial');
+
   modal.classList.add('active');
   if (window.SchemaLensAnalytics) {
     window.SchemaLensAnalytics.track('pro_interstitial_shown', {
@@ -5061,7 +5072,8 @@ function openProPreviewInterstitial(diff, migrationSQL, rollbackSQL, breakingCha
       total_changes: total,
       breaking_changes: breakingCount,
       risk_score: risk,
-      tables_changed: tablesChanged.size
+      tables_changed: tablesChanged.size,
+      lastChance: window.SchemaLensFinalCountdown ? window.SchemaLensFinalCountdown.isLastChance() : false
     });
   }
 }
@@ -7832,11 +7844,39 @@ function checkLicense() {
   return valid;
 }
 
+function applyLastChanceUrgency(badgeId, buyBtnId, modalName) {
+  const cd = window.SchemaLensFinalCountdown;
+  if (!cd) return;
+  const lastChance = cd.isLastChance();
+  const badge = badgeId ? document.getElementById(badgeId) : null;
+  const buyBtn = buyBtnId ? document.getElementById(buyBtnId) : null;
+  if (badge) {
+    badge.textContent = lastChance ? '⏰ Last Chance — ends July 10' : '🏁 Final Week — ends July 10';
+  }
+  if (buyBtn) {
+    if (lastChance) {
+      buyBtn.classList.add('last-chance-pulse');
+      if (buyBtn.textContent.indexOf('Last Chance') === -1) {
+        buyBtn.textContent = buyBtn.textContent.replace('Final Week', 'Last Chance');
+      }
+    } else {
+      buyBtn.classList.remove('last-chance-pulse');
+      if (buyBtn.textContent.indexOf('Last Chance') !== -1) {
+        buyBtn.textContent = buyBtn.textContent.replace('Last Chance', 'Final Week');
+      }
+    }
+  }
+  if (window.SchemaLensAnalytics && lastChance) {
+    window.SchemaLensAnalytics.track('last_chance_shown', { modal: modalName || 'unknown' });
+  }
+}
+
 function openLicenseModal() {
   document.getElementById('licenseModal').classList.add('active');
   document.getElementById('licenseInput').value = localStorage.getItem('schemalens_license') || '';
   document.getElementById('licenseInput').focus();
-  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_modal_opened', { variant: window.SchemaLensTeaserVariant || 'teaser', tableLimit: getFreeTierLimit(), paywallVariant: window.SchemaLensPaywallVariant || 'banner' });
+  applyLastChanceUrgency('licenseModalBadge', 'licenseModalBuyBtn', 'license_modal');
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_modal_opened', { variant: window.SchemaLensTeaserVariant || 'teaser', tableLimit: getFreeTierLimit(), paywallVariant: window.SchemaLensPaywallVariant || 'banner', lastChance: window.SchemaLensFinalCountdown ? window.SchemaLensFinalCountdown.isLastChance() : false });
 }
 
 function closeLicenseModal() {
