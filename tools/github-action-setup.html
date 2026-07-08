@@ -265,7 +265,7 @@
       - <span class="key">name</span>: <span class="str">Get base branch schema</span>
         <span class="key">run</span>: |
           git show origin/\${{ github.base_ref }}:${state.schemaPath} > schema-base.sql
-      - <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@main</span>
+      - <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@v1.0.2</span>
         <span class="key">with</span>:
           <span class="key">old-schema-path</span>: <span class="str">schema-base.sql</span>
           <span class="key">new-schema-path</span>: <span class="str">${state.schemaPath}</span>

@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: SchemaLens Schema Diff
-        uses: aimadetools/race-kimi@main
+        uses: aimadetools/race-kimi@v1.0.2
         with:
           # Adjust these paths to point to your base and current schema files.
           old-schema-path: ./schema/base.sql

@@ -32,9 +32,9 @@ Also available as:
 - **Chrome Extension** — [Install from Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
 - **Bookmarklet** — [Get Bookmarklet](https://schemalens.tech/tools/bookmarklet.html) — diff any SQL you see on the web
 
-> 🏁 **Final Week — The $100 AI Startup Race ends July 10.** Lifetime Pro is **$39** until then (then $79). Support an indie developer tool and unlock saved diff history, 80+ micro-tools, shareable links, and priority support. [Claim your Lifetime Pro →](https://schemalens.tech/launch-special.html) · [Try the free web diff →](https://schemalens.tech/app.html)
->
 > 💚 **Free forever:** unlimited visual schema diff, full migration SQL, rollback scripts, and ORM export — no account, no data leaves your browser.
+>
+> 💼 **Lifetime Pro — $39:** unlock saved diff history, 80+ micro-tools, shareable links, PDF/Markdown export, and priority support. [Get Pro →](https://schemalens.tech/pricing.html) · [Try the free web diff →](https://schemalens.tech/app.html)
 
 Built for the [$100 AI Startup Race](https://100aistartup.com) — a 12-week challenge to build a revenue-generating startup on a $90 budget.
 
@@ -86,7 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: aimadetools/race-kimi@main
+      - uses: aimadetools/race-kimi@v1.0.2
         with:
           old-schema-path: ./schema/base.sql
           new-schema-path: ./schema/current.sql
@@ -136,7 +136,7 @@ Set `upload-report: true` and every PR produces a downloadable, self-contained H
 Add one input to the SchemaLens GitHub Action and every diff result becomes a Slack or Microsoft Teams notification — plus a shareable alert page the whole team can bookmark.
 
 ```yaml
-- uses: aimadetools/race-kimi@main
+- uses: aimadetools/race-kimi@v1.0.2
   with:
     old-schema-path: ./schema/base.sql
     new-schema-path: ./schema/current.sql
@@ -158,7 +158,7 @@ Add one input to the SchemaLens GitHub Action and every diff result becomes a Sl
 Pin your schema to a deterministic SHA-256 fingerprint and fail the build when it drifts. Generate a `schema.lock` with the [Schema Lockfile Generator](https://schemalens.tech/tools/schema-lockfile-generator.html), commit it, then add `lockfile-path` to the Action.
 
 ```yaml
-- uses: aimadetools/race-kimi@main
+- uses: aimadetools/race-kimi@v1.0.2
   with:
     old-schema-path: ./schema/base.sql
     new-schema-path: ./schema/current.sql

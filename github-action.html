@@ -111,7 +111,7 @@
     <span class="key">runs-on</span>: <span class="str">ubuntu-latest</span>
     <span class="key">steps</span>:
       - <span class="key">uses</span>: <span class="str">actions/checkout@v4</span>
-      - <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@main</span>
+      - <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@v1.0.2</span>
         <span class="key">with</span>:
           <span class="key">old-schema-path</span>: <span class="str">./schema/base.sql</span>
           <span class="key">new-schema-path</span>: <span class="str">./schema/current.sql</span>
@@ -321,7 +321,7 @@
       <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 14px;">Send every diff result to the SchemaLens hosted webhook and get rich alerts in Slack or Microsoft Teams — plus a shareable alert page your whole team can view. <strong>Free tier includes alerts, shareable URLs, and local dashboard history.</strong> Team tier adds persisted server-side history and higher rate limits.</p>
       <div class="code-block">
 <span class="comment"># Add to your workflow — no license key required for free alerts</span>
-- <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@main</span>
+- <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@v1.0.2</span>
   <span class="key">with</span>:
     <span class="key">old-schema-path</span>: <span class="str">./schema/base.sql</span>
     <span class="key">new-schema-path</span>: <span class="str">./schema/current.sql</span>
@@ -352,7 +352,7 @@
       <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 14px;">Pin your database schema to a deterministic SHA-256 fingerprint and fail the build when it drifts unexpectedly. Generate a <code>schema.lock</code> with the <a href="tools/schema-lockfile-generator.html">Schema Lockfile Generator</a>, commit it, and the Action verifies the fingerprint on every run.</p>
       <div class="code-block">
 <span class="comment"># Add to your workflow — fails when schema.lock no longer matches</span>
-- <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@main</span>
+- <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@v1.0.2</span>
   <span class="key">with</span>:
     <span class="key">old-schema-path</span>: <span class="str">./schema/base.sql</span>
     <span class="key">new-schema-path</span>: <span class="str">./schema/current.sql</span>
@@ -448,7 +448,7 @@
       - <span class="key">name</span>: <span class="str">Get base schema</span>
         <span class="key">run</span>: |
           git show origin/${{ github.base_ref }}:schema.sql > schema-base.sql
-      - <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@main</span>
+      - <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@v1.0.2</span>
         <span class="key">with</span>:
           <span class="key">old-schema-path</span>: <span class="str">schema-base.sql</span>
           <span class="key">new-schema-path</span>: <span class="str">schema.sql</span>
