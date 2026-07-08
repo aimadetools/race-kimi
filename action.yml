@@ -2,7 +2,7 @@ name: 'SchemaLens Schema Diff'
 branding:
   icon: 'shield'
   color: 'indigo'
-description: 'Catch breaking database schema changes in every pull request. Free schema diff for GitHub Actions with full migration SQL, PR comments, Check Runs, and risk scores. Add in one click from the Actions → New workflow tab using the built-in starter workflow. Upgrade to SchemaLens Team for drift alerts and shared workspaces. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.'
+description: 'Catch breaking database schema changes in every pull request. Free schema diff for GitHub Actions with full migration SQL, PR comments, Check Runs, risk scores, HTML report artifacts, and deterministic schema lockfile verification. Add in one click from the Actions → New workflow tab using the built-in starter workflow. Upgrade to SchemaLens Team for drift alerts and shared workspaces. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.'
 inputs:
   old-schema-path:
     description: 'Path to the old schema SQL file'
@@ -254,7 +254,7 @@ runs:
           echo ""
           echo "🔐 **Pin your schema with a deterministic lockfile** — Generate a SHA-256 fingerprint from your SQL dump and verify it in CI. [Schema Lockfile Generator →](https://schemalens.tech/tools/schema-lockfile-generator.html)"
           echo ""
-          echo '> 🏁 **Final Week — The $100 AI Startup Race ends July 10.** Get SchemaLens Lifetime Pro for **$39** (then $79) and unlock saved diff history, 80+ micro-tools, shareable links, and priority support. [Claim Pro →](https://schemalens.tech/launch-special.html)'
+          echo '> 🏆 **SchemaLens is free for CI/CD.** Lifetime Pro unlocks saved diff history, 80+ micro-tools, shareable links, and priority support. [Get Pro →](https://schemalens.tech/pricing.html)'
           echo ""
           echo "💡 **Want a shared workspace with 90-day persisted alert history?** [Upgrade to SchemaLens Team](https://schemalens.tech/team-buy.html)."
           echo ""
