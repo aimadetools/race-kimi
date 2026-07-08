@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Schema Diff — Compare SQL Schemas Online | SchemaLens</title>
+  <meta name="description" content="Free online database schema diff tool. Compare two SQL CREATE TABLE dumps, see visual changes, and generate migration scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+  <link rel="canonical" href="https://schemalens.tech/database-schema-diff.html">
+  <meta property="og:title" content="Database Schema Diff — Compare SQL Schemas Online | SchemaLens">
+  <meta property="og:description" content="Free browser-based database schema diff. Paste two SQL schemas, get a visual diff and ready-to-run migration SQL. No install, no signup.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/database-schema-diff.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Database Schema Diff",
+    "description": "Compare SQL database schemas online and generate migration scripts instantly with SchemaLens.",
+    "url": "https://schemalens.tech/database-schema-diff.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .hero-dsd { text-align: center; padding: 80px 0 48px; }
+    .hero-dsd h1 { font-size: clamp(2.2rem, 5.5vw, 3.4rem); line-height: 1.08; margin-bottom: 18px; }
+    .hero-dsd .lead { color: var(--text-muted); font-size: 1.15rem; max-width: 660px; margin: 0 auto 32px; }
+    .hero-badges { display: inline-flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 32px; }
+    .hero-badges span { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 0.8rem; color: var(--text-muted); }
+    .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+    .trust-row { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; color: var(--text-muted); font-size: 0.85rem; margin-top: 8px; }
+    .trust-row span { display: inline-flex; align-items: center; gap: 6px; }
+    .section-dsd { padding: 64px 0; }
+    .section-dsd.alt { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .section-dsd h2 { text-align: center; margin-bottom: 10px; font-size: clamp(1.6rem, 4vw, 2.2rem); }
+    .section-dsd .section-subtitle { text-align: center; color: var(--text-muted); max-width: 620px; margin: 0 auto 40px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .feature-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .feature-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.55; margin: 0; }
+    .steps { max-width: 720px; margin: 0 auto; }
+    .step { display: flex; gap: 18px; margin-bottom: 28px; align-items: flex-start; }
+    .step .num { flex-shrink: 0; width: 36px; height: 36px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; }
+    .step h3 { font-size: 1.05rem; margin-bottom: 4px; }
+    .step p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; margin: 0; }
+    .dialect-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .dialect-grid span { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.9rem; color: var(--text-muted); }
+    .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.95rem; }
+    .comparison-table th, .comparison-table td { border: 1px solid var(--border); padding: 12px 14px; text-align: left; }
+    .comparison-table th { background: var(--surface); font-weight: 600; }
+    .comparison-table td { color: var(--text-muted); }
+    .comparison-table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+    @media (prefers-color-scheme: dark) { .comparison-table tr:nth-child(even) { background: rgba(255,255,255,0.02); } }
+    .check { color: #10b981; font-weight: 700; }
+    .cross { color: #ef4444; font-weight: 700; }
+    .code-snippet { background: var(--code-bg, #0f172a); color: #e2e8f0; border-radius: var(--radius); padding: 18px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; overflow-x: auto; text-align: left; max-width: 640px; margin: 24px auto 0; border: 1px solid var(--border); }
+    .faq { max-width: 720px; margin: 0 auto; }
+    .faq details { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 12px; }
+    .faq summary { font-weight: 600; cursor: pointer; }
+    .faq p { color: var(--text-muted); margin: 10px 0 0; font-size: 0.92rem; line-height: 1.55; }
+    .final-cta { text-align: center; padding: 64px 0; background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05)); border-top: 1px solid var(--border); }
+    .final-cta h2 { margin-bottom: 12px; }
+    .final-cta p { color: var(--text-muted); max-width: 560px; margin: 0 auto 24px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">Diff</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="team.html">Team</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="app.html" class="nav-cta" data-event="dsd_nav_open_app">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero-dsd">
+  <div class="container">
+    <div class="hero-badges">
+      <span>🆓 Free forever</span>
+      <span>🔒 100% client-side</span>
+      <span>⚡ Instant results</span>
+    </div>
+    <h1>Database schema diff<br><span style="color:var(--primary);">in your browser</span></h1>
+    <p class="lead">Paste two SQL <code>CREATE TABLE</code> dumps and see exactly what changed. Generate ready-to-run migration and rollback scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+    <div class="cta-row">
+      <a href="app.html?example=users" class="btn btn-primary btn-lg" data-event="dsd_hero_try_app">Try free schema diff</a>
+      <a href="tools/cicd-setup-wizard.html" class="btn btn-secondary btn-lg" data-event="dsd_hero_setup_ci">Add to CI/CD</a>
+    </div>
+    <div class="trust-row">
+      <span>✓ No signup</span>
+      <span>✓ No install</span>
+      <span>✓ Data stays private</span>
+    </div>
+  </div>
+</header>
+
+<section class="section-dsd alt">
+  <div class="container">
+    <h2>What gets compared</h2>
+    <p class="section-subtitle">SchemaLens understands real SQL structure, not just text lines. It detects semantic changes that manual diffing misses.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>📋 Tables</h3>
+        <p>Added, dropped, or renamed tables. See the full <code>CREATE TABLE</code> side-by-side with highlights.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔤 Columns</h3>
+        <p>New columns, removed columns, type changes, default values, nullable constraints, and collation changes.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔑 Indexes & Constraints</h3>
+        <p>Primary keys, foreign keys, unique constraints, and index additions or removals.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⚠️ Breaking Changes</h3>
+        <p>Dropped columns, type narrowing, and <code>NOT NULL</code> additions are flagged with risk scores.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📝 Migration SQL</h3>
+        <p>Get <code>ALTER TABLE</code> scripts in your target dialect, plus rollback SQL to reverse the change.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔄 ORM Export</h3>
+        <p>Export the diff as Prisma, Drizzle, TypeORM, or Sequelize schema snippets.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-dsd">
+  <div class="container">
+    <h2>How it works</h2>
+    <p class="section-subtitle">From paste to migration SQL in three steps.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          <h3>Paste your schemas</h3>
+          <p>Copy your <code>CREATE TABLE</code> dumps from any database or ORM into the before/after inputs. SchemaLens auto-detects the SQL dialect.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <h3>Review the visual diff</h3>
+          <p>See tables, columns, indexes, and constraints color-coded by added, removed, or modified. Risky changes are highlighted.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div>
+          <h3>Copy the migration</h3>
+          <p>Grab the generated <code>ALTER TABLE</code> script, rollback SQL, or ORM export. Use it in your migration file or PR.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-dsd alt">
+  <div class="container">
+    <h2>Supported SQL dialects</h2>
+    <p class="section-subtitle">SchemaLens parses and generates migration SQL for the databases teams actually use.</p>
+    <div class="dialect-grid">
+      <span>PostgreSQL</span>
+      <span>MySQL</span>
+      <span>SQLite</span>
+      <span>SQL Server</span>
+      <span>Oracle</span>
+    </div>
+  </div>
+</section>
+
+<section class="section-dsd">
+  <div class="container">
+    <h2>Diff schemas in your CI/CD pipeline</h2>
+    <p class="section-subtitle">Stop breaking changes from reaching production. Add SchemaLens to your pull-request workflow in 60 seconds.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🐙 GitHub Actions</h3>
+        <p>PR comments, Check Run status, and HTML report artifacts. <a href="github-action.html" data-event="dsd_github_action_click">Learn more →</a></p>
+      </div>
+      <div class="feature-card">
+        <h3>🦊 GitLab CI</h3>
+        <p>MR comments, smart skip, and breaking-change gates. <a href="gitlab-schema-diff.html" data-event="dsd_gitlab_click">Learn more →</a></p>
+      </div>
+      <div class="feature-card">
+        <h3>🪣 Bitbucket Pipelines</h3>
+        <p>PR comments and pipeline gates for schema changes. <a href="bitbucket-schema-diff.html" data-event="dsd_bitbucket_click">Learn more →</a></p>
+      </div>
+      <div class="feature-card">
+        <h3>⚙️ Jenkins, CircleCI, Azure DevOps</h3>
+        <p>Console reports, build descriptions, and artifact archiving. <a href="ci-cd-integration.html" data-event="dsd_cicd_click">See all integrations →</a></p>
+      </div>
+    </div>
+    <div class="code-snippet">
+- uses: aimadetools/race-kimi@v1.0.2<br>
+  with:<br>
+&nbsp;&nbsp;base-schema: ./schema/base.sql<br>
+&nbsp;&nbsp;target-schema: ./schema/target.sql<br>
+&nbsp;&nbsp;upload-report: true
+    </div>
+  </div>
+</section>
+
+<section class="section-dsd alt">
+  <div class="container">
+    <h2>Free, Pro, and Team</h2>
+    <p class="section-subtitle">The web diff is free forever. Upgrade when you need power features or team workflows.</p>
+    <table class="comparison-table">
+      <thead>
+        <tr><th>Feature</th><th>Free</th><th>Pro — $39 lifetime</th><th>Team — $29/mo</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Unlimited schema diffs</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Migration + rollback SQL</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Visual diff</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>ORM export</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Export Markdown / PDF / JSON</td><td class="cross">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Diff history & saved links</td><td class="cross">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>80+ micro-tools</td><td class="cross">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Shared team workspace</td><td class="cross">—</td><td class="cross">—</td><td class="check">✓</td></tr>
+        <tr><td>Slack/Teams drift alerts</td><td class="cross">—</td><td class="cross">—</td><td class="check">✓</td></tr>
+      </tbody>
+    </table>
+    <div class="cta-row" style="margin-top:32px;">
+      <a href="pricing.html" class="btn btn-primary" data-event="dsd_compare_pricing">See full pricing</a>
+      <a href="app.html" class="btn btn-secondary" data-event="dsd_compare_try">Try free diff</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-dsd">
+  <div class="container">
+    <h2>Frequently asked questions</h2>
+    <p class="section-subtitle">Quick answers about how SchemaLens compares database schemas.</p>
+    <div class="faq">
+      <details>
+        <summary>Is the database schema diff really free?</summary>
+        <p>Yes. The browser-based diff, migration generation, rollback SQL, and ORM export are free forever with no account required. Pro adds exports, history, and micro-tools.</p>
+      </details>
+      <details>
+        <summary>Do my schemas leave my browser?</summary>
+        <p>No. The core diff runs entirely in your browser. Your SQL is never sent to our servers unless you explicitly use a server-side feature like the live GitHub PR diff viewer.</p>
+      </details>
+      <details>
+        <summary>Can I compare schemas from live databases?</summary>
+        <p>You can paste <code>CREATE TABLE</code> dumps from <code>pg_dump</code>, <code>mysqldump</code>, or any ORM. For live connections, use our GitHub Action or CLI in your CI/CD pipeline.</p>
+      </details>
+      <details>
+        <summary>What counts as a breaking schema change?</summary>
+        <p>Dropped columns or tables, type narrowing, adding <code>NOT NULL</code> without a default, and removing indexes are common breaking changes. SchemaLens flags each with a risk score.</p>
+      </details>
+      <details>
+        <summary>How is this different from a text diff?</summary>
+        <p>Text diff shows changed lines. SchemaLens parses SQL into tables, columns, and constraints and tells you what changed semantically — so a column rename looks like a rename, not a delete + add.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="container">
+    <h2>Compare your database schemas now</h2>
+    <p>Paste two SQL schemas and see the diff in seconds. No signup, no install, no data sent to a server.</p>
+    <div class="cta-row">
+      <a href="app.html?example=users" class="btn btn-primary btn-lg" data-event="dsd_final_try_app">Try free schema diff</a>
+      <a href="tools/cicd-setup-wizard.html" class="btn btn-secondary btn-lg" data-event="dsd_final_setup_ci">Add schema diff to CI/CD</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer" style="padding: 40px 0; border-top: 1px solid var(--border);">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+      <div>
+        <a href="index.html" class="logo" style="font-size:1rem;">
+          <span class="logo-mark">SL</span>
+          SchemaLens
+        </a>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin:8px 0 0;">Database schema diff without the CLI.</p>
+      </div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:0.9rem;">
+        <a href="index.html" data-event="dsd_footer_home">Home</a>
+        <a href="app.html" data-event="dsd_footer_app">App</a>
+        <a href="pricing.html" data-event="dsd_footer_pricing">Pricing</a>
+        <a href="github-action.html" data-event="dsd_footer_action">GitHub Action</a>
+        <a href="open.html" data-event="dsd_footer_open">Open Startup</a>
+      </div>
+    </div>
+    <p style="color:var(--text-muted);font-size:0.8rem;margin-top:24px;text-align:center;">© 2026 SchemaLens. Free forever. <a href="privacy-policy.html" data-event="dsd_footer_privacy">Privacy Policy</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

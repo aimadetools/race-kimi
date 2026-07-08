@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Race to the Finish — SchemaLens Lifetime Pro $39</title>
-  <meta name="description" content="SchemaLens Lifetime Pro for $39 — limited time only. Compare SQL schemas and generate migrations instantly.">
-  <meta property="og:title" content="Race to the Finish — SchemaLens Lifetime Pro $39">
-  <meta property="og:description" content="Help SchemaLens win the $100 AI Startup Race. Lifetime Pro for $39 — one-time payment, forever.">
+  <title>SchemaLens Lifetime Pro — $39 One-Time</title>
+  <meta name="description" content="SchemaLens Lifetime Pro for $39 — one-time payment, forever. Compare SQL schemas and generate migrations instantly.">
+  <meta property="og:title" content="SchemaLens Lifetime Pro — $39 One-Time">
+  <meta property="og:description" content="SchemaLens Lifetime Pro for $39 — one-time payment, forever.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/9-deal.html">
@@ -53,7 +53,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock",
       "url": "https://schemalens.tech/9-deal.html",
-      "validThrough": "2026-07-10T23:59:59Z"
+      "validThrough": "2027-07-08T23:59:59Z"
     }
   }
   </script>
@@ -89,16 +89,9 @@
 
   <main>
     <section class="deal-hero">
-      <div class="badge">🏁 Race to the Finish — Limited Time</div>
+      <div class="badge">Lifetime Pro</div>
       <h1>Lifetime Pro for <span style="color:var(--success);">$39</span></h1>
-      <p>SchemaLens is competing in the <strong>$100 AI Startup Race</strong>. Help us cross the finish line — get Lifetime Pro at 60% off. One payment, forever.</p>
-
-      <div class="countdown" id="countdown">
-        <div class="countdown-unit"><span class="num" id="cdDays">00</span><div class="lbl">Days</div></div>
-        <div class="countdown-unit"><span class="num" id="cdHours">00</span><div class="lbl">Hours</div></div>
-        <div class="countdown-unit"><span class="num" id="cdMinutes">00</span><div class="lbl">Mins</div></div>
-        <div class="countdown-unit"><span class="num" id="cdSeconds">00</span><div class="lbl">Secs</div></div>
-      </div>
+      <p>Get Lifetime Pro at 60% off the equivalent yearly value. One payment, forever.</p>
 
       <div class="pricing-box">
         <div class="price-old">$99</div>
@@ -106,7 +99,7 @@
         <div class="price-save">Save 60%</div>
         <div class="price-note">Lifetime access — no recurring fees<br>14-day money-back guarantee</div>
         <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary btn-lg" style="width:100%;display:block;margin-bottom:12px;" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39</a>
-        <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Offer expires July 10. Instant license delivery.</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Lifetime access. Instant license delivery.</p>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:480px;margin:0 auto;text-align:center;">
@@ -152,12 +145,12 @@
         <p>Absolutely. The Lifetime Pro license covers personal and commercial use.</p>
       </div>
       <div class="faq-item">
-        <h4>Will the price go up after July 10?</h4>
-        <p>Yes. After the race ends, Lifetime Pro returns to $79. Lock in $39 now.</p>
+        <h4>Is this a limited-time price?</h4>
+        <p>Lifetime Pro is $39 for as long as we offer it. We may introduce a higher regular price in the future, but anyone who buys at $39 keeps lifetime access.</p>
       </div>
       <div class="faq-item">
-        <h4>How does this help the race?</h4>
-        <p>SchemaLens is built by an AI competing against 6 others to create a real startup with real revenue. Every sale counts toward the finish line.</p>
+        <h4>Who builds SchemaLens?</h4>
+        <p>SchemaLens is a real startup built by an AI agent in the $100 AI Startup Race. Every commit, decision, and metric is public.</p>
       </div>
     </section>
   </main>
@@ -172,29 +165,6 @@
 
   <script>
   (function() {
-    const end = new Date('2026-07-10T23:59:59Z');
-    function update() {
-      const now = new Date();
-      const diff = end - now;
-      if (diff <= 0) {
-        document.getElementById('cdDays').textContent = '00';
-        document.getElementById('cdHours').textContent = '00';
-        document.getElementById('cdMinutes').textContent = '00';
-        document.getElementById('cdSeconds').textContent = '00';
-        return;
-      }
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
-      document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
-      document.getElementById('cdMinutes').textContent = String(minutes).padStart(2, '0');
-      document.getElementById('cdSeconds').textContent = String(seconds).padStart(2, '0');
-    }
-    setInterval(update, 1000);
-    update();
-
     // Email capture
     const form = document.getElementById('dealForm');
     const emailInput = document.getElementById('dealEmail');

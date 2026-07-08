@@ -389,7 +389,7 @@
           <p style="color: var(--text-muted); font-size: 0.9rem;">Power features for power users</p>
           <div class="price">$39<span> once</span></div>
           <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">Lifetime access. No recurring bills.</p>
-          <p style="background: rgba(239,68,68,0.1); border: 1px solid var(--danger); border-radius: 8px; padding: 8px 12px; font-size: 0.8rem; color: var(--danger); font-weight: 600; margin-bottom: 16px;">🏁 Final Week — Lifetime Pro $39 until July 10, then $79. <a href="launch-special.html" style="color:var(--danger);text-decoration:underline;">See the offer →</a></p>
+          <p style="background: rgba(99,102,241,0.08); border: 1px solid var(--primary); border-radius: 8px; padding: 8px 12px; font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-bottom: 16px;">Lifetime Pro is $39 one-time. <a href="launch-special.html" style="color:var(--primary);text-decoration:underline;">See the offer →</a></p>
           <ul>
             <li>Everything in Free</li>
             <li>Unlimited saved diff history</li>
@@ -432,7 +432,7 @@
           <h3>Lifetime Pro</h3>
           <p style="color: var(--text-muted); font-size: 0.9rem;">Pay once, keep forever</p>
           <div class="price">$39<span>once</span></div>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">Never pay again. Same features as Pro. Price increases to $79 after July 10.</p>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">Never pay again. Same features as Pro. $39 one-time.</p>
           <ul>
             <li>Everything in Pro</li>
             <li>All future Pro updates</li>
@@ -777,23 +777,15 @@
 <script src="lib/ref-tracking.js"></script>
 <script>
 (function(){
-  const now = new Date();
-  const raceEnd = new Date('2026-07-10T23:59:59Z');
-  if (now > raceEnd) return;
-  // Update Pro and Founder cards to show race price
-  document.querySelectorAll('.pricing-card').forEach(card => {
-    const priceEl = card.querySelector('.price');
-    if (priceEl && priceEl.textContent.includes('$39')) {
-      priceEl.innerHTML = '<span style="text-decoration:line-through;color:var(--text-muted);font-size:1.2rem;vertical-align:middle;margin-right:6px;">$99</span>$39<span> once</span>';
-    }
-    const btn = card.querySelector('a[href*="gumroad.com/l/schemalens-lifetime"]');
-    if (btn) btn.href = 'https://gumroad.com/l/schemalens-lifetime?wanted=true';
+  // Ensure Lifetime Pro Gumroad links carry wanted=true
+  document.querySelectorAll('a[href*="gumroad.com/l/schemalens-lifetime"]').forEach(btn => {
+    btn.href = 'https://gumroad.com/l/schemalens-lifetime?wanted=true';
   });
   const faq = document.querySelector('.about-content');
   if (faq) {
     faq.innerHTML = faq.innerHTML.replace(
       'Lifetime Pro is a one-time payment of $39.',
-      'Lifetime Pro is a one-time payment of <strong style="color:var(--success);">$39</strong> during the Race to the Finish (ends July 10). No subscription.'
+      'Lifetime Pro is a one-time payment of <strong style="color:var(--success);">$39</strong>. No subscription.'
     );
   }
 })();

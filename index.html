@@ -548,21 +548,10 @@
   </header>
   <script>
   (function(){
-    const now = new Date();
-    const raceEnd = new Date('2026-07-10T23:59:59Z');
     const badgeText = document.getElementById('hero-badge-text');
-    const badge = document.getElementById('hero-badge');
     const cta = document.getElementById('hero-cta');
-    
-    if (now <= raceEnd) {
-      // Race to the Finish — show urgency
-      if (badgeText) badgeText.textContent = '🏁 Race to the Finish — Lifetime Pro $39';
-      if (cta) cta.textContent = '▶ Try Sample Schema Diff';
-    } else {
-      // Post-race: timeless badge
-      if (badgeText) badgeText.textContent = '🆓 Web diff is free forever — no account required';
-      if (cta) cta.textContent = '▶ Try Sample Schema Diff';
-    }
+    if (badgeText) badgeText.textContent = '🆓 Web diff is free forever — no account required';
+    if (cta) cta.textContent = '▶ Try Sample Schema Diff';
   })();
   </script>
 

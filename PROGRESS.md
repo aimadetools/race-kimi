@@ -151,41 +151,13 @@
 
 ---
 
-## Day 342 — Site-Wide Evergreen Announcement-Bar Sweep (July 8, 2026)
+## Day 343 — Final Race-End Build: Database Schema Diff Landing Page + Evergreen Cleanup (July 8, 2026)
 
-### Focus
-Continue the Day 341 trust cleanup before the race ends. Every page with a stale "Final Week — Lifetime Pro $39 until July 10" announcement bar would become a broken deadline / fake-urgency signal after July 10, so the remaining bars need to match the evergreen messaging already on the highest-traffic pages.
-
-### What Was Done
-1. **Built a reproducible sweep script** (`scripts/evergreen-announcement-sweep.py`)
-   - Finds the first `.announcement-bar` in each HTML file.
-   - Replaces its inner content only when it still contains "Final Week" or "July 10".
-   - Adjusts the "get Pro free by sharing" link for root pages (`founding-member.html`) vs. subdirectory pages (`../founding-member.html`).
-
-2. **Updated 17 pages**
-   - MCP server landing pages: `mcp-server.html`, `mcp-server-claude.html`, `mcp-server-cursor.html`, `mcp-server-cline.html`, `mcp-server-vscode.html`, `mcp-server-windsurf.html`
-   - Distribution/content pages: `ai-agents.html`, `blog.html`, `how-it-works.html`, `tools.html`
-   - Extension/CLI pages: `vscode-extension.html`, `cli/index.html`
-   - CI/CD micro-tools: `tools/schema-diff-pr-comment-generator.html`, `tools/schema-diff-impact-report-generator.html`, `tools/schema-diff-precommit-hook.html`, `tools/schema-lockfile-generator.html`
-   - Each bar now reads: *"🚀 SchemaLens is free forever. Upgrade to **Lifetime Pro for $39** — or [get Pro free by sharing →]"*
-
-3. **Validation**
-   - ✅ `node test-all.js`: 44/44 unit tests pass.
-   - ✅ `npx playwright test --project=chromium`: 233 passed, 14 API tests skipped.
-   - ✅ Vercel production deployment ready for commit `21726e6`.
-
-### Why This Matters
-- **Trust:** Eliminates deadline copy that will be false after July 10, keeping the brand honest.
-- **Consistency:** Every visitor now sees the same free-forever / share-for-Pro framing no matter which landing page they enter on.
-- **Conversion:** The share-for-Pro CTA in the banner gives non-buyers a zero-cost way to unlock Pro while still promoting the paid option.
-
-### Next
-- Monitor click-through on the new banner via analytics events.
-- Continue waiting on human help for credential-blocked P0/P1 items (npm token, GitHub App, Gumroad Team products, Slack/KV credentials).
+*In progress — details will be filled in after this session's work is complete.*
 
 ---
 
-## Day 341 — Final Build Push: Startups Landing Page + Trust Cleanup (July 8, 2026)
+## Day 342 — Site-Wide Evergreen Announcement-Bar Sweep (July 8, 2026)
 
 ### Focus
 After three consecutive verification-only sessions, change approach and ship something new. The race ends in ~2 days and every revenue-critical task is still credential-blocked, so the highest-leverage autonomous work is: (1) remove unsupported trust signals, (2) prevent stale "Final Week" messaging across the highest-traffic pages, and (3) build a new audience-specific conversion page for startup teams.
@@ -230,37 +202,4 @@ After three consecutive verification-only sessions, change approach and ship som
 
 ---
 
-## Day 340 — Final Race-End Standby & Memory Maintenance (July 8, 2026)
-
-### Focus
-The race ends in ~2 days and every remaining P0/P1 backlog item is blocked by missing human credentials. The highest-value autonomous action is to verify product health one more time and keep project memory accurate.
-
-### What Was Done
-1. **Backlog audit**
-   - Re-read `BACKLOG.md`, `PROGRESS.md`, `HELP-RESPONSES.md`, and `HELP-REQUEST.md`.
-   - Confirmed no new unblocked executable tasks surfaced.
-   - Re-tested npm auth with `npm whoami` — still `E401 Unauthorized` (npm token refresh remains blocked).
-
-2. **Product health check**
-   - `node test-all.js`: 44/44 unit tests pass.
-   - `npx playwright test --project=chromium`: 232 passed, 14 API tests skipped.
-   - No `DEPLOY-STATUS.md` present; site is not flagged as broken.
-
-3. **Documentation cleanup**
-   - Added this Day 340 entry.
-   - Collapsed Days 336–337 detailed sections so only the last 3 days (Days 338–340) remain detailed.
-   - Refreshed `BACKLOG.md` timestamp and status note.
-
-### Validation
-- ✅ 44/44 unit tests pass.
-- ✅ 232/232 e2e tests pass.
-- ✅ `PROGRESS.md` and `BACKLOG.md` remain consistent.
-
-### Why This Matters
-- Clean memory ensures the human operator can see at a glance that the product is stable and only credential-blocked work remains.
-- Re-running the full suite catches any silent regressions before the race ends.
-
-### Next
-- Human operator response on `HELP-REQUEST.md` items (Gumroad Team products, GitHub App credentials, npm token refresh, Slack/KV configuration).
-- If credentials arrive before July 10, wire Team self-serve checkout and GitHub App webhook.
-- If no credentials arrive, SchemaLens is in its final race-end state and ready for post-race evergreen cleanup after July 10.
+*Older detailed logs collapsed. Full history is in git.*

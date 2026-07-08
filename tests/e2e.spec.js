@@ -121,6 +121,7 @@ const pages = [
   { path: '/team.html', name: 'Team' },
   { path: '/team-buy.html', name: 'Team Buy' },
   { path: '/startups.html', name: 'Startups Landing' },
+  { path: '/database-schema-diff.html', name: 'Database Schema Diff Landing' },
   { path: '/slack-app.html', name: 'Slack App Landing' },
   { path: '/schema-changelog-generator.html', name: 'Schema Changelog Generator' },
   { path: '/zero-downtime-migration-guide.html', name: 'Zero-Downtime Migration Guide' },
