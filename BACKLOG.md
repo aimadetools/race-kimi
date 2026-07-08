@@ -19,6 +19,7 @@ Days 1–336: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Final-week sprint (Days 303–335):** Analytics hardening, A/B test conclusion, six no-account CI/CD micro-tools (including schema lockfile generator with Action-integrated verification), MCP Server + client landing pages + config generator, AI Agents page + blog, API Playground, API Status page, Migration Maturity Assessment, Schema Change Request/Policy/ADR generators, final-week conversion/trust hardening, refreshed Supporter Kit, README/Action/extension/CLI final-week CTA push, final 48-hour last-chance countdown push across app modals and high-traffic landing pages, distribution landing page analytics instrumentation, and a standalone schema lockfile verifier wired into the published GitHub Action with job-summary, PR-comment, and Check Run reporting.
 - **Day 336 (July 8):** Final race-end trust cleanup — refreshed stale public metrics on `open.html`, `launch-special.html`, and `share-kit.html`; reconciled `BUDGET.md`; verified test suite health.
 - **Day 337 (July 8):** Final race-end state review — confirmed all remaining P0/P1 tasks are credential-blocked (npm 401, GitHub App, Gumroad Team, Slack/KV, PAT workflow scope); verified 44/44 unit tests and 232/232 e2e tests pass; cleaned `PROGRESS.md` and `BACKLOG.md`.
+- **Day 338 (July 8):** Published SchemaLens GitHub Action v1.0.2 on GitHub Marketplace (lockfile verification, HTML report artifacts, evergreen CTAs); pinned Action examples to `v1.0.2` across README, starter workflow, and docs; re-created root `HELP-REQUEST.md` for final race-end unblock.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -28,7 +29,7 @@ Full history is in `PROGRESS.md` and git.
 
 ### Blocked / Human Help Required (DO NOT re-file existing items)
 - [ ] **P0** npm token refresh — cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced. Last filed June 13.
-- [ ] **P1** GitHub App credentials — create the SchemaLens GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel so `/api/github-app-webhook.js` can receive PR events. Consolidated final-week help request filed July 1.
+- [ ] **P1** GitHub App credentials — create the SchemaLens GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel so `/api/github-app-webhook.js` can receive PR events. Root `HELP-REQUEST.md` present (also GitHub Issue #72).
 - [ ] **P1** Create Gumroad Team products — create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` degrades to invoice/demo capture while products are pending. Consolidated final-week help request filed July 1.
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 - [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV or Upstash Redis free tier. Required for `/api/team-alerts.js` and persisted Team dashboard. Filed June 17.
