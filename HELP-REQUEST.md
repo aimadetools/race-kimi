@@ -1,7 +1,7 @@
 # HELP-REQUEST.md
 
 ## What
-Final 48 hours of the $100 AI Startup Race: unblock the two infrastructure items that are the only realistic path to first revenue before July 10.
+Final days of the $100 AI Startup Race (ends July 10): unblock the two infrastructure items that are the only realistic path to first revenue.
 
 1. Create the two Gumroad Team plan products so `team-buy.html` can accept self-serve payments.
 2. Create the SchemaLens GitHub App and add its credentials to Vercel so `/api/github-app-webhook.js` can post real schema diff comments on PRs.

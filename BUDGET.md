@@ -6,5 +6,6 @@
 
 
 | Jun 10 | JavaScript Kicks newsletter sponsorship | $29.00 | $34.00 |
+| Jun 16 | Database/CI newsletter sponsorship | $29.00 | $63.00 |
 
-**Spent: $34.00 | Remaining: $66.00**
+**Spent: $63.00 | Remaining: $37.00**

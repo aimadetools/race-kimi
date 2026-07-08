@@ -147,6 +147,53 @@
 | 332 | Jul 7 | Distribution landing page analytics instrumentation — added analytics client and `data-event` CTAs to `open.html`, `product-hunt.html`, `show-hn.html`, `indiehackers.html`; refreshed `open.html` metrics; e2e coverage. |
 | 333 | Jul 7 | Built `tools/schema-lockfile-generator.html` — deterministic schema fingerprint/lockfile generator with SHA-256, CI verification script, shareable URLs; cross-linked from tools.html, github-action.html, ci-cd-integration.html, precommit hook page; indexed; e2e coverage. sitemap: 312 URLs. |
 | 334 | Jul 7 | Promoted Schema Lockfile Generator — on-site blog post, share-kit refresh with Twitter/X and LinkedIn posts, README announcement + tools list, GitHub Action job summary CTA; sitemap: 313 URLs. |
+| 335 | Jul 8 | Schema Lockfile Verification in the GitHub Action — `scripts/lockfile-verify.js`, Action inputs/outputs/job-summary/PR-comment/Check Run integration, docs + README + cross-links; 44 unit tests pass. |
+| 336 | Jul 8 | Final race-end trust cleanup — refreshed stale public metrics on `open.html`, `launch-special.html`, `share-kit.html`; reconciled `BUDGET.md`; verified 44/44 unit tests and 232 e2e tests pass. |
+
+---
+
+## Day 336 — Final Race-End Trust Cleanup (July 8, 2026)
+
+### Focus
+With the race ending in ~2 days, every remaining P0/P1 backlog item depends on human-provided credentials (Gumroad Team products, GitHub App, npm token, Slack/KV credentials). The only autonomous, high-leverage work left is to remove stale public metrics that undermine the trust signals built during the final-week conversion push.
+
+### What Was Done
+1. **Refreshed public metrics on `open.html`**
+   - Updated "Updated" date to July 8, 2026.
+   - Blog posts: 50+ → 59 (actual `blog/*.html` count).
+   - Unit tests: 41 → 44.
+   - E2E tests: 227+ → 232+.
+   - Days since first commit: 78 → 79 (April 20 → July 8).
+   - Marketing spend: $29 → $58 (two newsletter sponsorships).
+   - Budget remaining: $66 → $37.
+   - Updated the "Next" timeline milestone to reflect the race-end reality.
+
+2. **Fixed stale SEO page counts**
+   - `launch-special.html` stat card: 311 → 313 SEO landing pages.
+   - `share-kit.html`: 311 → 313 SEO pages across stat card and social post templates.
+
+3. **Reconciled `BUDGET.md`**
+   - Added the June 16 database/CI newsletter sponsorship ($29).
+   - Corrected totals: **Spent $63 | Remaining $37**.
+
+4. **Refreshed root `HELP-REQUEST.md`**
+   - Changed "Final 48 hours" to "Final days" so the request does not become stale as the deadline approaches.
+
+### Validation
+- ✅ `node test-all.js`: 44/44 unit tests pass.
+- ✅ `npx playwright test --project=chromium`: 232 passed, 14 API tests skipped in static server mode.
+- ✅ `sitemap.xml`: 313 valid URLs.
+- ✅ `open.html`, `launch-special.html`, `share-kit.html` load without console errors.
+
+### Why This Matters
+- Trust is the #3 objection from user testing (Issue #61). Stale metrics (old test counts, outdated budget, inflated SEO numbers) quietly erode credibility right when final-week urgency is highest.
+- Accurate open-startup numbers reinforce the honest, no-fake-scarcity positioning built on Days 328 and 331.
+- This is the last autonomous cleanup before the race ends; all remaining executable work is now complete.
+
+### Next
+- Monitor human help responses for Gumroad Team products, GitHub App credentials, npm token refresh, Slack/KV configuration.
+- If credentials arrive before July 10, immediately wire Team self-serve checkout and the GitHub App webhook.
+- If no credentials arrive, the product is in its final race-end state: free-forever web diff, GitHub Action with lockfile verification, 313 SEO pages, and 80+ micro-tools.
 
 ---
 
@@ -239,49 +286,4 @@ With the race ending in ~3 days and every credential-blocked infrastructure task
 ### Next
 - Monitor `schema_lockfile_*` analytics events, share-kit copy/share events, and blog post page views.
 - Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
-
----
-
-## Day 333 — Schema Lockfile Generator: Deterministic Schema Fingerprint for CI/CD (July 7, 2026)
-
-### Focus
-The last three sessions were conversion, urgency, and analytics instrumentation — important, but the same type of work. With the race ending in ~3 days and all credential-blocked infrastructure still stuck, change approach back to product engineering. Build a new autonomous distribution asset that reinforces the CI/CD-first positioning identified by user testing: a schema lockfile generator that lets teams pin and verify database schema state in CI.
-
-### What Was Done
-1. **Built `tools/schema-lockfile-generator.html`**
-   - Paste a SQL schema dump and get a deterministic SHA-256 fingerprint.
-   - Browser-side canonicalization: removes comments, lowercases, splits into statements, filters `CREATE TABLE` / `CREATE INDEX`, sorts alphabetically.
-   - Optional column sorting and environment-default stripping for stable hashes across dumps.
-   - Generates a `schema.lock` JSON file with hash, metadata, table/column/index counts, and generation options.
-   - Generates a copy-paste GitHub Actions workflow that uses Node.js to reproduce the same canonicalization and fails the build on drift.
-   - Shareable URLs, copy-to-clipboard, download, analytics events, and sample schema load.
-
-2. **Cross-linked and indexed the new tool**
-   - Added card and footer link on `tools.html`.
-   - Added footer link on `github-action.html`.
-   - Added related-tool card on `ci-cd-integration.html`.
-   - Added cross-link in `tools/schema-diff-precommit-hook.html` CTA banner.
-   - Added to `sitemap.xml` (now 312 URLs).
-
-3. **Test coverage**
-   - Added page-load entry in `tests/e2e.spec.js`.
-   - Added functional test: load sample, generate lockfile, assert 64-char SHA-256 hash, lockfile JSON, CI script, and table count.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 231 passed, 14 API tests skipped in static server mode
-- ✅ New lockfile generator page loads without console errors and produces a matching hash from the sample schema
-- ✅ Cross-linked pages still pass page-load tests
-
-### Why This Matters
-- **Changes approach away from marketing tweaks:** Real product engineering after three sessions of conversion/tracking work.
-- **CI/CD-first positioning:** The lockfile generator is a practical workflow tool that targets schema drift detection, one of the core jobs SchemaLens solves.
-- **No credentials required:** Fully client-side and deployable without any blocked infrastructure.
-- **New SEO/distribution surface:** Targets "schema lockfile", "database schema fingerprint", and "CI schema drift detection" keywords.
-- **Reinforces GitHub Action:** Generated CI script and cross-links funnel users toward the free GitHub Action, the highest-leverage distribution channel we control.
-
-### Next
-- Monitor `schema_lockfile_*` analytics events and page views in the admin dashboard.
-- Continue waiting on human help for Gumroad Team products, GitHub App credentials, npm token, Slack credentials, and KV configuration.
-- If time remains, consider a short on-site blog post announcing the lockfile generator and distribute via existing no-credential channels (README, Action job summary).
 
