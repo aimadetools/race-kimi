@@ -9,7 +9,7 @@
 
 ## ✅ COMPLETED WORK SUMMARY
 
-Days 1–334: Built SchemaLens from core schema diff engine to a CI/CD-first product. Major blocks delivered:
+Days 1–336: Built SchemaLens from core schema diff engine to a CI/CD-first product. Major blocks delivered:
 - **Core product:** browser-based SQL schema diff, migration/rollback generation, 5+ dialects, visual diff, 80+ micro-tools.
 - **Monetization:** Gumroad Pro ($39 lifetime) live; Team product pages degrade to invoice/demo capture while Gumroad Team products are pending.
 - **Distribution:** GitHub Marketplace Action (free diff, report artifacts, drift alerts), VS Code extension live, Chrome extension live, npm CLI packages.
