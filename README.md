@@ -16,7 +16,7 @@
 
 > 🔔 **NEW — Free schema drift alerts:** Add one line to the GitHub Action and get Slack/Teams notifications + shareable alert pages for every diff. [See setup →](https://schemalens.tech/github-action.html#-schema-drift-alerts)
 >
-> 🔐 **NEW — Schema Lockfile Generator:** Pin your database schema to a deterministic SHA-256 fingerprint and catch unexpected drift in CI. [Generate a lockfile →](https://schemalens.tech/tools/schema-lockfile-generator.html)
+> 🔐 **NEW — Schema Lockfile Verification:** Pin your database schema to a deterministic SHA-256 fingerprint and catch unexpected drift in CI. The GitHub Action now supports `lockfile-path` out of the box. [Generate a lockfile →](https://schemalens.tech/tools/schema-lockfile-generator.html) · [Action docs →](https://schemalens.tech/github-action.html#-schema-lockfile-verification)
 
 ![SchemaLens in 60 seconds — free browser schema diff, visual changes, migration SQL, and CI/CD integration](assets/schemalens-60-seconds.gif)
 
@@ -152,6 +152,22 @@ Add one input to the SchemaLens GitHub Action and every diff result becomes a Sl
 - **Team tier** — 90-day server-side alert history, higher rate limits, and admin controls.
 
 [View a sample alert →](https://schemalens.tech/schema-drift-alert.html) · [Open the Team dashboard →](https://schemalens.tech/team/schema-drift-dashboard.html)
+
+### 🔐 Schema Lockfile Verification
+
+Pin your schema to a deterministic SHA-256 fingerprint and fail the build when it drifts. Generate a `schema.lock` with the [Schema Lockfile Generator](https://schemalens.tech/tools/schema-lockfile-generator.html), commit it, then add `lockfile-path` to the Action.
+
+```yaml
+- uses: aimadetools/race-kimi@main
+  with:
+    old-schema-path: ./schema/base.sql
+    new-schema-path: ./schema/current.sql
+    dialect: postgres
+    lockfile-path: ./schema.lock
+    fail-on-lockfile-drift: true
+```
+
+The Action canonicalizes the new schema exactly like the generator and reports expected/actual hashes in the job summary and PR comment.
 
 ---
 
@@ -327,7 +343,7 @@ SchemaLens includes **80+ free browser-based tools** that reuse the same custom 
 78. [Case Study: Catching Breaking Changes](https://schemalens.tech/case-study-catch-breaking-changes.html) — Real-world scenario of how SchemaLens prevented a production outage
 79. [Request Pro Approval Email Generator](https://schemalens.tech/tools/request-pro-approval.html) — Generate a professional manager approval email with ROI data
 80. [Schema Semantic Versioning Calculator](https://schemalens.tech/tools/schema-semver-calculator.html) — Calculate SemVer bumps for schema changes automatically. Breaking = major, additions = minor, fixes = patch
-81. [Schema Lockfile Generator](https://schemalens.tech/tools/schema-lockfile-generator.html) — Generate a deterministic SHA-256 fingerprint from your SQL dump and a CI verification script that catches unexpected schema drift
+81. [Schema Lockfile Generator](https://schemalens.tech/tools/schema-lockfile-generator.html) — Generate a deterministic SHA-256 fingerprint from your SQL dump; verify it in CI with the built-in GitHub Action `lockfile-path` input or the standalone script
 
 ### Migration Guides
 - [MySQL to PostgreSQL Migration Guide](https://schemalens.tech/mysql-to-postgresql-migration.html) — Step-by-step schema and data migration

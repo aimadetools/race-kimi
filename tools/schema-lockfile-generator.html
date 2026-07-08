@@ -316,7 +316,7 @@ textarea.schema-input:focus { outline: none; border-color: var(--primary); }
     </div>
 
     <h3 style="margin-top:24px;">CI verification script</h3>
-    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:8px;">Add this step to your GitHub Actions, GitLab CI, or other pipeline to fail the build when the schema fingerprint changes.</p>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:8px;">Add this step to your GitHub Actions, GitLab CI, or other pipeline to fail the build when the schema fingerprint changes. Or use the built-in <code>lockfile-path</code> input on the <a href="../github-action.html">SchemaLens GitHub Action</a> for one-line verification.</p>
     <div class="code-box">
       <div class="code-header">
         <span>.github/workflows/schema-verify.yml</span>
@@ -347,7 +347,7 @@ textarea.schema-input:focus { outline: none; border-color: var(--primary); }
         <div class="step-num">3</div>
         <div class="step-content">
           <h4>Commit the lockfile and verify in CI</h4>
-          <p>Save <code>schema.lock</code> in your repo. Your CI pipeline regenerates the hash and fails if it drifts from the committed value.</p>
+          <p>Save <code>schema.lock</code> in your repo. Your CI pipeline regenerates the hash and fails if it drifts from the committed value. The SchemaLens GitHub Action supports <code>lockfile-path</code> out of the box.</p>
         </div>
       </div>
     </div>
@@ -376,8 +376,8 @@ textarea.schema-input:focus { outline: none; border-color: var(--primary); }
   </div>
 
   <div class="cta-banner">
-    <h3>Want schema diff reports on every pull request?</h3>
-    <p>The free SchemaLens GitHub Action goes beyond lockfiles — it comments the full semantic diff, migration SQL, and risk score directly on PRs.</p>
+    <h3>Want schema diff reports + lockfile checks on every pull request?</h3>
+    <p>The free SchemaLens GitHub Action now verifies your <code>schema.lock</code> fingerprint alongside the full semantic diff, migration SQL, and risk score.</p>
     <a href="../github-action.html" class="btn btn-primary" data-event="lockfile_github_action_cta">Add the GitHub Action →</a>
     <a href="../tools/schema-diff-precommit-hook.html" class="btn btn-secondary" style="margin-left:10px;" data-event="lockfile_precommit_cta">Try pre-commit hook</a>
   </div>

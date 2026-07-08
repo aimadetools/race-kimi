@@ -23,6 +23,7 @@ global.history = { replaceState: () => {} };
 global.window = { matchMedia: () => ({ matches: false }) };
 
 const fs = require('fs');
+const path = require('path');
 const html = fs.readFileSync('app.html', 'utf8');
 const scripts = [...html.matchAll(/<script>(?!.*src)([\s\S]*?)<\/script>/g)].map(m => m[1]);
 const script = scripts.find(s => s.includes('function parseSQL')) || scripts[scripts.length - 1];
@@ -581,5 +582,111 @@ function testSchemaDiffReportEndpoint() {
 
 if (testSchemaDiffReportEndpoint()) ok += 3;
 
-console.log('\n' + ok + '/41 tests passed');
-process.exit(ok === 41 ? 0 : 1);
+// --- Schema Lockfile Verifier Tests ---
+const { execFileSync } = require('child_process');
+const os = require('os');
+
+function tmpFile(name, content) {
+  const p = path.join(os.tmpdir(), `schemalens-test-${Date.now()}-${name}`);
+  fs.writeFileSync(p, content);
+  return p;
+}
+
+const lockfileSchema = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  title VARCHAR(255) NOT NULL
+);
+
+CREATE INDEX idx_posts_user ON posts(user_id);
+`;
+
+const lockfileJson = {
+  version: 1,
+  generator: 'https://schemalens.tech/tools/schema-lockfile-generator.html',
+  project: 'testapp',
+  dialect: 'postgres',
+  generatedAt: '2026-07-08T03:00:00Z',
+  hashAlgorithm: 'sha256',
+  hash: 'cbcc707c47bfd5c198122a1044831793d381bedb3a05c62a41e8ffe6c735b79f',
+  options: { sortColumns: true, stripDefaults: true },
+  tables: 2, columns: 5, indexes: 1, normalizedBytes: 0
+};
+
+function testLockfileVerifier() {
+  let passed = 0;
+  const schemaPath = tmpFile('schema.sql', lockfileSchema);
+  const lockPath = tmpFile('schema.lock', JSON.stringify(lockfileJson, null, 2));
+
+  try {
+    const out = execFileSync(process.execPath, [
+      path.join(__dirname, 'scripts', 'lockfile-verify.js'),
+      '--schema', schemaPath,
+      '--lockfile', lockPath
+    ], { encoding: 'utf8' });
+    if (out.includes('✅ Schema fingerprint matches') && out.includes(lockfileJson.hash)) {
+      console.log('lockfile-verifier-match: OK');
+      passed++;
+    } else {
+      console.log('lockfile-verifier-match: FAIL — unexpected output:', out);
+    }
+  } catch (e) {
+    console.log('lockfile-verifier-match: FAIL — exited non-zero:', e.stdout, e.stderr);
+  }
+
+  const driftSchema = lockfileSchema.replace(
+    'email VARCHAR(255) NOT NULL,',
+    'email VARCHAR(255) NOT NULL,\n  phone VARCHAR(20),'
+  );
+  const driftSchemaPath = tmpFile('schema-drift.sql', driftSchema);
+  try {
+    execFileSync(process.execPath, [
+      path.join(__dirname, 'scripts', 'lockfile-verify.js'),
+      '--schema', driftSchemaPath,
+      '--lockfile', lockPath
+    ], { encoding: 'utf8' });
+    console.log('lockfile-verifier-drift: FAIL — expected non-zero exit');
+  } catch (e) {
+    const combined = (e.stdout || '') + (e.stderr || '');
+    if (e.status === 1 && combined.includes('Schema drift detected')) {
+      console.log('lockfile-verifier-drift: OK');
+      passed++;
+    } else {
+      console.log('lockfile-verifier-drift: FAIL — unexpected exit/output:', e.status, e.stdout, e.stderr);
+    }
+  }
+
+  try {
+    execFileSync(process.execPath, [
+      path.join(__dirname, 'scripts', 'lockfile-verify.js'),
+      '--schema', schemaPath,
+      '--lockfile', '/tmp/schemalens-nonexistent.lock'
+    ], { encoding: 'utf8' });
+    console.log('lockfile-verifier-missing: FAIL — expected non-zero exit');
+  } catch (e) {
+    const combined = (e.stdout || '') + (e.stderr || '');
+    if (e.status === 1 && combined.includes('Lockfile not found')) {
+      console.log('lockfile-verifier-missing: OK');
+      passed++;
+    } else {
+      console.log('lockfile-verifier-missing: FAIL — unexpected exit/output:', e.status, e.stdout, e.stderr);
+    }
+  }
+
+  try { fs.unlinkSync(schemaPath); } catch (_) {}
+  try { fs.unlinkSync(lockPath); } catch (_) {}
+  try { fs.unlinkSync(driftSchemaPath); } catch (_) {}
+
+  return passed;
+}
+
+ok += testLockfileVerifier();
+
+console.log('\n' + ok + '/44 tests passed');
+process.exit(ok === 44 ? 0 : 1);
