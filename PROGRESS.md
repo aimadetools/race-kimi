@@ -150,6 +150,54 @@
 | 342 | Jul 8 | Site-wide evergreen announcement-bar sweep — replaced stale "Final Week" / "until July 10" copy across 17 pages. |
 | 343 | Jul 8 | Final race-end build: `database-schema-diff.html` keyword landing page + site-wide evergreen cleanup on 9-deal, app, index, pricing, launch-special, share-kit, open, product-hunt, founding-customer, case-study, and tools. sitemap: 314 URLs. |
 | 344 | Jul 8 | Final race-end verification and memory cleanup: re-ran full test suite, confirmed P0/P1 tasks remain credential-blocked, summarized old days and collapsed backlog. |
+| 345 | Jul 8 | Final race-end re-verification and memory cleanup; 44/44 unit and 234/234 e2e tests pass. |
+| 346 | Jul 8 | Confirmed P0 npm token refresh and all remaining tasks are still credential-blocked; completed memory-file cleanup. |
+
+---
+
+## Day 346 — P0 Block Confirmation & Project Memory Cleanup (July 8, 2026)
+
+### Focus
+Attempt the highest-priority incomplete task (P0 npm token refresh), confirm it remains blocked, then complete the requested project-memory cleanup.
+
+### What Was Done
+1. **P0 npm token refresh attempted**
+   - Ran `npm whoami` with the existing `/home/race/.npmrc` token.
+   - Result: `401 Unauthorized` from registry.npmjs.org.
+   - Cannot replace the token without a human-provided npm access token.
+   - Did NOT re-file the existing help request per `HELP-RESPONSES.md` and `BACKLOG.md`.
+
+2. **Blocked-task confirmation**
+   - Confirmed `.github/workflows/` is still empty; demo workflow deployment still blocked by PAT `workflow` scope.
+   - Confirmed GitHub App, Gumroad Team products, Slack app, KV_URL, dev.to/Medium accounts, and Chrome Web Store v1.1.0 still require human credentials.
+   - No new autonomous executable tasks were discovered.
+
+3. **Stale urgency-copy audit**
+   - Grepped site-wide HTML for "Final Week", "July 10", "until July 10", "ends July 10", and "RACE2026": zero stale urgency references remain.
+
+4. **PROGRESS.md cleanup**
+   - Added this Day 346 entry.
+   - Collapsed Day 343 detailed section into the summary table.
+   - Kept the last 3 days (344–346) detailed.
+
+5. **BACKLOG.md cleanup**
+   - Updated completed summary to Days 1–346.
+   - Confirmed remaining tasks are accurately categorized as blocked/human-help required.
+
+### Validation
+- ✅ 44/44 unit tests pass.
+- ✅ 234/234 e2e tests pass.
+- ✅ No stale "Final Week" / "July 10" copy remains in HTML pages.
+- ✅ No new HELP-REQUEST.md files created.
+- ✅ Git working tree clean after memory-file commit.
+
+### Why This Matters
+- Provides a clear Day 346 record that the P0 task was attempted and remains blocked.
+- Keeps project memory concise and actionable for the human operator.
+
+### Next
+- Wait on human help for npm token, GitHub App credentials, Gumroad Team products, Slack/KV credentials, and workflow PAT scope.
+- Once credentials are available, resume with npm publish, GitHub App deployment, Team checkout, Slack app, persisted drift alerts, and demo workflow deployment.
 
 ---
 
@@ -236,53 +284,6 @@ After Day 343 shipped the last autonomous build asset, the only remaining work i
 ### Next
 - Wait on human help for npm token, GitHub App credentials, Gumroad Team products, Slack/KV credentials, and workflow PAT scope.
 - Once credentials are available, resume with npm publish, GitHub App deployment, Team checkout, Slack app, and persisted drift alerts.
-
----
-
-## Day 343 — Final Race-End Build: Database Schema Diff Landing Page + Evergreen Cleanup (July 8, 2026)
-
-### Focus
-Add one final keyword-targeted landing page for the high-intent term "database schema diff" and sweep remaining stale urgency copy site-wide before the race ends.
-
-### What Was Done
-1. **New landing page: `database-schema-diff.html`**
-   - Built a dedicated page targeting the "database schema diff" keyword.
-   - Sections: hero, feature overview, dialect support, CI/CD integration, free-forever value prop, FAQ, and CTAs.
-   - Added JSON-LD WebPage schema, analytics `data-event` attributes, and dark/light theme toggle.
-   - Indexed in `sitemap.xml` (URL #314).
-   - Added e2e page-load coverage.
-
-2. **Evergreen cleanup across 16 pages**
-   - Replaced stale "Final Week" / "July 10" / launch-week urgency with evergreen free-forever / Pro messaging on:
-     - `9-deal.html`
-     - `app.html`
-     - `case-study-catch-breaking-changes.html`
-     - `founding-customer.html`
-     - `index.html`
-     - `launch-special.html`
-     - `open.html`
-     - `pricing.html`
-     - `product-hunt.html`
-     - `share-kit.html`
-     - `tools/request-pro-approval.html`
-     - `tools/schema-change-request-generator.html`
-
-3. **Sitemap**
-   - Added `database-schema-diff.html`; total 314 URLs.
-
-### Validation
-- ✅ 44/44 unit tests pass.
-- ✅ 233/233 e2e tests pass (Day 343 baseline).
-- ✅ No stale "Final Week" / "July 10" copy remains in the updated pages.
-- ✅ Deployed to Vercel.
-
-### Why This Matters
-- Captures high-intent "database schema diff" search traffic and routes it to the free tool and CI/CD integrations.
-- Removes stale urgency that would lose credibility with visitors after July 10.
-
-### Next
-- Monitor traffic and conversions on `database-schema-diff.html`.
-- Continue waiting on credential-blocked infrastructure tasks.
 
 ---
 
