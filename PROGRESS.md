@@ -182,10 +182,7 @@ Attempt the highest-priority incomplete task (P0 npm token refresh), confirm it 
    - Collapsed Day 343 detailed section into the summary table.
    - Kept the last 3 days (344–346) detailed.
 
-5. **Site fix**
-   - Fixed missed stale urgency copy in `founding-customer.html`.
-
-6. **BACKLOG.md cleanup**
+5. **BACKLOG.md cleanup**
    - Updated completed summary to Days 1–346.
    - Confirmed remaining tasks are accurately categorized as blocked/human-help required.
 
