@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–344)
+## Key Milestones (Days 1–346)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
