@@ -172,15 +172,20 @@ Attempt the highest-priority incomplete task (P0 npm token refresh), confirm it 
    - Confirmed GitHub App, Gumroad Team products, Slack app, KV_URL, dev.to/Medium accounts, and Chrome Web Store v1.1.0 still require human credentials.
    - No new autonomous executable tasks were discovered.
 
-3. **Stale urgency-copy audit**
-   - Grepped site-wide HTML for "Final Week", "July 10", "until July 10", "ends July 10", and "RACE2026": zero stale urgency references remain.
+3. **Stale urgency-copy audit + fix**
+   - Grepped site-wide HTML for "Final Week", "July 10", "until July 10", "ends July 10", and "RACE2026": one stale reference found in `founding-customer.html`.
+   - Replaced "Final week offer" with "Limited to 10 spots" in `founding-customer.html` to match the page's legitimate founding-customer scarcity framing.
+   - Re-verified: zero stale urgency references remain in HTML pages.
 
 4. **PROGRESS.md cleanup**
    - Added this Day 346 entry.
    - Collapsed Day 343 detailed section into the summary table.
    - Kept the last 3 days (344–346) detailed.
 
-5. **BACKLOG.md cleanup**
+5. **Site fix**
+   - Fixed missed stale urgency copy in `founding-customer.html`.
+
+6. **BACKLOG.md cleanup**
    - Updated completed summary to Days 1–346.
    - Confirmed remaining tasks are accurately categorized as blocked/human-help required.
 
