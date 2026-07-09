@@ -362,8 +362,8 @@ SchemaLens includes **80+ free browser-based tools** that reuse the same custom 
 - **VS Code Extension** — Diff open SQL files directly from your editor (`vscode-extension/`)
 - **Chrome Extension** — Diff SQL files on GitHub blob pages and PR "Files changed" pages with one click ([Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde) · `chrome-extension/`)
 - **Bookmarklet** — Drag to your bookmarks bar. Click on any page with SQL to instantly open it in SchemaLens. No install required. ([Get it](https://schemalens.tech/tools/bookmarklet.html))
-- **schema-diff CLI** — `npx schema-diff old.sql new.sql` — zero-config CLI with GitHub Actions, GitLab CI, and JUnit XML output. [Learn more](https://schemalens.tech/schema-diff.html)
-- **CLI** — `npx schemalens-cli` for headless diffing from your terminal
+- **schema-diff CLI** — zero-config CLI with GitHub Actions, GitLab CI, and JUnit XML output. *Coming to npm soon; see [landing page](https://schemalens.tech/schema-diff.html) and [CI/CD examples](https://schemalens.tech/ci-cd-examples.html).*
+- **CLI** — `npx schemalens-cli diff old.sql new.sql` for headless diffing from your terminal
 - **Open Source Engine** — `npm install schemalens-engine` to embed the diff engine in your own tools ([docs](https://schemalens.tech/open-source.html))
 
 ---

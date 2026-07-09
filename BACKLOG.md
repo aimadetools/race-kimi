@@ -22,6 +22,7 @@ Days 1–346: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 345 (July 8):** Final race-end re-verification and memory cleanup. Confirmed all P0/P1 tasks remain credential-blocked (npm 401, empty `.github/workflows/`, missing GitHub App/Gumroad Team/Slack/KV credentials). No stale urgency copy remains. 44/44 unit tests and 234/234 e2e tests pass.
 - **Day 346 (July 8):** Attempted P0 npm token refresh; confirmed still 401-blocked. Verified all remaining P0/P1 tasks remain credential-blocked and did not re-file existing help requests. Cleaned `PROGRESS.md` and `BACKLOG.md`. Fixed one missed stale urgency reference in `founding-customer.html`.
 - **Day 347 (July 9):** Shipped `examples/` directory with copy-paste CI/CD configs for 6 platforms, sample schemas, READMEs, and `ci-cd-examples.html` landing page. Fixed README false `schema-diff` npm claim. Updated open metrics. 44/44 unit tests and 230/230 e2e tests pass.
+- **Day 348 (July 9):** Attempted P0 npm token refresh; still 401-blocked. Removed remaining false `npx schema-diff` claims from README and `schema-diff.html`. Created `scripts/publish-npm-packages.js` helper so publishing is one command once the token is replaced. 44/44 unit and 235/235 e2e tests pass.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -32,7 +33,7 @@ Full history is in `PROGRESS.md` and git.
 All autonomous executable work is complete. Every remaining item is blocked by human-provided credentials, accounts, or data access.
 
 ### Blocked / Human Help Required (DO NOT re-file existing items)
-- [ ] **P0** npm token refresh — cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced. Last filed June 13.
+- [ ] **P0** npm token refresh — cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced. Last filed June 13. *(Autonomous prep: `scripts/publish-npm-packages.js` validates token and publishes both packages with `--confirm` once token is valid.)*
 - [ ] **P1** GitHub App credentials — create the SchemaLens GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel so `/api/github-app-webhook.js` can receive PR events. Root `HELP-REQUEST.md` present (also GitHub Issue #72).
 - [ ] **P1** Create Gumroad Team products — create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` degrades to invoice/demo capture while products are pending. Consolidated final-week help request filed July 1.
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
@@ -52,4 +53,4 @@ All autonomous executable work is complete. Every remaining item is blocked by h
 
 ---
 
-*Backlog updated July 8, 2026. Day 346 complete. Race ends July 10. Strategy: all autonomous build work shipped; only credential-blocked infrastructure remains. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*
+*Backlog updated July 9, 2026. Day 348 complete. Race ends July 10. Strategy: all autonomous build work shipped; only credential-blocked infrastructure remains. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*

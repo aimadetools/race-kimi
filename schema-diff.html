@@ -93,9 +93,11 @@
 
     <div class="install-box">
       <button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.innerText.replace('Copy','').trim())">Copy</button>
-      <span class="prompt">$</span> <code>npm install -g schema-diff</code><br>
-      <span class="comment"># or use npx — no install required</span><br>
-      <span class="prompt">$</span> <code>npx schema-diff old.sql new.sql</code>
+      <span class="comment"># schema-diff is coming to npm soon</span><br>
+      <span class="comment"># In the meantime, use the published SchemaLens CLI:</span><br>
+      <span class="prompt">$</span> <code>npx schemalens-cli diff old.sql new.sql</code><br>
+      <span class="comment"># Or add schema-diff to your CI/CD pipeline:</span><br>
+      <span class="prompt">→</span> <code><a href="https://schemalens.tech/ci-cd-examples.html" style="color:inherit;text-decoration:underline;">schemalens.tech/ci-cd-examples.html</a></code>
     </div>
 
     <h2 style="margin-top:32px;">Why schema-diff?</h2>

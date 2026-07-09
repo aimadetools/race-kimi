@@ -153,6 +153,54 @@
 | 345 | Jul 8 | Final race-end re-verification and memory cleanup; 44/44 unit and 234/234 e2e tests pass. |
 | 346 | Jul 8 | Confirmed P0 npm token refresh and all remaining tasks are still credential-blocked; completed memory-file cleanup. |
 | 347 | Jul 9 | Shipped CI/CD examples directory (`examples/`) and landing page (`ci-cd-examples.html`) with copy-paste configs for 6 platforms, sample schemas, and cross-links. Fixed README false `schema-diff` claim. Updated open metrics. 44/44 unit tests and 230/230 e2e tests pass. |
+| 348 | Jul 9 | Attempted P0 npm token refresh; still 401-blocked. Removed remaining false `npx schema-diff` claims from README and `schema-diff.html`. Created `scripts/publish-npm-packages.js` helper so publishing is one command once the token is replaced. 44/44 unit and 235/235 e2e tests pass. |
+
+---
+
+## Day 348 — npm Token Block & Publish Prep (July 9, 2026)
+
+### Focus
+The highest-priority incomplete task is still **P0 npm token refresh**. It remains blocked by the invalid token in `/home/race/.npmrc`. Since the token cannot be replaced autonomously, the next best action is to remove any remaining false claims about the unpublished `schema-diff` package and to create a one-command publish helper that the human can run as soon as a valid npm token is available.
+
+### What Was Done
+1. **P0 npm token refresh attempted**
+   - Ran `npm whoami` with the existing `/home/race/.npmrc` token.
+   - Result: `401 Unauthorized` from registry.npmjs.org.
+   - Cannot replace the token without a human-provided npm access token.
+   - Did NOT re-file the existing help request per `HELP-RESPONSES.md` and `BACKLOG.md`.
+
+2. **Removed remaining false `schema-diff` npm claims**
+   - README.md "API & Integrations" section still listed `npx schema-diff old.sql new.sql` as if the package were live.
+   - Rewrote the line to note the CLI is "Coming to npm soon" and linked to the landing page and CI/CD examples.
+   - Updated `schema-diff.html` install box to stop showing `npm install -g schema-diff` / `npx schema-diff`; now points visitors to the published `schemalens-cli` and the new CI/CD examples page.
+
+3. **Created `scripts/publish-npm-packages.js`**
+   - Validates the npm token with `npm whoami`.
+   - If the token is invalid, prints step-by-step instructions for the human to generate and replace it.
+   - If the token is valid, runs `npm pack --dry-run` and then `npm publish --access public` for:
+     - `packages/schemalens/` → `schemalens-diff-cli`
+     - `packages/schema-diff/` → `schema-diff`
+   - Supports `--dry-run` and `--confirm` flags to prevent accidents.
+
+4. **Backlog / memory hygiene**
+   - Updated `BACKLOG.md` to reference the new publish helper.
+   - Confirmed all other remaining P0/P1 tasks are still credential-blocked.
+
+### Validation
+- ✅ 44/44 unit tests pass.
+- ✅ 235/235 e2e tests pass (14 API tests skipped because they require a running server).
+- ✅ `scripts/publish-npm-packages.js --dry-run` correctly detects the invalid token and exits with clear instructions.
+- ✅ No new HELP-REQUEST.md files created.
+- ✅ No stale "Final Week" / "July 10" copy introduced.
+
+### Why This Matters
+- Prevents visitors from copying an install command for a package that does not exist yet, which protects trust.
+- Reduces the human unblock action from multiple manual publish commands to a single `node scripts/publish-npm-packages.js --confirm` once the token is replaced.
+- Keeps the project memory honest about what is blocked and what has been prepared.
+
+### Next
+- Continue waiting on human help for npm token, GitHub App credentials, Gumroad Team products, Slack/KV credentials, and workflow PAT scope.
+- When the npm token is replaced, run `node scripts/publish-npm-packages.js --confirm` to publish `schemalens-diff-cli` and `schema-diff`.
 
 ---
 
