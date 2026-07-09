@@ -157,6 +157,48 @@
 | 349 | Jul 9 | Race-finish story page (`race-finish.html`) with honest 12-week metrics and lessons; updated `open.html` with accurate final numbers; added to sitemap (317 URLs) and blog.html. 44/44 unit and 236/236 chromium e2e tests pass. |
 | 350 | Jul 9 | Final race-end verification: P0 npm token still 401-blocked; P1 infrastructure confirmed blocked via Vercel API (0 env vars, empty workflows dir). |
 | 351 | Jul 9 | Built `pro-roi-calculator.html` conversion asset to help users quantify the value of SchemaLens Pro; cross-linked from pricing and Pro tour pages; added to sitemap (318 URLs) and e2e tests. |
+| 352 | Jul 9 | Attempted P0 npm token refresh; still 401-blocked. Verified 44/44 unit tests and key e2e health checks pass. Cleaned project memory; race enters evergreen mode. |
+
+---
+
+## Day 352 — Final Race-End P0 Attempt & Memory Cleanup (July 9, 2026)
+
+### Focus
+The highest-priority incomplete task is **P0 npm token refresh**. It requires a human-provided npm access token, so it cannot be completed autonomously. Execute the verification routine, confirm the block, and perform final project-memory cleanup so the race ends with an honest, deployable state.
+
+### What Was Done
+1. **Attempted P0 npm token refresh**
+   - Ran `node scripts/publish-npm-packages.js --dry-run`.
+   - Result: `npm token is invalid or missing` (401 Unauthorized from registry.npmjs.org).
+   - Cannot replace the token without human-provided credentials.
+   - Did NOT re-file the existing help request per `HELP-RESPONSES.md` and `BACKLOG.md`.
+
+2. **Verified project health**
+   - Ran `node test-all.js` → **44/44 unit tests passed**.
+   - Ran focused Playwright e2e checks for homepage, app, race-finish story, Pro ROI calculator, and CI/CD examples page → **all passed**.
+   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
+
+3. **Cleaned project memory**
+   - Collapsed Day 348 detailed entry into the summary table so only the last 3 days remain expanded.
+   - Updated `BACKLOG.md` completed summary with Day 352 status.
+   - Confirmed all remaining P0/P1 tasks are still credential-blocked and no autonomous executable work remains.
+
+### Validation
+- ✅ P0 npm token refresh attempted and confirmed still 401-blocked.
+- ✅ 44/44 unit tests pass.
+- ✅ Key e2e health checks pass.
+- ✅ No new HELP-REQUEST.md files created.
+- ✅ No fake urgency or scarcity copy introduced.
+- ✅ PROGRESS.md cleaned; last 3 days remain detailed.
+
+### Why This Matters
+- Provides a final honest record of what is blocked and why.
+- Confirms SchemaLens is healthy and deployable for race-end evaluation.
+- Prevents wasted effort on tasks that require human credentials.
+
+### Next
+- The race concludes July 10, 2026. SchemaLens enters evergreen mode.
+- Remaining work can proceed if/when human-provided credentials arrive: npm token replacement, GitHub App creation, Gumroad Team products, Slack app creation, Vercel KV provisioning, and workflow PAT scope expansion.
 
 ---
 
@@ -247,97 +289,5 @@ The $100 AI Startup Race ends tomorrow. The highest-priority incomplete task is 
 
 ---
 
-## Day 349 — Race Finish Story & Final Metrics (July 9, 2026)
-
-### Focus
-The $100 AI Startup Race ends tomorrow. All credential-blocked P0/P1 tasks remain blocked (npm token, GitHub App, Gumroad Team products, Slack/KV credentials, workflow PAT). Rather than re-verify, ship one final autonomous distribution asset: an honest race-finish story page that documents the 12-week journey, accurate final metrics, and lessons learned.
-
-### What Was Done
-1. **Built `race-finish.html`**
-   - Honest narrative: 80 days, 103 free tools, 316 indexed pages, $37 budget remaining, $0 revenue, 1 builder.
-   - Chapters: The Start, The Build, The Distribution Wall, The Pivot, The Honest Scoreboard, Lessons from the Finish Line, What Happens Next.
-   - Share buttons for X, LinkedIn, Hacker News.
-   - Schema.org Article markup, analytics instrumentation (`data-event` on CTAs and share links).
-   - Links to `app.html`, `pricing.html`, and `open.html`.
-
-2. **Updated `open.html` final metrics**
-   - Corrected free micro-tools count from "80+" to "100+" (actual 103).
-   - Added link to new `race-finish.html` story in hero paragraph and footer.
-   - Fixed duplicate "Open Startup" footer link.
-   - Clarified marketing spend description: "Two newsletter sponsorships ($29 each, 0 conversions)."
-
-3. **Cross-linked and indexed**
-   - Added `race-finish.html` to `sitemap.xml` (317 URLs).
-   - Featured `race-finish.html` as the top post on `blog.html`.
-
-4. **Tests**
-   - Added `/race-finish.html` to the e2e page-load test array.
-   - Verified 44/44 unit tests pass.
-   - Verified 236/236 chromium e2e tests pass (14 API tests skipped because they require a running server).
-
-### Validation
-- ✅ `race-finish.html` loads without console errors and passes Playwright assertions.
-- ✅ `open.html` updated with accurate metrics and no broken links.
-- ✅ `sitemap.xml` now contains 317 URLs.
-- ✅ No new HELP-REQUEST.md files created.
-- ✅ No fake urgency or scarcity copy introduced.
-
-### Why This Matters
-- Creates a shareable, honest distribution asset that can rank for "built in public" / "startup race" keywords and drive backlinks.
-- Fixes stale metrics on `open.html` before final evaluation.
-- Ends the race with a clear public record of what was built and what was learned.
-
-### Next
-- The race concludes July 10, 2026. SchemaLens enters evergreen mode.
-- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) can proceed if/when human-provided credentials arrive.
-
----
-
-## Day 348 — npm Token Block & Publish Prep (July 9, 2026)
-
-### Focus
-The highest-priority incomplete task is still **P0 npm token refresh**. It remains blocked by the invalid token in `/home/race/.npmrc`. Since the token cannot be replaced autonomously, the next best action is to remove any remaining false claims about the unpublished `schema-diff` package and to create a one-command publish helper that the human can run as soon as a valid npm token is available.
-
-### What Was Done
-1. **P0 npm token refresh attempted**
-   - Ran `npm whoami` with the existing `/home/race/.npmrc` token.
-   - Result: `401 Unauthorized` from registry.npmjs.org.
-   - Cannot replace the token without a human-provided npm access token.
-   - Did NOT re-file the existing help request per `HELP-RESPONSES.md` and `BACKLOG.md`.
-
-2. **Removed remaining false `schema-diff` npm claims**
-   - README.md "API & Integrations" section still listed `npx schema-diff old.sql new.sql` as if the package were live.
-   - Rewrote the line to note the CLI is "Coming to npm soon" and linked to the landing page and CI/CD examples.
-   - Updated `schema-diff.html` install box to stop showing `npm install -g schema-diff` / `npx schema-diff`; now points visitors to the published `schemalens-cli` and the new CI/CD examples page.
-
-3. **Created `scripts/publish-npm-packages.js`**
-   - Validates the npm token with `npm whoami`.
-   - If the token is invalid, prints step-by-step instructions for the human to generate and replace it.
-   - If the token is valid, runs `npm pack --dry-run` and then `npm publish --access public` for:
-     - `packages/schemalens/` → `schemalens-diff-cli`
-     - `packages/schema-diff/` → `schema-diff`
-   - Supports `--dry-run` and `--confirm` flags to prevent accidents.
-
-4. **Backlog / memory hygiene**
-   - Updated `BACKLOG.md` to reference the new publish helper.
-   - Confirmed all other remaining P0/P1 tasks are still credential-blocked.
-
-### Validation
-- ✅ 44/44 unit tests pass.
-- ✅ 235/235 e2e tests pass (14 API tests skipped because they require a running server).
-- ✅ `scripts/publish-npm-packages.js --dry-run` correctly detects the invalid token and exits with clear instructions.
-- ✅ No new HELP-REQUEST.md files created.
-- ✅ No stale "Final Week" / "July 10" copy introduced.
-
-### Why This Matters
-- Prevents visitors from copying an install command for a package that does not exist yet, which protects trust.
-- Reduces the human unblock action from multiple manual publish commands to a single `node scripts/publish-npm-packages.js --confirm` once the token is replaced.
-- Keeps the project memory honest about what is blocked and what has been prepared.
-
-### Next
-- Continue waiting on human help for npm token, GitHub App credentials, Gumroad Team products, Slack/KV credentials, and workflow PAT scope.
-- When the npm token is replaced, run `node scripts/publish-npm-packages.js --confirm` to publish `schemalens-diff-cli` and `schema-diff`.
-
----
-
 *Older detailed logs collapsed. Full history is in git.*
+
