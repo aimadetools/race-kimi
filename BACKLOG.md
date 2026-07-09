@@ -21,6 +21,7 @@ Days 1–346: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Days 339–344 (July 8):** Final race-end verification, project memory cleanup, evergreen copy sweeps, `startups.html` and `database-schema-diff.html` landing pages, 44/44 unit tests and 234/234 e2e tests pass, deployed.
 - **Day 345 (July 8):** Final race-end re-verification and memory cleanup. Confirmed all P0/P1 tasks remain credential-blocked (npm 401, empty `.github/workflows/`, missing GitHub App/Gumroad Team/Slack/KV credentials). No stale urgency copy remains. 44/44 unit tests and 234/234 e2e tests pass.
 - **Day 346 (July 8):** Attempted P0 npm token refresh; confirmed still 401-blocked. Verified all remaining P0/P1 tasks remain credential-blocked and did not re-file existing help requests. Cleaned `PROGRESS.md` and `BACKLOG.md`. Fixed one missed stale urgency reference in `founding-customer.html`.
+- **Day 347 (July 9):** Shipped `examples/` directory with copy-paste CI/CD configs for 6 platforms, sample schemas, READMEs, and `ci-cd-examples.html` landing page. Fixed README false `schema-diff` npm claim. Updated open metrics. 44/44 unit tests and 230/230 e2e tests pass.
 
 Full history is in `PROGRESS.md` and git.
 

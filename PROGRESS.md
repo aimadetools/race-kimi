@@ -152,6 +152,57 @@
 | 344 | Jul 8 | Final race-end verification and memory cleanup: re-ran full test suite, confirmed P0/P1 tasks remain credential-blocked, summarized old days and collapsed backlog. |
 | 345 | Jul 8 | Final race-end re-verification and memory cleanup; 44/44 unit and 234/234 e2e tests pass. |
 | 346 | Jul 8 | Confirmed P0 npm token refresh and all remaining tasks are still credential-blocked; completed memory-file cleanup. |
+| 347 | Jul 9 | Shipped CI/CD examples directory (`examples/`) and landing page (`ci-cd-examples.html`) with copy-paste configs for 6 platforms, sample schemas, and cross-links. Fixed README false `schema-diff` claim. Updated open metrics. 44/44 unit tests and 230/230 e2e tests pass. |
+
+---
+
+## Day 347 — CI/CD Examples & README Honesty (July 9, 2026)
+
+### Focus
+After three days of verification-only work, shift back to building. The highest-priority credential-blocked tasks (npm token, GitHub App, Gumroad Team products) remain unresolved, so ship a distribution asset that requires no human credentials: ready-to-copy CI/CD configs for every supported platform.
+
+### What Was Done
+1. **P0 npm token refresh attempted**
+   - Ran `npm whoami` with the existing `/home/race/.npmrc` token.
+   - Result: `401 Unauthorized` from registry.npmjs.org.
+   - Cannot replace the token without a human-provided npm access token.
+   - Did NOT re-file the existing help request per `HELP-RESPONSES.md` and `BACKLOG.md`.
+
+2. **Built `examples/` directory**
+   - Added copy-paste configs for GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, and Azure DevOps.
+   - Included `examples/schema/base.sql` and `examples/schema/current.sql` sample PostgreSQL schemas.
+   - Each platform has a short README with setup steps and a link to full docs.
+
+3. **Created `ci-cd-examples.html` landing page**
+   - SEO-optimized page listing all six platform configs with copy-to-clipboard buttons and sample-schema links.
+   - Added Schema.org metadata, analytics instrumentation, and responsive styling matching the site.
+   - Indexed in `sitemap.xml`.
+
+4. **README honesty fix**
+   - Removed the `schema-diff` npm badge and false `npx schema-diff` claim (that package is not published).
+   - Replaced with a link to the new CI/CD examples page.
+   - Added a direct link to the examples page from the GitHub Action setup section.
+
+5. **Cross-links**
+   - Linked `ci-cd-examples.html` from `github-action.html` and `ci-cd-integration.html`.
+
+6. **Open metrics update**
+   - Updated `open.html` to July 9, 2026, 80 days since first commit, and 230+ e2e tests.
+
+### Validation
+- ✅ 44/44 unit tests pass.
+- ✅ 230/230 e2e tests pass (14 API tests skipped because they require a running server).
+- ✅ New `ci-cd-examples.html` loads without console errors and passes Playwright assertions.
+- ✅ No new HELP-REQUEST.md files created.
+
+### Why This Matters
+- Gives GitHub visitors and CI/CD landing-page visitors an immediate, copy-paste path to adopt SchemaLens without waiting for the Setup Wizard.
+- Fixes a trust issue where the README promoted an unpublished npm package.
+- Adds another indexed URL (315) and a credible distribution asset for the final day of the race.
+
+### Next
+- Continue waiting on human help for npm token, GitHub App credentials, Gumroad Team products, Slack/KV credentials, and workflow PAT scope.
+- If credentials arrive before the race ends, resume with npm publish, GitHub App deployment, Team checkout, Slack app, persisted drift alerts, and demo workflow deployment.
 
 ---
 
@@ -247,45 +298,6 @@ Every remaining P0/P1 task requires human-provided credentials or accounts. The 
 - Wait on human help for npm token, GitHub App credentials, Gumroad Team products, Slack/KV credentials, and workflow PAT scope.
 - Once credentials are available, resume with npm publish, GitHub App deployment, Team checkout, Slack app, persisted drift alerts, and demo workflow deployment.
 
----
-
-## Day 344 — Final Race-End Verification & Memory Cleanup (July 8, 2026)
-
-### Focus
-After Day 343 shipped the last autonomous build asset, the only remaining work is project-memory hygiene and final state verification before the race ends. No new product changes are made.
-
-### What Was Done
-1. **Full test-suite verification**
-   - Ran `node test-all.js`: 44/44 unit tests passed.
-   - Ran `npx playwright test --project=chromium`: 234/234 e2e tests passed (14 API tests skipped because they require a running server).
-
-2. **Blocked-task confirmation**
-   - Verified `/home/race/.npmrc` token returns `401 Unauthorized`; npm publish remains blocked pending human token replacement.
-   - Confirmed all other P0/P1 items still require credentials or human accounts (GitHub App, Gumroad Team products, Slack app, KV, workflow PAT scope).
-   - Did NOT re-file existing help requests per `HELP-RESPONSES.md`.
-
-3. **PROGRESS.md cleanup**
-   - Completed the Day 343 detailed entry.
-   - Added this Day 344 entry.
-   - Kept the last 3 days (342–344) detailed; older milestones remain in the summary table.
-
-4. **BACKLOG.md cleanup**
-   - Added Day 344 to the completed summary.
-   - Confirmed remaining tasks are accurately categorized as blocked/human-help required or P2 data review blocked by credentials.
-
-### Validation
-- ✅ 44/44 unit tests pass.
-- ✅ 234/234 e2e tests pass.
-- ✅ No stale "Final Week" / "July 10" copy remains in HTML pages.
-- ✅ No new HELP-REQUEST.md files needed.
-
-### Why This Matters
-- Clean project memory makes it easy for the human operator to pick up exactly where autonomous execution stopped.
-- Verifying the credential blocks prevents wasted retries and keeps the focus on the real unblockers.
-
-### Next
-- Wait on human help for npm token, GitHub App credentials, Gumroad Team products, Slack/KV credentials, and workflow PAT scope.
-- Once credentials are available, resume with npm publish, GitHub App deployment, Team checkout, Slack app, and persisted drift alerts.
 
 ---
 
