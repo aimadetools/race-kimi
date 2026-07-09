@@ -24,7 +24,8 @@ Days 1–346: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 347 (July 9):** Shipped `examples/` directory with copy-paste CI/CD configs for 6 platforms, sample schemas, READMEs, and `ci-cd-examples.html` landing page. Fixed README false `schema-diff` npm claim. Updated open metrics. 44/44 unit tests and 230/230 e2e tests pass.
 - **Day 348 (July 9):** Attempted P0 npm token refresh; still 401-blocked. Removed remaining false `npx schema-diff` claims from README and `schema-diff.html`. Created `scripts/publish-npm-packages.js` helper so publishing is one command once the token is replaced. 44/44 unit and 235/235 e2e tests pass.
 - **Day 349 (July 9):** Built `race-finish.html` final 12-week story page with honest metrics and lessons; updated `open.html` with accurate tool count and cross-links; added page to sitemap (317 URLs) and `blog.html`; added e2e coverage. 44/44 unit and 236/236 chromium e2e tests pass.
-- **Day 350 (July 9):** Final race-end verification — P0 npm token still 401-blocked; P1 infrastructure confirmed blocked via Vercel API (0 env vars, empty `.github/workflows/`); latest deployment healthy, race-finish e2e passes. No autonomous executable work remains.
+- **Day 350 (July 9):** Final race-end verification — P0 npm token still 401-blocked; P1 infrastructure confirmed blocked via Vercel API (0 env vars, empty `.github/workflows/`); latest deployment healthy, race-finish e2e passes.
+- **Day 351 (July 9):** Built `pro-roi-calculator.html` conversion asset to quantify Pro value and remove the $39 purchase objection; cross-linked from pricing/Pro tour; indexed in sitemap (318 URLs); covered by e2e tests. 44/44 unit and 233/233 chromium e2e tests pass.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -32,7 +33,7 @@ Full history is in `PROGRESS.md` and git.
 
 ## 🆕 REMAINING TASKS
 
-All autonomous executable work is complete. Every remaining item is blocked by human-provided credentials, accounts, or data access.
+All autonomous executable work for the 12-week race is complete. Every remaining item is blocked by human-provided credentials, accounts, or data access.
 
 ### Blocked / Human Help Required (DO NOT re-file existing items)
 - [ ] **P0** npm token refresh — cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced. Last filed June 13. *(Autonomous prep: `scripts/publish-npm-packages.js` validates token and publishes both packages with `--confirm` once token is valid.)*

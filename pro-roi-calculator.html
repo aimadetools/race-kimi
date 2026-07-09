@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Pro ROI Calculator — Is SchemaLens Pro Worth $39?</title>
+  <meta name="description" content="Calculate how much time and money SchemaLens Pro saves you. Interactive ROI calculator for database schema diff, migration generation, and CI/CD automation.">
+  <meta property="og:title" content="Pro ROI Calculator — Is SchemaLens Pro Worth $39?">
+  <meta property="og:description" content="See how fast SchemaLens Pro pays for itself. Calculate time saved on schema diffs and migration reviews.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/pro-roi-calculator.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens Pro ROI Calculator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": "Interactive ROI calculation, schema diff time savings, migration review cost savings, payback period calculator",
+    "url": "https://schemalens.tech/pro-roi-calculator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .page-header { padding: 80px 24px 40px; text-align: center; max-width: 720px; margin: 0 auto; }
+    .page-header h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 14px; }
+    .page-header p { color: var(--text-muted); font-size: 1.15rem; line-height: 1.6; }
+
+    .calc-container { max-width: 900px; margin: 0 auto; padding: 0 24px 64px; }
+    .calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 32px; }
+    .calc-card h2 { font-size: 1.25rem; margin-bottom: 24px; }
+
+    .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; margin-bottom: 8px; }
+    .input-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+    .input-group .value { color: var(--primary); font-weight: 800; margin-left: 6px; }
+    .input-group input[type="range"] { width: 100%; accent-color: var(--primary); margin-bottom: 6px; }
+    .input-group .hint { font-size: 0.8rem; color: var(--text-muted); }
+
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 32px 0; }
+    .result-box { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+    .result-box .label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    .result-box .value { font-size: 1.7rem; font-weight: 800; color: var(--text); }
+    .result-box .value.highlight { background: linear-gradient(135deg, var(--success), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .result-box .value.payback { color: var(--success); }
+
+    .payback-banner { background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(59,130,246,0.08)); border: 2px solid rgba(16,185,129,0.4); border-radius: var(--radius); padding: 24px; text-align: center; margin-bottom: 32px; }
+    .payback-banner h3 { font-size: 1.3rem; margin-bottom: 8px; }
+    .payback-banner p { color: var(--text-muted); margin-bottom: 18px; }
+
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 24px 0; }
+    .feature-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+    .feature-card h4 { font-size: 1rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-muted); margin: 0; }
+    .feature-card .check { color: var(--success); font-weight: 700; }
+
+    .trust-bar { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 16px; }
+    .trust-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; font-size: 0.8rem; color: var(--text-muted); }
+
+    .cta-section { text-align: center; padding: 48px 24px; }
+    .cta-section h2 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
+    .cta-section p { color: var(--text-muted); max-width: 520px; margin: 0 auto 24px; }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><span class="logo-mark">SL</span> SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="features.html">Features</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header reveal">
+    <div class="hero-badge"><span class="dot"></span> Pro conversion helper</div>
+    <h1>Is SchemaLens Pro worth <span style="background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">$39</span>?</h1>
+    <p>Calculate how much time you save on schema diffs, migration reviews, and rollback planning. Most developers break even in under a week.</p>
+  </header>
+
+  <main class="calc-container">
+    <section class="calc-card reveal">
+      <h2>Your workflow</h2>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>Schema diffs per month <span class="value" id="val-diffs">8</span></label>
+          <input type="range" id="diffs" min="1" max="50" value="8" step="1" aria-label="Schema diffs per month">
+          <div class="hint">PR reviews, staging checks, migration planning</div>
+        </div>
+        <div class="input-group">
+          <label>Minutes saved per diff <span class="value" id="val-minutes">15</span></label>
+          <input type="range" id="minutes" min="5" max="60" value="15" step="5" aria-label="Minutes saved per diff">
+          <div class="hint">Manual comparison + writing ALTER statements</div>
+        </div>
+        <div class="input-group">
+          <label>Hourly rate <span class="value" id="val-rate">$85</span></label>
+          <input type="range" id="rate" min="25" max="250" value="85" step="5" aria-label="Hourly rate">
+          <div class="hint">Your effective hourly cost</div>
+        </div>
+        <div class="input-group">
+          <label>Team members <span class="value" id="val-team">1</span></label>
+          <input type="range" id="team" min="1" max="20" value="1" step="1" aria-label="Team members">
+          <div class="hint">People who regularly review schemas</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="payback-banner reveal">
+      <h3>SchemaLens Pro pays for itself in <span id="payback-days">4</span> days</h3>
+      <p id="payback-desc">At your current rate, you save <strong id="monthly-savings">$170</strong> per month in engineering time. That's <strong id="yearly-savings">$2,040</strong> per year for a one-time $39 investment.</p>
+      <a href="https://gumroad.com/l/schemalens-lifetime" class="btn btn-primary btn-lg" data-event="pro_roi_buy" target="_blank" rel="noopener">Get Lifetime Pro for $39 →</a>
+      <div class="trust-bar">
+        <span class="trust-pill"><span style="color:var(--success);">✓</span> 14-day refund</span>
+        <span class="trust-pill"><span style="color:var(--success);">✓</span> One-time payment</span>
+        <span class="trust-pill"><span style="color:var(--success);">✓</span> Instant access</span>
+      </div>
+    </section>
+
+    <section class="calc-card reveal">
+      <h2>Breakdown</h2>
+      <div class="results-grid">
+        <div class="result-box">
+          <div class="label">Time saved / month</div>
+          <div class="value" id="time-saved">2.0 hrs</div>
+        </div>
+        <div class="result-box">
+          <div class="label">Money saved / month</div>
+          <div class="value highlight" id="money-saved">$170</div>
+        </div>
+        <div class="result-box">
+          <div class="label">Money saved / year</div>
+          <div class="value highlight" id="year-saved">$2,040</div>
+        </div>
+        <div class="result-box">
+          <div class="label">Payback period</div>
+          <div class="value payback" id="payback-period">4 days</div>
+        </div>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.95rem;text-align:center;margin-bottom:0;">Assumes SchemaLens Pro saves 80% of the time you currently spend on manual schema comparison and migration script writing.</p>
+    </section>
+
+    <section class="calc-card reveal">
+      <h2>What you get with Pro</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4><span class="check">✓</span> Export anything</h4>
+          <p>Markdown, PDF, SQL, JSON exports for reports and documentation.</p>
+        </div>
+        <div class="feature-card">
+          <h4><span class="check">✓</span> Save & share diffs</h4>
+          <p>Build a history of schema changes and share links with your team.</p>
+        </div>
+        <div class="feature-card">
+          <h4><span class="check">✓</span> 100+ micro-tools</h4>
+          <p>Generators, converters, health checks, and migration helpers.</p>
+        </div>
+        <div class="feature-card">
+          <h4><span class="check">✓</span> Priority support</h4>
+          <p>Fast email responses for schema edge cases and migration questions.</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:24px;">
+        <a href="pro-tour.html" class="btn btn-secondary" data-event="pro_roi_tour">See full Pro tour →</a>
+      </div>
+    </section>
+
+    <section class="calc-card reveal">
+      <h2>Free vs Pro — what changes?</h2>
+      <p style="color:var(--text-muted);margin-bottom:16px;">The web diff is free forever: unlimited schemas, full migration SQL, rollback, ORM export, and CI/CD integrations. Pro adds power-user features for people who live in database migrations.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:18px;">
+          <h4 style="margin-bottom:10px;">Free</h4>
+          <ul style="list-style:none;padding:0;margin:0;color:var(--text-muted);font-size:0.9rem;line-height:1.8;">
+            <li>✓ Unlimited schema diffs</li>
+            <li>✓ Full migration SQL</li>
+            <li>✓ Rollback scripts</li>
+            <li>✓ CI/CD integrations</li>
+          </ul>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.05));border:1px solid var(--primary);border-radius:var(--radius);padding:18px;">
+          <h4 style="margin-bottom:10px;">Pro — $39 lifetime</h4>
+          <ul style="list-style:none;padding:0;margin:0;font-size:0.9rem;line-height:1.8;">
+            <li>✓ Everything in Free</li>
+            <li>✓ PDF / Markdown exports</li>
+            <li>✓ Save & share diff links</li>
+            <li>✓ 100+ micro-tools</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section reveal">
+      <h2>Still unsure?</h2>
+      <p>Try the free schema diff first. No signup, no credit card, no table limits. When you hit a workflow that needs exports or saved history, Pro is a one-time $39 upgrade.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="app.html" class="btn btn-secondary" data-event="pro_roi_try_free">Try free diff →</a>
+        <a href="pricing.html" class="btn btn-primary" data-event="pro_roi_pricing">Compare plans →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><span class="logo-mark">SL</span> SchemaLens</a>
+          <p>Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="app.html">Open App</a>
+          <a href="features.html">Features</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="pro-tour.html">Pro Tour</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="blog.html">Blog</a>
+          <a href="tools.html">Free Tools</a>
+          <a href="github-action.html">GitHub Action</a>
+          <a href="api.html">API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="open.html">Open Startup</a>
+          <a href="race-finish.html">Race Finish</a>
+          <a href="about.html">About</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. Built in public.</span>
+        <span><a href="privacy-policy.html">Privacy</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function() {
+    const inputs = {
+      diffs: document.getElementById('diffs'),
+      minutes: document.getElementById('minutes'),
+      rate: document.getElementById('rate'),
+      team: document.getElementById('team')
+    };
+    const displays = {
+      diffs: document.getElementById('val-diffs'),
+      minutes: document.getElementById('val-minutes'),
+      rate: document.getElementById('val-rate'),
+      team: document.getElementById('val-team')
+    };
+    const outputs = {
+      timeSaved: document.getElementById('time-saved'),
+      moneySaved: document.getElementById('money-saved'),
+      yearSaved: document.getElementById('year-saved'),
+      paybackPeriod: document.getElementById('payback-period'),
+      paybackDays: document.getElementById('payback-days'),
+      monthlySavings: document.getElementById('monthly-savings'),
+      yearlySavings: document.getElementById('yearly-savings'),
+      paybackDesc: document.getElementById('payback-desc')
+    };
+
+    const PRO_PRICE = 39;
+    const EFFICIENCY = 0.8; // Pro saves 80% of manual time
+
+    function formatCurrency(n) {
+      return '$' + Math.round(n).toLocaleString();
+    }
+
+    function formatHours(minutes) {
+      const hrs = minutes / 60;
+      return hrs < 1 ? Math.round(minutes) + ' min' : hrs.toFixed(1).replace(/\.0$/, '') + ' hrs';
+    }
+
+    function calculate() {
+      const diffs = parseInt(inputs.diffs.value, 10);
+      const minutes = parseInt(inputs.minutes.value, 10);
+      const rate = parseInt(inputs.rate.value, 10);
+      const team = parseInt(inputs.team.value, 10);
+
+      const totalMinutesPerMonth = diffs * minutes * team;
+      const savedMinutesPerMonth = totalMinutesPerMonth * EFFICIENCY;
+      const savedHoursPerMonth = savedMinutesPerMonth / 60;
+      const monthlySavings = savedHoursPerMonth * rate;
+      const yearlySavings = monthlySavings * 12;
+      const paybackMonths = monthlySavings > 0 ? PRO_PRICE / monthlySavings : Infinity;
+      const paybackDays = Math.max(1, Math.ceil(paybackMonths * 30));
+
+      displays.diffs.textContent = diffs;
+      displays.minutes.textContent = minutes;
+      displays.rate.textContent = '$' + rate;
+      displays.team.textContent = team;
+
+      outputs.timeSaved.textContent = formatHours(savedMinutesPerMonth);
+      outputs.moneySaved.textContent = formatCurrency(monthlySavings);
+      outputs.yearSaved.textContent = formatCurrency(yearlySavings);
+      outputs.paybackPeriod.textContent = paybackDays === 1 ? '1 day' : paybackDays + ' days';
+      outputs.paybackDays.textContent = paybackDays;
+      outputs.monthlySavings.textContent = formatCurrency(monthlySavings);
+      outputs.yearlySavings.textContent = formatCurrency(yearlySavings);
+
+      outputs.paybackDesc.innerHTML = 'At your current rate, you save <strong>' + formatCurrency(monthlySavings) + '</strong> per month in engineering time. That\'s <strong>' + formatCurrency(yearlySavings) + '</strong> per year for a one-time $39 investment.';
+
+      // Track calculator interactions (debounced)
+      if (typeof track === 'function') {
+        clearTimeout(calculate._t);
+        calculate._t = setTimeout(function() {
+          track('pro_roi_calculate', { diffs: diffs, minutes: minutes, rate: rate, team: team, monthly_savings: Math.round(monthlySavings), yearly_savings: Math.round(yearlySavings), payback_days: paybackDays });
+        }, 600);
+      }
+    }
+
+    Object.values(inputs).forEach(function(input) {
+      input.addEventListener('input', calculate);
+    });
+
+    // Reveal animations
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      observer.observe(el);
+    });
+
+    calculate();
+  })();
+  </script>
+</body>
+</html>

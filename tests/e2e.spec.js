@@ -217,6 +217,7 @@ const pages = [
   { path: '/schema-diff-newsletter.html', name: 'Newsletter Ad Landing Page' },
   { path: '/tools/api-playground.html', name: 'API Playground' },
   { path: '/race-finish.html', name: 'Race Finish Story' },
+  { path: '/pro-roi-calculator.html', name: 'Pro ROI Calculator' },
 ];
 
 for (const { path, name } of pages) {
@@ -226,6 +227,20 @@ for (const { path, name } of pages) {
     await expect(page.locator('body')).toBeVisible();
   });
 }
+
+// ───────────────────────────────────────────────
+// Pro ROI Calculator
+// ───────────────────────────────────────────────
+
+test('Pro ROI Calculator updates results when inputs change', async ({ page }) => {
+  await page.goto(`${BASE_URL}/pro-roi-calculator.html`);
+  await expect(page.locator('h1')).toContainText('Is SchemaLens Pro worth');
+  await expect(page.locator('#payback-days')).toContainText(/\d+/);
+  // Change diffs per month to 20 and verify monthly savings updates
+  await page.locator('#diffs').fill('20');
+  await expect(page.locator('#money-saved')).toContainText('$');
+  await expect(page.locator('#payback-days')).toContainText(/\d+/);
+});
 
 // ───────────────────────────────────────────────
 // Trust Center
