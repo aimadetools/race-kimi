@@ -3,7 +3,6 @@
 > Compare SQL schemas. Spot changes instantly. Generate migrations.
 
 [![npm](https://img.shields.io/npm/v/schemalens-cli?label=cli&style=flat-square)](https://www.npmjs.com/package/schemalens-cli)
-[![npm](https://img.shields.io/npm/v/schema-diff?label=schema-diff&style=flat-square&color=cb3837)](https://www.npmjs.com/package/schema-diff)
 [![npm](https://img.shields.io/npm/v/schemalens-engine?label=engine&style=flat-square)](https://www.npmjs.com/package/schemalens-engine)
 [![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?style=flat-square&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
@@ -25,7 +24,7 @@ SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CRE
 Also available as:
 - **Web app** — [schemalens.tech](https://schemalens.tech)
 - **CLI** — `npx schemalens-cli diff old.sql new.sql`
-- **CI-native CLI** — `npx schema-diff old.sql new.sql` (GitHub Actions, GitLab CI, JUnit XML)
+- **CI-native examples** — copy-paste configs for [GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket, and Azure DevOps](https://schemalens.tech/ci-cd-examples.html)
 - **Core engine** — `npm install schemalens-engine`
 - **MCP Server / AI Agents** — let Claude, Cursor, VS Code, or any MCP client review migration PRs and diff schemas ([setup →](https://schemalens.tech/mcp-server.html) · [AI Agents →](https://schemalens.tech/ai-agents.html))
 - **VS Code Extension** — [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
@@ -123,6 +122,7 @@ Set `upload-report: true` and every PR produces a downloadable, self-contained H
 
 - **[🚀 Add the starter workflow from the GitHub Actions tab →](https://github.com/aimadetools/race-kimi/tree/main/.github/workflow-templates)** — one click, no YAML to write
 - **[⚡ CI/CD Setup Wizard — generate your pipeline config in 60 seconds →](https://schemalens.tech/tools/cicd-setup-wizard.html?platform=github)**
+- **[📋 Copy-paste CI/CD examples for every platform →](https://schemalens.tech/ci-cd-examples.html)**
 - **[View full setup guide →](https://schemalens.tech/github-action.html)**
 - **[Try the web diff →](https://schemalens.tech/app.html)**
 - **[👁️ Preview the Team workspace →](https://schemalens.tech/team/workspace-preview.html)**

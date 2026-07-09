@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema Diff CI/CD Examples — SchemaLens</title>
+  <meta name="description" content="Copy-paste schema diff CI/CD configs for GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, and Azure DevOps. Includes sample PostgreSQL schemas.">
+  <meta property="og:title" content="Schema Diff CI/CD Examples — SchemaLens">
+  <meta property="og:description" content="Ready-to-use CI/CD configs that catch breaking database schema changes on every pull request.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/ci-cd-examples.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://schemalens.tech/ci-cd-examples.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Schema Diff CI/CD Examples",
+    "description": "Ready-to-use CI/CD configs for GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, and Azure DevOps.",
+    "url": "https://schemalens.tech/ci-cd-examples.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 56px 0 16px; text-align: center; }
+    .page-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 14px; letter-spacing: -0.02em; }
+    .page-header h1 span { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .page-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 640px; margin: 0 auto; }
+    .example-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 36px 0; }
+    .example-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; }
+    .example-card .icon { font-size: 1.8rem; margin-bottom: 10px; }
+    .example-card h3 { font-size: 1.15rem; margin-bottom: 6px; }
+    .example-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; flex: 1; margin-bottom: 16px; }
+    .example-card .file-path { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 6px 10px; border-radius: 6px; margin-bottom: 14px; word-break: break-all; }
+    .example-card .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .example-card .btn { flex: 1; min-width: 100px; text-align: center; }
+    .example-card .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .example-card .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+    .schema-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 16px 0; }
+    .schema-box h3 { margin-bottom: 10px; }
+    .schema-box p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 14px; }
+    .cta-bar { background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(34,211,238,0.06)); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; text-align: center; margin: 36px 0; }
+    .cta-bar h2 { font-size: 1.3rem; margin-bottom: 10px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 18px; }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--success); color: #fff; padding: 12px 18px; border-radius: var(--radius); font-weight: 600; opacity: 0; transform: translateY(12px); transition: all 0.3s ease; pointer-events: none; z-index: 1000; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script src="lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">Diff</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="github-action.html">GitHub Action</a>
+      <a href="ci-cd-integration.html">CI/CD</a>
+      <a href="app.html" class="nav-cta" data-event="cicd_examples_nav_open_app">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <h1>Schema diff <span>CI/CD examples</span></h1>
+    <p>Copy-paste configs for GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, and Azure DevOps. Each example includes sample schemas so you can test the diff locally before adding it to your pipeline.</p>
+  </div>
+
+  <div class="example-grid">
+    <div class="example-card">
+      <div class="icon">🐙</div>
+      <h3>GitHub Actions</h3>
+      <p>PR comments, Check Runs, HTML report artifacts, and a breaking-change gate. Runs only when .sql files change.</p>
+      <div class="file-path">.github/workflows/schema-diff.yml</div>
+      <div class="actions">
+        <button class="btn" data-event="cicd_examples_copy" data-event-platform="github" onclick="copyExample('examples/github-actions/schema-diff.yml', this)">Copy config</button>
+        <a class="btn btn-secondary" href="examples/github-actions/schema-diff.yml" target="_blank" data-event="cicd_examples_view" data-event-platform="github">View</a>
+      </div>
+    </div>
+
+    <div class="example-card">
+      <div class="icon">🦊</div>
+      <h3>GitLab CI</h3>
+      <p>Merge request pipeline with MR comments, downloadable artifacts, smart skip, and breaking-change fail.</p>
+      <div class="file-path">.gitlab-ci.yml</div>
+      <div class="actions">
+        <button class="btn" data-event="cicd_examples_copy" data-event-platform="gitlab" onclick="copyExample('examples/gitlab-ci/.gitlab-ci.yml', this)">Copy config</button>
+        <a class="btn btn-secondary" href="examples/gitlab-ci/.gitlab-ci.yml" target="_blank" data-event="cicd_examples_view" data-event-platform="gitlab">View</a>
+      </div>
+    </div>
+
+    <div class="example-card">
+      <div class="icon">📦</div>
+      <h3>Bitbucket Pipelines</h3>
+      <p>Pull-request checks with PR comments, artifacts, and a breaking-change gate.</p>
+      <div class="file-path">bitbucket-pipelines.yml</div>
+      <div class="actions">
+        <button class="btn" data-event="cicd_examples_copy" data-event-platform="bitbucket" onclick="copyExample('examples/bitbucket-pipelines/bitbucket-pipelines.yml', this)">Copy config</button>
+        <a class="btn btn-secondary" href="examples/bitbucket-pipelines/bitbucket-pipelines.yml" target="_blank" data-event="cicd_examples_view" data-event-platform="bitbucket">View</a>
+      </div>
+    </div>
+
+    <div class="example-card">
+      <div class="icon">🔧</div>
+      <h3>Jenkins</h3>
+      <p>Jenkinsfile with console reports, build descriptions, artifact archiving, and breaking-change fail.</p>
+      <div class="file-path">Jenkinsfile</div>
+      <div class="actions">
+        <button class="btn" data-event="cicd_examples_copy" data-event-platform="jenkins" onclick="copyExample('examples/jenkins/Jenkinsfile', this)">Copy config</button>
+        <a class="btn btn-secondary" href="examples/jenkins/Jenkinsfile" target="_blank" data-event="cicd_examples_view" data-event-platform="jenkins">View</a>
+      </div>
+    </div>
+
+    <div class="example-card">
+      <div class="icon">⭕</div>
+      <h3>CircleCI</h3>
+      <p>Branch workflow with PR comments, artifact storage, and path-filtered runs.</p>
+      <div class="file-path">.circleci/config.yml</div>
+      <div class="actions">
+        <button class="btn" data-event="cicd_examples_copy" data-event-platform="circleci" onclick="copyExample('examples/circleci/config.yml', this)">Copy config</button>
+        <a class="btn btn-secondary" href="examples/circleci/config.yml" target="_blank" data-event="cicd_examples_view" data-event-platform="circleci">View</a>
+      </div>
+    </div>
+
+    <div class="example-card">
+      <div class="icon">🔷</div>
+      <h3>Azure DevOps</h3>
+      <p>Pull-request pipeline with PR comments, published artifacts, and a breaking-change gate.</p>
+      <div class="file-path">azure-pipelines.yml</div>
+      <div class="actions">
+        <button class="btn" data-event="cicd_examples_copy" data-event-platform="azure" onclick="copyExample('examples/azure-devops/azure-pipelines.yml', this)">Copy config</button>
+        <a class="btn btn-secondary" href="examples/azure-devops/azure-pipelines.yml" target="_blank" data-event="cicd_examples_view" data-event-platform="azure">View</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="schema-box">
+    <h3>Sample PostgreSQL schemas</h3>
+    <p>Use these files to test any example locally. The current schema adds a column, an index, and a new table compared to the base schema.</p>
+    <div class="actions" style="justify-content: flex-start;">
+      <a class="btn" href="examples/schema/base.sql" target="_blank" data-event="cicd_examples_schema_view" data-event-schema="base">base.sql</a>
+      <a class="btn btn-secondary" href="examples/schema/current.sql" target="_blank" data-event="cicd_examples_schema_view" data-event-schema="current">current.sql</a>
+      <a class="btn btn-secondary" href="app.html?example=staging-vs-production" data-event="cicd_examples_try_diff">Try the diff</a>
+    </div>
+  </div>
+
+  <div class="cta-bar">
+    <h2>Want a config generated for your repo?</h2>
+    <p>The CI/CD Setup Wizard auto-detects your SQL files and writes a ready-to-use pipeline config in 60 seconds.</p>
+    <a class="btn" href="tools/cicd-setup-wizard.html" data-event="cicd_examples_wizard_click">Open the CI/CD Wizard</a>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container">
+    <p style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">
+      <a href="index.html">SchemaLens</a> ·
+      <a href="github-action.html">GitHub Action</a> ·
+      <a href="ci-cd-integration.html">CI/CD Integrations</a> ·
+      <a href="pricing.html">Pricing</a>
+    </p>
+  </div>
+</footer>
+
+<div class="toast" id="copyToast">Copied to clipboard</div>
+
+<script>
+async function copyExample(path, btn) {
+  try {
+    const res = await fetch(path);
+    const text = await res.text();
+    await navigator.clipboard.writeText(text);
+    showToast('Copied ' + path.split('/').pop());
+    if (window.SchemaLensAnalytics && window.SchemaLensAnalytics.track) {
+      window.SchemaLensAnalytics.track('cicd_examples_copied', { platform: btn.dataset.eventPlatform, file: path });
+    }
+  } catch (err) {
+    showToast('Copy failed — open the file manually');
+  }
+}
+function showToast(message) {
+  const toast = document.getElementById('copyToast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+</script>
+
+</body>
+</html>

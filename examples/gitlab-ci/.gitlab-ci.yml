@@ -1,0 +1,181 @@
+# SchemaLens — Schema Diff in GitLab Merge Requests
+# Add this file to your repository root and adjust the schema paths as needed.
+#
+# Features:
+#   - Auto-diffs schema on every MR that touches .sql files
+#   - Posts the diff report as an MR comment (requires GITLAB_TOKEN)
+#   - Fails the pipeline on breaking changes (optional)
+#   - Supports SchemaLens Pro license key for full migration output
+#   - Attaches the report as a downloadable artifact
+#
+# Setup:
+#   1. Copy this file to your repo root
+#   2. Set CI/CD variables (Settings → CI/CD → Variables):
+#      - GITLAB_TOKEN  (optional)  Project access token with api scope — for MR comments
+#      - SL_LICENSE_KEY (optional) SchemaLens Pro license key — for full migrations
+#   3. Adjust SCHEMA_PATH and DIALECT below to match your project
+
+stages:
+  - validate
+
+schema-diff:
+  stage: validate
+  image: node:20-alpine
+  variables:
+    # Adjust these for your project
+    SCHEMA_PATH: "schema/current.sql"
+    DIALECT: "postgres"
+    # Set to "true" to fail the pipeline when breaking changes are detected
+    FAIL_ON_BREAKING: "false"
+    # Set to "true" to post the diff as an MR comment
+    POST_MR_COMMENT: "false"
+    # Set to "true" to skip when no .sql files changed
+    SKIP_NO_SQL_CHANGE: "false"
+  before_script:
+    - apk add --no-cache git curl jq
+  script:
+    - |
+      # Smart skip: check if any .sql files changed in this MR
+      if [ "$SKIP_NO_SQL_CHANGE" = "true" ] && [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
+        git fetch origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+        if ! git diff --name-only "origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" "$CI_COMMIT_SHA" | grep -q '\.sql$'; then
+          echo "No .sql files changed in this MR. Skipping schema diff."
+          echo "## ✅ SchemaLens Schema Diff" > /tmp/schema_diff_report.md
+          echo "" >> /tmp/schema_diff_report.md
+          echo "No \`.sql\` files were modified in this merge request, so the schema diff was skipped to save CI time." >> /tmp/schema_diff_report.md
+          exit 0
+        fi
+      fi
+
+    - |
+      # Fetch base branch schema
+      git fetch origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" || true
+      git show "origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:$SCHEMA_PATH" > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema found" > /tmp/schema_base.sql
+
+    - |
+      # Determine endpoint (Pro vs Free)
+      if [ -n "$SL_LICENSE_KEY" ]; then
+        ENDPOINT="https://schemalens.tech/api/diff"
+        echo "Using SchemaLens Pro endpoint"
+      else
+        ENDPOINT="https://schemalens.tech/api/free-diff"
+        echo "Using SchemaLens Free endpoint"
+      fi
+
+    - |
+      # Build request body
+      BODY=$(jq -n \
+        --arg schemaA "$(cat /tmp/schema_base.sql)" \
+        --arg schemaB "$(cat "$SCHEMA_PATH")" \
+        --arg dialect "$DIALECT" \
+        --arg format "markdown" \
+        '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
+
+    - |
+      # Call SchemaLens API with retries
+      HTTP_STATUS=0
+      for attempt in 1 2 3; do
+        HTTP_STATUS=$(curl -sL -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+          -H "Content-Type: application/json" \
+          ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} \
+          -d "$BODY" || echo "000")
+        if [ "$HTTP_STATUS" = "200" ]; then
+          break
+        fi
+        echo "SchemaLens API attempt $attempt failed with HTTP $HTTP_STATUS. Retrying..."
+        sleep "$((attempt * 2))"
+      done
+
+    - |
+      if [ "$HTTP_STATUS" != "200" ]; then
+        echo "ERROR: SchemaLens API failed after 3 attempts (last HTTP status: $HTTP_STATUS)"
+        cat /tmp/schemalens_response.json 2>/dev/null || true
+        exit 1
+      fi
+
+    - |
+      # Extract summary fields
+      RESPONSE=$(cat /tmp/schemalens_response.json)
+      BCOUNT=$(echo "$RESPONSE" | jq -r '(.summary.breakingChangeCount // (.breakingChanges | length) // 0)')
+      RISK=$(echo "$RESPONSE" | jq -r '.riskScore.label // "Unknown"')
+      SCORE=$(echo "$RESPONSE" | jq -r '.riskScore.score // 0')
+      TA=$(echo "$RESPONSE" | jq -r '.summary.tablesAdded // 0')
+      TR=$(echo "$RESPONSE" | jq -r '.summary.tablesRemoved // 0')
+      TM=$(echo "$RESPONSE" | jq -r '.summary.tablesModified // 0')
+      TOTAL_LINES=$(echo "$RESPONSE" | jq -r '.totalMigrationLines // 0')
+
+      # Build markdown report
+      {
+        echo "## 🔍 SchemaLens Schema Diff Report"
+        echo ""
+        echo "| Metric | Value |"
+        echo "|--------|-------|"
+        echo "| 🟢 Tables Added | ${TA} |"
+        echo "| 🔴 Tables Removed | ${TR} |"
+        echo "| 🟡 Tables Modified | ${TM} |"
+        echo "| ⚠️ Breaking Changes | ${BCOUNT} |"
+        echo "| 📊 Risk Score | ${SCORE}/100 (${RISK}) |"
+        echo ""
+
+        if echo "$RESPONSE" | jq -e '.migration' >/dev/null 2>&1; then
+          echo "### Generated Migration"
+          echo '```sql'
+          echo "$RESPONSE" | jq -r '.migration'
+          echo '```'
+          echo ""
+        elif echo "$RESPONSE" | jq -e '.markdown' >/dev/null 2>&1; then
+          echo "### Diff Summary"
+          echo "$RESPONSE" | jq -r '.markdown'
+          echo ""
+        elif echo "$RESPONSE" | jq -e '.migrationTeaser' >/dev/null 2>&1; then
+          echo "### Migration Preview (Free Tier)"
+          echo '```sql'
+          echo "$RESPONSE" | jq -r '.migrationTeaser'
+          echo '```'
+          echo ""
+          if [ "$TOTAL_LINES" -gt 5 ]; then
+            echo "> 💡 **${TOTAL_LINES} total migration lines.** [Unlock the full migration with SchemaLens Pro →](https://schemalens.tech/pricing.html)"
+            echo ""
+          fi
+        fi
+
+        echo "---"
+        echo "*Generated by [SchemaLens GitLab CI](https://schemalens.tech/gitlab-schema-diff.html)*"
+      } > /tmp/schema_diff_report.md
+
+    - cat /tmp/schema_diff_report.md
+
+    - |
+      # Post MR comment (optional)
+      if [ "$POST_MR_COMMENT" = "true" ] && [ -n "$GITLAB_TOKEN" ] && [ -n "$CI_MERGE_REQUEST_IID" ]; then
+        REPORT=$(cat /tmp/schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+        COMMENT_STATUS=$(curl -sL -o /tmp/schemalens_comment.json -w "%{http_code}" -X POST \
+          -H "PRIVATE-TOKEN: $GITLAB_TOKEN" \
+          -H "Content-Type: application/json" \
+          "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes" \
+          -d "{\"body\": \"${REPORT}\"}" || echo "000")
+        if [ "$COMMENT_STATUS" = "201" ]; then
+          echo "MR comment posted successfully."
+        else
+          echo "WARNING: Failed to post MR comment (HTTP $COMMENT_STATUS). The diff was still computed."
+          cat /tmp/schemalens_comment.json 2>/dev/null || true
+        fi
+      fi
+
+    - |
+      # Fail on breaking changes (optional)
+      if [ "$FAIL_ON_BREAKING" = "true" ] && [ "$BCOUNT" != "0" ]; then
+        echo "ERROR: Breaking changes detected: ${BCOUNT}"
+        exit 1
+      fi
+
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - db/schema.sql
+        - migrations/*.sql
+        - "**/*.sql"
+  artifacts:
+    paths:
+      - /tmp/schema_diff_report.md
+    expire_in: 1 week

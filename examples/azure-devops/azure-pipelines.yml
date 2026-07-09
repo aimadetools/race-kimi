@@ -1,0 +1,81 @@
+# SchemaLens Azure DevOps Pipeline
+# Compare database schemas on every pull request and post the diff as a PR comment.
+# Docs: https://schemalens.tech/azure-devops-schema-diff.html
+
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  paths:
+    include:
+      - '**/*.sql'
+
+variables:
+  SCHEMA_OLD_PATH: 'schema/base.sql'
+  SCHEMA_NEW_PATH: 'schema/current.sql'
+  DIALECT: 'postgres'
+  FAIL_ON_BREAKING: 'false'
+  POST_PR_COMMENT: 'true'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - checkout: self
+    fetchDepth: 0
+    displayName: 'Checkout PR branch'
+
+  - script: |
+      set -euo pipefail
+      echo "Running SchemaLens schema diff..."
+      ENDPOINT="https://schemalens.tech/api/free-diff"
+      BODY=$(jq -n \
+        --arg schemaA "$(cat $(SCHEMA_OLD_PATH))" \
+        --arg schemaB "$(cat $(SCHEMA_NEW_PATH))" \
+        --arg dialect "$(DIALECT)" \
+        --arg format "markdown" \
+        '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
+      HTTP_STATUS=$(curl -sL -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+        -H "Content-Type: application/json" \
+        -d "$BODY" || echo "000")
+      if [ "$HTTP_STATUS" != "200" ]; then
+        echo "SchemaLens API failed (HTTP $HTTP_STATUS)"
+        cat /tmp/schemalens_response.json || true
+        exit 1
+      fi
+      jq -r '.markdown // .migrationTeaser // "No output."' /tmp/schemalens_response.json > /tmp/schema_diff_report.md
+      cat /tmp/schema_diff_report.md
+    displayName: 'SchemaLens Schema Diff'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathToPublish: '/tmp/schema_diff_report.md'
+      ArtifactName: 'schema-diff-report'
+    displayName: 'Publish diff report'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+
+  - script: |
+      set -e
+      REPORT=$(cat /tmp/schema_diff_report.md)
+      BODY="## SchemaLens Schema Diff Report\n\n$REPORT"
+      curl -s -X POST \
+        "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_apis/git/repositories/$(Build.Repository.Name)/pullRequests/$(System.PullRequest.PullRequestId)/threads?api-version=7.0" \
+        -H "Authorization: Bearer $(System.AccessToken)" \
+        -H "Content-Type: application/json" \
+        -d "{\"comments\":[{\"commentType\":1,\"content\":\"$BODY\"}],\"status\":1}"
+    displayName: 'Post PR comment'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), eq(variables['POST_PR_COMMENT'], 'true'))
+
+  - script: |
+      set -e
+      BREAKING=$(jq -r '(.summary.breakingChangeCount // (.breakingChanges | length) // 0)' /tmp/schemalens_response.json)
+      echo "Breaking changes: $BREAKING"
+      if [ "$BREAKING" != "0" ]; then
+        echo "##vso[task.logissue type=error]Breaking schema changes detected"
+        exit 1
+      fi
+    displayName: 'Fail on breaking changes'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), eq(variables['FAIL_ON_BREAKING'], 'true'))

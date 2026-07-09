@@ -339,6 +339,21 @@ test('Add schema diff to any repo page shows 6 platform cards', async ({ page })
   await expect(page.locator('a.platform-card[href="cicd-setup-wizard.html?platform=azure"]')).toContainText('Azure DevOps');
 });
 
+test('CI/CD examples page shows all platform configs and sample schemas', async ({ page }) => {
+  await page.goto(`${BASE_URL}/ci-cd-examples.html`);
+  await expect(page.locator('h1')).toContainText('Schema diff');
+  await expect(page.locator('h1')).toContainText('CI/CD examples');
+  await expect(page.locator('h3:has-text("GitHub Actions")')).toBeVisible();
+  await expect(page.locator('h3:has-text("GitLab CI")')).toBeVisible();
+  await expect(page.locator('h3:has-text("Bitbucket Pipelines")')).toBeVisible();
+  await expect(page.locator('h3:has-text("Jenkins")')).toBeVisible();
+  await expect(page.locator('h3:has-text("CircleCI")')).toBeVisible();
+  await expect(page.locator('h3:has-text("Azure DevOps")')).toBeVisible();
+  await expect(page.locator('a[href="examples/github-actions/schema-diff.yml"]')).toBeVisible();
+  await expect(page.locator('a[href="examples/schema/base.sql"]')).toBeVisible();
+  await expect(page.locator('a[href="examples/schema/current.sql"]')).toBeVisible();
+});
+
 test('GitLab 60-second page shows config and wizard CTA', async ({ page }) => {
   await page.goto(`${BASE_URL}/tools/gitlab-schema-diff-in-60-seconds.html`);
   await expect(page.locator('h1')).toContainText('GitLab repo');

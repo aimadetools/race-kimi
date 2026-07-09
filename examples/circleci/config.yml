@@ -1,0 +1,141 @@
+# SchemaLens Schema Diff for CircleCI
+# Place this file at .circleci/config.yml in your repository.
+# Catches breaking database schema changes in every PR build.
+
+version: 2.1
+
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:20.0
+
+jobs:
+  schema-diff:
+    executor: node-executor
+    environment:
+      SCHEMA_PATH: schema/current.sql
+      DIALECT: postgres
+      FAIL_ON_BREAKING: "false"
+      SKIP_NO_SQL_CHANGE: "false"
+      POST_PR_COMMENT: "false"
+      FORMAT: markdown
+    steps:
+      - checkout
+
+      - run:
+          name: Check for SQL changes (smart skip)
+          command: |
+            if [ "$SKIP_NO_SQL_CHANGE" = "true" ]; then
+              CHANGED=$(git diff --name-only origin/${CIRCLE_BRANCH}..HEAD 2>/dev/null || git diff --name-only HEAD~1..HEAD || echo "")
+              if ! echo "$CHANGED" | grep -q '\.sql$'; then
+                echo "No .sql files changed — skipping schema diff."
+                circleci-agent step halt
+              fi
+            fi
+
+      - run:
+          name: Fetch base schema
+          command: |
+            BASE_BRANCH=$(echo "${CIRCLE_PULL_REQUEST:-}" | sed 's/.*\///' || echo "main")
+            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              PR_NUM=$(echo "$CIRCLE_PULL_REQUEST" | sed 's/.*\///')
+              # Try to determine target branch from GitHub API
+              TARGET=$(curl -sL "https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pulls/${PR_NUM}" | jq -r '.base.ref // "main"')
+            else
+              TARGET="main"
+            fi
+            git fetch origin "$TARGET" 2>/dev/null || true
+            git show "origin/${TARGET}:$SCHEMA_PATH" > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql
+
+      - run:
+          name: Run SchemaLens diff
+          command: |
+            set -euo pipefail
+
+            ENDPOINT="https://schemalens.tech/api/free-diff"
+            LICENSE_HEADER=""
+            if [ -n "${SL_LICENSE_KEY:-}" ]; then
+              ENDPOINT="https://schemalens.tech/api/diff"
+              LICENSE_HEADER="-H \"X-License-Key: $SL_LICENSE_KEY\""
+              echo "[SchemaLens] Using Pro endpoint."
+            fi
+
+            BODY=$(jq -n \
+              --arg schemaA "$(cat /tmp/schema_base.sql)" \
+              --arg schemaB "$(cat "$SCHEMA_PATH")" \
+              --arg dialect "$DIALECT" \
+              --arg format "$FORMAT" \
+              '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
+
+            HTTP_STATUS=0
+            for attempt in 1 2 3; do
+              HTTP_STATUS=$(curl -sL -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+                -H "Content-Type: application/json" \
+                ${LICENSE_HEADER} \
+                -d "$BODY" || echo "000")
+              if [ "$HTTP_STATUS" = "200" ]; then break; fi
+              echo "[SchemaLens] Attempt $attempt failed (HTTP $HTTP_STATUS). Retrying..."
+              sleep $((attempt * 2))
+            done
+
+            if [ "$HTTP_STATUS" != "200" ]; then
+              echo "[SchemaLens] API failed after 3 attempts (status: $HTTP_STATUS)"
+              cat /tmp/schemalens_response.json 2>/dev/null || true
+              exit 1
+            fi
+
+            jq -r '.markdown // .migrationTeaser // "No output."' /tmp/schemalens_response.json > /tmp/schema_diff_report.md
+            cat /tmp/schema_diff_report.md
+
+      - run:
+          name: Extract metrics
+          command: |
+            BCOUNT=$(jq -r '(.summary.breakingChangeCount // (.breakingChanges | length) // 0)' /tmp/schemalens_response.json)
+            SCORE=$(jq -r '.riskScore.score // 0' /tmp/schemalens_response.json)
+            LABEL=$(jq -r '.riskScore.label // "Unknown"' /tmp/schemalens_response.json)
+            TA=$(jq -r '.summary.tablesAdded // 0' /tmp/schemalens_response.json)
+            TR=$(jq -r '.summary.tablesRemoved // 0' /tmp/schemalens_response.json)
+            TM=$(jq -r '.summary.tablesModified // 0' /tmp/schemalens_response.json)
+            echo "export SCHEMALENS_BC=$BCOUNT" >> "$BASH_ENV"
+            echo "export SCHEMALENS_SCORE=$SCORE" >> "$BASH_ENV"
+            echo "export SCHEMALENS_LABEL=$LABEL" >> "$BASH_ENV"
+            echo "export SCHEMALENS_TA=$TA" >> "$BASH_ENV"
+            echo "export SCHEMALENS_TR=$TR" >> "$BASH_ENV"
+            echo "export SCHEMALENS_TM=$TM" >> "$BASH_ENV"
+            echo "[SchemaLens] Risk: $LABEL ($SCORE/100) | +$TA -$TR ~$TM | $BCOUNT breaking"
+
+      - run:
+          name: Post PR comment
+          command: |
+            if [ "$POST_PR_COMMENT" = "true" ] && [ -n "${GITHUB_TOKEN:-}" ] && [ -n "${CIRCLE_PULL_REQUEST:-}" ]; then
+              PR_NUM=$(echo "$CIRCLE_PULL_REQUEST" | sed 's/.*\///')
+              REPORT=$(cat /tmp/schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+              curl -sL -X POST \
+                -H "Authorization: token $GITHUB_TOKEN" \
+                -H "Accept: application/vnd.github.v3+json" \
+                "https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/issues/${PR_NUM}/comments" \
+                -d "{\"body\": \"## SchemaLens Schema Diff Report\\n\\n${REPORT}\"}" || echo "Warning: failed to post PR comment."
+            fi
+          when: always
+
+      - run:
+          name: Fail on breaking changes
+          command: |
+            if [ "$FAIL_ON_BREAKING" = "true" ] && [ "$SCHEMALENS_BC" != "0" ]; then
+              echo "[SchemaLens] $SCHEMALENS_BC breaking change(s) detected. Failing build."
+              exit 1
+            fi
+
+      - store_artifacts:
+          path: /tmp/schema_diff_report.md
+          destination: schema_diff_report.md
+
+workflows:
+  schema-diff-workflow:
+    jobs:
+      - schema-diff:
+          filters:
+            branches:
+              ignore:
+                - main
+                - master

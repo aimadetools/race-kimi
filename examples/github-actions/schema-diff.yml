@@ -1,0 +1,32 @@
+# SchemaLens — Schema Diff in GitHub Actions
+# Copy this file to .github/workflows/schema-diff.yml in your repository.
+# Adjust old-schema-path / new-schema-path to point at your schema files.
+name: Schema Diff
+on:
+  pull_request:
+    paths:
+      - '**/*.sql'
+  workflow_dispatch:
+
+jobs:
+  schema-diff:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aimadetools/race-kimi@v1.0.2
+        with:
+          old-schema-path: ./schema/base.sql
+          new-schema-path: ./schema/current.sql
+          dialect: postgres
+          post-comment: true
+          create-check-run: true
+          run-only-on-schema-change: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fail-on-breaking: true
+          upload-report: true
+          schema-drift-webhook: https://schemalens.tech/api/schema-drift-webhook
