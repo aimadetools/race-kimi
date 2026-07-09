@@ -27,6 +27,7 @@ Days 1–346: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 350 (July 9):** Final race-end verification — P0 npm token still 401-blocked; P1 infrastructure confirmed blocked via Vercel API (0 env vars, empty `.github/workflows/`); latest deployment healthy, race-finish e2e passes.
 - **Day 351 (July 9):** Built `pro-roi-calculator.html` conversion asset to quantify Pro value and remove the $39 purchase objection; cross-linked from pricing/Pro tour; indexed in sitemap (318 URLs); covered by e2e tests. 44/44 unit and 233/233 chromium e2e tests pass.
 - **Day 352 (July 9):** Attempted P0 npm token refresh; confirmed still 401-blocked. Verified 44/44 unit tests and focused e2e health checks pass. Cleaned `PROGRESS.md` so only last 3 days remain detailed. Race enters evergreen mode with all remaining P0/P1 tasks credential-blocked.
+- **Day 353 (July 9):** Final race-end P1 verification and memory cleanup — P0 npm token still 401-blocked; all P1 infrastructure verified missing via Vercel API (0 env vars, empty workflows dir); 44/44 unit and 238/238 chromium e2e tests pass; `PROGRESS.md` and `BACKLOG.md` cleaned.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -57,4 +58,4 @@ All autonomous executable work for the 12-week race is complete. Every remaining
 
 ---
 
-*Backlog updated July 9, 2026. Day 352 complete. Race ends July 10. Strategy: all autonomous build work shipped; only credential-blocked infrastructure remains. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*
+*Backlog updated July 9, 2026. Day 353 complete. Race ends July 10. Strategy: all autonomous build work shipped; only credential-blocked infrastructure remains. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*
