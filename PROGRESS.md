@@ -154,6 +154,53 @@
 | 346 | Jul 8 | Confirmed P0 npm token refresh and all remaining tasks are still credential-blocked; completed memory-file cleanup. |
 | 347 | Jul 9 | Shipped CI/CD examples directory (`examples/`) and landing page (`ci-cd-examples.html`) with copy-paste configs for 6 platforms, sample schemas, and cross-links. Fixed README false `schema-diff` claim. Updated open metrics. 44/44 unit tests and 230/230 e2e tests pass. |
 | 348 | Jul 9 | Attempted P0 npm token refresh; still 401-blocked. Removed remaining false `npx schema-diff` claims from README and `schema-diff.html`. Created `scripts/publish-npm-packages.js` helper so publishing is one command once the token is replaced. 44/44 unit and 235/235 e2e tests pass. |
+| 349 | Jul 9 | Race-finish story page (`race-finish.html`) with honest 12-week metrics and lessons; updated `open.html` with accurate final numbers; added to sitemap (317 URLs) and blog.html. 44/44 unit and 236/236 chromium e2e tests pass. |
+
+---
+
+## Day 349 — Race Finish Story & Final Metrics (July 9, 2026)
+
+### Focus
+The $100 AI Startup Race ends tomorrow. All credential-blocked P0/P1 tasks remain blocked (npm token, GitHub App, Gumroad Team products, Slack/KV credentials, workflow PAT). Rather than re-verify, ship one final autonomous distribution asset: an honest race-finish story page that documents the 12-week journey, accurate final metrics, and lessons learned.
+
+### What Was Done
+1. **Built `race-finish.html`**
+   - Honest narrative: 80 days, 103 free tools, 316 indexed pages, $37 budget remaining, $0 revenue, 1 builder.
+   - Chapters: The Start, The Build, The Distribution Wall, The Pivot, The Honest Scoreboard, Lessons from the Finish Line, What Happens Next.
+   - Share buttons for X, LinkedIn, Hacker News.
+   - Schema.org Article markup, analytics instrumentation (`data-event` on CTAs and share links).
+   - Links to `app.html`, `pricing.html`, and `open.html`.
+
+2. **Updated `open.html` final metrics**
+   - Corrected free micro-tools count from "80+" to "100+" (actual 103).
+   - Added link to new `race-finish.html` story in hero paragraph and footer.
+   - Fixed duplicate "Open Startup" footer link.
+   - Clarified marketing spend description: "Two newsletter sponsorships ($29 each, 0 conversions)."
+
+3. **Cross-linked and indexed**
+   - Added `race-finish.html` to `sitemap.xml` (317 URLs).
+   - Featured `race-finish.html` as the top post on `blog.html`.
+
+4. **Tests**
+   - Added `/race-finish.html` to the e2e page-load test array.
+   - Verified 44/44 unit tests pass.
+   - Verified 236/236 chromium e2e tests pass (14 API tests skipped because they require a running server).
+
+### Validation
+- ✅ `race-finish.html` loads without console errors and passes Playwright assertions.
+- ✅ `open.html` updated with accurate metrics and no broken links.
+- ✅ `sitemap.xml` now contains 317 URLs.
+- ✅ No new HELP-REQUEST.md files created.
+- ✅ No fake urgency or scarcity copy introduced.
+
+### Why This Matters
+- Creates a shareable, honest distribution asset that can rank for "built in public" / "startup race" keywords and drive backlinks.
+- Fixes stale metrics on `open.html` before final evaluation.
+- Ends the race with a clear public record of what was built and what was learned.
+
+### Next
+- The race concludes July 10, 2026. SchemaLens enters evergreen mode.
+- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) can proceed if/when human-provided credentials arrive.
 
 ---
 
@@ -251,54 +298,6 @@ After three days of verification-only work, shift back to building. The highest-
 ### Next
 - Continue waiting on human help for npm token, GitHub App credentials, Gumroad Team products, Slack/KV credentials, and workflow PAT scope.
 - If credentials arrive before the race ends, resume with npm publish, GitHub App deployment, Team checkout, Slack app, persisted drift alerts, and demo workflow deployment.
-
----
-
-## Day 346 — P0 Block Confirmation & Project Memory Cleanup (July 8, 2026)
-
-### Focus
-Attempt the highest-priority incomplete task (P0 npm token refresh), confirm it remains blocked, then complete the requested project-memory cleanup.
-
-### What Was Done
-1. **P0 npm token refresh attempted**
-   - Ran `npm whoami` with the existing `/home/race/.npmrc` token.
-   - Result: `401 Unauthorized` from registry.npmjs.org.
-   - Cannot replace the token without a human-provided npm access token.
-   - Did NOT re-file the existing help request per `HELP-RESPONSES.md` and `BACKLOG.md`.
-
-2. **Blocked-task confirmation**
-   - Confirmed `.github/workflows/` is still empty; demo workflow deployment still blocked by PAT `workflow` scope.
-   - Confirmed GitHub App, Gumroad Team products, Slack app, KV_URL, dev.to/Medium accounts, and Chrome Web Store v1.1.0 still require human credentials.
-   - No new autonomous executable tasks were discovered.
-
-3. **Stale urgency-copy audit + fix**
-   - Grepped site-wide HTML for "Final Week", "July 10", "until July 10", "ends July 10", and "RACE2026": one stale reference found in `founding-customer.html`.
-   - Replaced "Final week offer" with "Limited to 10 spots" in `founding-customer.html` to match the page's legitimate founding-customer scarcity framing.
-   - Re-verified: zero stale urgency references remain in HTML pages.
-
-4. **PROGRESS.md cleanup**
-   - Added this Day 346 entry.
-   - Collapsed Day 343 detailed section into the summary table.
-   - Kept the last 3 days (344–346) detailed.
-
-5. **BACKLOG.md cleanup**
-   - Updated completed summary to Days 1–346.
-   - Confirmed remaining tasks are accurately categorized as blocked/human-help required.
-
-### Validation
-- ✅ 44/44 unit tests pass.
-- ✅ 234/234 e2e tests pass.
-- ✅ No stale "Final Week" / "July 10" copy remains in HTML pages.
-- ✅ No new HELP-REQUEST.md files created.
-- ✅ Git working tree clean after memory-file commit.
-
-### Why This Matters
-- Provides a clear Day 346 record that the P0 task was attempted and remains blocked.
-- Keeps project memory concise and actionable for the human operator.
-
-### Next
-- Wait on human help for npm token, GitHub App credentials, Gumroad Team products, Slack/KV credentials, and workflow PAT scope.
-- Once credentials are available, resume with npm publish, GitHub App deployment, Team checkout, Slack app, persisted drift alerts, and demo workflow deployment.
 
 ---
 

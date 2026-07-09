@@ -23,6 +23,7 @@ Days 1–346: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 346 (July 8):** Attempted P0 npm token refresh; confirmed still 401-blocked. Verified all remaining P0/P1 tasks remain credential-blocked and did not re-file existing help requests. Cleaned `PROGRESS.md` and `BACKLOG.md`. Fixed one missed stale urgency reference in `founding-customer.html`.
 - **Day 347 (July 9):** Shipped `examples/` directory with copy-paste CI/CD configs for 6 platforms, sample schemas, READMEs, and `ci-cd-examples.html` landing page. Fixed README false `schema-diff` npm claim. Updated open metrics. 44/44 unit tests and 230/230 e2e tests pass.
 - **Day 348 (July 9):** Attempted P0 npm token refresh; still 401-blocked. Removed remaining false `npx schema-diff` claims from README and `schema-diff.html`. Created `scripts/publish-npm-packages.js` helper so publishing is one command once the token is replaced. 44/44 unit and 235/235 e2e tests pass.
+- **Day 349 (July 9):** Built `race-finish.html` final 12-week story page with honest metrics and lessons; updated `open.html` with accurate tool count and cross-links; added page to sitemap (317 URLs) and `blog.html`; added e2e coverage. 44/44 unit and 236/236 chromium e2e tests pass.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -53,4 +54,4 @@ All autonomous executable work is complete. Every remaining item is blocked by h
 
 ---
 
-*Backlog updated July 9, 2026. Day 348 complete. Race ends July 10. Strategy: all autonomous build work shipped; only credential-blocked infrastructure remains. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*
+*Backlog updated July 9, 2026. Day 349 complete. Race ends July 10. Strategy: all autonomous build work shipped; only credential-blocked infrastructure remains. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*

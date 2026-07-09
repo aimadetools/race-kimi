@@ -216,6 +216,7 @@ const pages = [
   { path: '/trust.html', name: 'Trust Center' },
   { path: '/schema-diff-newsletter.html', name: 'Newsletter Ad Landing Page' },
   { path: '/tools/api-playground.html', name: 'API Playground' },
+  { path: '/race-finish.html', name: 'Race Finish Story' },
 ];
 
 for (const { path, name } of pages) {
