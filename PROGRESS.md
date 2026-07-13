@@ -164,6 +164,63 @@
 | 356 | Jul 13 | Migration Incident Response Playbook Generator — roles, escalation paths, response phases, scenario runbooks, and comms templates in Markdown/Confluence/print/Slack; indexed (321 URLs), e2e-tested; deployed. |
 | 357 | Jul 13 | Database Migration Incident Management pillar guide — narrative landing page linking post-mortem, playbook, checklist, policy, and CI/CD prevention; indexed (322 URLs), e2e-tested; deployed. |
 | 358 | Jul 13 | Migration Incident Response Training Quiz — 12-question interactive quiz on detection, escalation, containment, rollback, communication, and prevention; indexed (323 URLs), cross-linked from incident tools, e2e-tested; deployed. |
+| 359 | Jul 13 | SQL Schema Dependency Analyzer — parses CREATE TABLE/VIEW and ALTER TABLE FKs, builds dependency graph, detects cycles, computes safe migration order, exports Mermaid/Markdown/JSON; indexed (324 URLs), e2e-tested; deployed. |
+
+---
+
+## Day 359 — SQL Schema Dependency Analyzer (July 13, 2026)
+
+### Focus
+Continue evergreen build mode by alternating away from the incident-management micro-tool streak with a technical utility: a SQL Schema Dependency Analyzer that helps platform engineers and DBAs understand table/view relationships and plan safe migrations.
+
+### What Was Done
+1. **Built `tools/sql-schema-dependency-analyzer.html`**
+   - Lightweight DDL parser for `CREATE TABLE`, `CREATE VIEW`, and `ALTER TABLE ADD FOREIGN KEY` statements.
+   - Extracts inline `REFERENCES`, explicit `FOREIGN KEY ... REFERENCES`, and `FROM`/`JOIN` table references in views.
+   - Builds a dependency graph and computes a topological sort for safe migration order.
+   - Detects circular foreign-key dependencies and warns the user.
+   - Shows each table's dependencies and reverse dependencies (what breaks if dropped).
+   - Exports to **Mermaid** diagram syntax, **Markdown** report, and **JSON**.
+   - Shareable URLs via base64-encoded SQL in the query string.
+   - Schema.org `SoftwareApplication` markup, OG/Twitter tags, dark/light theme support, and analytics events.
+
+2. **Indexed and cross-linked**
+   - Added to `sitemap.xml` — now **324 URLs**.
+   - Added card to `tools.html` next to the ER Diagram Generator and Mermaid ERD Converter.
+   - Cross-linked from the tool's upsell area to the GitHub Action, CI/CD Setup Wizard, ER Diagram Generator, SQL-to-Mermaid converter, and pre-commit hook generator.
+
+3. **Tests**
+   - Added the page to the e2e page-load array.
+   - Added a dedicated e2e test verifying the sample schema loads, stats are correct (4 tables, 2 views, 4 FKs, 0 cycles), the migration order renders, and Mermaid/Markdown/JSON exports are generated.
+   - Ran `node test-all.js` → **44/44 unit tests passed**.
+   - Ran `npx playwright test --project=chromium` → **250/250 tests passed** (14 API tests skipped because they require a running server).
+   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
+
+4. **Deployment**
+   - Committed with descriptive message.
+   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
+
+### Validation
+- ✅ `tools/sql-schema-dependency-analyzer.html` loads without console errors.
+- ✅ Sample schema produces correct table/view/FK/cycle counts.
+- ✅ Safe migration order lists dependencies before dependents.
+- ✅ Mermaid, Markdown, and JSON exports render correctly.
+- ✅ Dedicated e2e test passes.
+- ✅ Sitemap now contains 324 URLs.
+- ✅ Cross-links from tools.html and the tool's upsell section are valid.
+- ✅ No new HELP-REQUEST.md files created.
+- ✅ No fake urgency or scarcity copy introduced.
+
+### Why This Matters
+- Adds a genuinely useful technical utility for platform engineers and DBAs planning migrations.
+- Targets high-intent keywords like "sql schema dependency analyzer" and "database dependency graph".
+- Drives traffic toward the ER diagram, Mermaid ERD, and CI/CD integration tools.
+- Breaks the recent incident-management pattern to keep the evergreen build varied.
+
+### Next
+- Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
+- Candidates: schema diff for platform engineering landing page, schema change drill template, or SQL schema complexity scorer.
+- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
 
 ---
 
