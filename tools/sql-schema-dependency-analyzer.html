@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Schema Dependency Analyzer — Free Database Dependency Graph | SchemaLens</title>
+<meta name="description" content="Analyze SQL schema dependencies instantly. Discover foreign-key relationships, view dependencies, circular references, and safe migration order. Export Mermaid diagrams and Markdown. Free, browser-based, privacy-first.">
+<link rel="canonical" href="https://schemalens.tech/tools/sql-schema-dependency-analyzer.html">
+<meta property="og:title" content="SQL Schema Dependency Analyzer — Free Database Dependency Graph">
+<meta property="og:description" content="Paste CREATE TABLE and CREATE VIEW statements to visualize schema dependencies, detect circular FKs, and get a safe migration order. Export to Mermaid or Markdown.">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-schema-dependency-analyzer.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL Schema Dependency Analyzer",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Foreign-key dependency graph, view dependency detection, circular dependency warnings, topological migration order, Mermaid diagram export, Markdown table export, JSON export, PostgreSQL MySQL SQLite SQL Server Oracle support",
+  "url": "https://schemalens.tech/tools/sql-schema-dependency-analyzer.html"
+}
+</script>
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-hover: #334155;
+  --border: #334155;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --secondary: #8b5cf6;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.announcement-bar {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: #fff;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+.announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+}
+nav a.logo {
+  font-weight: 700; font-size: 1.2rem; color: var(--text); text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+nav a.link { color: var(--text-muted); text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+nav a.link:hover { color: var(--text); }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+header { text-align: center; padding: 48px 24px 32px; }
+header h1 {
+  font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 12px;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; margin-bottom: 20px;
+}
+.card h2 { font-size: 1.15rem; margin-bottom: 16px; }
+.card h3 { font-size: 1rem; margin: 20px 0 10px; color: var(--text-muted); }
+
+.editor-label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: block; }
+textarea.sql-input {
+  width: 100%; min-height: 220px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px; color: var(--text); font-family: 'SF Mono', Monaco, monospace;
+  font-size: 0.9rem; resize: vertical;
+}
+textarea.sql-input:focus { outline: none; border-color: var(--primary); }
+
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 22px; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; border: none; text-decoration: none; transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--surface-hover); color: var(--text); border: 1px solid var(--border); }
+.btn-copy { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; font-size: 0.85rem; }
+.btn-copy:hover { color: var(--text); border-color: var(--primary); }
+
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 20px;
+}
+.stat-box {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px; text-align: center;
+}
+.stat-box .number { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+.stat-box .label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+.stat-box.danger .number { color: var(--danger); }
+.stat-box.warning .number { color: var(--warning); }
+
+.alert {
+  border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;
+  border-left: 4px solid var(--warning); background: rgba(245, 158, 11, 0.1);
+}
+.alert.danger { border-left-color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+.alert-title { font-weight: 700; margin-bottom: 4px; }
+.alert-body { color: var(--text-muted); font-size: 0.95rem; }
+
+.result-section { margin-bottom: 28px; }
+.result-section h3 { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; }
+
+.dependency-list { display: grid; gap: 10px; }
+.dep-item {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+}
+.dep-table { font-weight: 700; color: var(--text); min-width: 140px; }
+.dep-arrow { color: var(--text-muted); }
+.dep-targets { display: flex; flex-wrap: wrap; gap: 6px; }
+.dep-tag {
+  background: var(--surface-hover); border: 1px solid var(--border); border-radius: 6px;
+  padding: 4px 10px; font-size: 0.85rem; color: var(--text);
+}
+.dep-tag.fk { border-color: var(--primary); color: #c7d2fe; }
+.dep-tag.view { border-color: var(--secondary); color: #ddd6fe; }
+.dep-tag.cycle { border-color: var(--danger); color: #fecaca; }
+
+.order-list { display: flex; flex-wrap: wrap; gap: 10px; }
+.order-item {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 14px; display: flex; align-items: center; gap: 10px;
+}
+.order-number { background: var(--primary); color: #fff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+
+.output-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.output-tab {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 14px; font-size: 0.9rem; color: var(--text-muted); cursor: pointer;
+}
+.output-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.output-panel { display: none; }
+.output-panel.active { display: block; }
+pre.code-output {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; overflow-x: auto; font-family: 'SF Mono', Monaco, monospace;
+  font-size: 0.85rem; line-height: 1.5; color: var(--text); white-space: pre-wrap;
+}
+
+.empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; }
+.hidden { display: none; }
+
+.share-row { display: flex; gap: 10px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+.share-row input {
+  flex: 1; min-width: 220px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 0.9rem;
+}
+
+.upsell {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12));
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; margin-top: 24px;
+}
+.upsell h3 { margin-top: 0; color: var(--text); }
+.upsell p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px; }
+.upsell a { color: #c7d2fe; text-decoration: underline; }
+
+footer {
+  text-align: center; padding: 40px 24px; color: var(--text-muted); font-size: 0.85rem;
+  border-top: 1px solid var(--border); margin-top: 40px;
+}
+footer a { color: var(--text-muted); text-decoration: underline; }
+
+@media (max-width: 640px) {
+  nav a.link { margin-left: 12px; font-size: 0.8rem; }
+  .dep-item { flex-direction: column; align-items: flex-start; }
+}
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+</head>
+<body>
+
+<div class="announcement-bar">
+  Catch breaking schema changes in every PR with the free <a href="../github-action.html">SchemaLens GitHub Action</a>.
+</div>
+
+<nav>
+  <a href="../index.html" class="logo">SchemaLens</a>
+  <div>
+    <a href="../app.html" class="link">Diff</a>
+    <a href="../tools.html" class="link">Tools</a>
+    <a href="../blog.html" class="link">Blog</a>
+    <a href="../pricing.html" class="link">Pricing</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header>
+    <h1>SQL Schema Dependency Analyzer</h1>
+    <p>Discover foreign-key relationships, view dependencies, circular references, and the safest order to run your migrations. Paste your DDL below — everything stays in your browser.</p>
+  </header>
+
+  <div class="card">
+    <label class="editor-label" for="sqlInput">Paste CREATE TABLE / CREATE VIEW / ALTER TABLE statements</label>
+    <textarea id="sqlInput" class="sql-input" placeholder="CREATE TABLE users (&#10;  id SERIAL PRIMARY KEY,&#10;  team_id INT REFERENCES teams(id)&#10;);&#10;&#10;CREATE TABLE teams (&#10;  id SERIAL PRIMARY KEY&#10;);&#10;&#10;CREATE VIEW active_users AS&#10;SELECT u.* FROM users u JOIN teams t ON u.team_id = t.id;&#10;"></textarea>
+    <div class="btn-row">
+      <button id="analyzeBtn" class="btn btn-primary">Analyze Dependencies</button>
+      <button id="sampleBtn" class="btn btn-secondary">Load sample schema</button>
+      <button id="clearBtn" class="btn btn-secondary">Clear</button>
+    </div>
+  </div>
+
+  <div id="results" class="card hidden">
+    <h2>Dependency Analysis</h2>
+
+    <div class="stats-grid">
+      <div class="stat-box"><div class="number" id="statTables">0</div><div class="label">Tables</div></div>
+      <div class="stat-box"><div class="number" id="statViews">0</div><div class="label">Views</div></div>
+      <div class="stat-box"><div class="number" id="statFKs">0</div><div class="label">Foreign Keys</div></div>
+      <div class="stat-box" id="cycleBox"><div class="number" id="statCycles">0</div><div class="label">Cycles</div></div>
+    </div>
+
+    <div id="cycleAlert" class="alert danger hidden">
+      <div class="alert-title">Circular dependencies detected</div>
+      <div class="alert-body" id="cycleBody">Some tables reference each other. You may need to defer constraints or use multiple migration steps.</div>
+    </div>
+
+    <div class="result-section">
+      <h3>Safe migration order (topological sort)</h3>
+      <div id="orderList" class="order-list"></div>
+    </div>
+
+    <div class="result-section">
+      <h3>Dependencies by table</h3>
+      <div id="depList" class="dependency-list"></div>
+    </div>
+
+    <div class="result-section">
+      <h3>Export</h3>
+      <div class="output-tabs">
+        <button class="output-tab active" data-tab="mermaid">Mermaid</button>
+        <button class="output-tab" data-tab="markdown">Markdown</button>
+        <button class="output-tab" data-tab="json">JSON</button>
+      </div>
+      <div id="panel-mermaid" class="output-panel active">
+        <pre id="mermaidOutput" class="code-output"></pre>
+      </div>
+      <div id="panel-markdown" class="output-panel">
+        <pre id="markdownOutput" class="code-output"></pre>
+      </div>
+      <div id="panel-json" class="output-panel">
+        <pre id="jsonOutput" class="code-output"></pre>
+      </div>
+      <div class="btn-row">
+        <button id="copyOutputBtn" class="btn btn-copy">Copy current export</button>
+      </div>
+    </div>
+
+    <div class="share-row">
+      <input id="shareUrl" type="text" readonly placeholder="Shareable URL will appear here">
+      <button id="copyShareBtn" class="btn btn-secondary">Copy URL</button>
+    </div>
+  </div>
+
+  <div class="card upsell">
+    <h3>Keep dependencies under control in CI/CD</h3>
+    <p>SchemaLens diffs schemas in every pull request, flags breaking changes, and generates safe migration SQL. <a href="../github-action.html">Add the free GitHub Action</a> or <a href="../tools/cicd-setup-wizard.html">generate a config for GitLab, Jenkins, CircleCI, Bitbucket, or Azure DevOps</a>.</p>
+    <a href="../tools/schema-diagram.html" class="link">Generate an ER diagram</a> ·
+    <a href="../tools/sql-to-mermaid-erd.html" class="link">SQL to Mermaid ERD</a> ·
+    <a href="../tools/schema-diff-precommit-hook.html" class="link">Pre-commit hook</a>
+  </div>
+</div>
+
+<footer>
+  <p>Built by <a href="../index.html">SchemaLens</a> · <a href="../privacy-policy.html">Privacy Policy</a></p>
+</footer>
+
+<script>
+const sampleSQL = `CREATE TABLE teams (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  organization_id INT NOT NULL REFERENCES organizations(id)
+);
+
+CREATE TABLE organizations (
+  id SERIAL PRIMARY KEY,
+  slug VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  team_id INT REFERENCES teams(id) ON DELETE SET NULL
+);
+
+CREATE TABLE projects (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  owner_id INT NOT NULL REFERENCES users(id),
+  team_id INT NOT NULL REFERENCES teams(id)
+);
+
+CREATE VIEW team_members AS
+SELECT t.name AS team, u.email
+FROM users u
+JOIN teams t ON u.team_id = t.id;
+
+CREATE VIEW project_owners AS
+SELECT p.name AS project, u.email AS owner
+FROM projects p
+JOIN users u ON p.owner_id = u.id;`;
+
+function normalizeSQL(sql) {
+  return sql
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/--[^\n]*/g, ' ')
+    .replace(/'[^']*'/g, "''")
+    .replace(/"[^"]*"/g, '""')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function extractQuotedName(sql, offset) {
+  const rest = sql.slice(offset).trim();
+  const m = rest.match(/^(["\`]?)([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])\1/);
+  if (!m) return null;
+  return m[2].replace(/["\`]/g, '').toLowerCase();
+}
+
+function extractCreateTableName(sql) {
+  const m = sql.match(/CREATE\s+(?:TEMP\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+  return m ? m[1].replace(/["\`]/g, '').toLowerCase() : null;
+}
+
+function extractCreateViewName(sql) {
+  const m = sql.match(/CREATE\s+(?:OR\s+REPLACE\s+)?VIEW\s+(?:IF\s+NOT\s+EXISTS\s+)?["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+  return m ? m[1].replace(/["\`]/g, '').toLowerCase() : null;
+}
+
+function extractFKRefs(body) {
+  const refs = [];
+  // inline REFERENCES on column definitions
+  const inlineRegex = /REFERENCES\s+["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?\s*\(/gi;
+  let m;
+  while ((m = inlineRegex.exec(body)) !== null) {
+    refs.push(m[1].replace(/["\`]/g, '').toLowerCase());
+  }
+  // explicit FOREIGN KEY ... REFERENCES table(
+  const fkRegex = /FOREIGN\s+KEY\s*\([^)]+\)\s*REFERENCES\s+["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/gi;
+  while ((m = fkRegex.exec(body)) !== null) {
+    refs.push(m[1].replace(/["\`]/g, '').toLowerCase());
+  }
+  return refs;
+}
+
+function extractViewTables(sql) {
+  const refs = [];
+  // strip the CREATE VIEW ... AS prefix
+  const body = sql.replace(/CREATE\s+(?:OR\s+REPLACE\s+)?VIEW\s+[\s\S]*?\s+AS\s+/i, ' ');
+  const fromRegex = /(?:FROM|JOIN)\s+["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/gi;
+  let m;
+  while ((m = fromRegex.exec(body)) !== null) {
+    refs.push(m[1].replace(/["\`]/g, '').toLowerCase());
+  }
+  return [...new Set(refs)];
+}
+
+function extractAlterTableFKs(sql) {
+  const refs = [];
+  const tableMatch = sql.match(/ALTER\s+TABLE\s+["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+  if (!tableMatch) return [];
+  const table = tableMatch[1].replace(/["\`]/g, '').toLowerCase();
+  const fkRegex = /ADD\s+(?:CONSTRAINT\s+["\`]?[A-Za-z_][A-Za-z0-9_]*["\`]?\s+)?FOREIGN\s+KEY\s*\([^)]+\)\s*REFERENCES\s+["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/gi;
+  let m;
+  while ((m = fkRegex.exec(sql)) !== null) {
+    refs.push({ table, target: m[1].replace(/["\`]/g, '').toLowerCase() });
+  }
+  return refs;
+}
+
+function parseSchema(sql) {
+  const normalized = normalizeSQL(sql);
+  const tables = {};
+  const views = {};
+  const statements = normalized.split(/;+/).map(s => s.trim()).filter(Boolean);
+
+  for (const stmt of statements) {
+    if (/^CREATE\s+TABLE/i.test(stmt)) {
+      const name = extractCreateTableName(stmt);
+      if (!name) continue;
+      const bodyMatch = stmt.match(/CREATE\s+TABLE\s+[\s\S]*?\((.*)\)\s*$/i);
+      const body = bodyMatch ? bodyMatch[1] : '';
+      tables[name] = { name, fks: extractFKRefs(body), type: 'table' };
+    } else if (/^CREATE\s+VIEW/i.test(stmt)) {
+      const name = extractCreateViewName(stmt);
+      if (!name) continue;
+      views[name] = { name, refs: extractViewTables(stmt), type: 'view' };
+    } else if (/^ALTER\s+TABLE/i.test(stmt)) {
+      for (const { table, target } of extractAlterTableFKs(stmt)) {
+        if (!tables[table]) tables[table] = { name: table, fks: [], type: 'table' };
+        tables[table].fks.push(target);
+      }
+    }
+  }
+
+  // Ensure referenced tables exist as nodes even if not defined
+  for (const t of Object.values(tables)) {
+    for (const ref of t.fks) {
+      if (!tables[ref] && !views[ref]) tables[ref] = { name: ref, fks: [], type: 'table', missing: true };
+    }
+  }
+  for (const v of Object.values(views)) {
+    for (const ref of v.refs) {
+      if (!tables[ref] && !views[ref]) tables[ref] = { name: ref, fks: [], type: 'table', missing: true };
+    }
+  }
+
+  return { tables, views };
+}
+
+function buildGraph(schema) {
+  const nodes = new Set();
+  const edges = [];
+  const edgeTypes = [];
+
+  for (const t of Object.values(schema.tables)) {
+    nodes.add(t.name);
+    for (const ref of t.fks) {
+      nodes.add(ref);
+      edges.push([t.name, ref]);
+      edgeTypes.push({ from: t.name, to: ref, type: 'fk' });
+    }
+  }
+  for (const v of Object.values(schema.views)) {
+    nodes.add(v.name);
+    for (const ref of v.refs) {
+      nodes.add(ref);
+      edges.push([v.name, ref]);
+      edgeTypes.push({ from: v.name, to: ref, type: 'view' });
+    }
+  }
+
+  return { nodes: [...nodes], edges, edgeTypes };
+}
+
+function topologicalSort(schema) {
+  const graph = buildGraph(schema);
+  const inDegree = {};
+  const adj = {};
+  for (const n of graph.nodes) { inDegree[n] = 0; adj[n] = []; }
+  for (const [from, to] of graph.edges) {
+    adj[to].push(from); // reverse edge for migration order: dependencies first
+    inDegree[from]++;
+  }
+  const queue = graph.nodes.filter(n => inDegree[n] === 0).sort();
+  const result = [];
+  while (queue.length) {
+    const n = queue.shift();
+    result.push(n);
+    for (const next of adj[n]) {
+      inDegree[next]--;
+      if (inDegree[next] === 0) queue.push(next);
+    }
+    queue.sort();
+  }
+  return result;
+}
+
+function detectCycles(schema) {
+  const graph = buildGraph(schema);
+  const adj = {};
+  for (const n of graph.nodes) adj[n] = [];
+  for (const [from, to] of graph.edges) adj[from].push(to);
+
+  const cycles = [];
+  const visited = new Set();
+  const stack = new Set();
+
+  function dfs(node, path) {
+    if (stack.has(node)) {
+      const idx = path.indexOf(node);
+      if (idx !== -1) cycles.push(path.slice(idx).concat(node));
+      return;
+    }
+    if (visited.has(node)) return;
+    visited.add(node);
+    stack.add(node);
+    for (const next of adj[node]) dfs(next, path.concat(next));
+    stack.delete(node);
+  }
+
+  for (const n of graph.nodes) if (!visited.has(n)) dfs(n, [n]);
+  // Deduplicate by normalized cycle string
+  const seen = new Set();
+  return cycles.filter(c => {
+    const key = [...c].sort().join(',');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function dependentsOf(schema, name) {
+  const result = [];
+  for (const t of Object.values(schema.tables)) {
+    if (t.fks.includes(name)) result.push({ name: t.name, type: 'fk' });
+  }
+  for (const v of Object.values(schema.views)) {
+    if (v.refs.includes(name)) result.push({ name: v.name, type: 'view' });
+  }
+  return result;
+}
+
+function generateMermaid(schema) {
+  const graph = buildGraph(schema);
+  let out = 'graph TD\n';
+  for (const t of Object.values(schema.tables)) {
+    const shape = t.missing ? '([missing])' : '[table]';
+    out += `  ${safeId(t.name)}${shape}:::table\n`;
+  }
+  for (const v of Object.values(schema.views)) {
+    out += `  ${safeId(v.name)}[/view/]:::view\n`;
+  }
+  for (const e of graph.edgeTypes) {
+    const style = e.type === 'fk' ? '-->|FK|' : '-->|uses|';
+    out += `  ${safeId(e.from)} ${style} ${safeId(e.to)}\n`;
+  }
+  out += '  classDef table fill:#1e293b,stroke:#6366f1,color:#f1f5f9\n';
+  out += '  classDef view fill:#1e293b,stroke:#8b5cf6,color:#f1f5f9\n';
+  return out;
+}
+
+function generateMarkdown(schema) {
+  const order = topologicalSort(schema);
+  const cycles = detectCycles(schema);
+  let out = '# Schema Dependency Report\n\n';
+  out += `Generated with [SchemaLens](https://schemalens.tech/tools/sql-schema-dependency-analyzer.html)\n\n`;
+  out += `| Metric | Count |\n|---|---:|\n`;
+  out += `| Tables | ${Object.values(schema.tables).filter(t => !t.missing).length} |\n`;
+  out += `| Views | ${Object.values(schema.views).length} |\n`;
+  out += `| Foreign Keys | ${Object.values(schema.tables).reduce((a, t) => a + t.fks.length, 0)} |\n`;
+  out += `| Cycles | ${cycles.length} |\n\n`;
+  out += '## Safe Migration Order\n\n';
+  order.forEach((n, i) => { out += `${i + 1}. \`${n}\`\n`; });
+  out += '\n## Dependencies\n\n';
+  out += '| Object | Depends On | Depended On By |\n|---|---|---|\n';
+  for (const n of order) {
+    const deps = [];
+    const t = schema.tables[n];
+    const v = schema.views[n];
+    if (t) deps.push(...t.fks.map(x => `${x} (FK)`));
+    if (v) deps.push(...v.refs.map(x => `${x} (view)`));
+    const dps = dependentsOf(schema, n).map(d => `${d.name} (${d.type})`);
+    out += `| \`${n}\` | ${deps.join(', ') || '-'} | ${dps.join(', ') || '-'} |\n`;
+  }
+  if (cycles.length) {
+    out += '\n## Cycles\n\n';
+    cycles.forEach((c, i) => { out += `${i + 1}. \`${c.join(' -> ')}\`\n`; });
+  }
+  return out;
+}
+
+function generateJSON(schema) {
+  const graph = buildGraph(schema);
+  return JSON.stringify({
+    tables: Object.values(schema.tables).filter(t => !t.missing).map(t => t.name),
+    views: Object.values(schema.views).map(v => v.name),
+    edges: graph.edgeTypes,
+    migrationOrder: topologicalSort(schema),
+    cycles: detectCycles(schema),
+  }, null, 2);
+}
+
+function safeId(name) {
+  return 'n_' + name.replace(/[^a-z0-9_]/gi, '_');
+}
+
+function renderResults(schema) {
+  const graph = buildGraph(schema);
+  const order = topologicalSort(schema);
+  const cycles = detectCycles(schema);
+
+  document.getElementById('statTables').textContent = Object.values(schema.tables).filter(t => !t.missing).length;
+  document.getElementById('statViews').textContent = Object.values(schema.views).length;
+  document.getElementById('statFKs').textContent = Object.values(schema.tables).reduce((a, t) => a + t.fks.length, 0);
+  document.getElementById('statCycles').textContent = cycles.length;
+
+  const cycleBox = document.getElementById('cycleBox');
+  cycleBox.classList.toggle('danger', cycles.length > 0);
+  cycleBox.classList.toggle('warning', cycles.length === 0);
+  document.getElementById('cycleAlert').classList.toggle('hidden', cycles.length === 0);
+  document.getElementById('cycleBody').textContent = cycles.length
+    ? `Cycles found: ${cycles.map(c => c.join(' → ')).join('; ')}. Consider deferred constraints or splitting migrations.`
+    : 'No circular dependencies found.';
+
+  const orderList = document.getElementById('orderList');
+  orderList.innerHTML = '';
+  order.forEach((n, i) => {
+    const el = document.createElement('div');
+    el.className = 'order-item';
+    el.innerHTML = `<span class="order-number">${i + 1}</span><span>${escapeHtml(n)}</span>`;
+    orderList.appendChild(el);
+  });
+
+  const depList = document.getElementById('depList');
+  depList.innerHTML = '';
+  for (const n of order) {
+    const t = schema.tables[n];
+    const v = schema.views[n];
+    const deps = [];
+    if (t) {
+      for (const ref of [...new Set(t.fks)]) {
+        deps.push({ name: ref, type: 'fk' });
+      }
+    }
+    if (v) {
+      for (const ref of [...new Set(v.refs)]) {
+        deps.push({ name: ref, type: 'view' });
+      }
+    }
+    const dps = dependentsOf(schema, n);
+
+    const item = document.createElement('div');
+    item.className = 'dep-item';
+    let html = `<span class="dep-table">${escapeHtml(n)}</span>`;
+    if (deps.length) {
+      html += `<span class="dep-arrow">depends on →</span><div class="dep-targets">${deps.map(d => `<span class="dep-tag ${d.type}">${escapeHtml(d.name)}</span>`).join('')}</div>`;
+    }
+    if (dps.length) {
+      html += `<span class="dep-arrow">← used by</span><div class="dep-targets">${dps.map(d => `<span class="dep-tag ${d.type}">${escapeHtml(d.name)}</span>`).join('')}</div>`;
+    }
+    if (!deps.length && !dps.length) {
+      html += `<span class="dep-arrow">no dependencies</span>`;
+    }
+    item.innerHTML = html;
+    depList.appendChild(item);
+  }
+
+  document.getElementById('mermaidOutput').textContent = generateMermaid(schema);
+  document.getElementById('markdownOutput').textContent = generateMarkdown(schema);
+  document.getElementById('jsonOutput').textContent = generateJSON(schema);
+
+  document.getElementById('results').classList.remove('hidden');
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function updateShareUrl() {
+  const sql = document.getElementById('sqlInput').value;
+  const params = new URLSearchParams(window.location.search);
+  params.set('sql', compress(sql));
+  const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+  document.getElementById('shareUrl').value = url;
+}
+
+function compress(str) {
+  try {
+    return btoa(unescape(encodeURIComponent(str)));
+  } catch (e) { return ''; }
+}
+
+function decompress(str) {
+  try {
+    return decodeURIComponent(escape(atob(str)));
+  } catch (e) { return ''; }
+}
+
+function analyze() {
+  const sql = document.getElementById('sqlInput').value;
+  if (!sql.trim()) return;
+  const schema = parseSchema(sql);
+  renderResults(schema);
+  updateShareUrl();
+  if (typeof gtag === 'function') gtag('event', 'dependency_analyzer_run', { event_category: 'tools' });
+}
+
+function loadFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const sql = params.get('sql');
+  if (sql) {
+    const decoded = decompress(sql);
+    if (decoded) {
+      document.getElementById('sqlInput').value = decoded;
+      analyze();
+    }
+  }
+}
+
+function setActiveTab(tab) {
+  document.querySelectorAll('.output-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.output-panel').forEach(p => p.classList.toggle('active', p.id === `panel-${tab}`));
+}
+
+function getActiveOutput() {
+  const active = document.querySelector('.output-tab.active');
+  if (!active) return '';
+  return document.getElementById(`${active.dataset.tab}Output`).textContent;
+}
+
+document.getElementById('analyzeBtn').addEventListener('click', analyze);
+document.getElementById('sampleBtn').addEventListener('click', () => {
+  document.getElementById('sqlInput').value = sampleSQL;
+  analyze();
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('results').classList.add('hidden');
+  history.replaceState({}, '', window.location.pathname);
+});
+document.querySelectorAll('.output-tab').forEach(btn => {
+  btn.addEventListener('click', () => setActiveTab(btn.dataset.tab));
+});
+document.getElementById('copyOutputBtn').addEventListener('click', async () => {
+  const text = getActiveOutput();
+  if (!text) return;
+  await navigator.clipboard.writeText(text);
+  const btn = document.getElementById('copyOutputBtn');
+  const prev = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = prev, 1500);
+});
+document.getElementById('copyShareBtn').addEventListener('click', async () => {
+  const input = document.getElementById('shareUrl');
+  if (!input.value) return;
+  await navigator.clipboard.writeText(input.value);
+  const btn = document.getElementById('copyShareBtn');
+  const prev = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = prev, 1500);
+});
+
+loadFromUrl();
+</script>
+</body>
+</html>
