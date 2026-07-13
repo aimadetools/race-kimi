@@ -152,6 +152,7 @@ const pages = [
   { path: '/tools/schema-change-request-generator.html', name: 'Schema Change Request Generator' },
   { path: '/tools/schema-diff-api-client-generator.html', name: 'Schema Diff API Client Generator' },
   { path: '/tools/migration-incident-postmortem-generator.html', name: 'Migration Incident Post-Mortem Generator' },
+  { path: '/tools/migration-incident-response-playbook.html', name: 'Migration Incident Response Playbook' },
   { path: '/tools/schema-change-policy-generator.html', name: 'Schema Change Management Policy Generator' },
   { path: '/tools/schema-change-adr-generator.html', name: 'Schema Change ADR Generator' },
   { path: '/tools/mcp-config-generator.html', name: 'MCP Config Generator' },
@@ -1231,6 +1232,24 @@ test('migration incident post-mortem generator loads and generates markdown', as
   expect(output).toContain('12 minutes');
   expect(output).toContain('non-nullable column');
   expect(output).toContain('[ ] Add CI breaking-change gate');
+  expect(output).toContain('Generated with [SchemaLens](https://schemalens.tech)');
+});
+
+
+test('migration incident response playbook generator loads and generates markdown', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/migration-incident-response-playbook.html`);
+  await expect(page.locator('h1')).toContainText('Migration Incident Response Playbook Generator');
+  await page.fill('#orgName', 'Acme Platform Engineering');
+  await page.fill('#incidentCommander', 'Senior SRE on-call');
+  await page.fill('#dbaContact', '#dba-oncall');
+  await page.fill('#escalationPath', '1. Page on-call DBA\n2. Escalate to engineering manager');
+  await page.click('#generateBtn');
+  const output = await page.locator('#output').textContent();
+  expect(output).toContain('# Migration Incident Response Playbook');
+  expect(output).toContain('Acme Platform Engineering');
+  expect(output).toContain('Senior SRE on-call');
+  expect(output).toContain('#dba-oncall');
+  expect(output).toContain('Page on-call DBA');
   expect(output).toContain('Generated with [SchemaLens](https://schemalens.tech)');
 });
 

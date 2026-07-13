@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Migration Incident Response Playbook Generator | SchemaLens</title>
+  <meta name="description" content="Generate a database migration incident response playbook. Define roles, escalation paths, runbook steps, and communication templates in Markdown, Confluence, or Slack format.">
+  <link rel="canonical" href="https://schemalens.tech/tools/migration-incident-response-playbook.html">
+  <meta property="og:title" content="Migration Incident Response Playbook Generator">
+  <meta property="og:description" content="Generate a database migration incident response playbook with roles, escalation paths, runbook steps, and communication templates.">
+  <meta property="og:url" content="https://schemalens.tech/tools/migration-incident-response-playbook.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Migration Incident Response Playbook Generator">
+  <meta name="twitter:description" content="Generate a database migration incident response playbook with roles, escalation paths, runbook steps, and communication templates.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Migration Incident Response Playbook Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates migration incident response playbooks in Markdown, Confluence, printable, and Slack formats. Includes roles, escalation paths, detection channels, response phases, runbook steps, and communication templates.",
+    "url": "https://schemalens.tech/tools/migration-incident-response-playbook.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 960px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 80px; resize: vertical; font-family: inherit; font-size: 0.95rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .checkbox-group label { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; cursor: pointer; font-size: 0.88rem; font-weight: 400; }
+    .checkbox-group label:has(input:checked) { border-color: var(--primary); background: rgba(99,102,241,0.08); }
+    .checkbox-group input { width: auto; margin: 0; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; min-height: 280px; }
+
+    .preview-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .preview-tabs button { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+    .preview-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+    .section-divider { border-top: 1px solid var(--border); margin: 24px 0 18px; }
+    .section-title { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 12px; }
+
+    @media print {
+      .nav, .left-col, .preview-tabs, .btn-copy, .share-row, .upsell, footer { display: none !important; }
+      .tool-grid { display: block; padding: 0; }
+      .output { white-space: pre-wrap; color: #000; background: #fff; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Migration Incident Response Playbook Generator</h1>
+      <p>Build a ready-to-use runbook for database migration incidents. Define roles, escalation paths, response steps, and communication templates in seconds.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Playbook basics</h2>
+          <div class="field-row">
+            <div class="field">
+              <label for="orgName">Team / organization</label>
+              <input type="text" id="orgName" placeholder="e.g. Acme Platform Engineering">
+            </div>
+            <div class="field">
+              <label for="dialect">Primary database</label>
+              <select id="dialect">
+                <option value="PostgreSQL">PostgreSQL</option>
+                <option value="MySQL">MySQL</option>
+                <option value="SQLite">SQLite</option>
+                <option value="SQL Server">SQL Server</option>
+                <option value="Oracle">Oracle</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="severityFramework">Severity framework</label>
+            <select id="severityFramework">
+              <option value="sev">SEV 1–4</option>
+              <option value="p">P0–P3</option>
+              <option value="critical">Critical / High / Medium / Low</option>
+            </select>
+          </div>
+
+          <div class="section-divider"></div>
+          <div class="section-title">Roles & escalation</div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="incidentCommander">Incident commander</label>
+              <input type="text" id="incidentCommander" placeholder="e.g. Senior SRE on-call">
+            </div>
+            <div class="field">
+              <label for="dbaContact">DBA / database owner</label>
+              <input type="text" id="dbaContact" placeholder="e.g. #dba-oncall Slack channel">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="engineerContact">Engineering lead</label>
+              <input type="text" id="engineerContact" placeholder="e.g. #engineering-leads">
+            </div>
+            <div class="field">
+              <label for="commsContact">Communications lead</label>
+              <input type="text" id="commsContact" placeholder="e.g. #incident-comms">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="escalationPath">Escalation path</label>
+            <textarea id="escalationPath" placeholder="e.g. 1. Page on-call DBA&#10;2. Escalate to engineering manager if SEV 1 &gt; 15 min&#10;3. Page CTO if customer-facing outage &gt; 30 min"></textarea>
+          </div>
+
+          <div class="section-divider"></div>
+          <div class="section-title">Detection & channels</div>
+
+          <div class="field">
+            <label>Detection channels</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="detMonitoring" checked> Monitoring alerts</label>
+              <label><input type="checkbox" id="detCiCd" checked> CI/CD pipeline failure</label>
+              <label><input type="checkbox" id="detCustomer"> Customer reports</label>
+              <label><input type="checkbox" id="detSupport"> Support tickets</label>
+              <label><input type="checkbox" id="detManual"> Manual health check</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="commsChannels">Communication channels</label>
+            <textarea id="commsChannels" placeholder="e.g. Primary: #incidents Slack&#10;Bridge: Zoom war room (link in 1password)&#10;Status page: status.acme.com"></textarea>
+          </div>
+
+          <div class="section-divider"></div>
+          <div class="section-title">Response phases</div>
+
+          <div class="field">
+            <label>Include response phases</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="phaseDetect" checked> Detect</label>
+              <label><input type="checkbox" id="phaseAssess" checked> Assess</label>
+              <label><input type="checkbox" id="phaseContain" checked> Contain</label>
+              <label><input type="checkbox" id="phaseResolve" checked> Resolve</label>
+              <label><input type="checkbox" id="phaseReview" checked> Review</label>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+          <div class="section-title">Runbook scenarios</div>
+
+          <div class="field">
+            <label>Include scenario runbooks</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="scenarioBreaking" checked> Breaking change deployed</label>
+              <label><input type="checkbox" id="scenarioLock" checked> Lock timeout / long migration</label>
+              <label><input type="checkbox" id="scenarioDataLoss"> Data corruption / loss</label>
+              <label><input type="checkbox" id="scenarioRollback" checked> Rollback required</label>
+              <label><input type="checkbox" id="scenarioReplica"> Replication lag</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="customNotes">Custom notes / tools</label>
+            <textarea id="customNotes" placeholder="e.g. Schema diff tool: https://schemalens.tech/app.html&#10;Rollback scripts are stored in /migrations/rollback/&#10;Database snapshots taken nightly at 02:00 UTC"></textarea>
+          </div>
+
+          <button class="btn btn-primary" id="generateBtn" style="width:100%;" data-event="playbook_generate">Generate Playbook</button>
+        </div>
+
+        <div class="upsell">
+          <h3>🛡️ Prevent incidents before they happen</h3>
+          <ul>
+            <li>Catch breaking schema changes in every PR with the SchemaLens GitHub Action.</li>
+            <li>Auto-generate migration + rollback SQL for every schema diff.</li>
+            <li>Gate deploys on schema review approval and breaking-change checks.</li>
+          </ul>
+          <a href="../github-action.html" class="btn btn-primary" data-event="playbook_upsell_cicd">Add SchemaLens to CI/CD →</a>
+          <span style="margin-left:12px;">or <a href="../tools/schema-change-checklist.html" data-event="playbook_upsell_checklist">use the 32-point checklist</a>.</span>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel" style="position:sticky;top:80px;">
+          <h2>2. Generated playbook</h2>
+          <div class="preview-tabs">
+            <button class="active" data-tab="markdown">Markdown</button>
+            <button data-tab="confluence">Confluence</button>
+            <button data-tab="print">Print / PDF</button>
+            <button data-tab="slack">Slack / Teams</button>
+          </div>
+          <div class="output-wrap">
+            <button class="btn btn-secondary btn-copy" id="copyBtn">Copy</button>
+            <div class="output" id="output" tabindex="0" aria-label="Generated playbook"></div>
+          </div>
+          <div class="share-row">
+            <button class="btn btn-secondary" id="copyLinkBtn" data-event="playbook_copy_link">Copy Share Link</button>
+            <a href="../tools/migration-incident-postmortem-generator.html" class="btn btn-secondary" data-event="playbook_open_postmortem">Write Post-Mortem →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Built with 💜 by <a href="../index.html">SchemaLens</a> ·
+        <a href="../open.html">Open Startup</a> ·
+        <a href="../privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const els = {
+      orgName: document.getElementById('orgName'),
+      dialect: document.getElementById('dialect'),
+      severityFramework: document.getElementById('severityFramework'),
+      incidentCommander: document.getElementById('incidentCommander'),
+      dbaContact: document.getElementById('dbaContact'),
+      engineerContact: document.getElementById('engineerContact'),
+      commsContact: document.getElementById('commsContact'),
+      escalationPath: document.getElementById('escalationPath'),
+      commsChannels: document.getElementById('commsChannels'),
+      customNotes: document.getElementById('customNotes'),
+      generateBtn: document.getElementById('generateBtn'),
+      copyBtn: document.getElementById('copyBtn'),
+      copyLinkBtn: document.getElementById('copyLinkBtn'),
+      output: document.getElementById('output'),
+    };
+
+    const checkboxes = {
+      detMonitoring: 'Monitoring alerts',
+      detCiCd: 'CI/CD pipeline failure',
+      detCustomer: 'Customer reports',
+      detSupport: 'Support tickets',
+      detManual: 'Manual health check',
+      phaseDetect: 'Detect',
+      phaseAssess: 'Assess',
+      phaseContain: 'Contain',
+      phaseResolve: 'Resolve',
+      phaseReview: 'Review',
+      scenarioBreaking: 'Breaking change deployed',
+      scenarioLock: 'Lock timeout / long migration',
+      scenarioDataLoss: 'Data corruption / loss',
+      scenarioRollback: 'Rollback required',
+      scenarioReplica: 'Replication lag',
+    };
+
+    Object.keys(checkboxes).forEach(id => {
+      els[id] = document.getElementById(id);
+    });
+
+    let currentText = '';
+    let currentTab = 'markdown';
+
+    const severityLabels = {
+      sev: ['SEV 1 — Critical outage', 'SEV 2 — Major impact', 'SEV 3 — Minor impact', 'SEV 4 — No user impact'],
+      p: ['P0 — Critical outage', 'P1 — Major impact', 'P2 — Minor impact', 'P3 — Low impact'],
+      critical: ['Critical — Service down', 'High — Significant degradation', 'Medium — Limited impact', 'Low — No user impact'],
+    };
+
+    function defaultVal(val, fallback) {
+      return (val || '').trim() || fallback;
+    }
+
+    function checked(id) {
+      return els[id]?.checked;
+    }
+
+    function checkedList(prefix) {
+      return Object.keys(checkboxes)
+        .filter(id => id.startsWith(prefix) && checked(id))
+        .map(id => checkboxes[id]);
+    }
+
+    function buildData() {
+      return {
+        orgName: defaultVal(els.orgName.value, 'Engineering'),
+        dialect: els.dialect.value,
+        severityFramework: els.severityFramework.value,
+        incidentCommander: defaultVal(els.incidentCommander.value, 'Incident commander (TBD)'),
+        dbaContact: defaultVal(els.dbaContact.value, 'DBA on-call (TBD)'),
+        engineerContact: defaultVal(els.engineerContact.value, 'Engineering lead (TBD)'),
+        commsContact: defaultVal(els.commsContact.value, 'Communications lead (TBD)'),
+        escalationPath: defaultVal(els.escalationPath.value, '1. Page on-call DBA\n2. Escalate to engineering manager if unresolved in 15 minutes\n3. Page executive sponsor if customer-facing outage exceeds 30 minutes'),
+        commsChannels: defaultVal(els.commsChannels.value, 'Primary: #incidents Slack channel\nBridge: Zoom war room\nStatus page: status.example.com'),
+        customNotes: els.customNotes.value.trim(),
+        detectionChannels: checkedList('det'),
+        phases: checkedList('phase'),
+        scenarios: checkedList('scenario'),
+        severities: severityLabels[els.severityFramework.value],
+      };
+    }
+
+    function formatList(items, prefix = '-') {
+      return items.length ? items.map(i => `${prefix} ${i}`).join('\n') : '- _None selected._';
+    }
+
+    function indent(lines, spaces = '  ') {
+      return lines.split('\n').map(l => l ? spaces + l : l).join('\n');
+    }
+
+    function generateMarkdown(d) {
+      const lines = [];
+      lines.push(`# Migration Incident Response Playbook`);
+      lines.push('');
+      lines.push(`**Organization:** ${d.orgName}`);
+      lines.push(`**Primary database:** ${d.dialect}`);
+      lines.push(`**Severity framework:** ${d.severityFramework.toUpperCase()}`);
+      lines.push('');
+
+      lines.push('## Severity levels');
+      lines.push('');
+      d.severities.forEach(s => lines.push(`- ${s}`));
+      lines.push('');
+
+      lines.push('## Roles');
+      lines.push('');
+      lines.push(`- **Incident commander:** ${d.incidentCommander}`);
+      lines.push(`- **DBA / database owner:** ${d.dbaContact}`);
+      lines.push(`- **Engineering lead:** ${d.engineerContact}`);
+      lines.push(`- **Communications lead:** ${d.commsContact}`);
+      lines.push('');
+
+      lines.push('## Escalation path');
+      lines.push('');
+      lines.push(d.escalationPath);
+      lines.push('');
+
+      lines.push('## Detection channels');
+      lines.push('');
+      lines.push(formatList(d.detectionChannels));
+      lines.push('');
+
+      lines.push('## Communication channels');
+      lines.push('');
+      lines.push(d.commsChannels);
+      lines.push('');
+
+      if (d.phases.length) {
+        lines.push('## Response phases');
+        lines.push('');
+        if (d.phases.includes('Detect')) {
+          lines.push('### 1. Detect');
+          lines.push('- Acknowledge the alert or report in the incident channel.');
+          lines.push('- Confirm the issue is migration-related (check recent deploys, migration logs, schema changes).');
+          lines.push('- Open a war room if severity is critical or high.');
+          lines.push('');
+        }
+        if (d.phases.includes('Assess')) {
+          lines.push('### 2. Assess');
+          lines.push('- Identify affected services, tables, and users.');
+          lines.push('- Run a schema diff between expected and actual state.');
+          lines.push('- Determine if the change is breaking, locking, or data-impacting.');
+          lines.push('- Assign severity based on user impact and blast radius.');
+          lines.push('');
+        }
+        if (d.phases.includes('Contain')) {
+          lines.push('### 3. Contain');
+          lines.push('- Pause related deploys and migration jobs.');
+          lines.push('- Consider read-only mode or traffic routing if data integrity is at risk.');
+          lines.push('- Capture snapshots / logs before attempting rollback.');
+          lines.push('- Notify stakeholders through the communications channel.');
+          lines.push('');
+        }
+        if (d.phases.includes('Resolve')) {
+          lines.push('### 4. Resolve');
+          lines.push('- Execute rollback or forward-fix using pre-approved runbook steps.');
+          lines.push('- Verify service health and data consistency.');
+          lines.push('- Confirm monitoring is green before closing the incident.');
+          lines.push('');
+        }
+        if (d.phases.includes('Review')) {
+          lines.push('### 5. Review');
+          lines.push('- Schedule a post-mortem within 48 hours for SEV 1/2 incidents.');
+          lines.push('- Update runbooks and CI/CD gates based on findings.');
+          lines.push('- Track action items to completion.');
+          lines.push('');
+        }
+      }
+
+      if (d.scenarios.length) {
+        lines.push('## Scenario runbooks');
+        lines.push('');
+        if (d.scenarios.includes('Breaking change deployed')) {
+          lines.push('### Breaking change deployed');
+          lines.push('1. Identify the breaking change via schema diff or error logs.');
+          lines.push('2. Stop the deploy pipeline and prevent further rollouts.');
+          lines.push('3. Decide: rollback the migration or ship a forward-compatible fix.');
+          lines.push('4. If rolling back, execute the verified rollback script in a maintenance window if needed.');
+          lines.push('5. Validate application queries against the restored schema.');
+          lines.push('');
+        }
+        if (d.scenarios.includes('Lock timeout / long migration')) {
+          lines.push('### Lock timeout / long migration');
+          lines.push('1. Check active locks and long-running queries.');
+          lines.push('2. For PostgreSQL: use `pg_stat_activity`; MySQL: `SHOW PROCESSLIST`.');
+          lines.push('3. If safe, cancel the migration and retry with `CONCURRENTLY` / online DDL.');
+          lines.push('4. Schedule heavy migrations during low-traffic windows.');
+          lines.push('');
+        }
+        if (d.scenarios.includes('Data corruption / loss')) {
+          lines.push('### Data corruption / loss');
+          lines.push('1. Immediately stop writes to affected tables.');
+          lines.push('2. Restore from the most recent snapshot or backup.');
+          lines.push('3. Use point-in-time recovery if available.');
+          lines.push('4. Reconcile any data written between corruption and restore.');
+          lines.push('5. Communicate impact and recovery timeline to stakeholders.');
+          lines.push('');
+        }
+        if (d.scenarios.includes('Rollback required')) {
+          lines.push('### Rollback required');
+          lines.push('1. Confirm the rollback script is available and tested.');
+          lines.push('2. Take a fresh backup or snapshot before rollback.');
+          lines.push('3. Execute rollback in the approved environment order (staging first if possible).');
+          lines.push('4. Verify schema and application behavior after rollback.');
+          lines.push('5. Document reason and outcome in the incident channel.');
+          lines.push('');
+        }
+        if (d.scenarios.includes('Replication lag')) {
+          lines.push('### Replication lag');
+          lines.push('1. Monitor replication delay on all replicas.');
+          lines.push('2. If caused by a heavy DDL, consider pausing or throttling the migration.');
+          lines.push('3. Route read traffic away from lagging replicas if possible.');
+          lines.push('4. Do not promote a lagging replica until it catches up.');
+          lines.push('');
+        }
+      }
+
+      lines.push('## Communication templates');
+      lines.push('');
+      lines.push('### Initial incident announcement');
+      lines.push(`> 🚨 **Migration incident declared** — ${d.orgName}\n> Severity: [SEV level]\n> Affected system: [service / database]\n> Impact: [user / data impact]\n> Incident commander: ${d.incidentCommander}\n> Status: Investigating\n> Updates will be posted here every 15 minutes.`);
+      lines.push('');
+      lines.push('### Status update');
+      lines.push(`> 📊 **Update** — [SEV level] migration incident\n> What we know: [summary]\n> What we are doing: [action]\n> Next update: [time]`);
+      lines.push('');
+      lines.push('### All clear');
+      lines.push(`> ✅ **Resolved** — migration incident is now closed.\n> Duration: [duration]\n> Root cause: [summary]\n> Post-mortem will be shared within 48 hours.`);
+      lines.push('');
+
+      if (d.customNotes) {
+        lines.push('## Notes & tools');
+        lines.push('');
+        lines.push(d.customNotes);
+        lines.push('');
+      }
+
+      lines.push('---');
+      lines.push('_Generated with [SchemaLens](https://schemalens.tech)_');
+      return lines.join('\n');
+    }
+
+    function generateConfluence(d) {
+      const lines = [];
+      lines.push(`h1. Migration Incident Response Playbook`);
+      lines.push(`*Organization:* ${d.orgName}`);
+      lines.push(`*Primary database:* ${d.dialect}`);
+      lines.push(`*Severity framework:* ${d.severityFramework.toUpperCase()}`);
+      lines.push('');
+
+      lines.push('h2. Severity levels');
+      d.severities.forEach(s => lines.push(`# ${s}`));
+      lines.push('');
+
+      lines.push('h2. Roles');
+      lines.push(`* Incident commander: ${d.incidentCommander}`);
+      lines.push(`* DBA / database owner: ${d.dbaContact}`);
+      lines.push(`* Engineering lead: ${d.engineerContact}`);
+      lines.push(`* Communications lead: ${d.commsContact}`);
+      lines.push('');
+
+      lines.push('h2. Escalation path');
+      d.escalationPath.split('\n').forEach(line => lines.push(`# ${line}`));
+      lines.push('');
+
+      lines.push('h2. Detection channels');
+      d.detectionChannels.forEach(c => lines.push(`# ${c}`));
+      lines.push('');
+
+      lines.push('h2. Communication channels');
+      d.commsChannels.split('\n').forEach(line => lines.push(`# ${line}`));
+      lines.push('');
+
+      if (d.phases.length) {
+        lines.push('h2. Response phases');
+        d.phases.forEach(phase => {
+          lines.push(`h3. ${phase}`);
+          const steps = {
+            Detect: ['Acknowledge the alert or report in the incident channel.', 'Confirm the issue is migration-related.', 'Open a war room if severity is critical or high.'],
+            Assess: ['Identify affected services, tables, and users.', 'Run a schema diff between expected and actual state.', 'Determine if the change is breaking, locking, or data-impacting.', 'Assign severity based on user impact and blast radius.'],
+            Contain: ['Pause related deploys and migration jobs.', 'Consider read-only mode or traffic routing if data integrity is at risk.', 'Capture snapshots / logs before attempting rollback.', 'Notify stakeholders through the communications channel.'],
+            Resolve: ['Execute rollback or forward-fix using pre-approved runbook steps.', 'Verify service health and data consistency.', 'Confirm monitoring is green before closing the incident.'],
+            Review: ['Schedule a post-mortem within 48 hours for high-severity incidents.', 'Update runbooks and CI/CD gates based on findings.', 'Track action items to completion.'],
+          };
+          (steps[phase] || []).forEach(step => lines.push(`# ${step}`));
+          lines.push('');
+        });
+      }
+
+      if (d.scenarios.length) {
+        lines.push('h2. Scenario runbooks');
+        d.scenarios.forEach(s => {
+          lines.push(`h3. ${s}`);
+          const steps = {
+            'Breaking change deployed': ['Identify the breaking change via schema diff or error logs.', 'Stop the deploy pipeline and prevent further rollouts.', 'Decide: rollback or forward-compatible fix.', 'Execute verified rollback script if applicable.', 'Validate application queries against restored schema.'],
+            'Lock timeout / long migration': ['Check active locks and long-running queries.', 'Use pg_stat_activity or SHOW PROCESSLIST.', 'Cancel and retry with CONCURRENTLY / online DDL.', 'Schedule heavy migrations during low-traffic windows.'],
+            'Data corruption / loss': ['Stop writes to affected tables.', 'Restore from the most recent snapshot or backup.', 'Use point-in-time recovery if available.', 'Reconcile data written between corruption and restore.', 'Communicate impact and recovery timeline.'],
+            'Rollback required': ['Confirm rollback script is available and tested.', 'Take a fresh backup or snapshot before rollback.', 'Execute rollback in approved environment order.', 'Verify schema and application behavior.', 'Document reason and outcome.'],
+            'Replication lag': ['Monitor replication delay on all replicas.', 'Consider pausing or throttling heavy DDL.', 'Route read traffic away from lagging replicas.', 'Do not promote a lagging replica until caught up.'],
+          };
+          (steps[s] || []).forEach(step => lines.push(`# ${step}`));
+          lines.push('');
+        });
+      }
+
+      lines.push('h2. Communication templates');
+      lines.push('h3. Initial incident announcement');
+      lines.push(`{quote}🚨 Migration incident declared — ${d.orgName}\nSeverity: [SEV level]\nAffected system: [service / database]\nImpact: [user / data impact]\nIncident commander: ${d.incidentCommander}\nStatus: Investigating\nUpdates every 15 minutes.{quote}`);
+      lines.push('');
+      lines.push('h3. Status update');
+      lines.push(`{quote}📊 Update — [SEV level] migration incident\nWhat we know: [summary]\nWhat we are doing: [action]\nNext update: [time]{quote}`);
+      lines.push('');
+      lines.push('h3. All clear');
+      lines.push(`{quote}✅ Resolved — migration incident is now closed.\nDuration: [duration]\nRoot cause: [summary]\nPost-mortem within 48 hours.{quote}`);
+      lines.push('');
+
+      if (d.customNotes) {
+        lines.push('h2. Notes & tools');
+        d.customNotes.split('\n').forEach(line => lines.push(`# ${line}`));
+        lines.push('');
+      }
+
+      lines.push('----');
+      lines.push('Generated with SchemaLens: https://schemalens.tech');
+      return lines.join('\n');
+    }
+
+    function generatePrint(d) {
+      const lines = [];
+      lines.push(`MIGRATION INCIDENT RESPONSE PLAYBOOK`);
+      lines.push(`Organization: ${d.orgName}`);
+      lines.push(`Primary database: ${d.dialect}`);
+      lines.push(`Severity framework: ${d.severityFramework.toUpperCase()}`);
+      lines.push('');
+
+      lines.push('SEVERITY LEVELS');
+      d.severities.forEach(s => lines.push(`• ${s}`));
+      lines.push('');
+
+      lines.push('ROLES');
+      lines.push(`• Incident commander: ${d.incidentCommander}`);
+      lines.push(`• DBA / database owner: ${d.dbaContact}`);
+      lines.push(`• Engineering lead: ${d.engineerContact}`);
+      lines.push(`• Communications lead: ${d.commsContact}`);
+      lines.push('');
+
+      lines.push('ESCALATION PATH');
+      d.escalationPath.split('\n').forEach(line => lines.push(`• ${line}`));
+      lines.push('');
+
+      lines.push('DETECTION CHANNELS');
+      d.detectionChannels.forEach(c => lines.push(`• ${c}`));
+      lines.push('');
+
+      lines.push('COMMUNICATION CHANNELS');
+      d.commsChannels.split('\n').forEach(line => lines.push(`• ${line}`));
+      lines.push('');
+
+      if (d.phases.length) {
+        lines.push('RESPONSE PHASES');
+        d.phases.forEach(phase => {
+          lines.push(`${phase.toUpperCase()}`);
+          const steps = {
+            Detect: ['Acknowledge the alert or report.', 'Confirm issue is migration-related.', 'Open war room if critical/high.'],
+            Assess: ['Identify affected services, tables, users.', 'Run schema diff between expected and actual state.', 'Determine if breaking, locking, or data-impacting.', 'Assign severity.'],
+            Contain: ['Pause related deploys and migration jobs.', 'Consider read-only mode or traffic routing.', 'Capture snapshots / logs before rollback.', 'Notify stakeholders.'],
+            Resolve: ['Execute rollback or forward-fix.', 'Verify service health and data consistency.', 'Confirm monitoring is green.'],
+            Review: ['Schedule post-mortem within 48 hours.', 'Update runbooks and CI/CD gates.', 'Track action items.'],
+          };
+          (steps[phase] || []).forEach(step => lines.push(`  • ${step}`));
+          lines.push('');
+        });
+      }
+
+      if (d.scenarios.length) {
+        lines.push('SCENARIO RUNBOOKS');
+        d.scenarios.forEach(s => {
+          lines.push(s.toUpperCase());
+          const steps = {
+            'Breaking change deployed': ['Identify breaking change via schema diff or logs.', 'Stop deploy pipeline.', 'Decide rollback or forward fix.', 'Execute verified rollback if applicable.', 'Validate application queries.'],
+            'Lock timeout / long migration': ['Check active locks and long-running queries.', 'Use pg_stat_activity / SHOW PROCESSLIST.', 'Cancel and retry with CONCURRENTLY / online DDL.', 'Schedule heavy migrations in low-traffic windows.'],
+            'Data corruption / loss': ['Stop writes to affected tables.', 'Restore from latest snapshot or backup.', 'Use point-in-time recovery if available.', 'Reconcile data written during window.', 'Communicate impact and timeline.'],
+            'Rollback required': ['Confirm rollback script available and tested.', 'Take fresh backup before rollback.', 'Execute in approved environment order.', 'Verify schema and app behavior.', 'Document reason and outcome.'],
+            'Replication lag': ['Monitor replication delay on all replicas.', 'Pause or throttle heavy DDL if needed.', 'Route read traffic away from lagging replicas.', 'Do not promote lagging replica.'],
+          };
+          (steps[s] || []).forEach(step => lines.push(`  • ${step}`));
+          lines.push('');
+        });
+      }
+
+      lines.push('COMMUNICATION TEMPLATES');
+      lines.push('Initial announcement:');
+      lines.push(`  Migration incident declared — ${d.orgName}. Severity: [level]. Affected: [system]. Commander: ${d.incidentCommander}. Updates every 15 minutes.`);
+      lines.push('');
+      lines.push('Status update:');
+      lines.push('  [level] migration incident. What we know: [summary]. What we are doing: [action]. Next update: [time].');
+      lines.push('');
+      lines.push('All clear:');
+      lines.push('  Resolved. Duration: [duration]. Root cause: [summary]. Post-mortem within 48 hours.');
+      lines.push('');
+
+      if (d.customNotes) {
+        lines.push('NOTES & TOOLS');
+        d.customNotes.split('\n').forEach(line => lines.push(`• ${line}`));
+        lines.push('');
+      }
+
+      lines.push('Generated with SchemaLens — https://schemalens.tech');
+      return lines.join('\n');
+    }
+
+    function generateSlack(d) {
+      const lines = [];
+      lines.push(`📋 *Migration Incident Response Playbook — ${d.orgName}*`);
+      lines.push(`*Primary database:* ${d.dialect}`);
+      lines.push(`*Severity framework:* ${d.severityFramework.toUpperCase()}`);
+      lines.push('');
+
+      lines.push('*Severity levels*');
+      d.severities.forEach(s => lines.push(`• ${s}`));
+      lines.push('');
+
+      lines.push('*Roles*');
+      lines.push(`• Incident commander: ${d.incidentCommander}`);
+      lines.push(`• DBA: ${d.dbaContact}`);
+      lines.push(`• Engineering lead: ${d.engineerContact}`);
+      lines.push(`• Communications: ${d.commsContact}`);
+      lines.push('');
+
+      lines.push('*Escalation path*');
+      d.escalationPath.split('\n').forEach(line => lines.push(`• ${line}`));
+      lines.push('');
+
+      lines.push('*Detection channels*');
+      d.detectionChannels.forEach(c => lines.push(`• ${c}`));
+      lines.push('');
+
+      lines.push('*Response phases*');
+      d.phases.forEach(p => lines.push(`• ${p}`));
+      lines.push('');
+
+      if (d.scenarios.length) {
+        lines.push('*Scenario runbooks*');
+        d.scenarios.forEach(s => lines.push(`• ${s}`));
+        lines.push('');
+      }
+
+      lines.push('*Communication templates*');
+      lines.push(`🚨 *Migration incident declared — ${d.orgName}*`);
+      lines.push(`Severity: [level] | Affected: [system] | Commander: ${d.incidentCommander}`);
+      lines.push('Status: Investigating. Updates every 15 minutes.');
+      lines.push('');
+      lines.push('✅ *Resolved*');
+      lines.push('Duration: [duration] | Root cause: [summary] | Post-mortem in 48h');
+      lines.push('');
+      lines.push('Full playbook: https://schemalens.tech/tools/migration-incident-response-playbook.html');
+      return lines.join('\n');
+    }
+
+    const generators = {
+      markdown: generateMarkdown,
+      confluence: generateConfluence,
+      print: generatePrint,
+      slack: generateSlack,
+    };
+
+    function render() {
+      const d = buildData();
+      currentText = generators[currentTab](d);
+      els.output.textContent = currentText;
+    }
+
+    function updateUrl() {
+      const params = new URLSearchParams();
+      Object.entries({
+        org: els.orgName.value,
+        dialect: els.dialect.value,
+        severity: els.severityFramework.value,
+        commander: els.incidentCommander.value,
+        dba: els.dbaContact.value,
+        engineer: els.engineerContact.value,
+        comms: els.commsContact.value,
+        escalation: els.escalationPath.value,
+        channels: els.commsChannels.value,
+        notes: els.customNotes.value,
+      }).forEach(([k, v]) => { if (v) params.set(k, v); });
+      Object.keys(checkboxes).forEach(id => {
+        if (els[id]?.checked) params.append('inc', id);
+      });
+      if (currentTab !== 'markdown') params.set('tab', currentTab);
+      const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+      window.history.replaceState({}, '', newUrl);
+    }
+
+    function loadFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('org')) els.orgName.value = params.get('org');
+      if (params.has('dialect')) els.dialect.value = params.get('dialect');
+      if (params.has('severity')) els.severityFramework.value = params.get('severity');
+      if (params.has('commander')) els.incidentCommander.value = params.get('commander');
+      if (params.has('dba')) els.dbaContact.value = params.get('dba');
+      if (params.has('engineer')) els.engineerContact.value = params.get('engineer');
+      if (params.has('comms')) els.commsContact.value = params.get('comms');
+      if (params.has('escalation')) els.escalationPath.value = params.get('escalation');
+      if (params.has('channels')) els.commsChannels.value = params.get('channels');
+      if (params.has('notes')) els.customNotes.value = params.get('notes');
+      if (params.has('tab')) currentTab = params.get('tab');
+      const includes = params.getAll('inc');
+      Object.keys(checkboxes).forEach(id => {
+        const cb = document.getElementById(id);
+        if (cb) cb.checked = includes.includes(id);
+      });
+      document.querySelectorAll('.preview-tabs button').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === currentTab);
+      });
+    }
+
+    document.querySelectorAll('.preview-tabs button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.preview-tabs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTab = btn.dataset.tab;
+        render();
+        updateUrl();
+      });
+    });
+
+    els.copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(currentText);
+        els.copyBtn.textContent = 'Copied!';
+        els.copyBtn.classList.add('copied');
+        setTimeout(() => {
+          els.copyBtn.textContent = 'Copy';
+          els.copyBtn.classList.remove('copied');
+        }, 1500);
+      } catch (e) {
+        console.error('Copy failed', e);
+      }
+    });
+
+    els.copyLinkBtn.addEventListener('click', async () => {
+      updateUrl();
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        const original = els.copyLinkBtn.textContent;
+        els.copyLinkBtn.textContent = 'Link copied!';
+        setTimeout(() => { els.copyLinkBtn.textContent = original; }, 1500);
+      } catch (e) {
+        console.error('Copy link failed', e);
+      }
+    });
+
+    Object.values(els).forEach(el => {
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT')) {
+        el.addEventListener('input', () => { render(); updateUrl(); });
+      }
+    });
+
+    Object.keys(checkboxes).forEach(id => {
+      const cb = document.getElementById(id);
+      if (cb) cb.addEventListener('change', () => { render(); updateUrl(); });
+    });
+
+    els.generateBtn.addEventListener('click', () => {
+      render();
+      updateUrl();
+      els.output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    loadFromUrl();
+    render();
+  })();
+  </script>
+</body>
+</html>
