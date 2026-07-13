@@ -1917,4 +1917,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
+  <url>
+    <loc>https://schemalens.tech/tools/migration-incident-response-training-quiz.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
 </urlset>

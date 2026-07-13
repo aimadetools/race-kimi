@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Migration Incident Response Training Quiz | SchemaLens</title>
+  <meta name="description" content="Test your database migration incident response knowledge. 12 questions on detection, escalation, containment, rollback, communication, and prevention.">
+  <link rel="canonical" href="https://schemalens.tech/tools/migration-incident-response-training-quiz.html">
+  <meta property="og:title" content="Migration Incident Response Training Quiz">
+  <meta property="og:description" content="12 questions to test how your team would respond to a database migration incident.">
+  <meta property="og:url" content="https://schemalens.tech/tools/migration-incident-response-training-quiz.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Migration Incident Response Training Quiz">
+  <meta name="twitter:description" content="12 questions to test how your team would respond to a database migration incident.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "Migration Incident Response Training Quiz",
+    "description": "Interactive quiz covering detection, escalation, containment, rollback, communication, and prevention of database migration incidents.",
+    "educationalLevel": "Professional",
+    "learningResourceType": "Quiz",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "url": "https://schemalens.tech/tools/migration-incident-response-training-quiz.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .quiz-wrap { max-width: 760px; margin: 0 auto; padding: 0 24px 64px; }
+
+    .progress-bar { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; margin-bottom: 28px; }
+    .progress-bar .fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 0%; transition: width 0.3s ease; }
+
+    .question-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+    .question-card .q-number { font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .question-card .q-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; line-height: 1.5; }
+
+    .option { display: block; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 10px; cursor: pointer; font-size: 0.95rem; transition: border-color 0.15s, background 0.15s; }
+    .option:hover { border-color: var(--primary); }
+    .option input { display: none; }
+    .option.correct { border-color: var(--success); background: rgba(34,197,94,0.08); }
+    .option.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.08); }
+    .option.disabled { cursor: default; pointer-events: none; }
+
+    .feedback { margin-top: 14px; padding: 14px; border-radius: var(--radius-sm); font-size: 0.95rem; line-height: 1.5; display: none; }
+    .feedback.correct { display: block; background: rgba(34,197,94,0.1); border: 1px solid var(--success); }
+    .feedback.incorrect { display: block; background: rgba(239,68,68,0.1); border: 1px solid #ef4444; }
+    .feedback strong { display: block; margin-bottom: 4px; }
+
+    .quiz-actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 28px 0; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+
+    .results { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; text-align: center; }
+    .results.visible { display: block; }
+    .score-ring { width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(var(--primary) calc(var(--pct) * 1%), var(--bg) 0); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; position: relative; }
+    .score-ring::before { content: ''; position: absolute; inset: 10px; border-radius: 50%; background: var(--surface); }
+    .score-ring span { position: relative; font-size: 2rem; font-weight: 800; }
+    .results h2 { font-size: 1.6rem; margin-bottom: 10px; }
+    .results .level { font-size: 1.1rem; color: var(--primary); font-weight: 700; margin-bottom: 16px; }
+    .results p { color: var(--text-muted); max-width: 540px; margin: 0 auto 20px; line-height: 1.6; }
+
+    .resource-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; text-align: left; margin-top: 24px; }
+    .resource-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; }
+    .resource-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
+    .resource-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
+    .resource-card a { font-size: 0.85rem; font-weight: 600; }
+
+    .share-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 28px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Migration Incident Response Training Quiz</h1>
+      <p>12 questions on detection, escalation, containment, rollback, communication, and prevention. See how your team stacks up.</p>
+    </div>
+
+    <div class="quiz-wrap">
+      <div class="progress-bar" id="progressBar" aria-hidden="true"><div class="fill" id="progressFill"></div></div>
+
+      <div id="quizContainer">
+        <!-- Questions rendered by JS -->
+      </div>
+
+      <div class="quiz-actions" id="quizActions">
+        <button class="btn btn-primary" id="checkBtn" data-event="quiz_check_answer">Check Answer</button>
+        <button class="btn btn-secondary" id="nextBtn" data-event="quiz_next_question" style="display:none;">Next Question →</button>
+      </div>
+
+      <div class="results" id="results">
+        <div class="score-ring" id="scoreRing"><span id="scoreText">0/12</span></div>
+        <h2 id="resultsTitle">Quiz complete</h2>
+        <div class="level" id="resultsLevel">Level</div>
+        <p id="resultsSummary">Summary text</p>
+
+        <div class="resource-grid" id="resourceGrid">
+          <div class="resource-card">
+            <h4>📘 Incident Management Guide</h4>
+            <p>The full response lifecycle and prevention playbook.</p>
+            <a href="../database-migration-incident-management.html" data-event="quiz_resource_guide">Read guide →</a>
+          </div>
+          <div class="resource-card">
+            <h4>🚨 Response Playbook Generator</h4>
+            <p>Build a ready-to-use runbook for your team.</p>
+            <a href="../tools/migration-incident-response-playbook.html" data-event="quiz_resource_playbook">Generate playbook →</a>
+          </div>
+          <div class="resource-card">
+            <h4>🩺 Post-Mortem Generator</h4>
+            <p>Turn incidents into structured learning documents.</p>
+            <a href="../tools/migration-incident-postmortem-generator.html" data-event="quiz_resource_postmortem">Generate post-mortem →</a>
+          </div>
+          <div class="resource-card">
+            <h4>⚡ GitHub Action</h4>
+            <p>Catch breaking schema changes before they reach production.</p>
+            <a href="../github-action.html" data-event="quiz_resource_action">Add to CI/CD →</a>
+          </div>
+        </div>
+
+        <div class="share-row">
+          <button class="btn btn-secondary" id="copyLinkBtn" data-event="quiz_copy_link">Copy Share Link</button>
+          <button class="btn btn-secondary" id="restartBtn" data-event="quiz_restart">Retake Quiz</button>
+        </div>
+      </div>
+
+      <div class="upsell">
+        <h3>🛡️ Turn quiz scores into incident readiness</h3>
+        <ul>
+          <li>Run this quiz in your next team retro to identify knowledge gaps.</li>
+          <li>Pair it with the <a href="../tools/migration-incident-response-playbook.html" data-event="quiz_upsell_playbook">response playbook generator</a> and <a href="../tools/schema-change-checklist.html" data-event="quiz_upsell_checklist">schema change checklist</a>.</li>
+          <li>Add the SchemaLens GitHub Action to catch breaking changes before they become incidents.</li>
+        </ul>
+        <a href="../github-action.html" class="btn btn-primary" data-event="quiz_upsell_cicd">Add SchemaLens to CI/CD →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Built with 💜 by <a href="../index.html">SchemaLens</a> ·
+        <a href="../open.html">Open Startup</a> ·
+        <a href="../privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const questions = [
+      {
+        q: "A deployment adds a non-nullable column without a default value. Users start seeing 500 errors. What is the FIRST step?",
+        options: [
+          "Roll back the migration immediately",
+          "Add a default value directly in production",
+          "Assess scope and contain the impact before deciding",
+          "Notify customers before doing anything else"
+        ],
+        correct: 2,
+        explanation: "Containment comes first. Rolling back can be the right answer, but only after you understand whether rollback is safe, whether data has been written, and what the blast radius is."
+      },
+      {
+        q: "Monitoring shows replication lag spiking after an ALTER TABLE. The migration is still running. What is the best action?",
+        options: [
+          "Kill the migration if it is safe to do so and roll back",
+          "Wait until it finishes no matter how long it takes",
+          "Immediately restart the primary database",
+          "Run the same migration on the replica first"
+        ],
+        correct: 0,
+        explanation: "Replication lag during a long-running DDL can cascade into read-replica outages. If the operation is interruptible and you have a safe rollback path, stop it before lag becomes critical."
+      },
+      {
+        q: "Who should be the Incident Commander for a schema migration outage?",
+        options: [
+          "The engineer who wrote the migration",
+          "A designated person responsible for coordination, not necessarily the deepest technical expert",
+          "The most senior DBA available",
+          "The product manager who requested the change"
+        ],
+        correct: 1,
+        explanation: "The Incident Commander coordinates communication, escalations, and next steps. They do not need to be the person fixing the database; in fact, separating coordination from deep troubleshooting reduces chaos."
+      },
+      {
+        q: "During the Contain phase of a migration incident, which action is LEAST appropriate?",
+        options: [
+          "Pausing related deploys",
+          "Gathering logs and query metrics",
+          "Blaming the engineer who merged the migration",
+          "Alerting stakeholders with a severity estimate"
+        ],
+        correct: 2,
+        explanation: "Incident response is not about blame. Containment focuses on limiting blast radius, preserving evidence, and keeping stakeholders informed."
+      },
+      {
+        q: "A migration locks a table for 30 seconds, causing a query pile-up and brief downtime. This is best classified as a(n) __________ incident.",
+        options: [
+          "Data corruption incident",
+          "Breaking schema change incident",
+          "Lock timeout / performance incident",
+          "Replication topology incident"
+        ],
+        correct: 2,
+        explanation: "Long-held locks from DDL are a classic performance incident category. The fix usually involves safer migration strategies such as online DDL, pt-online-schema-change, or smaller batched operations."
+      },
+      {
+        q: "The rollback plan requires dropping a column that was just added and already has writes. What should you verify FIRST?",
+        options: [
+          "Whether dropping the column loses data",
+          "Whether the column name is a reserved word",
+          "Whether the migration ran inside a transaction",
+          "Whether the application can still connect"
+        ],
+        correct: 0,
+        explanation: "Dropping a column that has received writes will delete that data. Check whether the data can be discarded, migrated, or whether a forward fix is safer than rollback."
+      },
+      {
+        q: "Which combination of practices BEST prevents migration incidents?",
+        options: [
+          "Running migrations only on Friday evenings when traffic is low",
+          "Schema diff review + CI breaking-change gate + staging test",
+          "Having a senior DBA approve every migration by email",
+          "Avoiding schema changes unless absolutely necessary"
+        ],
+        correct: 1,
+        explanation: "Prevention is a system: automated diff review in CI catches breaking changes, staging tests validate behavior, and human review provides judgment."
+      },
+      {
+        q: "In a post-incident review, the primary goal is to __________.",
+        options: [
+          "Assign blame for the failure",
+          "Understand contributing factors and improve systems and processes",
+          "Document who was on-call",
+          "Estimate the financial cost of the outage"
+        ],
+        correct: 1,
+        explanation: "Effective post-incident reviews are blameless and focus on systemic improvements: better checks, clearer runbooks, and safer tooling."
+      },
+      {
+        q: "Communication during an active incident should __________.",
+        options: [
+          "Be delayed until the root cause is fully understood",
+          "Be transparent, regular, and aligned with severity",
+          "Only go to engineering leadership",
+          "Happen only in private direct messages"
+        ],
+        correct: 1,
+        explanation: "Stakeholders and customers prefer honest, regular updates over silence. Match frequency and detail to severity, and update when facts change."
+      },
+      {
+        q: "A schema change removes a column that the application still references. This is best classified as a __________.",
+        options: [
+          "Data corruption issue",
+          "Breaking change",
+          "Lock timeout",
+          "Configuration drift"
+        ],
+        correct: 1,
+        explanation: "Removing a column that downstream code expects is a breaking schema change. CI diff gates and deployment ordering (backward-compatible migrations) prevent it."
+      },
+      {
+        q: "Before running a rollback migration in production, you should __________.",
+        options: [
+          "Test it in a non-production environment or against a copy",
+          "Run it immediately to save time",
+          "Ask the CEO for approval",
+          "Skip rollback and always apply a forward fix"
+        ],
+        correct: 0,
+        explanation: "Rollback scripts can be as dangerous as forward migrations. Validate them against production-like data when possible to avoid secondary incidents."
+      },
+      {
+        q: "Which of the following is a valid exit criterion for the Resolve phase?",
+        options: [
+          "Error rates and business metrics are back to normal",
+          "The post-mortem is already written",
+          "The on-call rotation has been updated",
+          "The migration script has been deleted"
+        ],
+        correct: 0,
+        explanation: "Resolve ends when the system is healthy and stable. Writing the post-mortem and updating runbooks happen in the Review phase."
+      }
+    ];
+
+    const container = document.getElementById('quizContainer');
+    const progressFill = document.getElementById('progressFill');
+    const checkBtn = document.getElementById('checkBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const results = document.getElementById('results');
+    const scoreRing = document.getElementById('scoreRing');
+    const scoreText = document.getElementById('scoreText');
+    const resultsTitle = document.getElementById('resultsTitle');
+    const resultsLevel = document.getElementById('resultsLevel');
+    const resultsSummary = document.getElementById('resultsSummary');
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    const restartBtn = document.getElementById('restartBtn');
+
+    let current = 0;
+    let score = 0;
+    let answered = false;
+    const answers = new Array(questions.length).fill(null);
+
+    function renderQuestion() {
+      answered = false;
+      const q = questions[current];
+      const savedAnswer = answers[current];
+
+      container.innerHTML = `
+        <div class="question-card">
+          <div class="q-number">Question ${current + 1} of ${questions.length}</div>
+          <div class="q-text">${escapeHtml(q.q)}</div>
+          <div class="options" role="radiogroup" aria-label="Answer options">
+            ${q.options.map((opt, idx) => `
+              <label class="option" id="opt-${idx}" data-idx="${idx}">
+                <input type="radio" name="q${current}" value="${idx}" ${savedAnswer === idx ? 'checked' : ''}>
+                ${escapeHtml(opt)}
+              </label>
+            `).join('')}
+          </div>
+          <div class="feedback" id="feedback"></div>
+        </div>
+      `;
+
+      progressFill.style.width = `${((current) / questions.length) * 100}%`;
+      checkBtn.style.display = 'inline-flex';
+      nextBtn.style.display = 'none';
+
+      document.querySelectorAll('.option').forEach(label => {
+        label.addEventListener('click', () => {
+          if (answered) return;
+          const idx = parseInt(label.dataset.idx, 10);
+          document.querySelectorAll('.option input').forEach(i => i.checked = false);
+          label.querySelector('input').checked = true;
+          answers[current] = idx;
+        });
+      });
+
+      if (savedAnswer !== null) {
+        checkAnswer();
+      }
+    }
+
+    function checkAnswer() {
+      if (answers[current] === null) return;
+      answered = true;
+      const q = questions[current];
+      const selected = answers[current];
+      const isCorrect = selected === q.correct;
+      if (isCorrect) score++;
+
+      document.querySelectorAll('.option').forEach((label, idx) => {
+        label.classList.add('disabled');
+        if (idx === q.correct) label.classList.add('correct');
+        else if (idx === selected) label.classList.add('incorrect');
+      });
+
+      const feedback = document.getElementById('feedback');
+      feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+      feedback.innerHTML = `<strong>${isCorrect ? '✅ Correct' : '❌ Incorrect'}</strong>${escapeHtml(q.explanation)}`;
+
+      checkBtn.style.display = 'none';
+      nextBtn.style.display = 'inline-flex';
+      nextBtn.textContent = current === questions.length - 1 ? 'See Results →' : 'Next Question →';
+      updateUrl();
+    }
+
+    function showResults() {
+      container.style.display = 'none';
+      document.getElementById('quizActions').style.display = 'none';
+      document.getElementById('progressBar').style.display = 'none';
+      results.classList.add('visible');
+
+      const pct = Math.round((score / questions.length) * 100);
+      scoreRing.style.setProperty('--pct', pct);
+      scoreText.textContent = `${score}/${questions.length}`;
+
+      let level, summary;
+      if (score >= 10) {
+        level = '🏆 Expert Responder';
+        summary = "You have a strong grasp of migration incident response. Your next move is to make this knowledge repeatable across the team with a playbook, CI gates, and regular drills.";
+      } else if (score >= 6) {
+        level = '📋 Intermediate Responder';
+        summary = "You know the basics, but a few gaps could slow you down during a real incident. Review the incident management guide and build a response playbook tailored to your stack.";
+      } else {
+        level = '🌱 Novice Responder';
+        summary = "Incident response is a learned skill. Start with the incident management guide, then run this quiz with your team and create your first response playbook together.";
+      }
+
+      resultsTitle.textContent = 'Quiz complete';
+      resultsLevel.textContent = level;
+      resultsSummary.textContent = summary;
+      updateUrl();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function updateUrl() {
+      const params = new URLSearchParams();
+      answers.forEach((a, i) => { if (a !== null) params.set(`q${i}`, a); });
+      if (results.classList.contains('visible')) params.set('results', '1');
+      const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+      window.history.replaceState({}, '', newUrl);
+    }
+
+    function loadFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      let any = false;
+      questions.forEach((_, i) => {
+        if (params.has(`q${i}`)) {
+          answers[i] = parseInt(params.get(`q${i}`), 10);
+          any = true;
+        }
+      });
+      if (params.has('results') && any) {
+        score = answers.reduce((acc, a, i) => acc + (a === questions[i].correct ? 1 : 0), 0);
+        showResults();
+        return true;
+      }
+      if (any) {
+        current = questions.findIndex((_, i) => answers[i] === null);
+        if (current === -1) {
+          score = answers.reduce((acc, a, i) => acc + (a === questions[i].correct ? 1 : 0), 0);
+          showResults();
+          return true;
+        }
+      }
+      return false;
+    }
+
+    checkBtn.addEventListener('click', () => {
+      if (answers[current] === null) return;
+      checkAnswer();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (current < questions.length - 1) {
+        current++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    copyLinkBtn.addEventListener('click', async () => {
+      updateUrl();
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        const original = copyLinkBtn.textContent;
+        copyLinkBtn.textContent = 'Link copied!';
+        setTimeout(() => { copyLinkBtn.textContent = original; }, 1500);
+      } catch (e) { console.error('Copy failed', e); }
+    });
+
+    restartBtn.addEventListener('click', () => {
+      current = 0;
+      score = 0;
+      answers.fill(null);
+      container.style.display = 'block';
+      document.getElementById('quizActions').style.display = 'flex';
+      document.getElementById('progressBar').style.display = 'block';
+      results.classList.remove('visible');
+      window.history.replaceState({}, '', window.location.pathname);
+      renderQuestion();
+    });
+
+    if (!loadFromUrl()) renderQuestion();
+  })();
+  </script>
+</body>
+</html>

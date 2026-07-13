@@ -222,6 +222,7 @@ const pages = [
   { path: '/race-finish.html', name: 'Race Finish Story' },
   { path: '/pro-roi-calculator.html', name: 'Pro ROI Calculator' },
   { path: '/database-migration-incident-management.html', name: 'Database Migration Incident Management Guide' },
+  { path: '/tools/migration-incident-response-training-quiz.html', name: 'Migration Incident Response Training Quiz' },
 ];
 
 for (const { path, name } of pages) {
@@ -1265,6 +1266,44 @@ test('database migration incident management guide loads with key sections', asy
   await expect(page.locator('a[href="tools/migration-incident-postmortem-generator.html"]').first()).toBeVisible();
   await expect(page.locator('a[href="tools/schema-change-checklist.html"]').first()).toBeVisible();
   await expect(page.locator('a[href="github-action.html"]').first()).toBeVisible();
+});
+
+
+test('migration incident response training quiz scores answers and shows results', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/migration-incident-response-training-quiz.html`);
+  await expect(page.locator('h1')).toContainText('Migration Incident Response Training Quiz');
+  await expect(page.locator('.q-number')).toContainText('Question 1 of 12');
+
+  // Answer Q1 correctly (option index 2: assess scope first)
+  await page.locator('label.option[data-idx="2"]').click();
+  await page.click('#checkBtn');
+  await expect(page.locator('.feedback.correct')).toContainText('Containment comes first');
+  await page.click('#nextBtn');
+
+  // Answer Q2 correctly (option index 0: kill migration if safe)
+  await page.locator('label.option[data-idx="0"]').click();
+  await page.click('#checkBtn');
+  await page.click('#nextBtn');
+
+  // Answer Q3 correctly (option index 1: designated coordinator)
+  await page.locator('label.option[data-idx="1"]').click();
+  await page.click('#checkBtn');
+  await page.click('#nextBtn');
+
+  // Answer remaining questions correctly by selecting option index 2 where correct answer matches, otherwise adjust
+  for (let i = 3; i < 12; i++) {
+    // Correct answer indices: Q1=2, Q2=0, Q3=1, Q4=2, Q5=2, Q6=0, Q7=1, Q8=1, Q9=1, Q10=1, Q11=0, Q12=0
+    const correctIdx = [2, 0, 1, 2, 2, 0, 1, 1, 1, 1, 0, 0][i];
+    await page.locator(`label.option[data-idx="${correctIdx}"]`).click();
+    await page.click('#checkBtn');
+    await page.click('#nextBtn');
+  }
+
+  await expect(page.locator('#results.visible')).toBeVisible();
+  await expect(page.locator('#scoreText')).toContainText('12/12');
+  await expect(page.locator('#resultsLevel')).toContainText('Expert Responder');
+  await expect(page.locator('#resourceGrid a[href="../database-migration-incident-management.html"]')).toBeVisible();
+  await expect(page.locator('#resourceGrid a[href="../github-action.html"]')).toBeVisible();
 });
 
 
