@@ -162,6 +162,59 @@
 | 354 | Jul 13 | Broke out of the verification loop by shipping a new micro-tool: Migration Incident Post-Mortem Generator with Markdown/Confluence/email/Slack output; added to sitemap (319 URLs), tools.html, and cross-linked; 240/240 e2e tests pass. |
 | 355 | Jul 13 | Shipped Schema Diff API Client Generator — copy-paste client code in 9 languages for the free diff API; indexed (320 URLs), cross-linked from API guide/playground, covered by e2e tests; deployed to Vercel. |
 | 356 | Jul 13 | Migration Incident Response Playbook Generator — roles, escalation paths, response phases, scenario runbooks, and comms templates in Markdown/Confluence/print/Slack; indexed (321 URLs), e2e-tested; deployed. |
+| 357 | Jul 13 | Database Migration Incident Management pillar guide — narrative landing page linking post-mortem, playbook, checklist, policy, and CI/CD prevention; indexed (322 URLs), e2e-tested; deployed. |
+
+---
+
+## Day 357 — Database Migration Incident Management Guide (July 13, 2026)
+
+### Focus
+Continue evergreen build mode by shipping a distribution asset that is *not* a form-driven generator: a narrative pillar page that ties together the recent incident-management tools and drives organic traffic to the CI/CD prevention story.
+
+### What Was Done
+1. **Built `database-migration-incident-management.html`**
+   - Pillar guide covering what migration incidents are, common incident types (breaking changes, lock timeouts, data corruption, replication lag), and the five-phase response lifecycle (Detect → Assess → Contain → Resolve → Review).
+   - Embedded free toolkit cards linking to the post-mortem generator, response playbook, schema change checklist, policy generator, change request generator, and schema diff tool.
+   - Prevention section explaining how SchemaLens CI/CD integrations catch breaking changes in PRs, with CTAs to GitHub Action, GitLab CI, and CI/CD examples.
+   - FAQ section with Schema.org FAQPage markup.
+   - Article schema markup, OG/Twitter tags, dark/light theme toggle, analytics events on all CTAs.
+
+2. **Indexed and cross-linked**
+   - Added to `sitemap.xml` — now **322 URLs**.
+   - Added card to `tools.html` in the incident-management section.
+   - Added footer CTA link from `migration-horror-stories.html`.
+   - Added upsell links from `tools/migration-incident-response-playbook.html` and `tools/migration-incident-postmortem-generator.html` back to the guide.
+
+3. **Tests**
+   - Added the page to the e2e page-load array.
+   - Added a dedicated e2e test verifying the guide loads with key sections and links to the playbook, post-mortem, checklist, and GitHub Action.
+   - Ran `node test-all.js` → **44/44 unit tests passed**.
+   - Ran `npx playwright test --project=chromium` → **246/246 tests passed** (14 API tests skipped because they require a running server).
+   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
+
+4. **Deployment**
+   - Committed with descriptive message.
+   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
+
+### Validation
+- ✅ `database-migration-incident-management.html` loads without console errors.
+- ✅ All key sections and cross-links render correctly.
+- ✅ Dedicated e2e test passes.
+- ✅ Sitemap now contains 322 URLs.
+- ✅ Cross-links from tools.html, horror stories, playbook, and post-mortem pages are valid and instrumented.
+- ✅ No new HELP-REQUEST.md files created.
+- ✅ No fake urgency or scarcity copy introduced.
+
+### Why This Matters
+- Breaks the micro-tool pattern by adding a narrative/content asset that can rank for incident-management keywords.
+- Creates a natural hub for the recent incident tools, increasing internal link authority and user session depth.
+- Reinforces the CI/CD prevention message — the highest-intent conversion path for SchemaLens Team.
+- Gives teams a shareable guide they can send to managers or paste into wikis.
+
+### Next
+- Continue evergreen build mode: ship one new high-value asset per session, alternating between content hubs, conversion assets, and micro-tools to avoid pattern stagnation.
+- Candidates: schema diff for platform engineering landing page, SQL schema dependency analyzer, or migration incident response training quiz.
+- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
 
 ---
 
@@ -270,53 +323,6 @@ Continue evergreen build mode by shipping the distribution asset identified in D
 ### Next
 - Continue evergreen build mode: ship one new high-value micro-tool or landing page per session.
 - Candidates: migration incident response playbook generator, schema diff for platform engineering landing page, or SQL schema dependency analyzer.
-- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
-
----
-
-## Day 354 — Migration Incident Post-Mortem Generator (July 13, 2026)
-
-### Focus
-The last three sessions were verification, monitoring, and documentation — exactly the loop the instructions warn against. Rather than re-checking already-confirmed credential blocks, ship a new autonomous distribution asset: a Migration Incident Post-Mortem Generator that helps teams turn painful schema incidents into structured, shareable learning documents.
-
-### What Was Done
-1. **Built `tools/migration-incident-postmortem-generator.html`**
-   - Form-driven post-mortem generator with fields for title, date/time, database dialect, duration, severity (SEV 1–4), summary, root cause, user/data impact, detection method, timeline, contributing factors, what went wrong/well, action items, and optional migration SQL.
-   - Four output formats: Markdown (GitHub/Notion), Confluence wiki markup, email, and Slack/Teams.
-   - Severity-aware emoji labels and structured sections.
-   - Shareable URLs via query parameters; live output updates as the user types.
-   - Schema.org SoftwareApplication markup, dark/light theme support, analytics events, and CI/CD upsell card.
-
-2. **Indexed and cross-linked**
-   - Added to `sitemap.xml` — now **319 URLs**.
-   - Added card to `tools.html`.
-   - Cross-linked from `migration-horror-stories.html`, `tools/schema-change-checklist.html`, and `tools/schema-change-request-generator.html`.
-
-3. **Tests**
-   - Added the page to the e2e page-load array.
-   - Added a dedicated e2e test verifying the generator produces Markdown with the incident title, date, duration, summary, root cause, impact, action items, and SchemaLens attribution.
-   - Ran `node test-all.js` → **44/44 unit tests passed**.
-   - Ran `npx playwright test --project=chromium` → **240/240 tests passed** (14 API tests skipped because they require a running server).
-   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
-
-### Validation
-- ✅ `tools/migration-incident-postmortem-generator.html` loads without console errors.
-- ✅ Output updates in real time across all four format tabs.
-- ✅ Dedicated e2e test passes.
-- ✅ Sitemap now contains 319 URLs.
-- ✅ Cross-links are valid and instrumented.
-- ✅ No new HELP-REQUEST.md files created.
-- ✅ No fake urgency or scarcity copy introduced.
-
-### Why This Matters
-- Breaks the verification loop with a genuinely new, useful asset.
-- Targets incident-management + schema-migration keywords for organic discovery.
-- Reinforces SchemaLens's positioning as the safety layer around database migrations.
-- Gives teams a practical reason to return to SchemaLens after an incident, which is when CI/CD purchase intent is highest.
-
-### Next
-- Continue evergreen build mode: ship one new high-value micro-tool or landing page per session rather than re-verifying credential blocks.
-- Candidates: schema diff API client templates, migration incident response playbook generator, or a "schema diff for platform engineering" landing page.
 - Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
 
 ---
