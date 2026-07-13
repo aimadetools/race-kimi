@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Database Migration Incident Management — A Practical Guide | SchemaLens</title>
+  <meta name="description" content="A practical guide to managing database migration incidents: detection, response, rollback, post-mortems, and prevention. Use free SchemaLens tools to build runbooks and catch breaking changes before deploy.">
+  <link rel="canonical" href="https://schemalens.tech/database-migration-incident-management.html">
+  <meta property="og:title" content="Database Migration Incident Management — A Practical Guide">
+  <meta property="og:description" content="How to detect, respond to, and prevent database migration incidents. Free playbook, post-mortem, checklist, and policy generators.">
+  <meta property="og:url" content="https://schemalens.tech/database-migration-incident-management.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Database Migration Incident Management — A Practical Guide">
+  <meta name="twitter:description" content="How to detect, respond to, and prevent database migration incidents. Free playbook, post-mortem, checklist, and policy generators.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Database Migration Incident Management — A Practical Guide",
+    "description": "A practical guide to managing database migration incidents: detection, response, rollback, post-mortems, and prevention.",
+    "author": { "@type": "Organization", "name": "SchemaLens" },
+    "publisher": { "@type": "Organization", "name": "SchemaLens", "logo": { "@type": "ImageObject", "url": "https://schemalens.tech/favicon.svg" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://schemalens.tech/database-migration-incident-management.html" },
+    "datePublished": "2026-07-13",
+    "dateModified": "2026-07-13"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a database migration incident?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A database migration incident is an unplanned service disruption, data inconsistency, or performance degradation caused by applying a schema or data migration to a database. Common examples include dropped columns, missing indexes, lock timeouts, and incompatible defaults." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you respond to a failed database migration?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Stop the deployment, assess the scope and severity, contain the blast radius by rolling back or fixing forward if safe, resolve the root cause with a tested migration script, and run a post-mortem to prevent recurrence." }
+      },
+      {
+        "@type": "Question",
+        "name": "What should be in a migration incident response playbook?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A good playbook defines incident roles, escalation paths, communication channels, severity levels, response phases, rollback procedures, and scenario-specific runbooks for breaking changes, lock timeouts, data corruption, and replication lag." }
+      },
+      {
+        "@type": "Question",
+        "name": "How can SchemaLens prevent migration incidents?",
+        "acceptedAnswer": { "@type": "Answer", "text": "SchemaLens compares schemas before deployment, flags breaking changes, generates migration and rollback SQL, and integrates with CI/CD pipelines to catch risky schema diffs in every pull request." }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="lib/analytics-client.js"></script>
+  <style>
+    .dim-hero { text-align: center; padding: 4rem 1rem 2.5rem; max-width: 760px; margin: 0 auto; }
+    .dim-hero h1 { font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.15; margin-bottom: 0.75rem; }
+    .dim-hero .lead { font-size: 1.15rem; color: var(--text-muted); line-height: 1.7; }
+    .dim-section { max-width: 920px; margin: 0 auto; padding: 2.5rem 1rem; }
+    .dim-section h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+    .dim-section p { color: var(--text-muted); line-height: 1.75; margin-bottom: 1rem; }
+    .dim-section ul { color: var(--text-muted); line-height: 1.8; margin-bottom: 1.25rem; padding-left: 1.25rem; }
+    .dim-section li { margin-bottom: 0.5rem; }
+    .dim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin: 1.5rem 0; }
+    .dim-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .dim-card .icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+    .dim-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .dim-card p { font-size: 0.95rem; margin-bottom: 0.75rem; }
+    .dim-card a { color: var(--primary); font-weight: 600; text-decoration: none; }
+    .dim-card a:hover { text-decoration: underline; }
+    .dim-phase {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.25rem; margin-bottom: 1rem;
+    }
+    .dim-phase-number {
+      flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+      background: var(--primary); color: #fff; display: grid; place-items: center;
+      font-weight: 700; font-size: 0.95rem;
+    }
+    .dim-phase h3 { font-size: 1.1rem; margin-bottom: 0.35rem; }
+    .dim-phase p { font-size: 0.95rem; margin: 0; }
+    .dim-cta {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 2rem; text-align: center; margin: 2rem 0;
+    }
+    .dim-cta h2 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .dim-cta p { color: var(--text-muted); max-width: 560px; margin: 0 auto 1.25rem; line-height: 1.7; }
+    .dim-cta .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .dim-cta a {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 22px; border-radius: var(--radius-sm); text-decoration: none; font-weight: 600;
+    }
+    .dim-cta .btn-primary { background: var(--primary); color: #fff; }
+    .dim-cta .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .dim-cta .btn-secondary:hover { border-color: var(--primary); }
+    .dim-quote {
+      border-left: 3px solid var(--primary);
+      background: var(--surface);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 1.5rem 0;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+    .dim-quote cite { display: block; margin-top: 0.75rem; font-style: normal; font-weight: 600; color: var(--text); font-size: 0.9rem; }
+    @media (max-width: 600px) {
+      .dim-hero { padding: 2.5rem 1rem 1.5rem; }
+      .dim-section { padding: 1.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="logo">SchemaLens</a>
+    <div class="nav-links">
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="app.html" class="btn btn-sm">Try Free</a>
+    </div>
+  </nav>
+
+  <header class="dim-hero">
+    <h1>Database Migration Incident Management</h1>
+    <p class="lead">A practical playbook for detecting, responding to, and preventing database migration incidents — with free tools to build runbooks, post-mortems, and CI/CD safety gates.</p>
+  </header>
+
+  <main>
+    <section class="dim-section">
+      <h2>What is a database migration incident?</h2>
+      <p>A database migration incident happens when a schema or data change causes an unexpected outage, data loss, performance regression, or application failure. These incidents are expensive because they often occur during deployments, when production traffic is highest and engineering teams are under pressure.</p>
+      <p>The root cause is usually a missed schema change: a dropped column that a running query still references, a removed index that was hiding a slow scan, a changed default that breaks older app servers, or a lock that blocks writes long enough to time out customer requests.</p>
+      <div class="dim-quote">
+        "Most migration incidents are not caused by complex failures. They are caused by simple changes that no one reviewed carefully enough."
+        <cite>— SchemaLens incident research</cite>
+      </div>
+    </section>
+
+    <section class="dim-section">
+      <h2>Common migration incident types</h2>
+      <div class="dim-grid">
+        <div class="dim-card">
+          <div class="icon">🔥</div>
+          <h3>Breaking schema changes</h3>
+          <p>Dropping a column, renaming a table, or removing an index that production code still depends on.</p>
+          <a href="blog/dangerous-schema-changes.html">See dangerous changes →</a>
+        </div>
+        <div class="dim-card">
+          <div class="icon">⏱️</div>
+          <h3>Lock timeouts</h3>
+          <p>Long-running <code>ALTER TABLE</code> statements acquire aggressive locks and block writes on busy tables.</p>
+          <a href="zero-downtime-migration-guide.html">Read the zero-downtime guide →</a>
+        </div>
+        <div class="dim-card">
+          <div class="icon">💥</div>
+          <h3>Data corruption</h3>
+          <p>Bad defaults, truncated columns, or migration scripts that run in the wrong order corrupt live data.</p>
+          <a href="migration-horror-stories.html">Read real horror stories →</a>
+        </div>
+        <div class="dim-card">
+          <div class="icon">🔄</div>
+          <h3>Replication lag</h3>
+          <p>Large schema changes on primary databases create lag that cascades to replicas and stale reads.</p>
+          <a href="tools/migration-incident-response-playbook.html">Build a runbook →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dim-section">
+      <h2>The migration incident response lifecycle</h2>
+      <p>Effective incident management follows five clear phases. Document each phase before you need it — pressure is the wrong time to design a process.</p>
+
+      <div class="dim-phase">
+        <div class="dim-phase-number">1</div>
+        <div>
+          <h3>Detect</h3>
+          <p>Catch the problem fast through CI/CD alerts, monitoring, schema drift detection, customer reports, or support tickets. The earlier you detect, the smaller the blast radius.</p>
+        </div>
+      </div>
+      <div class="dim-phase">
+        <div class="dim-phase-number">2</div>
+        <div>
+          <h3>Assess</h3>
+          <p>Determine severity, affected systems, customer impact, and whether rollback is safe. Assign an incident commander and a DBA or database owner.</p>
+        </div>
+      </div>
+      <div class="dim-phase">
+        <div class="dim-phase-number">3</div>
+        <div>
+          <h3>Contain</h3>
+          <p>Stop the bleeding. Roll back the migration if possible, disable the feature flag, or redirect traffic. Do not optimize before the system is stable.</p>
+        </div>
+      </div>
+      <div class="dim-phase">
+        <div class="dim-phase-number">4</div>
+        <div>
+          <h3>Resolve</h3>
+          <p>Apply a tested fix-forward or rollback script. Validate the schema state, run smoke tests, and confirm monitoring returns to baseline.</p>
+        </div>
+      </div>
+      <div class="dim-phase">
+        <div class="dim-phase-number">5</div>
+        <div>
+          <h3>Review</h3>
+          <p>Run a blameless post-mortem. Capture timeline, root cause, contributing factors, what went well, and concrete action items. Use the review to update your runbook and prevention gates.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="dim-section">
+      <h2>Free migration incident toolkit</h2>
+      <p>SchemaLens gives you a set of free, browser-based tools to prepare for and respond to migration incidents. No signup required.</p>
+      <div class="dim-grid">
+        <div class="dim-card">
+          <div class="icon">🚨</div>
+          <h3>Incident Response Playbook Generator</h3>
+          <p>Define roles, escalation paths, response phases, and scenario runbooks. Export to Markdown, Confluence, print/PDF, or Slack.</p>
+          <a href="tools/migration-incident-response-playbook.html" data-event="dim_playbook_cta">Generate playbook →</a>
+        </div>
+        <div class="dim-card">
+          <div class="icon">🩺</div>
+          <h3>Post-Mortem Generator</h3>
+          <p>Turn a painful incident into a structured learning document with timeline, root cause, impact, and action items.</p>
+          <a href="tools/migration-incident-postmortem-generator.html" data-event="dim_postmortem_cta">Generate post-mortem →</a>
+        </div>
+        <div class="dim-card">
+          <div class="icon">✅</div>
+          <h3>Schema Change Checklist</h3>
+          <p>A 32-point checklist for production schema changes. Review indexes, rollback plans, breaking changes, and communication steps.</p>
+          <a href="tools/schema-change-checklist.html" data-event="dim_checklist_cta">Open checklist →</a>
+        </div>
+        <div class="dim-card">
+          <div class="icon">📜</div>
+          <h3>Change Management Policy Generator</h3>
+          <p>Generate a team policy for schema reviews, CI/CD gates, rollback rules, and compliance requirements.</p>
+          <a href="tools/schema-change-policy-generator.html" data-event="dim_policy_cta">Generate policy →</a>
+        </div>
+        <div class="dim-card">
+          <div class="icon">📝</div>
+          <h3>Schema Change Request Generator</h3>
+          <p>Create a structured change request for GitHub Issues, Jira, email, Slack, or Teams with risk assessment.</p>
+          <a href="tools/schema-change-request-generator.html" data-event="dim_request_cta">Generate request →</a>
+        </div>
+        <div class="dim-card">
+          <div class="icon">🔍</div>
+          <h3>Schema Diff Tool</h3>
+          <p>Compare two schemas and catch breaking changes before deploy. Generate migration and rollback SQL in your dialect.</p>
+          <a href="app.html" data-event="dim_diff_cta">Diff schemas →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dim-section">
+      <h2>Prevention: catch incidents before they ship</h2>
+      <p>The cheapest migration incident is the one you prevent in a pull request. SchemaLens integrates with GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, and Azure DevOps to diff schemas automatically on every PR.</p>
+      <ul>
+        <li><strong>Breaking-change detection:</strong> Flags dropped columns, removed indexes, type narrowing, and other risky changes.</li>
+        <li><strong>Migration preview:</strong> Generates the exact <code>ALTER TABLE</code> script reviewers will run in production.</li>
+        <li><strong>Rollback scripts:</strong> Produces rollback SQL so your team knows how to undo the change.</li>
+        <li><strong>PR comments and Check Runs:</strong> Surfaces the diff where reviewers already work — no new dashboards to check.</li>
+        <li><strong>Schema lockfiles:</strong> Track schema state over time and detect drift between branches and environments.</li>
+      </ul>
+      <div class="dim-cta">
+        <h2>Add schema diff to your CI/CD pipeline</h2>
+        <p>Copy a ready-made workflow for your platform and start catching risky schema changes in every pull request.</p>
+        <div class="btn-row">
+          <a href="github-action.html" class="btn-primary" data-event="dim_github_action_cta">GitHub Action</a>
+          <a href="gitlab-schema-diff.html" class="btn-secondary" data-event="dim_gitlab_cta">GitLab CI</a>
+          <a href="ci-cd-examples.html" class="btn-secondary" data-event="dim_examples_cta">All examples</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dim-section">
+      <h2>Frequently asked questions</h2>
+      <div class="faq" itemscope itemtype="https://schema.org/FAQPage">
+        <details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <summary itemprop="name">What is a database migration incident?</summary>
+          <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">A database migration incident is an unplanned service disruption, data inconsistency, or performance degradation caused by applying a schema or data migration. Common examples include dropped columns, missing indexes, lock timeouts, and incompatible defaults.</p>
+          </div>
+        </details>
+        <details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <summary itemprop="name">How do you respond to a failed database migration?</summary>
+          <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">Stop the deployment, assess scope and severity, contain the blast radius by rolling back or fixing forward if safe, resolve the root cause with a tested migration script, and run a post-mortem to prevent recurrence.</p>
+          </div>
+        </details>
+        <details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <summary itemprop="name">What should be in a migration incident response playbook?</summary>
+          <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">A good playbook defines incident roles, escalation paths, communication channels, severity levels, response phases, rollback procedures, and scenario-specific runbooks for breaking changes, lock timeouts, data corruption, and replication lag.</p>
+          </div>
+        </details>
+        <details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <summary itemprop="name">How can SchemaLens prevent migration incidents?</summary>
+          <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">SchemaLens compares schemas before deployment, flags breaking changes, generates migration and rollback SQL, and integrates with CI/CD pipelines to catch risky schema diffs in every pull request.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="dim-section">
+      <div class="dim-cta">
+        <h2>Start preventing migration incidents today</h2>
+        <p>Compare schemas, generate safe migrations, and add automated checks to your deployment pipeline — all without an account.</p>
+        <div class="btn-row">
+          <a href="app.html" class="btn-primary" data-event="dim_try_free_cta">Try SchemaLens Free</a>
+          <a href="pricing.html" class="btn-secondary" data-event="dim_pricing_cta">View Pricing</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <strong>SchemaLens</strong>
+        <p>Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div>
+        <strong>Product</strong>
+        <a href="app.html">Schema Diff Tool</a>
+        <a href="features.html">Features</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="tools.html">Free Tools</a>
+      </div>
+      <div>
+        <strong>CI/CD</strong>
+        <a href="github-action.html">GitHub Action</a>
+        <a href="gitlab-schema-diff.html">GitLab CI</a>
+        <a href="ci-cd-examples.html">CI/CD Examples</a>
+      </div>
+      <div>
+        <strong>Resources</strong>
+        <a href="blog.html">Blog</a>
+        <a href="migration-horror-stories.html">Horror Stories</a>
+        <a href="open.html">Open Metrics</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 SchemaLens. Built in public during the $100 AI Startup Race.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

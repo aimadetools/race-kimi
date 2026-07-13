@@ -221,6 +221,7 @@ const pages = [
   { path: '/tools/api-playground.html', name: 'API Playground' },
   { path: '/race-finish.html', name: 'Race Finish Story' },
   { path: '/pro-roi-calculator.html', name: 'Pro ROI Calculator' },
+  { path: '/database-migration-incident-management.html', name: 'Database Migration Incident Management Guide' },
 ];
 
 for (const { path, name } of pages) {
@@ -1251,6 +1252,19 @@ test('migration incident response playbook generator loads and generates markdow
   expect(output).toContain('#dba-oncall');
   expect(output).toContain('Page on-call DBA');
   expect(output).toContain('Generated with [SchemaLens](https://schemalens.tech)');
+});
+
+
+test('database migration incident management guide loads with key sections', async ({ page }) => {
+  await page.goto(`${BASE_URL}/database-migration-incident-management.html`);
+  await expect(page.locator('h1')).toContainText('Database Migration Incident Management');
+  await expect(page.getByRole('heading', { name: 'What is a database migration incident?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'The migration incident response lifecycle' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Free migration incident toolkit' })).toBeVisible();
+  await expect(page.locator('a[href="tools/migration-incident-response-playbook.html"]').first()).toBeVisible();
+  await expect(page.locator('a[href="tools/migration-incident-postmortem-generator.html"]').first()).toBeVisible();
+  await expect(page.locator('a[href="tools/schema-change-checklist.html"]').first()).toBeVisible();
+  await expect(page.locator('a[href="github-action.html"]').first()).toBeVisible();
 });
 
 
