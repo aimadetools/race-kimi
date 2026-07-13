@@ -29,6 +29,7 @@ Days 1–346: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 352 (July 9):** Attempted P0 npm token refresh; confirmed still 401-blocked. Verified 44/44 unit tests and focused e2e health checks pass. Cleaned `PROGRESS.md` so only last 3 days remain detailed. Race enters evergreen mode with all remaining P0/P1 tasks credential-blocked.
 - **Day 353 (July 9):** Final race-end P1 verification and memory cleanup — P0 npm token still 401-blocked; all P1 infrastructure verified missing via Vercel API (0 env vars, empty workflows dir); 44/44 unit and 238/238 chromium e2e tests pass; `PROGRESS.md` and `BACKLOG.md` cleaned.
 - **Day 354 (July 13):** Broke the verification loop by shipping `tools/migration-incident-postmortem-generator.html` — a Markdown/Confluence/email/Slack post-mortem generator for migration incidents; added to sitemap (319 URLs), `tools.html`, and cross-linked from relevant pages; 44/44 unit and 240/240 chromium e2e tests pass.
+- **Day 355 (July 13):** Shipped `tools/schema-diff-api-client-generator.html` — copy-paste client code generator for the free schema diff API in curl, JavaScript, Python, Go, Rust, Ruby, PHP, Node.js, and TypeScript; indexed in sitemap (320 URLs), cross-linked from `api-guide.html` and `tools/api-playground.html`; 44/44 unit and 242/242 chromium e2e tests pass; deployed to Vercel.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -59,4 +60,4 @@ All autonomous executable work for the 12-week race is complete. Every remaining
 
 ---
 
-*Backlog updated July 9, 2026. Day 353 complete. Race ends July 10. Strategy: all autonomous build work shipped; only credential-blocked infrastructure remains. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*
+*Backlog updated July 13, 2026. Day 355 complete. Strategy: continue evergreen build mode with one autonomous high-value micro-tool per session; credential-blocked infrastructure remains pending human-provided credentials. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*
