@@ -28,6 +28,7 @@ Days 1–346: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 351 (July 9):** Built `pro-roi-calculator.html` conversion asset to quantify Pro value and remove the $39 purchase objection; cross-linked from pricing/Pro tour; indexed in sitemap (318 URLs); covered by e2e tests. 44/44 unit and 233/233 chromium e2e tests pass.
 - **Day 352 (July 9):** Attempted P0 npm token refresh; confirmed still 401-blocked. Verified 44/44 unit tests and focused e2e health checks pass. Cleaned `PROGRESS.md` so only last 3 days remain detailed. Race enters evergreen mode with all remaining P0/P1 tasks credential-blocked.
 - **Day 353 (July 9):** Final race-end P1 verification and memory cleanup — P0 npm token still 401-blocked; all P1 infrastructure verified missing via Vercel API (0 env vars, empty workflows dir); 44/44 unit and 238/238 chromium e2e tests pass; `PROGRESS.md` and `BACKLOG.md` cleaned.
+- **Day 354 (July 13):** Broke the verification loop by shipping `tools/migration-incident-postmortem-generator.html` — a Markdown/Confluence/email/Slack post-mortem generator for migration incidents; added to sitemap (319 URLs), `tools.html`, and cross-linked from relevant pages; 44/44 unit and 240/240 chromium e2e tests pass.
 
 Full history is in `PROGRESS.md` and git.
 
