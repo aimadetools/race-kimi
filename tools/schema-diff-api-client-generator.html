@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Schema Diff API Client Generator — Copy-Paste Code in 9 Languages | SchemaLens</title>
+  <meta name="description" content="Generate ready-to-run API client code for the SchemaLens free schema diff endpoint. Copy-paste curl, JavaScript, Python, Go, Rust, Ruby, PHP, Node.js, and TypeScript examples.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-diff-api-client-generator.html">
+  <meta property="og:title" content="Schema Diff API Client Generator — Copy-Paste Code in 9 Languages">
+  <meta property="og:description" content="Generate ready-to-run client code for the SchemaLens free schema diff API. curl, JavaScript, Python, Go, Rust, Ruby, PHP, Node.js, TypeScript.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-diff-api-client-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Schema Diff API Client Generator">
+  <meta name="twitter:description" content="Copy-paste client code for the SchemaLens free schema diff API in 9 languages.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Schema Diff API Client Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates copy-paste API client code for the SchemaLens free schema diff endpoint in curl, JavaScript, Python, Go, Rust, Ruby, PHP, Node.js, and TypeScript.",
+    "url": "https://schemalens.tech/tools/schema-diff-api-client-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 700px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 960px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box; font-family: inherit;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 140px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.5; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output { background: var(--code-bg); color: var(--code-text); border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; line-height: 1.6; white-space: pre; word-break: normal; min-height: 320px; }
+
+    .preview-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .preview-tabs button { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+    .preview-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .hint-row { color: var(--text-muted); font-size: 0.85rem; margin-top: 8px; }
+
+    .endpoint-badge {
+      display: inline-flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 10px 14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; margin-bottom: 16px;
+    }
+    .endpoint-badge .method { color: var(--success); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Schema Diff API Client Generator</h1>
+      <p>Generate ready-to-run client code for the SchemaLens free schema diff API. Paste your schemas, pick a language, and copy the request into your script, pipeline, or notebook.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Request details</h2>
+
+          <div class="endpoint-badge">
+            <span class="method">POST</span>
+            <span>https://schemalens.tech/api/free-diff</span>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="dialect">Dialect</label>
+              <select id="dialect">
+                <option value="postgres">PostgreSQL</option>
+                <option value="mysql">MySQL</option>
+                <option value="sqlite">SQLite</option>
+                <option value="mssql">SQL Server</option>
+                <option value="oracle">Oracle</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="format">Response format</label>
+              <select id="format">
+                <option value="json">JSON</option>
+                <option value="markdown">Markdown</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="schemaA">Old schema SQL <span class="hint">(schemaA)</span></label>
+            <textarea id="schemaA" placeholder="CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="schemaB">New schema SQL <span class="hint">(schemaB)</span></label>
+            <textarea id="schemaB" placeholder="CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) NOT NULL);"></textarea>
+          </div>
+
+          <button class="btn btn-secondary btn-sm" id="loadSampleBtn" data-event="api_client_load_sample">Load sample schema</button>
+          <button class="btn btn-primary" id="generateBtn" style="width:100%; margin-top:14px;" data-event="api_client_generate">Generate client code</button>
+          <div class="hint-row">No API key required. Free tier: 15 requests/minute.</div>
+        </div>
+
+        <div class="upsell">
+          <h3>⚡ Add schema diff to CI/CD</h3>
+          <ul>
+            <li>Run the same diff automatically on every PR with the SchemaLens GitHub Action.</li>
+            <li>Get PR comments, Check Run risk scores, and migration/rollback SQL.</li>
+            <li>Gate deploys on breaking-change detection and schema lockfile verification.</li>
+          </ul>
+          <a href="../github-action.html" class="btn btn-primary" data-event="api_client_upsell_cicd">Add to GitHub Action →</a>
+          <span style="margin-left:12px;">or <a href="../tools/api-playground.html" data-event="api_client_open_playground">try the API playground</a>.</span>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel" style="position:sticky;top:80px;">
+          <h2>2. Generated client code</h2>
+          <div class="preview-tabs" id="langTabs">
+            <button class="active" data-lang="curl">cURL</button>
+            <button data-lang="js">JavaScript</button>
+            <button data-lang="python">Python</button>
+            <button data-lang="go">Go</button>
+            <button data-lang="rust">Rust</button>
+            <button data-lang="ruby">Ruby</button>
+            <button data-lang="php">PHP</button>
+            <button data-lang="node">Node.js</button>
+            <button data-lang="ts">TypeScript</button>
+          </div>
+          <div class="output-wrap">
+            <button class="btn btn-secondary btn-copy" id="copyBtn">Copy</button>
+            <div class="output" id="output" tabindex="0" aria-label="Generated client code"></div>
+          </div>
+          <div class="share-row">
+            <button class="btn btn-secondary" id="copyLinkBtn" data-event="api_client_copy_link">Copy Share Link</button>
+            <a href="../api-guide.html" class="btn btn-secondary" data-event="api_client_open_guide">API Quick Start</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Built with 💜 by <a href="../index.html">SchemaLens</a> ·
+        <a href="../open.html">Open Startup</a> ·
+        <a href="../privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const endpoint = 'https://schemalens.tech/api/free-diff';
+
+    const els = {
+      dialect: document.getElementById('dialect'),
+      format: document.getElementById('format'),
+      schemaA: document.getElementById('schemaA'),
+      schemaB: document.getElementById('schemaB'),
+      generateBtn: document.getElementById('generateBtn'),
+      loadSampleBtn: document.getElementById('loadSampleBtn'),
+      copyBtn: document.getElementById('copyBtn'),
+      copyLinkBtn: document.getElementById('copyLinkBtn'),
+      output: document.getElementById('output'),
+      langTabs: document.getElementById('langTabs'),
+    };
+
+    let currentLang = 'curl';
+    let generated = {};
+
+    const sampleSchemas = {
+      a: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
+);`,
+      b: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL
+);`
+    };
+
+    function escapeJson(str) {
+      return JSON.stringify(str);
+    }
+
+    function buildPayload() {
+      return {
+        schemaA: els.schemaA.value.trim() || sampleSchemas.a,
+        schemaB: els.schemaB.value.trim() || sampleSchemas.b,
+        dialect: els.dialect.value,
+        format: els.format.value
+      };
+    }
+
+    function generateCurl(p) {
+      return `curl -X POST ${endpoint} \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "schemaA": ${escapeJson(p.schemaA)},
+    "schemaB": ${escapeJson(p.schemaB)},
+    "dialect": "${p.dialect}",
+    "format": "${p.format}"
+  }'`;
+    }
+
+    function generateJs(p) {
+      return `const response = await fetch('${endpoint}', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    schemaA: ${escapeJson(p.schemaA)},
+    schemaB: ${escapeJson(p.schemaB)},
+    dialect: '${p.dialect}',
+    format: '${p.format}'
+  })
+});
+
+const data = await response.json();
+console.log(data.migration);`;
+    }
+
+    function generatePython(p) {
+      return `import requests
+
+response = requests.post(
+    '${endpoint}',
+    json={
+        'schemaA': ${escapeJson(p.schemaA)},
+        'schemaB': ${escapeJson(p.schemaB)},
+        'dialect': '${p.dialect}',
+        'format': '${p.format}'
+    }
+)
+
+data = response.json()
+print(data['migration'])`;
+    }
+
+    function generateGo(p) {
+      return `package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    payload := map[string]string{
+        "schemaA": ${escapeJson(p.schemaA)},
+        "schemaB": ${escapeJson(p.schemaB)},
+        "dialect": "${p.dialect}",
+        "format": "${p.format}",
+    }
+    body, _ := json.Marshal(payload)
+    resp, _ := http.Post("${endpoint}", "application/json", bytes.NewBuffer(body))
+    defer resp.Body.Close()
+
+    var result map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&result)
+    fmt.Println(result["migration"])
+}`;
+    }
+
+    function generateRust(p) {
+      return `use reqwest;
+use serde_json::json;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = reqwest::Client::new();
+    let res = client
+        .post("${endpoint}")
+        .header("Content-Type", "application/json")
+        .json(&json!({
+            "schemaA": ${escapeJson(p.schemaA)},
+            "schemaB": ${escapeJson(p.schemaB)},
+            "dialect": "${p.dialect}",
+            "format": "${p.format}"
+        }))
+        .send()
+        .await?;
+
+    let data: serde_json::Value = res.json().await?;
+    println!("{}", data["migration"]);
+    Ok(())
+}`;
+    }
+
+    function generateRuby(p) {
+      return `require 'net/http'
+require 'json'
+
+uri = URI('${endpoint}')
+req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+req.body = {
+  schemaA: ${escapeJson(p.schemaA)},
+  schemaB: ${escapeJson(p.schemaB)},
+  dialect: '${p.dialect}',
+  format: '${p.format}'
+}.to_json
+
+res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
+  http.request(req)
+end
+
+data = JSON.parse(res.body)
+puts data['migration']`;
+    }
+
+    function generatePhp(p) {
+      return `<?php
+$ch = curl_init('${endpoint}');
+$payload = json_encode([
+    'schemaA' => ${escapeJson(p.schemaA)},
+    'schemaB' => ${escapeJson(p.schemaB)},
+    'dialect' => '${p.dialect}',
+    'format' => '${p.format}'
+]);
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+curl_close($ch);
+
+$data = json_decode($response, true);
+echo $data['migration'];`;
+    }
+
+    function generateNode(p) {
+      return `const axios = require('axios');
+
+const { data } = await axios.post('${endpoint}', {
+  schemaA: ${escapeJson(p.schemaA)},
+  schemaB: ${escapeJson(p.schemaB)},
+  dialect: '${p.dialect}',
+  format: '${p.format}'
+});
+
+console.log(data.migration);`;
+    }
+
+    function generateTs(p) {
+      return `interface SchemaDiffResponse {
+  summary: {
+    tablesAdded: number;
+    tablesRemoved: number;
+    tablesModified: number;
+    breakingChangeCount: number;
+  };
+  riskScore: { score: number; label: string };
+  migration: string;
+  rollback: string;
+}
+
+const response = await fetch('${endpoint}', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    schemaA: ${escapeJson(p.schemaA)},
+    schemaB: ${escapeJson(p.schemaB)},
+    dialect: '${p.dialect}',
+    format: '${p.format}'
+  })
+});
+
+const data: SchemaDiffResponse = await response.json();
+console.log(data.migration);`;
+    }
+
+    const generators = {
+      curl: generateCurl,
+      js: generateJs,
+      python: generatePython,
+      go: generateGo,
+      rust: generateRust,
+      ruby: generateRuby,
+      php: generatePhp,
+      node: generateNode,
+      ts: generateTs
+    };
+
+    function render() {
+      const p = buildPayload();
+      Object.keys(generators).forEach(lang => {
+        generated[lang] = generators[lang](p);
+      });
+      els.output.textContent = generated[currentLang];
+      updateUrl(p);
+    }
+
+    function updateUrl(p) {
+      try {
+        const url = new URL(location.href);
+        url.searchParams.set('dialect', p.dialect);
+        url.searchParams.set('format', p.format);
+        url.searchParams.set('lang', currentLang);
+        if (els.schemaA.value.trim() && els.schemaA.value.trim() !== sampleSchemas.a) {
+          url.searchParams.set('schemaA', encodeURIComponent(els.schemaA.value.trim()));
+        } else {
+          url.searchParams.delete('schemaA');
+        }
+        if (els.schemaB.value.trim() && els.schemaB.value.trim() !== sampleSchemas.b) {
+          url.searchParams.set('schemaB', encodeURIComponent(els.schemaB.value.trim()));
+        } else {
+          url.searchParams.delete('schemaB');
+        }
+        history.replaceState(null, '', url.toString());
+      } catch (e) {}
+    }
+
+    function loadFromUrl() {
+      try {
+        const params = new URLSearchParams(location.search);
+        const dialect = params.get('dialect');
+        const format = params.get('format');
+        const lang = params.get('lang');
+        const schemaA = params.get('schemaA');
+        const schemaB = params.get('schemaB');
+        if (dialect) els.dialect.value = dialect;
+        if (format) els.format.value = format;
+        if (lang && generators[lang]) currentLang = lang;
+        if (schemaA) els.schemaA.value = decodeURIComponent(schemaA);
+        if (schemaB) els.schemaB.value = decodeURIComponent(schemaB);
+      } catch (e) {}
+    }
+
+    function setActiveTab(lang) {
+      currentLang = lang;
+      els.langTabs.querySelectorAll('button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      els.output.textContent = generated[lang] || generators[lang](buildPayload());
+      updateUrl(buildPayload());
+    }
+
+    function copyOutput() {
+      navigator.clipboard.writeText(els.output.textContent).then(() => {
+        els.copyBtn.classList.add('copied');
+        els.copyBtn.textContent = 'Copied!';
+        setTimeout(() => {
+          els.copyBtn.classList.remove('copied');
+          els.copyBtn.textContent = 'Copy';
+        }, 1500);
+      }).catch(() => {});
+    }
+
+    function copyShareLink() {
+      navigator.clipboard.writeText(location.href).then(() => {
+        els.copyLinkBtn.textContent = 'Link copied!';
+        setTimeout(() => { els.copyLinkBtn.textContent = 'Copy Share Link'; }, 1500);
+      }).catch(() => {});
+    }
+
+    els.langTabs.addEventListener('click', (e) => {
+      if (e.target.matches('button[data-lang]')) {
+        setActiveTab(e.target.dataset.lang);
+      }
+    });
+
+    els.generateBtn.addEventListener('click', render);
+    els.copyBtn.addEventListener('click', copyOutput);
+    els.copyLinkBtn.addEventListener('click', copyShareLink);
+
+    els.loadSampleBtn.addEventListener('click', () => {
+      els.schemaA.value = sampleSchemas.a;
+      els.schemaB.value = sampleSchemas.b;
+      render();
+    });
+
+    [els.dialect, els.format, els.schemaA, els.schemaB].forEach(el => {
+      el.addEventListener('input', () => updateUrl(buildPayload()));
+    });
+
+    loadFromUrl();
+    render();
+    setActiveTab(currentLang);
+  })();
+  </script>
+</body>
+</html>

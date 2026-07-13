@@ -150,6 +150,7 @@ const pages = [
   { path: '/tools/schema-change-checklist.html', name: 'Database Schema Change Checklist' },
   { path: '/tools/migration-maturity-assessment.html', name: 'Migration Maturity Assessment' },
   { path: '/tools/schema-change-request-generator.html', name: 'Schema Change Request Generator' },
+  { path: '/tools/schema-diff-api-client-generator.html', name: 'Schema Diff API Client Generator' },
   { path: '/tools/migration-incident-postmortem-generator.html', name: 'Migration Incident Post-Mortem Generator' },
   { path: '/tools/schema-change-policy-generator.html', name: 'Schema Change Management Policy Generator' },
   { path: '/tools/schema-change-adr-generator.html', name: 'Schema Change ADR Generator' },
@@ -1231,4 +1232,34 @@ test('migration incident post-mortem generator loads and generates markdown', as
   expect(output).toContain('non-nullable column');
   expect(output).toContain('[ ] Add CI breaking-change gate');
   expect(output).toContain('Generated with [SchemaLens](https://schemalens.tech)');
+});
+
+
+test('schema diff api client generator generates curl and javascript', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/schema-diff-api-client-generator.html`);
+  await expect(page.locator('h1')).toContainText('Schema Diff API Client Generator');
+
+  // Load sample schemas and generate
+  await page.click('#loadSampleBtn');
+  await page.click('#generateBtn');
+
+  // cURL tab is active by default
+  const output = await page.locator('#output').textContent();
+  expect(output).toContain('curl -X POST https://schemalens.tech/api/free-diff');
+  expect(output).toContain('schemaA');
+  expect(output).toContain('schemaB');
+  expect(output).toContain('-H "Content-Type: application/json"');
+
+  // Switch to JavaScript tab
+  await page.click('[data-lang="js"]');
+  const jsOutput = await page.locator('#output').textContent();
+  expect(jsOutput).toContain("fetch('https://schemalens.tech/api/free-diff'");
+  expect(jsOutput).toContain('JSON.stringify({');
+  expect(jsOutput).toContain('migration');
+
+  // Switch to Python tab
+  await page.click('[data-lang="python"]');
+  const pyOutput = await page.locator('#output').textContent();
+  expect(pyOutput).toContain("requests.post(");
+  expect(pyOutput).toContain("'schemaA'");
 });
