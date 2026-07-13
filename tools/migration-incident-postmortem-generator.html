@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Migration Incident Post-Mortem Generator | SchemaLens</title>
+  <meta name="description" content="Generate a structured database migration incident post-mortem in Markdown, Confluence, email, or Slack format. Capture root cause, impact, timeline, and action items.">
+  <link rel="canonical" href="https://schemalens.tech/tools/migration-incident-postmortem-generator.html">
+  <meta property="og:title" content="Migration Incident Post-Mortem Generator">
+  <meta property="og:description" content="Generate a structured post-mortem for a database migration incident. Markdown, Confluence, email, and Slack formats.">
+  <meta property="og:url" content="https://schemalens.tech/tools/migration-incident-postmortem-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Migration Incident Post-Mortem Generator">
+  <meta name="twitter:description" content="Generate a structured post-mortem for a database migration incident. Markdown, Confluence, email, and Slack formats.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Migration Incident Post-Mortem Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates migration incident post-mortems in Markdown, Confluence, email, and Slack formats. Includes severity, timeline, root cause, impact, contributing factors, and action items.",
+    "url": "https://schemalens.tech/tools/migration-incident-postmortem-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 960px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 90px; resize: vertical; font-family: inherit; font-size: 0.95rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; }
+    .checkbox-group label { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; cursor: pointer; font-size: 0.9rem; font-weight: 400; }
+    .checkbox-group label:has(input:checked) { border-color: var(--primary); background: rgba(99,102,241,0.08); }
+    .checkbox-group input { width: auto; margin: 0; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; min-height: 280px; }
+
+    .preview-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .preview-tabs button { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+    .preview-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .severity-options { display: flex; gap: 12px; flex-wrap: wrap; }
+    .severity-options label { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; cursor: pointer; font-size: 0.9rem; }
+    .severity-options input { margin: 0; }
+    .severity-options label:has(input:checked) { border-color: var(--primary); background: rgba(99,102,241,0.08); }
+
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Migration Incident Post-Mortem Generator</h1>
+      <p>Turn a painful migration incident into a clear, actionable post-mortem. Generate Markdown, Confluence, email, or Slack formats in seconds.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Incident details</h2>
+          <div class="field-row">
+            <div class="field">
+              <label for="incidentTitle">Incident title</label>
+              <input type="text" id="incidentTitle" placeholder="e.g. users table migration caused 12-minute outage">
+            </div>
+            <div class="field">
+              <label for="incidentDate">Date / time</label>
+              <input type="text" id="incidentDate" placeholder="e.g. July 9, 2026 14:32 UTC">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="dialect">Database dialect</label>
+              <select id="dialect">
+                <option value="PostgreSQL">PostgreSQL</option>
+                <option value="MySQL">MySQL</option>
+                <option value="SQLite">SQLite</option>
+                <option value="SQL Server">SQL Server</option>
+                <option value="Oracle">Oracle</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="duration">Duration</label>
+              <input type="text" id="duration" placeholder="e.g. 12 minutes">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Severity</label>
+            <div class="severity-options">
+              <label><input type="radio" name="severity" value="SEV 1" checked> 🔴 SEV 1 — Critical outage</label>
+              <label><input type="radio" name="severity" value="SEV 2"> 🟠 SEV 2 — Major impact</label>
+              <label><input type="radio" name="severity" value="SEV 3"> 🟡 SEV 3 — Minor impact</label>
+              <label><input type="radio" name="severity" value="SEV 4"> 🟢 SEV 4 — No user impact</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="summary">What happened?</label>
+            <textarea id="summary" placeholder="e.g. A deployment added a non-nullable column to the users table without a default, causing insert failures and 500 errors across API services."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="rootCause">Root cause</label>
+            <textarea id="rootCause" placeholder="e.g. The migration script did not specify a default value and was not tested against a copy of production data. The breaking change was not caught in code review."></textarea>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="impactUsers">User impact</label>
+              <input type="text" id="impactUsers" placeholder="e.g. ~12,000 failed signups">
+            </div>
+            <div class="field">
+              <label for="impactData">Data impact</label>
+              <input type="text" id="impactData" placeholder="e.g. 0 rows lost; 1,200 retries queued">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="detection">How was it detected?</label>
+            <input type="text" id="detection" placeholder="e.g. PagerDuty alert from error-rate SLO; customer support reported signup errors">
+          </div>
+
+          <div class="field">
+            <label for="timeline">Timeline</label>
+            <textarea id="timeline" placeholder="e.g. 14:32 UTC — migration deployed&#10;14:33 UTC — error rate spike detected&#10;14:38 UTC — rollback initiated&#10;14:44 UTC — service fully recovered"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Contributing factors</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="cfNoReview" checked> Missing schema review</label>
+              <label><input type="checkbox" id="cfNoTest"> No staging test</label>
+              <label><input type="checkbox" id="cfNoRollback"> No rollback plan</label>
+              <label><input type="checkbox" id="cfBreaking"> Breaking change undetected</label>
+              <label><input type="checkbox" id="cfManual"> Manual migration step</label>
+              <label><input type="checkbox" id="cfOffHours"> Off-hours deploy without coverage</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="wentWrong">What went wrong?</label>
+            <textarea id="wentWrong" placeholder="e.g. The diff tool showed the column addition but the review checklist was skipped. No one verified nullability against existing app code."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="wentWell">What went well?</label>
+            <textarea id="wentWell" placeholder="e.g. Rollback completed in 6 minutes. Monitoring caught the issue within 60 seconds. Runbook was up to date."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="actionItems">Action items</label>
+            <textarea id="actionItems" placeholder="e.g. [ ] Add breaking-change gate to CI&#10;[ ] Require schema diff review for all migration PRs&#10;[ ] Test non-nullable columns with production-like dataset"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="migrationSql">Migration SQL <span class="hint">(optional)</span></label>
+            <textarea id="migrationSql" placeholder="e.g. ALTER TABLE users ADD COLUMN phone VARCHAR(20) NOT NULL;"></textarea>
+          </div>
+
+          <button class="btn btn-primary" id="generateBtn" style="width:100%;" data-event="pm_generate">Generate Post-Mortem</button>
+        </div>
+
+        <div class="upsell">
+          <h3>🛡️ Prevent the next incident</h3>
+          <ul>
+            <li>Catch breaking schema changes before they reach production with the SchemaLens GitHub Action.</li>
+            <li>Auto-generate migration + rollback SQL for every schema diff.</li>
+            <li>Gate deploys on schema review approval and breaking-change checks.</li>
+          </ul>
+          <a href="../github-action.html" class="btn btn-primary" data-event="pm_upsell_cicd">Add SchemaLens to CI/CD →</a>
+          <span style="margin-left:12px;">or <a href="../tools/schema-change-checklist.html" data-event="pm_upsell_checklist">use the 32-point checklist</a>.</span>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel" style="position:sticky;top:80px;">
+          <h2>2. Generated post-mortem</h2>
+          <div class="preview-tabs">
+            <button class="active" data-tab="markdown">Markdown</button>
+            <button data-tab="confluence">Confluence</button>
+            <button data-tab="email">Email</button>
+            <button data-tab="slack">Slack / Teams</button>
+          </div>
+          <div class="output-wrap">
+            <button class="btn btn-secondary btn-copy" id="copyBtn">Copy</button>
+            <div class="output" id="output" tabindex="0" aria-label="Generated post-mortem"></div>
+          </div>
+          <div class="share-row">
+            <button class="btn btn-secondary" id="copyLinkBtn" data-event="pm_copy_link">Copy Share Link</button>
+            <a href="../app.html" class="btn btn-secondary" data-event="pm_open_app">Open Schema Diff App</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Built with 💜 by <a href="../index.html">SchemaLens</a> ·
+        <a href="../open.html">Open Startup</a> ·
+        <a href="../privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const els = {
+      incidentTitle: document.getElementById('incidentTitle'),
+      incidentDate: document.getElementById('incidentDate'),
+      dialect: document.getElementById('dialect'),
+      duration: document.getElementById('duration'),
+      summary: document.getElementById('summary'),
+      rootCause: document.getElementById('rootCause'),
+      impactUsers: document.getElementById('impactUsers'),
+      impactData: document.getElementById('impactData'),
+      detection: document.getElementById('detection'),
+      timeline: document.getElementById('timeline'),
+      wentWrong: document.getElementById('wentWrong'),
+      wentWell: document.getElementById('wentWell'),
+      actionItems: document.getElementById('actionItems'),
+      migrationSql: document.getElementById('migrationSql'),
+      generateBtn: document.getElementById('generateBtn'),
+      copyBtn: document.getElementById('copyBtn'),
+      copyLinkBtn: document.getElementById('copyLinkBtn'),
+      output: document.getElementById('output'),
+    };
+
+    let currentText = '';
+    let currentTab = 'markdown';
+
+    const severityEmoji = { 'SEV 1': '🔴', 'SEV 2': '🟠', 'SEV 3': '🟡', 'SEV 4': '🟢' };
+
+    function getSeverity() {
+      return document.querySelector('input[name="severity"]:checked')?.value || 'SEV 1';
+    }
+
+    function getContributingFactors() {
+      const factors = [];
+      if (els.cfNoReview?.checked) factors.push('Missing schema review');
+      if (els.cfNoTest?.checked) factors.push('No staging test');
+      if (els.cfNoRollback?.checked) factors.push('No rollback plan');
+      if (els.cfBreaking?.checked) factors.push('Breaking change undetected');
+      if (els.cfManual?.checked) factors.push('Manual migration step');
+      if (els.cfOffHours?.checked) factors.push('Off-hours deploy without coverage');
+      return factors.length ? factors : ['To be determined'];
+    }
+
+    // Bind checkboxes after DOM load
+    ['cfNoReview', 'cfNoTest', 'cfNoRollback', 'cfBreaking', 'cfManual', 'cfOffHours'].forEach(id => {
+      els[id] = document.getElementById(id);
+    });
+
+    function defaultVal(val, fallback) {
+      return (val || '').trim() || fallback;
+    }
+
+    function buildData() {
+      return {
+        title: defaultVal(els.incidentTitle.value, 'Database migration incident'),
+        date: defaultVal(els.incidentDate.value, 'Not specified'),
+        dialect: els.dialect.value,
+        duration: defaultVal(els.duration.value, 'Not specified'),
+        severity: getSeverity(),
+        summary: defaultVal(els.summary.value, '_No summary provided._'),
+        rootCause: defaultVal(els.rootCause.value, '_Root cause under investigation._'),
+        impactUsers: defaultVal(els.impactUsers.value, 'Not specified'),
+        impactData: defaultVal(els.impactData.value, 'Not specified'),
+        detection: defaultVal(els.detection.value, '_Not specified._'),
+        timeline: defaultVal(els.timeline.value, '_Timeline not recorded._'),
+        contributingFactors: getContributingFactors(),
+        wentWrong: defaultVal(els.wentWrong.value, '_To be documented._'),
+        wentWell: defaultVal(els.wentWell.value, '_To be documented._'),
+        actionItems: defaultVal(els.actionItems.value, '_Action items pending._'),
+        migrationSql: els.migrationSql.value.trim(),
+      };
+    }
+
+    function formatList(items, prefix = '-') {
+      return items.map(i => `${prefix} ${i}`).join('\n');
+    }
+
+    function generateMarkdown(d) {
+      const lines = [];
+      lines.push(`# Post-Mortem: ${d.title}`);
+      lines.push('');
+      lines.push('## Incident overview');
+      lines.push('');
+      lines.push(`| Field | Value |`);
+      lines.push(`|---|---|`);
+      lines.push(`| **Title** | ${d.title} |`);
+      lines.push(`| **Date / time** | ${d.date} |`);
+      lines.push(`| **Database** | ${d.dialect} |`);
+      lines.push(`| **Duration** | ${d.duration} |`);
+      lines.push(`| **Severity** | ${severityEmoji[d.severity]} ${d.severity} |`);
+      lines.push('');
+      lines.push('## Summary');
+      lines.push(d.summary);
+      lines.push('');
+      lines.push('## Impact');
+      lines.push(`- **Users:** ${d.impactUsers}`);
+      lines.push(`- **Data:** ${d.impactData}`);
+      lines.push('');
+      lines.push('## Detection');
+      lines.push(d.detection);
+      lines.push('');
+      lines.push('## Timeline');
+      lines.push(d.timeline);
+      lines.push('');
+      lines.push('## Root cause');
+      lines.push(d.rootCause);
+      lines.push('');
+      lines.push('## Contributing factors');
+      lines.push(formatList(d.contributingFactors));
+      lines.push('');
+      lines.push('## What went wrong');
+      lines.push(d.wentWrong);
+      lines.push('');
+      lines.push('## What went well');
+      lines.push(d.wentWell);
+      lines.push('');
+      lines.push('## Action items');
+      lines.push(d.actionItems);
+      lines.push('');
+      if (d.migrationSql) {
+        lines.push('## Migration SQL');
+        lines.push('```sql');
+        lines.push(d.migrationSql);
+        lines.push('```');
+        lines.push('');
+      }
+      lines.push('---');
+      lines.push('_Generated with [SchemaLens](https://schemalens.tech)_');
+      return lines.join('\n');
+    }
+
+    function generateConfluence(d) {
+      const lines = [];
+      lines.push(`h1. Post-Mortem: ${d.title}`);
+      lines.push('');
+      lines.push('h2. Incident overview');
+      lines.push(`*Title:* ${d.title}`);
+      lines.push(`*Date / time:* ${d.date}`);
+      lines.push(`*Database:* ${d.dialect}`);
+      lines.push(`*Duration:* ${d.duration}`);
+      lines.push(`*Severity:* ${severityEmoji[d.severity]} ${d.severity}`);
+      lines.push('');
+      lines.push('h2. Summary');
+      lines.push(d.summary);
+      lines.push('');
+      lines.push('h2. Impact');
+      lines.push(`* Users: ${d.impactUsers}`);
+      lines.push(`* Data: ${d.impactData}`);
+      lines.push('');
+      lines.push('h2. Detection');
+      lines.push(d.detection);
+      lines.push('');
+      lines.push('h2. Timeline');
+      d.timeline.split('\n').forEach(line => lines.push(`# ${line}`));
+      lines.push('');
+      lines.push('h2. Root cause');
+      lines.push(d.rootCause);
+      lines.push('');
+      lines.push('h2. Contributing factors');
+      d.contributingFactors.forEach(f => lines.push(`# ${f}`));
+      lines.push('');
+      lines.push('h2. What went wrong');
+      lines.push(d.wentWrong);
+      lines.push('');
+      lines.push('h2. What went well');
+      lines.push(d.wentWell);
+      lines.push('');
+      lines.push('h2. Action items');
+      d.actionItems.split('\n').forEach(line => lines.push(`# ${line}`));
+      lines.push('');
+      if (d.migrationSql) {
+        lines.push('h2. Migration SQL');
+        lines.push('{code:sql}');
+        lines.push(d.migrationSql);
+        lines.push('{code}');
+        lines.push('');
+      }
+      lines.push('----');
+      lines.push('Generated with SchemaLens: https://schemalens.tech');
+      return lines.join('\n');
+    }
+
+    function generateEmail(d) {
+      const lines = [];
+      lines.push(`Subject: Post-Mortem: ${d.title}`);
+      lines.push('');
+      lines.push('Hi team,');
+      lines.push('');
+      lines.push(`Please review the post-mortem for the migration incident on ${d.date}.`);
+      lines.push('');
+      lines.push('---');
+      lines.push(`Severity: ${severityEmoji[d.severity]} ${d.severity}`);
+      lines.push(`Duration: ${d.duration}`);
+      lines.push(`Database: ${d.dialect}`);
+      lines.push('');
+      lines.push('Summary:');
+      lines.push(d.summary);
+      lines.push('');
+      lines.push('Impact:');
+      lines.push(`- Users: ${d.impactUsers}`);
+      lines.push(`- Data: ${d.impactData}`);
+      lines.push('');
+      lines.push('Root cause:');
+      lines.push(d.rootCause);
+      lines.push('');
+      lines.push('Contributing factors:');
+      d.contributingFactors.forEach(f => lines.push(`- ${f}`));
+      lines.push('');
+      lines.push('Action items:');
+      d.actionItems.split('\n').forEach(line => lines.push(`${line}`));
+      lines.push('');
+      lines.push('The full post-mortem is available in the team wiki.');
+      lines.push('');
+      lines.push('Thanks,');
+      lines.push('_The Engineering Team_');
+      lines.push('');
+      lines.push('---');
+      lines.push('Generated with SchemaLens: https://schemalens.tech');
+      return lines.join('\n');
+    }
+
+    function generateSlack(d) {
+      const lines = [];
+      lines.push(`📋 *Post-Mortem: ${d.title}*`);
+      lines.push(`*Severity:* ${severityEmoji[d.severity]} ${d.severity}  |  *Duration:* ${d.duration}  |  *DB:* ${d.dialect}`);
+      lines.push('');
+      lines.push('*Summary:*');
+      lines.push(d.summary);
+      lines.push('');
+      lines.push('*Impact:*');
+      lines.push(`• Users: ${d.impactUsers}`);
+      lines.push(`• Data: ${d.impactData}`);
+      lines.push('');
+      lines.push('*Root cause:*');
+      lines.push(d.rootCause);
+      lines.push('');
+      lines.push('*Contributing factors:*');
+      d.contributingFactors.forEach(f => lines.push(`• ${f}`));
+      lines.push('');
+      lines.push('*Action items:*');
+      d.actionItems.split('\n').forEach(line => lines.push(`• ${line}`));
+      lines.push('');
+      if (d.migrationSql) {
+        lines.push('*Migration SQL:*');
+        lines.push('```' + d.migrationSql + '```');
+        lines.push('');
+      }
+      lines.push('Full post-mortem: https://schemalens.tech/tools/migration-incident-postmortem-generator.html');
+      return lines.join('\n');
+    }
+
+    const generators = {
+      markdown: generateMarkdown,
+      confluence: generateConfluence,
+      email: generateEmail,
+      slack: generateSlack,
+    };
+
+    function render() {
+      const d = buildData();
+      currentText = generators[currentTab](d);
+      els.output.textContent = currentText;
+    }
+
+    function updateUrl() {
+      const params = new URLSearchParams();
+      Object.entries({
+        title: els.incidentTitle.value,
+        date: els.incidentDate.value,
+        dialect: els.dialect.value,
+        duration: els.duration.value,
+        severity: getSeverity(),
+        summary: els.summary.value,
+        rootCause: els.rootCause.value,
+        impactUsers: els.impactUsers.value,
+        impactData: els.impactData.value,
+        detection: els.detection.value,
+        timeline: els.timeline.value,
+        wentWrong: els.wentWrong.value,
+        wentWell: els.wentWell.value,
+        actionItems: els.actionItems.value,
+        migrationSql: els.migrationSql.value,
+      }).forEach(([k, v]) => { if (v) params.set(k, v); });
+      ['cfNoReview', 'cfNoTest', 'cfNoRollback', 'cfBreaking', 'cfManual', 'cfOffHours'].forEach(id => {
+        if (els[id]?.checked) params.append('factor', id);
+      });
+      const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+      window.history.replaceState({}, '', newUrl);
+    }
+
+    function loadFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('title')) els.incidentTitle.value = params.get('title');
+      if (params.has('date')) els.incidentDate.value = params.get('date');
+      if (params.has('dialect')) els.dialect.value = params.get('dialect');
+      if (params.has('duration')) els.duration.value = params.get('duration');
+      if (params.has('severity')) {
+        const s = document.querySelector(`input[name="severity"][value="${params.get('severity')}"]`);
+        if (s) s.checked = true;
+      }
+      if (params.has('summary')) els.summary.value = params.get('summary');
+      if (params.has('rootCause')) els.rootCause.value = params.get('rootCause');
+      if (params.has('impactUsers')) els.impactUsers.value = params.get('impactUsers');
+      if (params.has('impactData')) els.impactData.value = params.get('impactData');
+      if (params.has('detection')) els.detection.value = params.get('detection');
+      if (params.has('timeline')) els.timeline.value = params.get('timeline');
+      if (params.has('wentWrong')) els.wentWrong.value = params.get('wentWrong');
+      if (params.has('wentWell')) els.wentWell.value = params.get('wentWell');
+      if (params.has('actionItems')) els.actionItems.value = params.get('actionItems');
+      if (params.has('migrationSql')) els.migrationSql.value = params.get('migrationSql');
+      const factors = params.getAll('factor');
+      factors.forEach(id => {
+        const cb = document.getElementById(id);
+        if (cb) cb.checked = true;
+      });
+    }
+
+    document.querySelectorAll('.preview-tabs button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.preview-tabs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTab = btn.dataset.tab;
+        render();
+      });
+    });
+
+    els.copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(currentText);
+        els.copyBtn.textContent = 'Copied!';
+        els.copyBtn.classList.add('copied');
+        setTimeout(() => {
+          els.copyBtn.textContent = 'Copy';
+          els.copyBtn.classList.remove('copied');
+        }, 1500);
+      } catch (e) {
+        console.error('Copy failed', e);
+      }
+    });
+
+    els.copyLinkBtn.addEventListener('click', async () => {
+      updateUrl();
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        const original = els.copyLinkBtn.textContent;
+        els.copyLinkBtn.textContent = 'Link copied!';
+        setTimeout(() => { els.copyLinkBtn.textContent = original; }, 1500);
+      } catch (e) {
+        console.error('Copy link failed', e);
+      }
+    });
+
+    Object.values(els).forEach(el => {
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT')) {
+        el.addEventListener('input', () => { render(); updateUrl(); });
+      }
+    });
+
+    document.querySelectorAll('input[name="severity"]').forEach(r => {
+      r.addEventListener('change', () => { render(); updateUrl(); });
+    });
+
+    ['cfNoReview', 'cfNoTest', 'cfNoRollback', 'cfBreaking', 'cfManual', 'cfOffHours'].forEach(id => {
+      const cb = document.getElementById(id);
+      if (cb) cb.addEventListener('change', () => { render(); updateUrl(); });
+    });
+
+    els.generateBtn.addEventListener('click', () => {
+      render();
+      updateUrl();
+      els.output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    loadFromUrl();
+    render();
+  })();
+  </script>
+</body>
+</html>

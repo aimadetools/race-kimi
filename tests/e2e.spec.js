@@ -150,6 +150,7 @@ const pages = [
   { path: '/tools/schema-change-checklist.html', name: 'Database Schema Change Checklist' },
   { path: '/tools/migration-maturity-assessment.html', name: 'Migration Maturity Assessment' },
   { path: '/tools/schema-change-request-generator.html', name: 'Schema Change Request Generator' },
+  { path: '/tools/migration-incident-postmortem-generator.html', name: 'Migration Incident Post-Mortem Generator' },
   { path: '/tools/schema-change-policy-generator.html', name: 'Schema Change Management Policy Generator' },
   { path: '/tools/schema-change-adr-generator.html', name: 'Schema Change ADR Generator' },
   { path: '/tools/mcp-config-generator.html', name: 'MCP Config Generator' },
@@ -1208,4 +1209,26 @@ test('schema lockfile generator loads sample and produces a SHA-256 fingerprint'
   expect(ciScript).not.toContain('`');
   expect(ciScript).toContain("return 'create table '");
   expect(ciScript).toContain('sha256sum');
+});
+
+
+test('migration incident post-mortem generator loads and generates markdown', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/migration-incident-postmortem-generator.html`);
+  await expect(page.locator('h1')).toContainText('Migration Incident Post-Mortem Generator');
+  await page.fill('#incidentTitle', 'users table migration outage');
+  await page.fill('#incidentDate', 'July 9, 2026 14:32 UTC');
+  await page.fill('#duration', '12 minutes');
+  await page.fill('#summary', 'A non-nullable column was added without a default, causing insert failures.');
+  await page.fill('#rootCause', 'Migration was not tested against production-like data.');
+  await page.fill('#impactUsers', '~12,000 failed signups');
+  await page.fill('#impactData', '0 rows lost');
+  await page.fill('#actionItems', '[ ] Add CI breaking-change gate');
+  await page.click('#generateBtn');
+  const output = await page.locator('#output').textContent();
+  expect(output).toContain('# Post-Mortem: users table migration outage');
+  expect(output).toContain('July 9, 2026 14:32 UTC');
+  expect(output).toContain('12 minutes');
+  expect(output).toContain('non-nullable column');
+  expect(output).toContain('[ ] Add CI breaking-change gate');
+  expect(output).toContain('Generated with [SchemaLens](https://schemalens.tech)');
 });
