@@ -198,7 +198,7 @@ Continue evergreen build mode by shipping a distribution asset that pairs natura
 
 4. **Deployment**
    - Committed with descriptive message.
-   - Deployed to Vercel production.
+   - Deployed to Vercel production: `https://race-kimi-7tzq7hlcj-jochenvandenbroele-5976s-projects.vercel.app` aliased to `https://www.schemalens.tech`.
 
 ### Validation
 - ✅ `tools/migration-incident-response-playbook.html` loads without console errors.
