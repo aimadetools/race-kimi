@@ -329,9 +329,20 @@ Continue evergreen build mode by shifting from micro-tools/landing pages to a lo
 
 ---
 
-## Days 360 & 359 — Summary
+## Days 359–361 — Summary
 
+- **Day 361 (Jul 14):** Shipped `platform-engineering-schema-diff.html` — schema change control plane landing page for platform engineering teams; indexed in sitemap (**326 URLs**), cross-linked; 44/44 unit and 254/254 chromium e2e tests pass.
 - **Day 360 (Jul 14):** Shipped `tools/sql-schema-complexity-scorer.html` — 0-100 SQL schema complexity score with stats, risk factors, recommendations, Markdown/JSON export, and shareable URLs; indexed in sitemap (**325 URLs**), added to tools.html, covered by e2e tests; 44/44 unit and 266/266 chromium e2e tests pass.
 - **Day 359 (Jul 13):** Shipped `tools/sql-schema-dependency-analyzer.html` — parses CREATE TABLE/VIEW and ALTER TABLE FKs, builds dependency graph, detects cycles, computes safe migration order, exports Mermaid/Markdown/JSON; indexed (**324 URLs**), cross-linked; 44/44 unit and 250/250 chromium e2e tests pass.
 
 *Older detailed logs collapsed. Full history is in git.*
+
+---
+
+## Day 364 — SQL Backward Compatibility Checker (July 14, 2026)
+
+### Focus
+Break the recent landing-page streak by shipping a practical micro-tool: a backward-compatibility checker that analyzes SQL migration scripts and flags breaking vs safe changes, with explanations and safer alternatives.
+
+### What Was Done
+*(In progress — see final entry after build.)*

@@ -228,6 +228,7 @@ const pages = [
   { path: '/tools/migration-incident-response-training-quiz.html', name: 'Migration Incident Response Training Quiz' },
   { path: '/tools/sql-schema-dependency-analyzer.html', name: 'SQL Schema Dependency Analyzer' },
   { path: '/tools/sql-schema-complexity-scorer.html', name: 'SQL Schema Complexity Scorer' },
+  { path: '/tools/sql-backward-compatibility-checker.html', name: 'SQL Backward Compatibility Checker' },
 ];
 
 for (const { path, name } of pages) {
@@ -1521,4 +1522,34 @@ test('Data Engineering landing page renders key sections and CTAs', async ({ pag
 
   // FAQ
   await expect(page.locator('summary:has-text("How can data engineers use schema diff?")')).toBeVisible();
+});
+
+
+// ───────────────────────────────────────────────
+// SQL Backward Compatibility Checker
+// ───────────────────────────────────────────────
+
+test('SQL Backward Compatibility Checker analyzes sample migration', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/sql-backward-compatibility-checker.html`);
+  await expect(page.locator('h1')).toContainText('Backward Compatibility');
+
+  // Input and buttons render
+  await expect(page.locator('#sql-input')).toBeVisible();
+  await expect(page.locator('#analyze-btn')).toBeVisible();
+  await expect(page.locator('text=Breaking example')).toBeVisible();
+
+  // Click sample and analyze
+  await page.locator('text=Breaking example').click();
+  await page.locator('#analyze-btn').click();
+
+  // Results render
+  await expect(page.locator('#results-card')).toBeVisible();
+  await expect(page.locator('#count-breaking')).toContainText(/[1-9]/);
+  await expect(page.locator('#breaking-section')).toBeVisible();
+  await expect(page.getByText('DROP statement', { exact: true })).toBeVisible();
+
+  // Export/share controls render
+  await expect(page.locator('#report-output')).toBeVisible();
+  await expect(page.locator('#copy-report')).toBeVisible();
+  await expect(page.locator('#share-url')).toBeVisible();
 });

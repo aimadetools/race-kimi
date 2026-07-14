@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Backward Compatibility Checker — Free Breaking-Change Analyzer | SchemaLens</title>
+<meta name="description" content="Check whether your SQL migration is backward compatible. Instantly detect breaking changes, risky operations, and safe alternatives before deploying to production.">
+<link rel="canonical" href="https://schemalens.tech/tools/sql-backward-compatibility-checker.html">
+<meta property="og:title" content="SQL Backward Compatibility Checker — Free Breaking-Change Analyzer">
+<meta property="og:description" content="Paste your ALTER TABLE / CREATE / DROP migration script and get a clear breakdown of breaking, risky, and safe changes with safer alternatives.">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-backward-compatibility-checker.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL Backward Compatibility Checker",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Backward compatibility analysis, breaking change detection, risky migration warnings, safe alternatives, Markdown export, shareable URLs, PostgreSQL MySQL SQLite SQL Server Oracle support",
+  "url": "https://schemalens.tech/tools/sql-backward-compatibility-checker.html"
+}
+</script>
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-hover: #334155;
+  --border: #334155;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --secondary: #8b5cf6;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #38bdf8;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.announcement-bar {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: #fff;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+.announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+}
+nav a.logo {
+  font-weight: 700; font-size: 1.2rem; color: var(--text); text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+nav a.link { color: var(--text-muted); text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+nav a.link:hover { color: var(--text); }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+header { text-align: center; padding: 48px 24px 32px; }
+header h1 {
+  font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 12px;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; margin-bottom: 20px;
+}
+.card h2 { font-size: 1.15rem; margin-bottom: 16px; }
+.card h3 { font-size: 1rem; margin: 20px 0 10px; color: var(--text-muted); }
+
+.editor-label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: block; }
+textarea.sql-input {
+  width: 100%; min-height: 260px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px; color: var(--text); font-family: 'SF Mono', Monaco, monospace;
+  font-size: 0.9rem; resize: vertical;
+}
+textarea.sql-input:focus { outline: none; border-color: var(--primary); }
+
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 22px; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; border: none; text-decoration: none; transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--surface-hover); color: var(--text); border: 1px solid var(--border); }
+.btn-copy { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; font-size: 0.85rem; }
+.btn-copy:hover { color: var(--text); border-color: var(--primary); }
+
+.sample-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.sample-chip {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+  padding: 6px 12px; font-size: 0.8rem; color: var(--text-muted); cursor: pointer;
+}
+.sample-chip:hover { border-color: var(--primary); color: var(--text); }
+
+.summary-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-bottom: 24px;
+}
+.summary-box {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px; text-align: center;
+}
+.summary-box .number { font-size: 1.8rem; font-weight: 800; }
+.summary-box .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+.summary-box.breaking { border-color: rgba(239, 68, 68, 0.4); }
+.summary-box.breaking .number { color: var(--danger); }
+.summary-box.risky { border-color: rgba(245, 158, 11, 0.4); }
+.summary-box.risky .number { color: var(--warning); }
+.summary-box.safe { border-color: rgba(34, 197, 94, 0.4); }
+.summary-box.safe .number { color: var(--success); }
+.summary-box.total { border-color: rgba(99, 102, 241, 0.4); }
+.summary-box.total .number { color: var(--primary); }
+
+.verdict-bar {
+  border-radius: 10px; padding: 16px 20px; margin-bottom: 24px;
+  display: flex; align-items: center; gap: 14px; font-weight: 700;
+}
+.verdict-bar.breaking { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); color: #fca5a5; }
+.verdict-bar.risky { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: #fcd34d; }
+.verdict-bar.safe { background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.35); color: #86efac; }
+.verdict-bar .icon { font-size: 1.4rem; }
+
+.result-section { margin-bottom: 28px; }
+.result-section h3 { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+.change-list { display: grid; gap: 12px; }
+.change-item {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; display: grid; gap: 10px;
+}
+.change-item.breaking { border-left: 4px solid var(--danger); }
+.change-item.risky { border-left: 4px solid var(--warning); }
+.change-item.safe { border-left: 4px solid var(--success); }
+.change-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.change-type { font-weight: 700; font-size: 0.95rem; }
+.change-severity {
+  font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 4px 10px; border-radius: 999px;
+}
+.change-severity.breaking { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+.change-severity.risky { background: rgba(245, 158, 11, 0.15); color: #fcd34d; }
+.change-severity.safe { background: rgba(34, 197, 94, 0.15); color: #86efac; }
+.change-sql {
+  font-family: 'SF Mono', Monaco, monospace; font-size: 0.85rem;
+  background: rgba(15, 23, 42, 0.6); border-radius: 6px; padding: 10px;
+  overflow-x: auto; white-space: pre-wrap; color: var(--text-muted);
+}
+.change-reason { font-size: 0.9rem; color: var(--text-muted); }
+.change-alternative {
+  background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 8px; padding: 12px; font-size: 0.9rem;
+}
+.change-alternative strong { color: #c7d2fe; }
+
+.empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; }
+.hidden { display: none; }
+
+.output-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.output-tab {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 14px; font-size: 0.9rem; color: var(--text-muted); cursor: pointer;
+}
+.output-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.output-panel { display: none; }
+.output-panel.active { display: block; }
+pre.code-output {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; overflow-x: auto; font-family: 'SF Mono', Monaco, monospace;
+  font-size: 0.85rem; line-height: 1.5; color: var(--text); white-space: pre-wrap;
+}
+
+.share-row { display: flex; gap: 10px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+.share-row input {
+  flex: 1; min-width: 220px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 0.9rem;
+}
+
+.upsell {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12));
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; margin-top: 24px;
+}
+.upsell h3 { margin-top: 0; color: var(--text); }
+.upsell p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px; }
+.upsell a { color: #c7d2fe; text-decoration: underline; }
+
+footer {
+  text-align: center; padding: 40px 24px; color: var(--text-muted); font-size: 0.85rem;
+  border-top: 1px solid var(--border); margin-top: 40px;
+}
+footer a { color: var(--text-muted); text-decoration: underline; }
+
+@media (max-width: 640px) {
+  nav a.link { margin-left: 12px; font-size: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="announcement-bar">
+  Catch breaking schema changes in every PR — <a href="/github-action.html">SchemaLens GitHub Action</a> is free forever.
+</div>
+
+<nav>
+  <a class="logo" href="/">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="8" height="8" rx="2" fill="#6366f1"/>
+      <rect x="13" y="3" width="8" height="8" rx="2" fill="#8b5cf6"/>
+      <rect x="3" y="13" width="8" height="8" rx="2" fill="#8b5cf6"/>
+      <rect x="13" y="13" width="8" height="8" rx="2" fill="#6366f1"/>
+    </svg>
+    SchemaLens
+  </a>
+  <div>
+    <a class="link" href="/app.html">App</a>
+    <a class="link" href="/tools.html">Tools</a>
+    <a class="link" href="/pricing.html">Pricing</a>
+    <a class="link" href="/github-action.html">GitHub Action</a>
+  </div>
+</nav>
+
+<header>
+  <h1>SQL Backward Compatibility Checker</h1>
+  <p>Paste a migration script and instantly see which statements are <strong>breaking</strong>, <strong>risky</strong>, or <strong>safe</strong> for zero-downtime deployments. Get safer alternatives before you ship.</p>
+</header>
+
+<main class="container">
+
+  <section class="card">
+    <label class="editor-label" for="sql-input">Migration SQL</label>
+    <textarea id="sql-input" class="sql-input" placeholder="-- Paste ALTER TABLE, CREATE, DROP, RENAME statements here
+ALTER TABLE users DROP COLUMN phone;
+ALTER TABLE orders ADD COLUMN status VARCHAR(20) NOT NULL;
+CREATE INDEX CONCURRENTLY idx_orders_status ON orders(status);
+"></textarea>
+    <div class="sample-row">
+      <span class="sample-chip" data-sample="breaking" data-event="backward_compat_sample" data-example="breaking">Breaking example</span>
+      <span class="sample-chip" data-sample="risky" data-event="backward_compat_sample" data-example="risky">Risky example</span>
+      <span class="sample-chip" data-sample="safe" data-event="backward_compat_sample" data-example="safe">Safe example</span>
+      <span class="sample-chip" data-sample="mixed" data-event="backward_compat_sample" data-example="mixed">Mixed real-world</span>
+    </div>
+    <div class="btn-row">
+      <button id="analyze-btn" class="btn btn-primary" data-event="backward_compat_analyze">Analyze Compatibility</button>
+      <button id="clear-btn" class="btn btn-secondary" data-event="backward_compat_clear">Clear</button>
+    </div>
+  </section>
+
+  <section id="results-card" class="card hidden">
+    <h2>Compatibility Report</h2>
+
+    <div class="verdict-bar" id="verdict-bar">
+      <span class="icon" id="verdict-icon">🟢</span>
+      <span id="verdict-text">All changes are backward compatible.</span>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-box breaking">
+        <div class="number" id="count-breaking">0</div>
+        <div class="label">Breaking</div>
+      </div>
+      <div class="summary-box risky">
+        <div class="number" id="count-risky">0</div>
+        <div class="label">Risky</div>
+      </div>
+      <div class="summary-box safe">
+        <div class="number" id="count-safe">0</div>
+        <div class="label">Safe</div>
+      </div>
+      <div class="summary-box total">
+        <div class="number" id="count-total">0</div>
+        <div class="label">Statements</div>
+      </div>
+    </div>
+
+    <div id="breaking-section" class="result-section hidden">
+      <h3><span>🚨</span> Breaking Changes</h3>
+      <div class="change-list" id="breaking-list"></div>
+    </div>
+
+    <div id="risky-section" class="result-section hidden">
+      <h3><span>⚠️</span> Risky / Conditional</h3>
+      <div class="change-list" id="risky-list"></div>
+    </div>
+
+    <div id="safe-section" class="result-section hidden">
+      <h3><span>✅</span> Safe Changes</h3>
+      <div class="change-list" id="safe-list"></div>
+    </div>
+
+    <div class="output-tabs" style="margin-top: 24px;">
+      <button class="output-tab active" data-tab="report">Markdown Report</button>
+      <button class="output-tab" data-tab="sql">Safer SQL Suggestions</button>
+    </div>
+    <div class="output-panel active" id="panel-report">
+      <pre class="code-output" id="report-output"></pre>
+      <div class="btn-row">
+        <button class="btn btn-copy" id="copy-report" data-event="backward_compat_copy_report">Copy Markdown</button>
+        <button class="btn btn-copy" id="download-report" data-event="backward_compat_download_report">Download .md</button>
+      </div>
+    </div>
+    <div class="output-panel" id="panel-sql">
+      <pre class="code-output" id="sql-output"></pre>
+      <div class="btn-row">
+        <button class="btn btn-copy" id="copy-sql" data-event="backward_compat_copy_sql">Copy SQL</button>
+      </div>
+    </div>
+
+    <div class="share-row">
+      <input type="text" id="share-url" readonly placeholder="Shareable URL">
+      <button class="btn btn-copy" id="copy-share" data-event="backward_compat_copy_link">Copy Link</button>
+    </div>
+  </section>
+
+  <section class="card" id="why-card">
+    <h2>What counts as breaking?</h2>
+    <p style="color: var(--text-muted); margin-bottom: 16px;">A change is <strong>breaking</strong> when an older version of your application can no longer read or write the database after it runs. Common examples:</p>
+    <div class="change-list">
+      <div class="change-item breaking">
+        <div class="change-header"><span class="change-type">DROP COLUMN / TABLE / INDEX / CONSTRAINT</span><span class="change-severity breaking">Breaking</span></div>
+        <div class="change-reason">Running code that references the dropped object will fail.</div>
+      </div>
+      <div class="change-item breaking">
+        <div class="change-header"><span class="change-type">ALTER COLUMN to a narrower type</span><span class="change-severity breaking">Breaking</span></div>
+        <div class="change-reason">Existing data may no longer fit, or applications expect the previous type.</div>
+      </div>
+      <div class="change-item breaking">
+        <div class="change-header"><span class="change-type">ADD NOT NULL without a DEFAULT</span><span class="change-severity breaking">Breaking</span></div>
+        <div class="change-reason">Existing rows with NULL values will make the ALTER fail or break inserts from old code.</div>
+      </div>
+      <div class="change-item risky">
+        <div class="change-header"><span class="change-type">RENAME COLUMN / TABLE</span><span class="change-severity risky">Risky</span></div>
+        <div class="change-reason">Breaks every query referencing the old name. Use a copy + dual-write migration instead.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="upsell">
+    <h3>Stop breaking changes before they reach production</h3>
+    <p>Add SchemaLens to your CI/CD pipeline and catch backward-incompatible migrations on every pull request — free forever.</p>
+    <a class="btn btn-primary" href="/github-action.html" data-event="backward_compat_github_action_cta">Add SchemaLens GitHub Action →</a>
+    <a class="btn btn-secondary" href="/tools/cicd-setup-wizard.html" data-event="backward_compat_wizard_cta">CI/CD Setup Wizard</a>
+  </section>
+
+</main>
+
+<footer>
+  <p>Built with 💜 by <a href="/">SchemaLens</a> — the missing GUI for database migrations.</p>
+  <p style="margin-top: 8px;"><a href="/privacy-policy.html">Privacy</a> · <a href="/about.html">About</a> · <a href="/open.html">Open Metrics</a></p>
+</footer>
+
+<script>
+const samples = {
+  breaking: `-- Breaking migration example
+ALTER TABLE users DROP COLUMN phone;
+ALTER TABLE orders ALTER COLUMN total TYPE INT;
+DROP INDEX idx_users_email;
+ALTER TABLE products RENAME COLUMN sku TO product_code;`,
+  risky: `-- Risky migration example
+ALTER TABLE events ADD COLUMN region VARCHAR(10) NOT NULL;
+CREATE INDEX idx_events_region ON events(region);
+ALTER TABLE users ALTER COLUMN bio TYPE VARCHAR(500);`,
+  safe: `-- Safe migration example
+ALTER TABLE users ADD COLUMN newsletter_opt_in BOOLEAN DEFAULT FALSE;
+CREATE INDEX CONCURRENTLY idx_users_created_at ON users(created_at);
+ALTER TABLE orders ADD CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id) NOT VALID;`,
+  mixed: `-- Mixed real-world migration
+ALTER TABLE users DROP COLUMN temp_flag;
+ALTER TABLE users ADD COLUMN mfa_enabled BOOLEAN DEFAULT FALSE;
+ALTER TABLE orders ALTER COLUMN total TYPE DECIMAL(12,2);
+CREATE INDEX CONCURRENTLY idx_orders_status ON orders(status);
+ALTER TABLE events ADD COLUMN region VARCHAR(10) NOT NULL DEFAULT 'unknown';
+DROP TABLE legacy_imports;`
+};
+
+function splitStatements(sql) {
+  const out = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  let inDollar = false;
+  let dollarTag = '';
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+    const next = sql[i + 1] || '';
+    if (inString) {
+      current += ch;
+      if (ch === '\\' && (stringChar === "'" || stringChar === '"')) { current += next; i++; continue; }
+      if (ch === stringChar) { inString = false; stringChar = ''; }
+      continue;
+    }
+    if (inDollar) {
+      current += ch;
+      if (ch === '$') {
+        const ahead = sql.slice(i + 1);
+        if (ahead.startsWith(dollarTag + '$')) { current += dollarTag + '$'; i += dollarTag.length + 1; inDollar = false; dollarTag = ''; }
+      }
+      continue;
+    }
+    if ((ch === "'" || ch === '"') && !inDollar) { inString = true; stringChar = ch; current += ch; continue; }
+    if (ch === '$') {
+      const m = sql.slice(i).match(/^\$([a-zA-Z0-9_]*)\$/);
+      if (m) { inDollar = true; dollarTag = m[1]; current += m[0]; i += m[0].length - 1; continue; }
+    }
+    if (ch === ';') { out.push(current.trim()); current = ''; continue; }
+    current += ch;
+  }
+  const last = current.trim();
+  if (last) out.push(last);
+  return out.filter(s => s.length > 0);
+}
+
+function normalize(s) {
+  return s.replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+function classifyStatement(sql) {
+  const norm = normalize(sql);
+  if (!norm) return null;
+
+  // Dropping objects is almost always breaking
+  if (/^drop\s+(table|column|index|constraint|database|view|materialized view|sequence)/.test(norm)) {
+    return {
+      severity: 'breaking',
+      type: 'DROP statement',
+      reason: 'Removes a database object that running application code may still reference.',
+      alternative: 'Use a multi-step deprecation: stop writes, default the column to a safe value, remove references from code, then drop in a later release.'
+    };
+  }
+
+  // Renames are risky/breaking
+  if (/^alter\s+table\s+\S+\s+rename\s+(column|to)/.test(norm) || /^rename\s+(table|column|index)/.test(norm)) {
+    return {
+      severity: 'risky',
+      type: 'RENAME statement',
+      reason: 'Renames break every query, ORM model, and view that references the old name.',
+      alternative: 'Add a new column/table with the desired name, dual-write to both, migrate reads, then drop the old one in a later release.'
+    };
+  }
+
+  // ALTER COLUMN narrowing or NOT NULL without default
+  if (/^alter\s+table\s+\S+\s+(alter|modify|change)\s+(column\s+)?\S+/.test(norm)) {
+    const narrowing = /type\s+\S+/.test(norm) && /\b(int|smallint|decimal\s*\(\s*\d+\s*,\s*\d+\s*\)|varchar\s*\(\s*\d+\s*\)|char\s*\(\s*\d+\s*\))\b/.test(norm);
+    const addedNotNull = /\bnot\s+null\b/.test(norm) && !/\bdefault\b/.test(norm);
+    if (addedNotNull) {
+      return {
+        severity: 'breaking',
+        type: 'ADD NOT NULL without DEFAULT',
+        reason: 'Existing rows with NULL will cause the ALTER to fail, and old code may still insert NULL.',
+        alternative: 'First add the column as NULL, update existing rows, add a DEFAULT, then add NOT NULL in a separate migration.'
+      };
+    }
+    if (narrowing) {
+      return {
+        severity: 'breaking',
+        type: 'Narrowing type change',
+        reason: 'Existing data may not fit the new, smaller type.',
+        alternative: 'Verify all values fit, truncate or migrate data explicitly, then change the type in a controlled step.'
+      };
+    }
+    return {
+      severity: 'safe',
+      type: 'Type or column change',
+      reason: 'Widening or non-constraining changes are generally safe.',
+      alternative: 'Monitor query plans after the change; some type changes can still cause index scans.'
+    };
+  }
+
+  // ADD COLUMN
+  if (/^alter\s+table\s+\S+\s+add\s+(column\s+)?\S+/.test(norm)) {
+    const notNull = /\bnot\s+null\b/.test(norm);
+    const hasDefault = /\bdefault\b/.test(norm);
+    if (notNull && !hasDefault) {
+      return {
+        severity: 'breaking',
+        type: 'ADD COLUMN NOT NULL without DEFAULT',
+        reason: 'Existing rows will fail the constraint if the table is not empty.',
+        alternative: 'Add the column as NULL or with a DEFAULT value first, then enforce NOT NULL after backfilling.'
+      };
+    }
+    return {
+      severity: 'safe',
+      type: 'ADD COLUMN',
+      reason: 'Adding a nullable column (or one with a DEFAULT) does not affect existing queries.',
+      alternative: 'No change needed. If the table is huge, consider adding the column without a volatile default to avoid a full rewrite.'
+    };
+  }
+
+  // CREATE INDEX
+  if (/^create\s+(unique\s+)?index/.test(norm)) {
+    const concurrently = /\bconcurrently\b/.test(norm);
+    if (concurrently) {
+      return {
+        severity: 'safe',
+        type: 'CREATE INDEX CONCURRENTLY',
+        reason: 'CONCURRENTLY avoids locking the table during the build.',
+        alternative: 'No change needed. Remember CONCURRENTLY cannot run inside a transaction in PostgreSQL.'
+      };
+    }
+    return {
+      severity: 'risky',
+      type: 'CREATE INDEX',
+      reason: 'A regular CREATE INDEX can lock large tables for the duration of the build.',
+      alternative: 'Use CREATE INDEX CONCURRENTLY on PostgreSQL or an online index build option for MySQL/SQL Server.'
+    };
+  }
+
+  // ADD FOREIGN KEY
+  if (/^alter\s+table\s+\S+\s+add\s+(constraint\s+\S+\s+)?foreign\s+key/.test(norm)) {
+    const notValid = /\bnot\s+valid\b/.test(norm);
+    if (notValid) {
+      return {
+        severity: 'safe',
+        type: 'ADD FOREIGN KEY NOT VALID',
+        reason: 'Adds the constraint without locking the table to validate existing rows immediately.',
+        alternative: 'Follow up with VALIDATE CONSTRAINT in a later migration to enforce it for existing rows.'
+      };
+    }
+    return {
+      severity: 'risky',
+      type: 'ADD FOREIGN KEY',
+      reason: 'Adding a validated FK on a large table can lock rows while checking referential integrity.',
+      alternative: 'Add the FK as NOT VALID, then run VALIDATE CONSTRAINT separately.'
+    };
+  }
+
+  // ADD PRIMARY KEY / UNIQUE
+  if (/^alter\s+table\s+\S+\s+add\s+(constraint\s+\S+\s+)?(primary\s+key|unique)/.test(norm)) {
+    return {
+      severity: 'risky',
+      type: 'ADD PRIMARY KEY / UNIQUE',
+      reason: 'Creating a unique constraint on a large table can lock it and fail if duplicates exist.',
+      alternative: 'Clean duplicates first, then create the constraint. For huge tables, use an online index build or do it in a maintenance window.'
+    };
+  }
+
+  // TRUNCATE
+  if (/^truncate\s+table/.test(norm)) {
+    return {
+      severity: 'breaking',
+      type: 'TRUNCATE TABLE',
+      reason: 'Removes all data; any running code expecting rows will fail.',
+      alternative: 'Never truncate production tables in a migration. Use a data-fix script with explicit conditions if you must remove rows.'
+    };
+  }
+
+  // CREATE TABLE is usually safe
+  if (/^create\s+table/.test(norm)) {
+    return {
+      severity: 'safe',
+      type: 'CREATE TABLE',
+      reason: 'New tables do not affect existing code until something reads or writes them.',
+      alternative: 'Ensure the table name does not collide with future ORM model names.'
+    };
+  }
+
+  // Default: unknown
+  return {
+    severity: 'risky',
+    type: 'Unrecognized statement',
+    reason: 'Cannot automatically determine compatibility. Review manually.',
+    alternative: 'Test the migration against a copy of production data and check query plans.'
+  };
+}
+
+function analyze(sql) {
+  const statements = splitStatements(sql);
+  const results = [];
+  for (const stmt of statements) {
+    const classification = classifyStatement(stmt);
+    if (classification) {
+      results.push({ statement: stmt, ...classification });
+    }
+  }
+  return results;
+}
+
+function renderIcon(severity) {
+  if (severity === 'breaking') return '🚨';
+  if (severity === 'risky') return '⚠️';
+  return '✅';
+}
+
+function renderResults(results) {
+  const breaking = results.filter(r => r.severity === 'breaking');
+  const risky = results.filter(r => r.severity === 'risky');
+  const safe = results.filter(r => r.severity === 'safe');
+
+  document.getElementById('count-breaking').textContent = breaking.length;
+  document.getElementById('count-risky').textContent = risky.length;
+  document.getElementById('count-safe').textContent = safe.length;
+  document.getElementById('count-total').textContent = results.length;
+
+  const verdictBar = document.getElementById('verdict-bar');
+  const verdictIcon = document.getElementById('verdict-icon');
+  const verdictText = document.getElementById('verdict-text');
+  verdictBar.className = 'verdict-bar ' + (breaking.length ? 'breaking' : risky.length ? 'risky' : 'safe');
+  verdictIcon.textContent = breaking.length ? '🚨' : risky.length ? '⚠️' : '🟢';
+  if (breaking.length) {
+    verdictText.textContent = `Found ${breaking.length} breaking change${breaking.length > 1 ? 's' : ''}. Do not deploy without a safer migration path.`;
+  } else if (risky.length) {
+    verdictText.textContent = `No breaking changes, but ${risky.length} operation${risky.length > 1 ? 's' : ''} need${risky.length === 1 ? 's' : ''} caution.`;
+  } else {
+    verdictText.textContent = 'All analyzed statements look backward compatible.';
+  }
+
+  renderList('breaking-list', breaking);
+  renderList('risky-list', risky);
+  renderList('safe-list', safe);
+
+  toggle('breaking-section', breaking.length > 0);
+  toggle('risky-section', risky.length > 0);
+  toggle('safe-section', safe.length > 0);
+
+  document.getElementById('report-output').textContent = generateReport(results);
+  document.getElementById('sql-output').textContent = generateSaferSQL(results);
+  updateShareURL();
+  toggle('results-card', true);
+}
+
+function renderList(id, items) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  if (!items.length) { el.innerHTML = '<div class="empty-state">None found.</div>'; return; }
+  for (const item of items) {
+    const div = document.createElement('div');
+    div.className = 'change-item ' + item.severity;
+    div.innerHTML = `
+      <div class="change-header">
+        <span class="change-type">${escapeHtml(item.type)}</span>
+        <span class="change-severity ${item.severity}">${item.severity}</span>
+      </div>
+      <div class="change-sql">${escapeHtml(item.statement)}</div>
+      <div class="change-reason">${escapeHtml(item.reason)}</div>
+      <div class="change-alternative"><strong>Safer alternative:</strong> ${escapeHtml(item.alternative)}</div>
+    `;
+    el.appendChild(div);
+  }
+}
+
+function toggle(id, show) {
+  document.getElementById(id).classList.toggle('hidden', !show);
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
+function generateReport(results) {
+  const now = new Date().toISOString().slice(0, 10);
+  const counts = { breaking: 0, risky: 0, safe: 0 };
+  for (const r of results) counts[r.severity]++;
+  let md = `# SQL Backward Compatibility Report\n\nGenerated by SchemaLens on ${now}\n\n`;
+  md += `- **Breaking:** ${counts.breaking}\n`;
+  md += `- **Risky:** ${counts.risky}\n`;
+  md += `- **Safe:** ${counts.safe}\n\n`;
+  md += '## Findings\n\n';
+  for (const r of results) {
+    md += `### ${renderIcon(r.severity)} ${r.type} (${r.severity.toUpperCase()})\n\n`;
+    md += '```sql\n' + r.statement + '\n```\n\n';
+    md += `- **Why:** ${r.reason}\n`;
+    md += `- **Safer alternative:** ${r.alternative}\n\n`;
+  }
+  md += '---\n\nStop breaking schema changes in CI with the [SchemaLens GitHub Action](https://schemalens.tech/github-action.html).';
+  return md;
+}
+
+function generateSaferSQL(results) {
+  const lines = ['-- Safer migration suggestions generated by SchemaLens', ''];
+  for (const r of results) {
+    if (r.severity === 'safe') continue;
+    lines.push(`-- ${renderIcon(r.severity)} ${r.type}`);
+    lines.push(`-- Original: ${r.statement.replace(/\n/g, ' ')}`);
+    lines.push(`-- Suggestion: ${r.alternative}`);
+    lines.push('');
+  }
+  return lines.join('\n');
+}
+
+function updateShareURL() {
+  const sql = document.getElementById('sql-input').value;
+  const params = new URLSearchParams();
+  params.set('sql', btoa(unescape(encodeURIComponent(sql))));
+  const url = `${location.origin}${location.pathname}?${params.toString()}`;
+  document.getElementById('share-url').value = url;
+}
+
+function loadFromURL() {
+  const params = new URLSearchParams(location.search);
+  const sql = params.get('sql');
+  if (sql) {
+    try {
+      document.getElementById('sql-input').value = decodeURIComponent(escape(atob(sql)));
+      return true;
+    } catch (e) { console.error(e); }
+  }
+  return false;
+}
+
+// Event wiring
+document.getElementById('analyze-btn').addEventListener('click', () => {
+  const sql = document.getElementById('sql-input').value;
+  if (!sql.trim()) return;
+  const results = analyze(sql);
+  renderResults(results);
+});
+
+document.getElementById('clear-btn').addEventListener('click', () => {
+  document.getElementById('sql-input').value = '';
+  toggle('results-card', false);
+  history.replaceState({}, '', location.pathname);
+});
+
+for (const chip of document.querySelectorAll('.sample-chip')) {
+  chip.addEventListener('click', () => {
+    document.getElementById('sql-input').value = samples[chip.dataset.sample] || '';
+    toggle('results-card', false);
+  });
+}
+
+for (const tab of document.querySelectorAll('.output-tab')) {
+  tab.addEventListener('click', () => {
+    for (const t of document.querySelectorAll('.output-tab')) t.classList.remove('active');
+    for (const p of document.querySelectorAll('.output-panel')) p.classList.remove('active');
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+  });
+}
+
+document.getElementById('copy-report').addEventListener('click', async () => {
+  const text = document.getElementById('report-output').textContent;
+  await navigator.clipboard.writeText(text);
+  const btn = document.getElementById('copy-report');
+  const old = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = old, 1500);
+});
+
+document.getElementById('download-report').addEventListener('click', () => {
+  const blob = new Blob([document.getElementById('report-output').textContent], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'schema-backward-compatibility-report.md';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById('copy-sql').addEventListener('click', async () => {
+  const text = document.getElementById('sql-output').textContent;
+  await navigator.clipboard.writeText(text);
+  const btn = document.getElementById('copy-sql');
+  const old = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = old, 1500);
+});
+
+document.getElementById('copy-share').addEventListener('click', async () => {
+  const input = document.getElementById('share-url');
+  await navigator.clipboard.writeText(input.value);
+  const btn = document.getElementById('copy-share');
+  const old = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = old, 1500);
+});
+
+// Load shared URL on startup
+if (loadFromURL()) {
+  document.getElementById('analyze-btn').click();
+}
+</script>
+
+<script src="../lib/analytics-client.js"></script>
+</body>
+</html>
