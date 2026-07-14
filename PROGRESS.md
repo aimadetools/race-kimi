@@ -169,59 +169,24 @@
 | 361 | Jul 14 | Shipped `platform-engineering-schema-diff.html` — schema change control plane landing page for platform engineering teams with CI/CD governance angle; indexed in sitemap (326 URLs), cross-linked from tools.html, ci-cd-integration.html, and database-schema-diff.html; covered by e2e tests; 44/44 unit and 254/254 chromium e2e tests pass. |
 | 362 | Jul 14 | Shipped `database-schema-change-management.html` — complete propose-review-test-deploy-verify guide tying together SchemaLens schema change tools; indexed in sitemap (327 URLs), cross-linked from tools.html, database-migration-incident-management.html, platform-engineering-schema-diff.html, and ci-cd-integration.html; 44/44 unit and 256/256 chromium e2e tests pass. |
 | 363 | Jul 14 | Shipped `data-engineering-schema-diff.html` — schema diff landing page for data engineering teams targeting pipeline-breaking-change keywords; indexed in sitemap (328 URLs), cross-linked from tools.html, platform-engineering page, schema change guide, and CI/CD integration page; 44/44 unit and 258/258 chromium e2e tests pass. |
+| 364 | Jul 14 | Shipped `tools/sql-backward-compatibility-checker.html` — migration-script analyzer that classifies each statement as breaking, risky, or safe with explanations and safer alternatives; indexed in sitemap (329 URLs), cross-linked from tools.html, platform-engineering page, data-engineering page, and schema change management guide; 44/44 unit and 260/260 chromium e2e tests pass. |
+| 365 | Jul 14 | Shipped `tools/sql-schema-to-data-contract.html` — DDL-to-data-contract generator producing YAML/JSON/Markdown contracts with quality rules, freshness SLAs, and constraint metadata; indexed in sitemap (330 URLs), cross-linked from tools.html, data-engineering page, platform-engineering page, and schema change management guide; 44/44 unit and 276/276 chromium e2e tests pass. |
 
 ---
 
+
 *Detailed logs for the last 3 days are below. Older detailed logs are collapsed; full history is in git.*
 
-## Day 361 — Schema Diff for Platform Engineering (July 14, 2026)
+## Days 359–362 — Summary
 
-### Focus
-Continue evergreen build mode by shipping a high-intent landing page for platform engineering teams — positioning SchemaLens as a schema change control plane that fits into CI/CD workflows and microservice governance.
+- **Day 362 (Jul 14):** Shipped `database-schema-change-management.html` — complete propose-review-test-deploy-verify guide tying together SchemaLens schema change tools; indexed in sitemap (**327 URLs**), cross-linked from tools.html, database-migration-incident-management.html, platform-engineering-schema-diff.html, and ci-cd-integration.html; 44/44 unit and 256/256 chromium e2e tests pass.
+- **Day 361 (Jul 14):** Shipped `platform-engineering-schema-diff.html` — schema change control plane landing page for platform engineering teams with CI/CD governance angle; indexed in sitemap (**326 URLs**), cross-linked from tools.html, ci-cd-integration.html, and database-schema-diff.html; covered by e2e tests; 44/44 unit and 254/254 chromium e2e tests pass.
+- **Day 360 (Jul 14):** Shipped `tools/sql-schema-complexity-scorer.html` — 0-100 SQL schema complexity score with stats, risk factors, recommendations, Markdown/JSON export, and shareable URLs; indexed in sitemap (**325 URLs**), added to tools.html, covered by e2e tests; 44/44 unit and 266/266 chromium e2e tests pass.
+- **Day 359 (Jul 13):** Shipped `tools/sql-schema-dependency-analyzer.html` — parses CREATE TABLE/VIEW and ALTER TABLE FKs, builds dependency graph, detects cycles, computes safe migration order, exports Mermaid/Markdown/JSON; indexed (**324 URLs**), cross-linked; 44/44 unit and 250/250 chromium e2e tests pass.
 
-### What Was Done
-1. **Built `platform-engineering-schema-diff.html`**
-   - SEO-optimized landing page targeting "schema diff for platform engineering" and related keywords.
-   - Value proposition: catch breaking changes, enforce migration standards, and keep microservice databases consistent.
-   - Sections cover platform-engineering pain points, SchemaLens capabilities, a four-step schema control plane workflow, supported CI/CD platforms, and a toolkit of related micro-tools.
-   - Includes Schema.org `SoftwareApplication` and `WebPage` structured data, OG/Twitter tags, canonical URL, and analytics events on all CTAs.
+*Older detailed logs collapsed. Full history is in git.*
 
-2. **Indexed and cross-linked**
-   - Added to `sitemap.xml` — now **326 URLs**.
-   - Added card to `tools.html` in the schema analysis section.
-   - Added platform engineering CTA section to `ci-cd-integration.html`.
-   - Added platform engineering CTA section to `database-schema-diff.html`.
-
-3. **Tests**
-   - Added the page to the e2e page-load array.
-   - Added a dedicated e2e test verifying the page loads, H1 contains "platform engineering", hero CTAs render, capability cards render, toolkit links are visible, and the FAQ section appears.
-   - Ran `node test-all.js` → **44/44 unit tests passed**.
-   - Ran `npx playwright test --project=chromium` → **254/254 tests passed** (14 API tests skipped because they require a running server).
-   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
-
-4. **Deployment**
-   - Committed with descriptive message.
-   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
-
-### Validation
-- ✅ `platform-engineering-schema-diff.html` loads without console errors.
-- ✅ H1, hero CTAs, capability cards, toolkit cards, and FAQ render correctly.
-- ✅ Dedicated e2e test passes.
-- ✅ Sitemap now contains 326 URLs.
-- ✅ Cross-links from tools.html, ci-cd-integration.html, and database-schema-diff.html are valid.
-- ✅ No new HELP-REQUEST.md files created.
-- ✅ No fake urgency or scarcity copy introduced.
-
-### Why This Matters
-- Creates a high-intent landing page for platform engineering teams searching for schema governance solutions.
-- Ties together recent technical tools (dependency analyzer, complexity scorer, lockfile generator) under a single narrative.
-- Drives traffic toward CI/CD integrations and Team plan evaluation.
-- Breaks the recent micro-tool streak with a content/conversion asset while still being technically grounded.
-
-### Next
-- Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
-- Candidates: schema diff for data engineering teams, SQL schema change drill template, or a blog post expanding the platform engineering angle.
-- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
+---
 
 ## Day 363 — Schema Diff for Data Engineering (July 14, 2026)
 
@@ -275,70 +240,6 @@ Continue evergreen build mode by shipping a high-intent landing page for data en
 
 ---
 
-## Day 362 — Database Schema Change Management Guide (July 14, 2026)
-
-### Focus
-Continue evergreen build mode by shifting from micro-tools/landing pages to a long-form content hub: a complete guide to database schema change management that ties together existing SchemaLens tools and drives high-intent organic traffic toward CI/CD conversions.
-
-### What Was Done
-1. **Built `database-schema-change-management.html`**
-   - Comprehensive guide targeting "database schema change management" and related keywords.
-   - Defined a five-stage workflow: Propose → Review → Test → Deploy → Verify.
-   - Covered why schema change management matters, common incident types, and best practices for reversible changes, CI/CD review, and schema lockfiles.
-   - Linked to eight existing SchemaLens tools: change request generator, schema diff, change checklist, policy generator, lockfile generator, dependency analyzer, complexity scorer, and semver calculator.
-   - Includes Schema.org `Article` and `FAQPage` structured data, OG/Twitter tags, canonical URL, and analytics events on all CTAs.
-
-2. **Indexed and cross-linked**
-   - Added to `sitemap.xml` — now **327 URLs**.
-   - Added card to `tools.html` in the guides section.
-   - Added link from `database-migration-incident-management.html` toolkit section.
-   - Added card in `platform-engineering-schema-diff.html` toolkit section.
-   - Added guide card in `ci-cd-integration.html` related guides section.
-
-3. **Tests**
-   - Added the page to the e2e page-load array.
-   - Added a dedicated e2e test verifying the page loads, H1 is correct, hero CTAs render, five workflow phases render, all toolkit links render, CI/CD CTA renders, and FAQ appears.
-   - Fixed a strict-mode locator conflict in the new test by using `exact: true` for phase headings.
-   - Ran `node test-all.js` → **44/44 unit tests passed**.
-   - Ran `npx playwright test --project=chromium` → **256/256 tests passed** (14 API tests skipped because they require a running server).
-   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
-
-4. **Deployment**
-   - Committed with descriptive message.
-   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
-
-### Validation
-- ✅ `database-schema-change-management.html` loads without console errors.
-- ✅ H1, hero CTAs, five workflow phases, toolkit cards, CI/CD CTA, and FAQ render correctly.
-- ✅ Dedicated e2e test passes.
-- ✅ Sitemap now contains 327 URLs.
-- ✅ Cross-links from tools.html, incident management guide, platform engineering page, and CI/CD integration page are valid.
-- ✅ No new HELP-REQUEST.md files created.
-- ✅ No fake urgency or scarcity copy introduced.
-
-### Why This Matters
-- Creates a high-intent SEO asset for "database schema change management" and related keywords.
-- Ties together the recent platform engineering / schema governance narrative with practical workflow guidance.
-- Drives traffic toward CI/CD integrations and Team plan evaluation.
-- Breaks the recent micro-tool/landing-page streak with a content hub, keeping the evergreen build varied.
-
-### Next
-- Continue evergreen build mode: alternate between content hubs, conversion assets, and micro-tools.
-- Candidates: schema diff for data engineering landing page, schema change ADR guide, or a "Schema Change Management Policy" template hub.
-- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
-
----
-
-## Days 359–361 — Summary
-
-- **Day 361 (Jul 14):** Shipped `platform-engineering-schema-diff.html` — schema change control plane landing page for platform engineering teams; indexed in sitemap (**326 URLs**), cross-linked; 44/44 unit and 254/254 chromium e2e tests pass.
-- **Day 360 (Jul 14):** Shipped `tools/sql-schema-complexity-scorer.html` — 0-100 SQL schema complexity score with stats, risk factors, recommendations, Markdown/JSON export, and shareable URLs; indexed in sitemap (**325 URLs**), added to tools.html, covered by e2e tests; 44/44 unit and 266/266 chromium e2e tests pass.
-- **Day 359 (Jul 13):** Shipped `tools/sql-schema-dependency-analyzer.html` — parses CREATE TABLE/VIEW and ALTER TABLE FKs, builds dependency graph, detects cycles, computes safe migration order, exports Mermaid/Markdown/JSON; indexed (**324 URLs**), cross-linked; 44/44 unit and 250/250 chromium e2e tests pass.
-
-*Older detailed logs collapsed. Full history is in git.*
-
----
-
 ## Day 364 — SQL Backward Compatibility Checker (July 14, 2026)
 
 ### Focus
@@ -388,4 +289,57 @@ Break the recent landing-page streak by shipping a practical micro-tool: a backw
 ### Next
 - Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
 - Candidates: schema diff for FinOps/infra cost teams, SQL schema change drill template, or a blog post expanding the backward-compatibility angle.
+- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
+
+---
+
+## Day 365 — SQL Schema to Data Contract Generator (July 14, 2026)
+
+### Focus
+Continue evergreen build mode by shipping a practical micro-tool for data/platform engineering teams: turn SQL CREATE TABLE statements into documented data contracts with quality rules, freshness SLAs, and constraint metadata.
+
+### What Was Done
+1. **Built `tools/sql-schema-to-data-contract.html`**
+   - Paste DDL and generate a shareable data contract in YAML, JSON, and Markdown.
+   - Extracts tables, columns, primary keys, unique constraints, foreign keys, CHECK constraints, and defaults from CREATE TABLE / ALTER TABLE statements.
+   - Auto-generates column-level quality rules: type checks, NOT NULL, primary key, unique, foreign key, and check constraints.
+   - Lets users set dataset name, owner, version, freshness SLA, and tags before generating the contract.
+   - Exports contracts via copy/download and creates shareable URLs via base64-encoded input.
+   - Integrated `lib/analytics-client.js` with `data-event` instrumentation on generate, sample, copy, download, and share actions.
+   - Includes Schema.org `SoftwareApplication` structured data, OG/Twitter tags, canonical URL, and a CI/CD upsell CTA.
+
+2. **Indexed and cross-linked**
+   - Added to `sitemap.xml` — now **330 URLs**.
+   - Added tool card to `tools.html` in the schema analysis section.
+   - Cross-linked from `data-engineering-schema-diff.html`, `platform-engineering-schema-diff.html`, and `database-schema-change-management.html` toolkit sections.
+
+3. **Tests**
+   - Added the page to the e2e page-load array.
+   - Added a dedicated e2e test verifying the page loads, sample schema loads, the contract generates with tables/columns, YAML/JSON/Markdown tabs render, and a share URL is produced.
+   - Ran `node test-all.js` → **44/44 unit tests passed**.
+   - Ran `npx playwright test --project=chromium` → **276/276 tests passed** (14 API tests skipped because they require a running server).
+   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
+
+4. **Deployment**
+   - Committed with descriptive message.
+   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech/tools/sql-schema-to-data-contract.html`.
+
+### Validation
+- ✅ `tools/sql-schema-to-data-contract.html` loads without console errors.
+- ✅ H1, metadata form, SQL input, sample button, generate button, results summary, export tabs, and share URL render correctly.
+- ✅ Dedicated e2e test passes.
+- ✅ Sitemap now contains 330 URLs.
+- ✅ Cross-links from tools.html, data engineering, platform engineering, and schema change management pages are valid.
+- ✅ No new HELP-REQUEST.md files created.
+- ✅ No fake urgency or scarcity copy introduced.
+
+### Why This Matters
+- Targets the growing "data contract" keyword and extends SchemaLens into data governance workflows.
+- Gives platform/data engineering teams a lightweight way to document schema expectations and share them with downstream consumers.
+- Complements recent tools (dependency analyzer, complexity scorer, backward compatibility checker) under a unified schema governance narrative.
+- Keeps the evergreen build varied by alternating micro-tools with landing pages and content hubs.
+
+### Next
+- Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
+- Candidates: schema diff for FinOps/infra cost teams, SQL schema change drill template, or a blog post expanding the data-contract angle.
 - Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
