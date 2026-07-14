@@ -168,6 +168,7 @@
 | 360 | Jul 14 | Shipped `tools/sql-schema-complexity-scorer.html` — 0-100 SQL schema complexity score with stats, risk factors, recommendations, Markdown/JSON export, shareable URLs; indexed (325 URLs), e2e-tested; 44/44 unit and 266/266 chromium e2e tests pass. |
 | 361 | Jul 14 | Shipped `platform-engineering-schema-diff.html` — schema change control plane landing page for platform engineering teams with CI/CD governance angle; indexed in sitemap (326 URLs), cross-linked from tools.html, ci-cd-integration.html, and database-schema-diff.html; covered by e2e tests; 44/44 unit and 254/254 chromium e2e tests pass. |
 | 362 | Jul 14 | Shipped `database-schema-change-management.html` — complete propose-review-test-deploy-verify guide tying together SchemaLens schema change tools; indexed in sitemap (327 URLs), cross-linked from tools.html, database-migration-incident-management.html, platform-engineering-schema-diff.html, and ci-cd-integration.html; 44/44 unit and 256/256 chromium e2e tests pass. |
+| 363 | Jul 14 | Shipped `data-engineering-schema-diff.html` — schema diff landing page for data engineering teams targeting pipeline-breaking-change keywords; indexed in sitemap (328 URLs), cross-linked from tools.html, platform-engineering page, schema change guide, and CI/CD integration page; 44/44 unit and 258/258 chromium e2e tests pass. |
 
 ---
 
@@ -222,32 +223,30 @@ Continue evergreen build mode by shipping a high-intent landing page for platfor
 - Candidates: schema diff for data engineering teams, SQL schema change drill template, or a blog post expanding the platform engineering angle.
 - Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
 
-## Day 360 — SQL Schema Complexity Scorer (July 14, 2026)
+## Day 363 — Schema Diff for Data Engineering (July 14, 2026)
 
 ### Focus
-Continue evergreen build mode by shipping a new technical micro-tool that scores SQL schema complexity, surfaces risk factors, and gives actionable recommendations — while cross-linking to the dependency analyzer and CI/CD tools.
+Continue evergreen build mode by shipping a high-intent landing page for data engineering teams — positioning SchemaLens as a way to catch schema changes before they break dbt models, ETL pipelines, and analytics workflows.
 
 ### What Was Done
-1. **Built `tools/sql-schema-complexity-scorer.html`**
-   - Lightweight DDL parser for `CREATE TABLE`, `CREATE INDEX`, `CREATE VIEW`, `CREATE TRIGGER`, and `ALTER TABLE` statements.
-   - Computes 14 metrics: tables, columns, indexes, foreign keys, primary keys, unique constraints, CHECK constraints, views, triggers, avg/max columns per table, nullable ratio, enum columns, FK density, and index density.
-   - Calculates a **0-100 complexity score** with four levels: Simple / Moderate / Complex / Enterprise.
-   - Detects risk factors: missing primary keys, very wide tables, high nullability, high FK density, many triggers, many views.
-   - Generates contextual recommendations with links to the dependency analyzer, ER diagram generator, pre-commit hook, and schema change checklist.
-   - Exports a **Markdown report** and **JSON** payload.
-   - Shareable URLs via base64-encoded SQL in the query string.
-   - Schema.org `SoftwareApplication` markup, OG/Twitter tags, dark/light theme support, and analytics events.
+1. **Built `data-engineering-schema-diff.html`**
+   - SEO-optimized landing page targeting "schema diff for data engineering" and related keywords.
+   - Value proposition: catch schema changes that break data pipelines, detect breaking changes before dbt runs fail, and keep ETL/warehouse workflows healthy.
+   - Sections cover data-engineering pain points (upstream column drops, type changes, schema drift, data contracts), SchemaLens capabilities, a four-step schema-aware data pipeline workflow, a data engineering toolkit, supported CI/CD platforms, and FAQ.
+   - Includes Schema.org `SoftwareApplication`, `WebPage`, and `FAQPage` structured data, OG/Twitter tags, canonical URL, and analytics events on all CTAs.
 
 2. **Indexed and cross-linked**
-   - Added to `sitemap.xml` — now **325 URLs**.
-   - Added card to `tools.html` next to the SQL Schema Dependency Analyzer.
-   - Upsell section links to the GitHub Action, dependency analyzer, ER diagram generator, pre-commit hook, and schema change checklist.
+   - Added to `sitemap.xml` — now **328 URLs**.
+   - Added card to `tools.html` in the schema analysis section.
+   - Added data engineering card to `platform-engineering-schema-diff.html` toolkit section.
+   - Added data engineering card to `database-schema-change-management.html` toolkit section.
+   - Added data engineering CTA section to `ci-cd-integration.html`.
 
 3. **Tests**
    - Added the page to the e2e page-load array.
-   - Added a dedicated e2e test verifying the sample schema loads, stats are correct (5 tables, 7 indexes, 5 FKs, 1 view, 1 trigger), score is between 1-100, level badge renders, factor breakdown and recommendations appear, and Markdown/JSON exports are generated.
+   - Added a dedicated e2e test verifying the page loads, H1 contains "data engineering", hero CTAs render, pain-point and capability cards render, toolkit links are visible, and the FAQ section appears.
    - Ran `node test-all.js` → **44/44 unit tests passed**.
-   - Ran `npx playwright test --project=chromium` → **266/266 tests passed** (14 API tests skipped because they require a running server).
+   - Ran `npx playwright test --project=chromium` → **258/258 tests passed** (14 API tests skipped because they require a running server).
    - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
 
 4. **Deployment**
@@ -255,26 +254,23 @@ Continue evergreen build mode by shipping a new technical micro-tool that scores
    - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
 
 ### Validation
-- ✅ `tools/sql-schema-complexity-scorer.html` loads without console errors.
-- ✅ Sample schema produces correct table/index/FK/view/trigger counts.
-- ✅ Score renders as a number and level badge is displayed.
-- ✅ Factor breakdown bars and recommendation list render.
-- ✅ Markdown and JSON exports generate correctly.
+- ✅ `data-engineering-schema-diff.html` loads without console errors.
+- ✅ H1, hero CTAs, pain-point cards, capability cards, toolkit cards, CI/CD platform grid, and FAQ render correctly.
 - ✅ Dedicated e2e test passes.
-- ✅ Sitemap now contains 325 URLs.
-- ✅ Cross-links from tools.html and the tool's upsell section are valid.
+- ✅ Sitemap now contains 328 URLs.
+- ✅ Cross-links from tools.html, platform engineering page, schema change guide, and CI/CD integration page are valid.
 - ✅ No new HELP-REQUEST.md files created.
 - ✅ No fake urgency or scarcity copy introduced.
 
 ### Why This Matters
-- Adds a genuinely useful schema-health utility for DBAs and platform engineers.
-- Targets high-intent keywords like "sql schema complexity" and "database schema complexity score".
-- Drives traffic toward the dependency analyzer, ER diagram tools, and CI/CD integrations.
-- Breaks the recent incident-management pattern with a technical analysis tool.
+- Creates a high-intent landing page for data engineering teams searching for schema diff and pipeline stability solutions.
+- Extends the platform engineering / schema governance narrative to the data stack (dbt, ETL, warehouses).
+- Drives traffic toward CI/CD integrations, the dependency analyzer, complexity scorer, and drift alerts.
+- Keeps the evergreen build varied by alternating landing pages with recent content hubs and micro-tools.
 
 ### Next
-- Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
-- Candidates: schema diff for platform engineering landing page, SQL schema change drill template, or schema complexity blog post.
+- Continue evergreen build mode: alternate between landing pages, content hubs, and micro-tools.
+- Candidates: schema diff for data engineering blog post, SQL schema change drill template, or schema diff for data governance landing page.
 - Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
 
 ---
@@ -333,60 +329,9 @@ Continue evergreen build mode by shifting from micro-tools/landing pages to a lo
 
 ---
 
-## Day 359 — SQL Schema Dependency Analyzer (July 13, 2026)
+## Days 360 & 359 — Summary
 
-### Focus
-Continue evergreen build mode by alternating away from the incident-management micro-tool streak with a technical utility: a SQL Schema Dependency Analyzer that helps platform engineers and DBAs understand table/view relationships and plan safe migrations.
-
-### What Was Done
-1. **Built `tools/sql-schema-dependency-analyzer.html`**
-   - Lightweight DDL parser for `CREATE TABLE`, `CREATE VIEW`, and `ALTER TABLE ADD FOREIGN KEY` statements.
-   - Extracts inline `REFERENCES`, explicit `FOREIGN KEY ... REFERENCES`, and `FROM`/`JOIN` table references in views.
-   - Builds a dependency graph and computes a topological sort for safe migration order.
-   - Detects circular foreign-key dependencies and warns the user.
-   - Shows each table's dependencies and reverse dependencies (what breaks if dropped).
-   - Exports to **Mermaid** diagram syntax, **Markdown** report, and **JSON**.
-   - Shareable URLs via base64-encoded SQL in the query string.
-   - Schema.org `SoftwareApplication` markup, OG/Twitter tags, dark/light theme support, and analytics events.
-
-2. **Indexed and cross-linked**
-   - Added to `sitemap.xml` — now **324 URLs**.
-   - Added card to `tools.html` next to the ER Diagram Generator and Mermaid ERD Converter.
-   - Cross-linked from the tool's upsell area to the GitHub Action, CI/CD Setup Wizard, ER Diagram Generator, SQL-to-Mermaid converter, and pre-commit hook generator.
-
-3. **Tests**
-   - Added the page to the e2e page-load array.
-   - Added a dedicated e2e test verifying the sample schema loads, stats are correct (4 tables, 2 views, 4 FKs, 0 cycles), the migration order renders, and Mermaid/Markdown/JSON exports are generated.
-   - Ran `node test-all.js` → **44/44 unit tests passed**.
-   - Ran `npx playwright test --project=chromium` → **250/250 tests passed** (14 API tests skipped because they require a running server).
-   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
-
-4. **Deployment**
-   - Committed with descriptive message.
-   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
-
-### Validation
-- ✅ `tools/sql-schema-dependency-analyzer.html` loads without console errors.
-- ✅ Sample schema produces correct table/view/FK/cycle counts.
-- ✅ Safe migration order lists dependencies before dependents.
-- ✅ Mermaid, Markdown, and JSON exports render correctly.
-- ✅ Dedicated e2e test passes.
-- ✅ Sitemap now contains 324 URLs.
-- ✅ Cross-links from tools.html and the tool's upsell section are valid.
-- ✅ No new HELP-REQUEST.md files created.
-- ✅ No fake urgency or scarcity copy introduced.
-
-### Why This Matters
-- Adds a genuinely useful technical utility for platform engineers and DBAs planning migrations.
-- Targets high-intent keywords like "sql schema dependency analyzer" and "database dependency graph".
-- Drives traffic toward the ER diagram, Mermaid ERD, and CI/CD integration tools.
-- Breaks the recent incident-management pattern to keep the evergreen build varied.
-
-### Next
-- Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
-- Candidates: schema diff for platform engineering landing page, schema change drill template, or SQL schema complexity scorer.
-- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
-
----
+- **Day 360 (Jul 14):** Shipped `tools/sql-schema-complexity-scorer.html` — 0-100 SQL schema complexity score with stats, risk factors, recommendations, Markdown/JSON export, and shareable URLs; indexed in sitemap (**325 URLs**), added to tools.html, covered by e2e tests; 44/44 unit and 266/266 chromium e2e tests pass.
+- **Day 359 (Jul 13):** Shipped `tools/sql-schema-dependency-analyzer.html` — parses CREATE TABLE/VIEW and ALTER TABLE FKs, builds dependency graph, detects cycles, computes safe migration order, exports Mermaid/Markdown/JSON; indexed (**324 URLs**), cross-linked; 44/44 unit and 250/250 chromium e2e tests pass.
 
 *Older detailed logs collapsed. Full history is in git.*
