@@ -166,10 +166,60 @@
 | 358 | Jul 13 | Shipped `tools/migration-incident-response-training-quiz.html` — 12-question interactive quiz on migration incident response with scoring, explanations, and shareable URLs; indexed (323 URLs), cross-linked; 44/44 unit and 248/248 e2e tests pass. |
 | 359 | Jul 13 | Shipped `tools/sql-schema-dependency-analyzer.html` — parses CREATE TABLE/VIEW and ALTER TABLE FKs, builds dependency graph, detects cycles, computes safe migration order, exports Mermaid/Markdown/JSON; indexed (324 URLs), cross-linked; 44/44 unit and 250/250 chromium e2e tests pass. |
 | 360 | Jul 14 | Shipped `tools/sql-schema-complexity-scorer.html` — 0-100 SQL schema complexity score with stats, risk factors, recommendations, Markdown/JSON export, shareable URLs; indexed (325 URLs), e2e-tested; 44/44 unit and 266/266 chromium e2e tests pass. |
+| 361 | Jul 14 | Shipped `platform-engineering-schema-diff.html` — schema change control plane landing page for platform engineering teams with CI/CD governance angle; indexed in sitemap (326 URLs), cross-linked from tools.html, ci-cd-integration.html, and database-schema-diff.html; covered by e2e tests; 44/44 unit and 254/254 chromium e2e tests pass. |
 
 ---
 
 *Detailed logs for the last 3 days are below. Older detailed logs are collapsed; full history is in git.*
+
+## Day 361 — Schema Diff for Platform Engineering (July 14, 2026)
+
+### Focus
+Continue evergreen build mode by shipping a high-intent landing page for platform engineering teams — positioning SchemaLens as a schema change control plane that fits into CI/CD workflows and microservice governance.
+
+### What Was Done
+1. **Built `platform-engineering-schema-diff.html`**
+   - SEO-optimized landing page targeting "schema diff for platform engineering" and related keywords.
+   - Value proposition: catch breaking changes, enforce migration standards, and keep microservice databases consistent.
+   - Sections cover platform-engineering pain points, SchemaLens capabilities, a four-step schema control plane workflow, supported CI/CD platforms, and a toolkit of related micro-tools.
+   - Includes Schema.org `SoftwareApplication` and `WebPage` structured data, OG/Twitter tags, canonical URL, and analytics events on all CTAs.
+
+2. **Indexed and cross-linked**
+   - Added to `sitemap.xml` — now **326 URLs**.
+   - Added card to `tools.html` in the schema analysis section.
+   - Added platform engineering CTA section to `ci-cd-integration.html`.
+   - Added platform engineering CTA section to `database-schema-diff.html`.
+
+3. **Tests**
+   - Added the page to the e2e page-load array.
+   - Added a dedicated e2e test verifying the page loads, H1 contains "platform engineering", hero CTAs render, capability cards render, toolkit links are visible, and the FAQ section appears.
+   - Ran `node test-all.js` → **44/44 unit tests passed**.
+   - Ran `npx playwright test --project=chromium` → **254/254 tests passed** (14 API tests skipped because they require a running server).
+   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
+
+4. **Deployment**
+   - Committed with descriptive message.
+   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
+
+### Validation
+- ✅ `platform-engineering-schema-diff.html` loads without console errors.
+- ✅ H1, hero CTAs, capability cards, toolkit cards, and FAQ render correctly.
+- ✅ Dedicated e2e test passes.
+- ✅ Sitemap now contains 326 URLs.
+- ✅ Cross-links from tools.html, ci-cd-integration.html, and database-schema-diff.html are valid.
+- ✅ No new HELP-REQUEST.md files created.
+- ✅ No fake urgency or scarcity copy introduced.
+
+### Why This Matters
+- Creates a high-intent landing page for platform engineering teams searching for schema governance solutions.
+- Ties together recent technical tools (dependency analyzer, complexity scorer, lockfile generator) under a single narrative.
+- Drives traffic toward CI/CD integrations and Team plan evaluation.
+- Breaks the recent micro-tool streak with a content/conversion asset while still being technically grounded.
+
+### Next
+- Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
+- Candidates: schema diff for data engineering teams, SQL schema change drill template, or a blog post expanding the platform engineering angle.
+- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
 
 ## Day 360 — SQL Schema Complexity Scorer (July 14, 2026)
 
@@ -280,60 +330,6 @@ Continue evergreen build mode by alternating away from the incident-management m
 ### Next
 - Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
 - Candidates: schema diff for platform engineering landing page, schema change drill template, or SQL schema complexity scorer.
-- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
-
----
-
-## Day 358 — Migration Incident Response Training Quiz (July 13, 2026)
-
-### Focus
-Continue evergreen build mode by shipping an interactive micro-tool that tests and improves team knowledge of database migration incident response, while cross-linking back to the recent incident-management toolkit.
-
-### What Was Done
-1. **Built `tools/migration-incident-response-training-quiz.html`**
-   - 12 multiple-choice questions covering detection, escalation, containment, rollback, communication, and prevention.
-   - Instant feedback after each answer with educational explanations.
-   - Score ring and responder level (Novice / Intermediate / Expert) on completion.
-   - Shareable URLs that preserve answers and results.
-   - Resource recommendations linking to the incident management guide, response playbook generator, post-mortem generator, and GitHub Action.
-   - Schema.org `LearningResource` markup, dark/light theme toggle, and analytics events on all CTAs.
-
-2. **Indexed and cross-linked**
-   - Added to `sitemap.xml` — now **323 URLs**.
-   - Added card to `tools.html` in the incident-management section.
-   - Cross-linked from `database-migration-incident-management.html` toolkit grid.
-   - Added quiz links to `tools/migration-incident-postmortem-generator.html` and `tools/migration-incident-response-playbook.html` upsell areas.
-
-3. **Tests**
-   - Added the page to the e2e page-load array.
-   - Added a dedicated e2e test verifying the quiz progresses through all 12 questions, scores a perfect result, and displays resource links.
-   - Ran `node test-all.js` → **44/44 unit tests passed**.
-   - Ran `npx playwright test --project=chromium` → **248/248 tests passed** (14 API tests skipped because they require a running server).
-   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
-
-4. **Deployment**
-   - Committed with descriptive message.
-   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
-
-### Validation
-- ✅ `tools/migration-incident-response-training-quiz.html` loads without console errors.
-- ✅ All 12 questions render, accept answers, and show instant feedback.
-- ✅ Perfect-score path reaches the results screen with correct level and resource links.
-- ✅ Dedicated e2e test passes.
-- ✅ Sitemap now contains 323 URLs.
-- ✅ Cross-links from incident guide, playbook, and post-mortem pages are valid and instrumented.
-- ✅ No new HELP-REQUEST.md files created.
-- ✅ No fake urgency or scarcity copy introduced.
-
-### Why This Matters
-- Adds an interactive, shareable training asset that teams can use in retros and onboarding.
-- Reinforces the incident-management content hub created over the last four days.
-- Creates another organic-discovery entry point for migration-incident keywords.
-- Drives qualified traffic toward the GitHub Action and response playbook generator.
-
-### Next
-- Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
-- Candidates: schema diff for platform engineering landing page, SQL schema dependency analyzer, or migration incident response drill template.
 - Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
 
 ---
