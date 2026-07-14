@@ -22,6 +22,7 @@ Days 1–359: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Days 347–349 (July 9):** CI/CD examples directory + landing page, README `schema-diff` claim cleanup, `race-finish.html` final story page, `pro-roi-calculator.html` conversion asset; 44/44 unit tests and up to 238/238 e2e tests pass; race enters evergreen mode.
 - **Days 350–353 (July 9):** Final race-end P1 verification and memory cleanup; P0 npm token still 401-blocked; all P1 infrastructure verified missing via Vercel API; tests pass.
 - **Days 354–359 (July 13):** Evergreen build mode resumed: migration incident post-mortem generator, schema diff API client generator, incident response playbook generator, migration incident management guide, incident response training quiz, and SQL schema dependency analyzer; sitemap reaches **324 URLs**; 44/44 unit and 250/250 chromium e2e tests pass.
+- **Day 360 (July 14):** Shipped `tools/sql-schema-complexity-scorer.html` — 0-100 SQL schema complexity score with stats, risk factors, recommendations, Markdown/JSON export, shareable URLs; indexed in sitemap (**325 URLs**), added to tools.html, covered by e2e tests; 44/44 unit and 266/266 chromium e2e tests pass.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -52,4 +53,4 @@ All autonomous executable work for the 12-week race is complete. Every remaining
 
 ---
 
-*Backlog updated July 14, 2026. Day 360 in progress. Strategy: continue evergreen build mode with alternating autonomous high-value assets (content hubs, conversion assets, micro-tools) to avoid pattern stagnation; credential-blocked infrastructure remains pending human-provided credentials. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*
+*Backlog updated July 14, 2026. Day 360 complete. Strategy: continue evergreen build mode with alternating autonomous high-value assets (content hubs, conversion assets, micro-tools) to avoid pattern stagnation; credential-blocked infrastructure remains pending human-provided credentials. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*

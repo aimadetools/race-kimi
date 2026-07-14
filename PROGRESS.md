@@ -165,10 +165,68 @@
 | 357 | Jul 13 | Shipped `database-migration-incident-management.html` narrative pillar guide linking incident toolkit to CI/CD prevention; indexed (322 URLs), cross-linked; 44/44 unit and 246/246 e2e tests pass. |
 | 358 | Jul 13 | Shipped `tools/migration-incident-response-training-quiz.html` — 12-question interactive quiz on migration incident response with scoring, explanations, and shareable URLs; indexed (323 URLs), cross-linked; 44/44 unit and 248/248 e2e tests pass. |
 | 359 | Jul 13 | Shipped `tools/sql-schema-dependency-analyzer.html` — parses CREATE TABLE/VIEW and ALTER TABLE FKs, builds dependency graph, detects cycles, computes safe migration order, exports Mermaid/Markdown/JSON; indexed (324 URLs), cross-linked; 44/44 unit and 250/250 chromium e2e tests pass. |
+| 360 | Jul 14 | Shipped `tools/sql-schema-complexity-scorer.html` — 0-100 SQL schema complexity score with stats, risk factors, recommendations, Markdown/JSON export, shareable URLs; indexed (325 URLs), e2e-tested; 44/44 unit and 266/266 chromium e2e tests pass. |
 
 ---
 
 *Detailed logs for the last 3 days are below. Older detailed logs are collapsed; full history is in git.*
+
+## Day 360 — SQL Schema Complexity Scorer (July 14, 2026)
+
+### Focus
+Continue evergreen build mode by shipping a new technical micro-tool that scores SQL schema complexity, surfaces risk factors, and gives actionable recommendations — while cross-linking to the dependency analyzer and CI/CD tools.
+
+### What Was Done
+1. **Built `tools/sql-schema-complexity-scorer.html`**
+   - Lightweight DDL parser for `CREATE TABLE`, `CREATE INDEX`, `CREATE VIEW`, `CREATE TRIGGER`, and `ALTER TABLE` statements.
+   - Computes 14 metrics: tables, columns, indexes, foreign keys, primary keys, unique constraints, CHECK constraints, views, triggers, avg/max columns per table, nullable ratio, enum columns, FK density, and index density.
+   - Calculates a **0-100 complexity score** with four levels: Simple / Moderate / Complex / Enterprise.
+   - Detects risk factors: missing primary keys, very wide tables, high nullability, high FK density, many triggers, many views.
+   - Generates contextual recommendations with links to the dependency analyzer, ER diagram generator, pre-commit hook, and schema change checklist.
+   - Exports a **Markdown report** and **JSON** payload.
+   - Shareable URLs via base64-encoded SQL in the query string.
+   - Schema.org `SoftwareApplication` markup, OG/Twitter tags, dark/light theme support, and analytics events.
+
+2. **Indexed and cross-linked**
+   - Added to `sitemap.xml` — now **325 URLs**.
+   - Added card to `tools.html` next to the SQL Schema Dependency Analyzer.
+   - Upsell section links to the GitHub Action, dependency analyzer, ER diagram generator, pre-commit hook, and schema change checklist.
+
+3. **Tests**
+   - Added the page to the e2e page-load array.
+   - Added a dedicated e2e test verifying the sample schema loads, stats are correct (5 tables, 7 indexes, 5 FKs, 1 view, 1 trigger), score is between 1-100, level badge renders, factor breakdown and recommendations appear, and Markdown/JSON exports are generated.
+   - Ran `node test-all.js` → **44/44 unit tests passed**.
+   - Ran `npx playwright test --project=chromium` → **266/266 tests passed** (14 API tests skipped because they require a running server).
+   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
+
+4. **Deployment**
+   - Committed with descriptive message.
+   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
+
+### Validation
+- ✅ `tools/sql-schema-complexity-scorer.html` loads without console errors.
+- ✅ Sample schema produces correct table/index/FK/view/trigger counts.
+- ✅ Score renders as a number and level badge is displayed.
+- ✅ Factor breakdown bars and recommendation list render.
+- ✅ Markdown and JSON exports generate correctly.
+- ✅ Dedicated e2e test passes.
+- ✅ Sitemap now contains 325 URLs.
+- ✅ Cross-links from tools.html and the tool's upsell section are valid.
+- ✅ No new HELP-REQUEST.md files created.
+- ✅ No fake urgency or scarcity copy introduced.
+
+### Why This Matters
+- Adds a genuinely useful schema-health utility for DBAs and platform engineers.
+- Targets high-intent keywords like "sql schema complexity" and "database schema complexity score".
+- Drives traffic toward the dependency analyzer, ER diagram tools, and CI/CD integrations.
+- Breaks the recent incident-management pattern with a technical analysis tool.
+
+### Next
+- Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
+- Candidates: schema diff for platform engineering landing page, SQL schema change drill template, or schema complexity blog post.
+- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
+
+---
 
 ## Day 359 — SQL Schema Dependency Analyzer (July 13, 2026)
 
@@ -276,58 +334,6 @@ Continue evergreen build mode by shipping an interactive micro-tool that tests a
 ### Next
 - Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
 - Candidates: schema diff for platform engineering landing page, SQL schema dependency analyzer, or migration incident response drill template.
-- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
-
----
-
-## Day 357 — Database Migration Incident Management Guide (July 13, 2026)
-
-### Focus
-Continue evergreen build mode by shipping a distribution asset that is *not* a form-driven generator: a narrative pillar page that ties together the recent incident-management tools and drives organic traffic to the CI/CD prevention story.
-
-### What Was Done
-1. **Built `database-migration-incident-management.html`**
-   - Pillar guide covering what migration incidents are, common incident types (breaking changes, lock timeouts, data corruption, replication lag), and the five-phase response lifecycle (Detect → Assess → Contain → Resolve → Review).
-   - Embedded free toolkit cards linking to the post-mortem generator, response playbook, schema change checklist, policy generator, change request generator, and schema diff tool.
-   - Prevention section explaining how SchemaLens CI/CD integrations catch breaking changes in PRs, with CTAs to GitHub Action, GitLab CI, and CI/CD examples.
-   - FAQ section with Schema.org FAQPage markup.
-   - Article schema markup, OG/Twitter tags, dark/light theme toggle, analytics events on all CTAs.
-
-2. **Indexed and cross-linked**
-   - Added to `sitemap.xml` — now **322 URLs**.
-   - Added card to `tools.html` in the incident-management section.
-   - Added footer CTA link from `migration-horror-stories.html`.
-   - Added upsell links from `tools/migration-incident-response-playbook.html` and `tools/migration-incident-postmortem-generator.html` back to the guide.
-
-3. **Tests**
-   - Added the page to the e2e page-load array.
-   - Added a dedicated e2e test verifying the guide loads with key sections and links to the playbook, post-mortem, checklist, and GitHub Action.
-   - Ran `node test-all.js` → **44/44 unit tests passed**.
-   - Ran `npx playwright test --project=chromium` → **246/246 tests passed** (14 API tests skipped because they require a running server).
-   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
-
-4. **Deployment**
-   - Committed with descriptive message.
-   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
-
-### Validation
-- ✅ `database-migration-incident-management.html` loads without console errors.
-- ✅ All key sections and cross-links render correctly.
-- ✅ Dedicated e2e test passes.
-- ✅ Sitemap now contains 322 URLs.
-- ✅ Cross-links from tools.html, horror stories, playbook, and post-mortem pages are valid and instrumented.
-- ✅ No new HELP-REQUEST.md files created.
-- ✅ No fake urgency or scarcity copy introduced.
-
-### Why This Matters
-- Breaks the micro-tool pattern by adding a narrative/content asset that can rank for incident-management keywords.
-- Creates a natural hub for the recent incident tools, increasing internal link authority and user session depth.
-- Reinforces the CI/CD prevention message — the highest-intent conversion path for SchemaLens Team.
-- Gives teams a shareable guide they can send to managers or paste into wikis.
-
-### Next
-- Continue evergreen build mode: ship one new high-value asset per session, alternating between content hubs, conversion assets, and micro-tools to avoid pattern stagnation.
-- Candidates: schema diff for platform engineering landing page, SQL schema dependency analyzer, or migration incident response training quiz.
 - Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
 
 ---
