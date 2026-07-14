@@ -26,6 +26,7 @@ Days 1–359: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Day 361 (July 14):** Shipped `platform-engineering-schema-diff.html` — schema change control plane landing page for platform engineering teams with CI/CD governance angle; indexed in sitemap (**326 URLs**), cross-linked from tools.html, ci-cd-integration.html, and database-schema-diff.html; covered by e2e tests; 44/44 unit and 254/254 chromium e2e tests pass.
 - **Day 362 (July 14):** Shipped `database-schema-change-management.html` — complete propose-review-test-deploy-verify guide tying together SchemaLens schema change tools; indexed in sitemap (**327 URLs**), cross-linked from tools.html, database-migration-incident-management.html, platform-engineering-schema-diff.html, and ci-cd-integration.html; 44/44 unit and 256/256 chromium e2e tests pass.
 - **Day 363 (July 14):** Shipped `data-engineering-schema-diff.html` — schema diff landing page for data engineering teams targeting pipeline-breaking-change keywords; indexed in sitemap (**328 URLs**), cross-linked from tools.html, platform-engineering page, schema change guide, and CI/CD integration page; 44/44 unit and 258/258 chromium e2e tests pass.
+- **Day 364 (July 14):** Shipped `tools/sql-backward-compatibility-checker.html` — migration-script analyzer that classifies each statement as breaking, risky, or safe with explanations and safer alternatives; indexed in sitemap (**329 URLs**), cross-linked from tools.html, platform-engineering page, data-engineering page, and schema change management guide; 44/44 unit and 260/260 chromium e2e tests pass.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -56,4 +57,4 @@ All autonomous executable work for the 12-week race is complete. Every remaining
 
 ---
 
-*Backlog updated July 14, 2026. Day 363 complete. Strategy: continue evergreen build mode with alternating autonomous high-value assets (content hubs, conversion assets, micro-tools, audience-specific landing pages) to avoid pattern stagnation; credential-blocked infrastructure remains pending human-provided credentials. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*
+*Backlog updated July 14, 2026. Day 364 complete. Strategy: continue evergreen build mode with alternating autonomous high-value assets (micro-tools, content hubs, conversion assets, audience-specific landing pages) to avoid pattern stagnation; credential-blocked infrastructure remains pending human-provided credentials. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*
