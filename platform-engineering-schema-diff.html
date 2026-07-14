@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema Diff for Platform Engineering Teams | SchemaLens</title>
+  <meta name="description" content="Give your platform engineering team a schema change control plane. Catch breaking changes, enforce migration standards, and keep microservice databases consistent with SchemaLens.">
+  <link rel="canonical" href="https://schemalens.tech/platform-engineering-schema-diff.html">
+  <meta property="og:title" content="Schema Diff for Platform Engineering Teams | SchemaLens">
+  <meta property="og:description" content="Catch breaking schema changes, enforce migration standards, and automate schema review across microservices with SchemaLens.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/platform-engineering-schema-diff.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Schema Diff for Platform Engineering Teams",
+    "description": "Schema change control plane for platform engineering teams. Catch breaking changes and enforce migration standards across microservices.",
+    "url": "https://schemalens.tech/platform-engineering-schema-diff.html"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens — Schema Diff for Platform Engineering",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Breaking change detection across microservice schemas",
+      "CI/CD pipeline integration for GitHub, GitLab, Bitbucket, Jenkins, CircleCI, Azure DevOps",
+      "Schema dependency analysis and safe migration ordering",
+      "Schema complexity scoring and risk factor detection",
+      "Schema lockfile verification",
+      "PR comments and Check Runs with migration risk scores",
+      "Markdown and JSON report export",
+      "Drift alerts for production schema monitoring"
+    ],
+    "url": "https://schemalens.tech/platform-engineering-schema-diff.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .hero-pe { text-align: center; padding: 80px 0 56px; }
+    .hero-pe h1 { font-size: clamp(2.2rem, 5.5vw, 3.4rem); line-height: 1.08; margin-bottom: 18px; }
+    .hero-pe .lead { color: var(--text-muted); font-size: 1.15rem; max-width: 700px; margin: 0 auto 32px; }
+    .hero-badges { display: inline-flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+    .hero-badges span { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 0.8rem; color: var(--text-muted); }
+    .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+    .trust-row { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; color: var(--text-muted); font-size: 0.85rem; margin-top: 8px; }
+    .trust-row span { display: inline-flex; align-items: center; gap: 6px; }
+    .section-pe { padding: 64px 0; }
+    .section-pe.alt { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .section-pe h2 { text-align: center; margin-bottom: 10px; font-size: clamp(1.6rem, 4vw, 2.2rem); }
+    .section-pe .section-subtitle { text-align: center; color: var(--text-muted); max-width: 640px; margin: 0 auto 40px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .feature-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .feature-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.55; margin: 0; }
+    .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .pain-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+    .pain-card .icon { font-size: 1.6rem; margin-bottom: 10px; }
+    .pain-card h3 { font-size: 1rem; margin-bottom: 6px; }
+    .pain-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 0; }
+    .workflow { max-width: 800px; margin: 0 auto; }
+    .workflow-step { display: flex; gap: 18px; margin-bottom: 28px; align-items: flex-start; }
+    .workflow-step .num { flex-shrink: 0; width: 36px; height: 36px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; }
+    .workflow-step h3 { font-size: 1.05rem; margin-bottom: 4px; }
+    .workflow-step p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; margin: 0; }
+    .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .tool-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; }
+    .tool-card h4 { font-size: 1rem; margin-bottom: 6px; }
+    .tool-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin: 0 0 14px; flex: 1; }
+    .tool-card a { font-size: 0.9rem; font-weight: 600; }
+    .platform-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .platform-grid span { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.9rem; color: var(--text-muted); }
+    .faq { max-width: 720px; margin: 0 auto; }
+    .faq details { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 12px; }
+    .faq summary { font-weight: 600; cursor: pointer; }
+    .faq p { color: var(--text-muted); margin: 10px 0 0; font-size: 0.92rem; line-height: 1.55; }
+    .final-cta { text-align: center; padding: 64px 0; background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05)); border-top: 1px solid var(--border); }
+    .final-cta h2 { margin-bottom: 12px; }
+    .final-cta p { color: var(--text-muted); max-width: 560px; margin: 0 auto 24px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">Diff</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="team.html">Team</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="app.html" class="nav-cta" data-event="pe_nav_open_app">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero-pe">
+  <div class="container">
+    <div class="hero-badges">
+      <span>🛠️ Built for platform teams</span>
+      <span>🆓 Free forever</span>
+      <span>🔒 100% client-side</span>
+    </div>
+    <h1>Schema diff for<br><span style="color:var(--primary);">platform engineering teams</span></h1>
+    <p class="lead">Give your platform team a schema change control plane. Catch breaking changes before they merge, enforce migration standards across microservices, and keep every service's database contract reviewable.</p>
+    <div class="cta-row">
+      <a href="app.html?example=users" class="btn btn-primary btn-lg" data-event="pe_hero_try_app">Try free schema diff</a>
+      <a href="tools/cicd-setup-wizard.html" class="btn btn-secondary btn-lg" data-event="pe_hero_setup_ci">Add to CI/CD</a>
+      <a href="team.html" class="btn btn-secondary btn-lg" data-event="pe_hero_team">Team Plan</a>
+    </div>
+    <div class="trust-row">
+      <span>✓ No signup</span>
+      <span>✓ Works with any SQL dialect</span>
+      <span>✓ CI-native reports</span>
+    </div>
+  </div>
+</header>
+
+<section class="section-pe alt">
+  <div class="container">
+    <h2>Why platform teams need schema governance</h2>
+    <p class="section-subtitle">Microservices multiply databases. Without a lightweight control plane, schema changes become a source of outages and blocked deploys.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="icon">💥</div>
+        <h3>Breaking changes slip into production</h3>
+        <p>A dropped column or a <code>NOT NULL</code> without a default can take down a service. Manual review misses semantic changes in long <code>ALTER TABLE</code> scripts.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🔄</div>
+        <h3>Every team uses a different process</h3>
+        <p>One service uses Liquibase, another uses raw SQL, another uses ORM migrations. Platform engineers need a dialect-agnostic view that works everywhere.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🕵️</div>
+        <h3>Schema drift is invisible until it hurts</h3>
+        <p>Production schemas drift from source-controlled DDL. By the time someone notices, rollback is complicated and customer impact is real.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">⏱️</div>
+        <h3>Reviewing migrations slows down deploys</h3>
+        <p>Senior engineers become bottlenecks because every schema change needs human eyes. Automating the first pass frees the team to ship faster.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pe">
+  <div class="container">
+    <h2>What SchemaLens gives platform engineers</h2>
+    <p class="section-subtitle">A no-install, no-signup layer of schema visibility that fits into the workflows your teams already use.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🛡️ Automated breaking-change detection</h3>
+        <p>Flag dropped tables, removed columns, type narrowing, <code>NOT NULL</code> additions, and missing indexes before they reach production.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔌 CI/CD-native reporting</h3>
+        <p>Post markdown diff reports to PRs, fail Check Runs on breaking changes, and archive HTML reports as pipeline artifacts.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🗝️ Schema lockfile verification</h3>
+        <p>Commit a <code>schemalens.lock</code> file and verify it in CI. Catch unauthorized or accidental schema drift automatically.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🌐 Dialect-agnostic diffing</h3>
+        <p>Compare PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle schemas with the same tooling and output format.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📊 Complexity & dependency analysis</h3>
+        <p>Score schema complexity and map table/view dependencies to plan safe migration order across tightly coupled services.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📡 Drift alerts & dashboards</h3>
+        <p>Send schema drift alerts to Slack or Teams. Share a persistent alert page that teams can bookmark and revisit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pe alt">
+  <div class="container">
+    <h2>A lightweight schema control plane</h2>
+    <p class="section-subtitle">From ad-hoc review to continuous governance in four steps.</p>
+    <div class="workflow">
+      <div class="workflow-step">
+        <div class="num">1</div>
+        <div>
+          <h3>Diff schemas instantly</h3>
+          <p>Paste two SQL dumps into the browser app or call the free <code>/api/free-diff</code> endpoint. SchemaLens parses the DDL and returns a semantic diff with risk scores.</p>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="num">2</div>
+        <div>
+          <h3>Embed checks in every PR</h3>
+          <p>Add the SchemaLens GitHub Action, GitLab CI template, or standalone Node.js script to your pipelines. It runs on every schema file change and posts a report.</p>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="num">3</div>
+        <div>
+          <h3>Lock and verify production schemas</h3>
+          <p>Generate a lockfile from your canonical schema and verify it against production dumps on a schedule. Drift triggers a Slack alert and a dashboard entry.</p>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="num">4</div>
+        <div>
+          <h3>Standardize with reusable tooling</h3>
+          <p>Share the same diff rules, report format, and migration checklist across every team. No forced migration from their existing tools.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pe">
+  <div class="container">
+    <h2>Works with your existing stack</h2>
+    <p class="section-subtitle">Drop SchemaLens into the CI/CD platforms and chat tools your teams already use.</p>
+    <div class="platform-grid">
+      <span>GitHub Actions</span>
+      <span>GitLab CI</span>
+      <span>Bitbucket Pipelines</span>
+      <span>Jenkins</span>
+      <span>CircleCI</span>
+      <span>Azure DevOps</span>
+      <span>Slack</span>
+      <span>Microsoft Teams</span>
+      <span>Discord</span>
+    </div>
+    <div style="text-align: center; margin-top: 32px;">
+      <a href="ci-cd-integration.html" class="btn btn-primary btn-lg" data-event="pe_view_ci_integrations">View all CI/CD integrations</a>
+      <a href="ci-cd-examples.html" class="btn btn-secondary btn-lg" style="margin-left: 10px;" data-event="pe_browse_examples">Browse copy-paste examples</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-pe alt">
+  <div class="container">
+    <h2>Platform engineering toolkit</h2>
+    <p class="section-subtitle">Free micro-tools that plug into your schema governance workflow.</p>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <h4>🕸️ SQL Schema Dependency Analyzer</h4>
+        <p>Map foreign-key and view dependencies, detect cycles, and compute a safe migration order across services.</p>
+        <a href="tools/sql-schema-dependency-analyzer.html" data-event="pe_tool_dependency">Analyze dependencies →</a>
+      </div>
+      <div class="tool-card">
+        <h4>📈 SQL Schema Complexity Scorer</h4>
+        <p>Score schema health, surface risk factors, and prioritize which services need refactoring attention.</p>
+        <a href="tools/sql-schema-complexity-scorer.html" data-event="pe_tool_complexity">Score schema →</a>
+      </div>
+      <div class="tool-card">
+        <h4>🔒 Schema Lockfile Generator</h4>
+        <p>Create a signed lockfile from any SQL dump and verify it in CI to catch unauthorized schema drift.</p>
+        <a href="tools/schema-lockfile-generator.html" data-event="pe_tool_lockfile">Generate lockfile →</a>
+      </div>
+      <div class="tool-card">
+        <h4>✅ Schema Change Checklist</h4>
+        <p>A 32-point checklist for production schema changes, ready to print, share, or paste into a runbook.</p>
+        <a href="tools/schema-change-checklist.html" data-event="pe_tool_checklist">Open checklist →</a>
+      </div>
+      <div class="tool-card">
+        <h4>📝 Migration Runbook Generator</h4>
+        <p>Turn a SQL migration into a step-by-step runbook with rollback steps, verification queries, and comms.</p>
+        <a href="tools/migration-runbook-generator.html" data-event="pe_tool_runbook">Build runbook →</a>
+      </div>
+      <div class="tool-card">
+        <h4>🚨 Schema Drift Alerts</h4>
+        <p>Free webhook endpoint that posts schema drift notifications to Slack, Teams, or Discord.</p>
+        <a href="schema-drift-alert.html" data-event="pe_tool_drift">Set up alerts →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pe">
+  <div class="container">
+    <h2>Frequently asked questions</h2>
+    <p class="section-subtitle">How platform engineering teams use SchemaLens.</p>
+    <div class="faq">
+      <details>
+        <summary>Can SchemaLens replace our existing schema migration tool?</summary>
+        <p>No, and it does not try to. SchemaLens is a review and governance layer. It diffs schemas, detects risks, and generates reports. You keep using Flyway, Liquibase, Prisma Migrate, or raw SQL migrations for actual deployments.</p>
+      </details>
+      <details>
+        <summary>How do we enforce schema standards across dozens of services?</summary>
+        <p>Add SchemaLens to each service's CI pipeline with the same config. Fail builds on breaking changes, require migration rollbacks, and archive reports. The shared report format keeps every team aligned without forcing a single migration tool.</p>
+      </details>
+      <details>
+        <summary>Does SchemaLens need access to our production databases?</summary>
+        <p>No. SchemaLens works with SQL dumps, migration files, and schema exports. You can run it entirely client-side or in CI against files in your repo. It never needs a live database connection.</p>
+      </details>
+      <details>
+        <summary>Can we run SchemaLens in a private CI environment?</summary>
+        <p>Yes. The standalone Node.js script has zero external dependencies and runs fully offline. You can also self-host the browser app or call the API from your own infrastructure.</p>
+      </details>
+      <details>
+        <summary>What is the SchemaLens Team plan for platform teams?</summary>
+        <p>The Team plan adds shared workspace features, persisted drift dashboards, and consolidated billing. While Gumroad Team products are pending, you can request an invoice or demo from the <a href="team.html">Team</a> page.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="container">
+    <h2>Start governing schema changes today</h2>
+    <p>Add SchemaLens to your platform engineering workflow in minutes. No signup, no install, no database connection required.</p>
+    <div class="cta-row">
+      <a href="tools/cicd-setup-wizard.html" class="btn btn-primary btn-lg" data-event="pe_final_setup_ci">⚡ Add Schema Diff to CI/CD</a>
+      <a href="app.html?example=users" class="btn btn-secondary btn-lg" data-event="pe_final_try_app">Try the free diff</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <a href="index.html" class="logo" style="margin-bottom: 12px;">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 320px;">Free browser-based schema diff, migration generation, and CI/CD governance for platform engineering teams.</p>
+    </div>
+    <div class="footer-links">
+      <div>
+        <h4>Product</h4>
+        <a href="app.html">Schema Diff</a>
+        <a href="tools.html">Tools</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="team.html">Team</a>
+      </div>
+      <div>
+        <h4>CI/CD</h4>
+        <a href="github-action.html">GitHub Action</a>
+        <a href="gitlab-schema-diff.html">GitLab CI</a>
+        <a href="bitbucket-schema-diff.html">Bitbucket</a>
+        <a href="ci-cd-integration.html">All integrations</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="blog.html">Blog</a>
+        <a href="api.html">API</a>
+        <a href="open.html">Open Startup</a>
+      </div>
+    </div>
+  </div>
+  <div class="container" style="text-align: center; padding: 24px 0; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem;">
+    © 2026 SchemaLens. Built in public.
+  </div>
+</footer>
+
+</body>
+</html>

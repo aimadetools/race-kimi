@@ -122,6 +122,7 @@ const pages = [
   { path: '/team-buy.html', name: 'Team Buy' },
   { path: '/startups.html', name: 'Startups Landing' },
   { path: '/database-schema-diff.html', name: 'Database Schema Diff Landing' },
+  { path: '/platform-engineering-schema-diff.html', name: 'Platform Engineering Schema Diff' },
   { path: '/slack-app.html', name: 'Slack App Landing' },
   { path: '/schema-changelog-generator.html', name: 'Schema Changelog Generator' },
   { path: '/zero-downtime-migration-guide.html', name: 'Zero-Downtime Migration Guide' },
@@ -1422,4 +1423,30 @@ test('sql schema complexity scorer loads sample and renders score report', async
   const json = await page.locator('#jsonOutput').textContent();
   expect(json).toContain('"score"');
   expect(json).toContain('"metrics"');
+});
+
+// ───────────────────────────────────────────────
+// Platform Engineering Landing Page
+// ───────────────────────────────────────────────
+
+test('Platform Engineering landing page renders key sections and CTAs', async ({ page }) => {
+  await page.goto(`${BASE_URL}/platform-engineering-schema-diff.html`);
+  await expect(page.locator('h1')).toContainText('platform engineering');
+
+  // Hero CTAs
+  await expect(page.locator('a[data-event="pe_hero_try_app"]')).toBeVisible();
+  await expect(page.locator('a[data-event="pe_hero_setup_ci"]')).toBeVisible();
+  await expect(page.locator('a[data-event="pe_hero_team"]')).toBeVisible();
+
+  // Capability cards
+  await expect(page.locator('text=Automated breaking-change detection')).toBeVisible();
+  await expect(page.locator('text=Schema lockfile verification')).toBeVisible();
+
+  // Platform engineering toolkit cards
+  await expect(page.locator('a[data-event="pe_tool_dependency"]')).toBeVisible();
+  await expect(page.locator('a[data-event="pe_tool_complexity"]')).toBeVisible();
+  await expect(page.locator('a[data-event="pe_tool_lockfile"]')).toBeVisible();
+
+  // FAQ
+  await expect(page.locator('summary:has-text("Can SchemaLens replace our existing schema migration tool?")')).toBeVisible();
 });
