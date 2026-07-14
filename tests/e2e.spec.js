@@ -123,6 +123,7 @@ const pages = [
   { path: '/startups.html', name: 'Startups Landing' },
   { path: '/database-schema-diff.html', name: 'Database Schema Diff Landing' },
   { path: '/platform-engineering-schema-diff.html', name: 'Platform Engineering Schema Diff' },
+  { path: '/data-engineering-schema-diff.html', name: 'Data Engineering Schema Diff' },
   { path: '/database-schema-change-management.html', name: 'Database Schema Change Management Guide' },
   { path: '/slack-app.html', name: 'Slack App Landing' },
   { path: '/schema-changelog-generator.html', name: 'Schema Changelog Generator' },
@@ -1487,4 +1488,37 @@ test('Database Schema Change Management guide renders key sections and CTAs', as
 
   // FAQ
   await expect(page.locator('summary:has-text("What is database schema change management?")')).toBeVisible();
+});
+
+
+// ───────────────────────────────────────────────
+// Data Engineering Landing Page
+// ───────────────────────────────────────────────
+
+test('Data Engineering landing page renders key sections and CTAs', async ({ page }) => {
+  await page.goto(`${BASE_URL}/data-engineering-schema-diff.html`);
+  await expect(page.locator('h1')).toContainText('data engineering');
+
+  // Hero CTAs
+  await expect(page.locator('a[data-event="de_hero_try_app"]')).toBeVisible();
+  await expect(page.locator('a[data-event="de_hero_setup_ci"]')).toBeVisible();
+  await expect(page.locator('a[data-event="de_hero_team"]')).toBeVisible();
+
+  // Pain point cards
+  await expect(page.locator('text=Upstream column drops break dbt models')).toBeVisible();
+  await expect(page.locator('text=Type changes silently corrupt analytics')).toBeVisible();
+
+  // Capability cards
+  await expect(page.locator('text=Source-to-warehouse schema diff')).toBeVisible();
+  await expect(page.locator('text=Breaking-change detection')).toBeVisible();
+
+  // Toolkit cards
+  await expect(page.locator('a[data-event="de_tool_dependency"]')).toBeVisible();
+  await expect(page.locator('a[data-event="de_tool_complexity"]')).toBeVisible();
+  await expect(page.locator('a[data-event="de_tool_lockfile"]')).toBeVisible();
+  await expect(page.locator('a[data-event="de_tool_wizard"]')).toBeVisible();
+  await expect(page.locator('a[data-event="de_tool_alerts"]')).toBeVisible();
+
+  // FAQ
+  await expect(page.locator('summary:has-text("How can data engineers use schema diff?")')).toBeVisible();
 });
