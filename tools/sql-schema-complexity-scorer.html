@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Schema Complexity Scorer — Free Database Complexity Analyzer | SchemaLens</title>
+<meta name="description" content="Score your SQL schema complexity instantly. Measure tables, columns, foreign keys, indexes, constraints, views, and triggers. Get a free complexity report with actionable recommendations.">
+<link rel="canonical" href="https://schemalens.tech/tools/sql-schema-complexity-scorer.html">
+<meta property="og:title" content="SQL Schema Complexity Scorer — Free Database Complexity Analyzer">
+<meta property="og:description" content="Paste your DDL to get a 0-100 complexity score, risk factors, and recommendations. Export a Markdown or JSON report. Free and browser-based.">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-schema-complexity-scorer.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL Schema Complexity Scorer",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Schema complexity scoring, table/column/index/constraint statistics, foreign-key density, view and trigger analysis, risk-factor detection, Markdown export, JSON export, shareable URLs, PostgreSQL MySQL SQLite SQL Server Oracle support",
+  "url": "https://schemalens.tech/tools/sql-schema-complexity-scorer.html"
+}
+</script>
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-hover: #334155;
+  --border: #334155;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --secondary: #8b5cf6;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.announcement-bar {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: #fff;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+.announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+}
+nav a.logo {
+  font-weight: 700; font-size: 1.2rem; color: var(--text); text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+nav a.link { color: var(--text-muted); text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+nav a.link:hover { color: var(--text); }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+header { text-align: center; padding: 48px 24px 32px; }
+header h1 {
+  font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 12px;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; margin-bottom: 20px;
+}
+.card h2 { font-size: 1.15rem; margin-bottom: 16px; }
+.card h3 { font-size: 1rem; margin: 20px 0 10px; color: var(--text-muted); }
+
+.editor-label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: block; }
+textarea.sql-input {
+  width: 100%; min-height: 220px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px; color: var(--text); font-family: 'SF Mono', Monaco, monospace;
+  font-size: 0.9rem; resize: vertical;
+}
+textarea.sql-input:focus { outline: none; border-color: var(--primary); }
+
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 22px; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; border: none; text-decoration: none; transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--surface-hover); color: var(--text); border: 1px solid var(--border); }
+.btn-copy { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; font-size: 0.85rem; }
+.btn-copy:hover { color: var(--text); border-color: var(--primary); }
+
+.score-ring {
+  width: 160px; height: 160px; border-radius: 50%;
+  background: conic-gradient(var(--primary) var(--score-deg), var(--bg) 0);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; position: relative;
+}
+.score-ring::after {
+  content: ''; width: 128px; height: 128px; border-radius: 50%; background: var(--surface);
+  position: absolute;
+}
+.score-inner {
+  position: relative; z-index: 1; text-align: center;
+}
+.score-number { font-size: 2.6rem; font-weight: 800; line-height: 1; }
+.score-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+.level-badge {
+  display: inline-block; padding: 6px 14px; border-radius: 999px;
+  font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+}
+.level-simple { background: rgba(34, 197, 94, 0.15); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.35); }
+.level-moderate { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
+.level-complex { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); }
+.level-enterprise { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); }
+
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-bottom: 20px;
+}
+.stat-box {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px; text-align: center;
+}
+.stat-box .number { font-size: 1.7rem; font-weight: 800; color: var(--primary); }
+.stat-box .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+.factor-list { display: grid; gap: 14px; }
+.factor-item { display: grid; gap: 6px; }
+.factor-top { display: flex; justify-content: space-between; font-size: 0.9rem; }
+.factor-bar {
+  height: 10px; background: var(--bg); border-radius: 5px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.factor-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 5px; transition: width 0.4s ease; }
+.factor-fill.low { background: linear-gradient(90deg, var(--success), #34d399); }
+.factor-fill.medium { background: linear-gradient(90deg, var(--warning), #fbbf24); }
+.factor-fill.high { background: linear-gradient(90deg, var(--danger), #f87171); }
+
+.recommendations { display: grid; gap: 10px; }
+.rec-item {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;
+}
+.rec-icon { font-size: 1.1rem; line-height: 1.4; }
+.rec-text { font-size: 0.95rem; }
+.rec-text strong { color: var(--text); }
+
+.output-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.output-tab {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 14px; font-size: 0.9rem; color: var(--text-muted); cursor: pointer;
+}
+.output-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.output-panel { display: none; }
+.output-panel.active { display: block; }
+pre.code-output {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; overflow-x: auto; font-family: 'SF Mono', Monaco, monospace;
+  font-size: 0.85rem; line-height: 1.5; color: var(--text); white-space: pre-wrap;
+}
+
+.empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; }
+.hidden { display: none; }
+
+.share-row { display: flex; gap: 10px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+.share-row input {
+  flex: 1; min-width: 220px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 0.9rem;
+}
+
+.upsell {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12));
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; margin-top: 24px;
+}
+.upsell h3 { margin-top: 0; color: var(--text); }
+.upsell p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px; }
+.upsell a { color: #c7d2fe; text-decoration: underline; }
+
+footer {
+  text-align: center; padding: 40px 24px; color: var(--text-muted); font-size: 0.85rem;
+  border-top: 1px solid var(--border); margin-top: 40px;
+}
+footer a { color: var(--text-muted); text-decoration: underline; }
+
+@media (max-width: 640px) {
+  nav a.link { margin-left: 12px; font-size: 0.8rem; }
+}
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+</head>
+<body>
+
+<div class="announcement-bar">
+  Catch breaking schema changes in every PR with the free <a href="../github-action.html">SchemaLens GitHub Action</a>.
+</div>
+
+<nav>
+  <a href="../index.html" class="logo">SchemaLens</a>
+  <div>
+    <a href="../app.html" class="link">Diff</a>
+    <a href="../tools.html" class="link">Tools</a>
+    <a href="../blog.html" class="link">Blog</a>
+    <a href="../pricing.html" class="link">Pricing</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header>
+    <h1>SQL Schema Complexity Scorer</h1>
+    <p>Measure how complex your database schema really is. Paste your DDL to get a 0-100 score, detailed metrics, risk factors, and actionable recommendations — everything stays in your browser.</p>
+  </header>
+
+  <div class="card">
+    <label class="editor-label" for="sqlInput">Paste CREATE TABLE / CREATE INDEX / CREATE VIEW / CREATE TRIGGER / ALTER TABLE statements</label>
+    <textarea id="sqlInput" class="sql-input" placeholder="CREATE TABLE users (&#10;  id SERIAL PRIMARY KEY,&#10;  email VARCHAR(255) NOT NULL UNIQUE,&#10;  team_id INT REFERENCES teams(id)&#10;);&#10;&#10;CREATE INDEX idx_users_team ON users(team_id);&#10;"></textarea>
+    <div class="btn-row">
+      <button id="scoreBtn" class="btn btn-primary">Score Complexity</button>
+      <button id="sampleBtn" class="btn btn-secondary">Load sample schema</button>
+      <button id="clearBtn" class="btn btn-secondary">Clear</button>
+    </div>
+  </div>
+
+  <div id="results" class="card hidden">
+    <h2>Complexity Score</h2>
+
+    <div class="score-ring" id="scoreRing" style="--score-deg: 0deg;">
+      <div class="score-inner">
+        <div class="score-number" id="scoreNumber">0</div>
+        <div class="score-label">/ 100</div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-bottom: 24px;">
+      <span id="levelBadge" class="level-badge level-simple">Simple</span>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box"><div class="number" id="statTables">0</div><div class="label">Tables</div></div>
+      <div class="stat-box"><div class="number" id="statColumns">0</div><div class="label">Columns</div></div>
+      <div class="stat-box"><div class="number" id="statIndexes">0</div><div class="label">Indexes</div></div>
+      <div class="stat-box"><div class="number" id="statFKs">0</div><div class="label">Foreign Keys</div></div>
+      <div class="stat-box"><div class="number" id="statConstraints">0</div><div class="label">Constraints</div></div>
+      <div class="stat-box"><div class="number" id="statViews">0</div><div class="label">Views</div></div>
+      <div class="stat-box"><div class="number" id="statTriggers">0</div><div class="label">Triggers</div></div>
+      <div class="stat-box"><div class="number" id="statAvgCols">0</div><div class="label">Avg Cols / Table</div></div>
+    </div>
+
+    <h3>Factor breakdown</h3>
+    <div id="factorList" class="factor-list"></div>
+
+    <h3>Risk factors</h3>
+    <div id="riskList" class="recommendations"></div>
+
+    <h3>Recommendations</h3>
+    <div id="recList" class="recommendations"></div>
+
+    <h3>Export</h3>
+    <div class="output-tabs">
+      <button class="output-tab active" data-tab="markdown">Markdown</button>
+      <button class="output-tab" data-tab="json">JSON</button>
+    </div>
+    <div id="panel-markdown" class="output-panel active">
+      <pre id="markdownOutput" class="code-output"></pre>
+    </div>
+    <div id="panel-json" class="output-panel">
+      <pre id="jsonOutput" class="code-output"></pre>
+    </div>
+    <div class="btn-row">
+      <button id="copyOutputBtn" class="btn btn-copy">Copy current export</button>
+    </div>
+
+    <div class="share-row">
+      <input id="shareUrl" type="text" readonly placeholder="Shareable URL will appear here">
+      <button id="copyShareBtn" class="btn btn-secondary">Copy URL</button>
+    </div>
+  </div>
+
+  <div class="card upsell">
+    <h3>Keep schema complexity from turning into production incidents</h3>
+    <p>SchemaLens diffs schemas in every pull request, flags breaking changes, and generates migration SQL. <a href="../github-action.html">Add the free GitHub Action</a> or <a href="../tools/sql-schema-dependency-analyzer.html">analyze your schema dependencies</a>.</p>
+    <a href="../tools/schema-diagram.html" class="link">Generate an ER diagram</a> ·
+    <a href="../tools/schema-diff-precommit-hook.html" class="link">Pre-commit hook</a> ·
+    <a href="../tools/schema-change-checklist.html" class="link">Schema change checklist</a>
+  </div>
+</div>
+
+<footer>
+  <p>Built by <a href="../index.html">SchemaLens</a> · <a href="../privacy-policy.html">Privacy Policy</a></p>
+</footer>
+
+<script>
+const sampleSQL = `CREATE TABLE organizations (
+  id SERIAL PRIMARY KEY,
+  slug VARCHAR(50) UNIQUE NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  settings JSONB DEFAULT '{}'
+);
+
+CREATE TABLE teams (
+  id SERIAL PRIMARY KEY,
+  organization_id INT NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  name VARCHAR(100) NOT NULL,
+  plan VARCHAR(20) NOT NULL DEFAULT 'free',
+  CHECK (plan IN ('free', 'pro', 'enterprise'))
+);
+
+CREATE INDEX idx_teams_org ON teams(organization_id);
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  team_id INT REFERENCES teams(id) ON DELETE SET NULL,
+  role VARCHAR(20) NOT NULL DEFAULT 'member',
+  preferences JSONB DEFAULT '{}',
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP,
+  CHECK (role IN ('member', 'admin', 'owner'))
+);
+
+CREATE INDEX idx_users_team ON users(team_id);
+CREATE INDEX idx_users_email ON users(email);
+
+CREATE TABLE projects (
+  id SERIAL PRIMARY KEY,
+  team_id INT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
+  owner_id INT NOT NULL REFERENCES users(id),
+  name VARCHAR(100) NOT NULL,
+  description TEXT,
+  is_public BOOLEAN NOT NULL DEFAULT FALSE,
+  metadata JSONB DEFAULT '{}'
+);
+
+CREATE INDEX idx_projects_team ON projects(team_id);
+CREATE INDEX idx_projects_owner ON projects(owner_id);
+
+CREATE TABLE deployments (
+  id SERIAL PRIMARY KEY,
+  project_id INT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  started_at TIMESTAMP,
+  finished_at TIMESTAMP,
+  logs TEXT,
+  CHECK (status IN ('pending', 'running', 'success', 'failed', 'rolled_back'))
+);
+
+CREATE INDEX idx_deployments_project ON deployments(project_id);
+CREATE INDEX idx_deployments_status ON deployments(status);
+
+CREATE VIEW active_projects AS
+SELECT p.*, u.email AS owner_email, t.name AS team_name
+FROM projects p
+JOIN users u ON p.owner_id = u.id
+JOIN teams t ON p.team_id = t.id
+WHERE p.is_public = TRUE;
+
+CREATE TRIGGER update_users_updated_at
+BEFORE UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();`;
+
+function normalizeSQL(sql) {
+  return sql
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/--[^\n]*/g, ' ')
+    .replace(/'[^']*'/g, "''")
+    .replace(/"[^"]*"/g, '""')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function stripQuotedStrings(sql) {
+  return sql.replace(/'[^']*'/g, "''");
+}
+
+function extractName(sql, regex) {
+  const m = sql.match(regex);
+  return m ? m[1].replace(/["\`]/g, '').toLowerCase() : null;
+}
+
+function extractCreateTableName(sql) {
+  return extractName(sql, /CREATE\s+(?:TEMP\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+}
+
+function extractCreateIndexName(sql) {
+  return extractName(sql, /CREATE\s+(?:UNIQUE\s+)?INDEX\s+(?:IF\s+NOT\s+EXISTS\s+)?["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+}
+
+function extractCreateIndexTable(sql) {
+  const m = sql.match(/CREATE\s+(?:UNIQUE\s+)?INDEX\s+[\s\S]*?\s+ON\s+["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+  return m ? m[1].replace(/["\`]/g, '').toLowerCase() : null;
+}
+
+function extractCreateViewName(sql) {
+  return extractName(sql, /CREATE\s+(?:OR\s+REPLACE\s+)?VIEW\s+(?:IF\s+NOT\s+EXISTS\s+)?["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+}
+
+function extractCreateTriggerName(sql) {
+  return extractName(sql, /CREATE\s+(?:OR\s+REPLACE\s+)?TRIGGER\s+["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+}
+
+function extractTriggerTable(sql) {
+  const m = sql.match(/TRIGGER\s+[\s\S]*?\s+ON\s+["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+  return m ? m[1].replace(/["\`]/g, '').toLowerCase() : null;
+}
+
+function extractColumns(body) {
+  const columns = [];
+  // Split top-level column/constraint definitions by commas not inside parentheses
+  const parts = [];
+  let depth = 0;
+  let current = '';
+  for (const ch of body) {
+    if (ch === '(') depth++;
+    else if (ch === ')') depth--;
+    if (ch === ',' && depth === 0) {
+      parts.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) parts.push(current.trim());
+
+  for (const part of parts) {
+    const words = part.trim().split(/\s+/);
+    if (words.length < 2) continue;
+    const name = words[0].replace(/["\`]/g, '').toLowerCase();
+    if (!name || name.match(/^(primary|foreign|unique|constraint|check)$/i)) continue;
+    const type = words[1].toUpperCase();
+    const def = part.toUpperCase();
+    columns.push({
+      name,
+      type,
+      nullable: !def.includes('NOT NULL'),
+      hasDefault: def.includes(' DEFAULT '),
+      isEnum: /ENUM\s*\(|CHECK\s*\([\s\S]*IN\s*\(/i.test(def),
+    });
+  }
+  return columns;
+}
+
+function extractInlineConstraints(body) {
+  let pks = 0;
+  let uniques = 0;
+  let checks = 0;
+  let fks = 0;
+
+  const pkRegex = /PRIMARY\s+KEY/gi;
+  while (pkRegex.exec(body)) pks++;
+
+  const uniqueRegex = /\bUNIQUE\b/gi;
+  while (uniqueRegex.exec(body)) uniques++;
+
+  const checkRegex = /CHECK\s*\(/gi;
+  while (checkRegex.exec(body)) checks++;
+
+  const fkRegex = /\bREFERENCES\s+["\`]?[A-Za-z_][A-Za-z0-9_]*["\`]?/gi;
+  while (fkRegex.exec(body)) fks++;
+
+  return { pks, uniques, checks, fks };
+}
+
+function extractTableConstraints(body) {
+  let pks = 0, uniques = 0, checks = 0;
+  const pkRegex = /CONSTRAINT\s+[\s\S]*?\s+PRIMARY\s+KEY/gi;
+  while (pkRegex.exec(body)) pks++;
+  const uniqueRegex = /CONSTRAINT\s+[\s\S]*?\s+UNIQUE/gi;
+  while (uniqueRegex.exec(body)) uniques++;
+  const checkRegex = /CONSTRAINT\s+[\s\S]*?\s+CHECK\s*\(/gi;
+  while (checkRegex.exec(body)) checks++;
+  return { pks, uniques, checks };
+}
+
+function parseSchema(sql) {
+  const normalized = normalizeSQL(sql);
+  const statements = normalized.split(/;+/).map(s => s.trim()).filter(Boolean);
+
+  const tables = {};
+  const indexes = [];
+  const views = [];
+  const triggers = [];
+
+  for (const stmt of statements) {
+    if (/^CREATE\s+TABLE/i.test(stmt)) {
+      const name = extractCreateTableName(stmt);
+      if (!name) continue;
+      const bodyMatch = stmt.match(/CREATE\s+TABLE\s+[\s\S]*?\((.*)\)\s*$/i);
+      const body = bodyMatch ? bodyMatch[1] : '';
+      const inline = extractInlineConstraints(body);
+      const tableConstraints = extractTableConstraints(body);
+      tables[name] = {
+        name,
+        columns: extractColumns(body),
+        inline,
+        tableConstraints,
+      };
+    } else if (/^CREATE\s+(?:UNIQUE\s+)?INDEX/i.test(stmt)) {
+      const name = extractCreateIndexName(stmt);
+      const table = extractCreateIndexTable(stmt);
+      if (table) indexes.push({ name, table });
+    } else if (/^CREATE\s+VIEW/i.test(stmt)) {
+      const name = extractCreateViewName(stmt);
+      if (name) views.push({ name });
+    } else if (/^CREATE\s+TRIGGER/i.test(stmt)) {
+      const name = extractCreateTriggerName(stmt);
+      const table = extractTriggerTable(stmt);
+      if (name || table) triggers.push({ name: name || 'unnamed', table });
+    } else if (/^ALTER\s+TABLE/i.test(stmt)) {
+      const tableMatch = stmt.match(/ALTER\s+TABLE\s+["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+      const table = tableMatch ? tableMatch[1].replace(/["\`]/g, '').toLowerCase() : null;
+      if (!table) continue;
+      if (!tables[table]) tables[table] = { name: table, columns: [], inline: { pks: 0, uniques: 0, checks: 0, fks: 0 }, tableConstraints: { pks: 0, uniques: 0, checks: 0 } };
+      const body = stmt.replace(/ALTER\s+TABLE\s+[\s\S]*?\s+/i, '');
+      const inline = extractInlineConstraints(body);
+      const tableConstraints = extractTableConstraints(body);
+      tables[table].inline.pks += inline.pks;
+      tables[table].inline.uniques += inline.uniques;
+      tables[table].inline.checks += inline.checks;
+      tables[table].inline.fks += inline.fks;
+      tables[table].tableConstraints.pks += tableConstraints.pks;
+      tables[table].tableConstraints.uniques += tableConstraints.uniques;
+      tables[table].tableConstraints.checks += tableConstraints.checks;
+
+      // ALTER TABLE ADD COLUMN ...
+      const colMatch = body.match(/ADD\s+COLUMN\s+(["\`]?[A-Za-z_][A-Za-z0-9_]*["\`]?)\s+([A-Za-z]+[\s\S]*)/i);
+      if (colMatch) {
+        const colDef = colMatch[1] + ' ' + colMatch[2];
+        const cols = extractColumns(colDef);
+        tables[table].columns.push(...cols);
+      }
+    }
+  }
+
+  return { tables, indexes, views, triggers };
+}
+
+function computeMetrics(schema) {
+  const tableList = Object.values(schema.tables);
+  const tableCount = tableList.length;
+  const columnCount = tableList.reduce((a, t) => a + t.columns.length, 0);
+  const indexCount = schema.indexes.length;
+  const fkCount = tableList.reduce((a, t) => a + t.inline.fks, 0);
+  const pkCount = tableList.reduce((a, t) => a + t.inline.pks + t.tableConstraints.pks, 0);
+  const uniqueCount = tableList.reduce((a, t) => a + t.inline.uniques + t.tableConstraints.uniques, 0);
+  const checkCount = tableList.reduce((a, t) => a + t.inline.checks + t.tableConstraints.checks, 0);
+  const constraintCount = pkCount + uniqueCount + checkCount + fkCount;
+  const viewCount = schema.views.length;
+  const triggerCount = schema.triggers.length;
+  const avgColumns = tableCount ? +(columnCount / tableCount).toFixed(1) : 0;
+  const maxColumns = tableList.reduce((a, t) => Math.max(a, t.columns.length), 0);
+  const nullableColumns = tableList.reduce((a, t) => a + t.columns.filter(c => c.nullable).length, 0);
+  const nullableRatio = columnCount ? nullableColumns / columnCount : 0;
+  const enumColumns = tableList.reduce((a, t) => a + t.columns.filter(c => c.isEnum).length, 0);
+  const tablesWithoutPK = tableList.filter(t => t.inline.pks + t.tableConstraints.pks === 0).length;
+
+  return {
+    tableCount,
+    columnCount,
+    indexCount,
+    fkCount,
+    pkCount,
+    uniqueCount,
+    checkCount,
+    constraintCount,
+    viewCount,
+    triggerCount,
+    avgColumns,
+    maxColumns,
+    nullableRatio,
+    enumColumns,
+    tablesWithoutPK,
+    fkDensity: tableCount ? fkCount / tableCount : 0,
+    indexDensity: tableCount ? indexCount / tableCount : 0,
+  };
+}
+
+function scoreComplexity(metrics) {
+  const tableScore = Math.min(25, metrics.tableCount * 1.5);
+  const columnScore = Math.min(20, (metrics.columnCount * 0.15) + (metrics.avgColumns * 1.5));
+  const relationScore = Math.min(25, (metrics.fkCount * 2) + (metrics.indexCount * 1.2) + (metrics.constraintCount * 0.8));
+  const viewTriggerScore = Math.min(15, (metrics.viewCount * 3) + (metrics.triggerCount * 5));
+  let riskScore = 0;
+  if (metrics.tablesWithoutPK > 0) riskScore += 5;
+  if (metrics.maxColumns > 30) riskScore += 5;
+  if (metrics.nullableRatio > 0.6) riskScore += 3;
+  if (metrics.fkDensity > 2) riskScore += 2;
+  riskScore = Math.min(15, riskScore);
+
+  const total = Math.round(tableScore + columnScore + relationScore + viewTriggerScore + riskScore);
+  return Math.min(100, total);
+}
+
+function complexityLevel(score) {
+  if (score <= 25) return { label: 'Simple', class: 'level-simple' };
+  if (score <= 50) return { label: 'Moderate', class: 'level-moderate' };
+  if (score <= 75) return { label: 'Complex', class: 'level-complex' };
+  return { label: 'Enterprise', class: 'level-enterprise' };
+}
+
+function buildFactors(metrics, score) {
+  const factors = [];
+  factors.push({ name: 'Table count', value: Math.min(100, metrics.tableCount * 4), score: Math.min(25, metrics.tableCount * 1.5) });
+  factors.push({ name: 'Column volume', value: Math.min(100, metrics.columnCount * 2), score: Math.min(20, metrics.columnCount * 0.15 + metrics.avgColumns * 1.5) });
+  factors.push({ name: 'Relations & indexes', value: Math.min(100, (metrics.fkCount + metrics.indexCount) * 8), score: Math.min(25, metrics.fkCount * 2 + metrics.indexCount * 1.2 + metrics.constraintCount * 0.8) });
+  factors.push({ name: 'Views & triggers', value: Math.min(100, metrics.viewCount * 15 + metrics.triggerCount * 25), score: Math.min(15, metrics.viewCount * 3 + metrics.triggerCount * 5) });
+  factors.push({ name: 'Risk factors', value: Math.min(100, score > 75 ? 100 : score), score: Math.min(15, score) });
+  return factors;
+}
+
+function buildRisks(metrics) {
+  const risks = [];
+  if (metrics.tablesWithoutPK > 0) {
+    risks.push({ icon: '🔑', text: `<strong>${metrics.tablesWithoutPK} table(s)</strong> have no PRIMARY KEY. Missing PKs make replication, replication, and ORM mapping harder.` });
+  }
+  if (metrics.maxColumns > 30) {
+    risks.push({ icon: '📏', text: `<strong>Widest table has ${metrics.maxColumns} columns.</strong> Wide tables are harder to maintain and often signal normalization issues.` });
+  }
+  if (metrics.nullableRatio > 0.6) {
+    risks.push({ icon: '⚠️', text: `<strong>${(metrics.nullableRatio * 100).toFixed(0)}% of columns are nullable.</strong> High nullability increases the chance of missing data bugs.` });
+  }
+  if (metrics.fkDensity > 2) {
+    risks.push({ icon: '🕸️', text: `<strong>High FK density</strong> (${metrics.fkDensity.toFixed(1)} FKs per table). Schema changes may cascade and require careful migration ordering.` });
+  }
+  if (metrics.triggerCount > 5) {
+    risks.push({ icon: '🔫', text: `<strong>${metrics.triggerCount} triggers detected.</strong> Triggers hide business logic and can surprise engineers during migrations.` });
+  }
+  if (metrics.viewCount > 10) {
+    risks.push({ icon: '👁️', text: `<strong>${metrics.viewCount} views detected.</strong> Many views can create dependency chains that complicate refactors.` });
+  }
+  if (risks.length === 0) {
+    risks.push({ icon: '✅', text: '<strong>No major risk flags.</strong> The schema looks healthy from the metrics we analyzed.' });
+  }
+  return risks;
+}
+
+function buildRecommendations(metrics, score) {
+  const recs = [];
+  if (score > 75) {
+    recs.push({ icon: '📊', text: 'Consider splitting the largest tables or isolating high-churn domains into separate schemas/services.' });
+  }
+  if (metrics.tablesWithoutPK > 0) {
+    recs.push({ icon: '🔑', text: 'Add PRIMARY KEY constraints to every table, even on legacy tables, to support replication and reliable lookups.' });
+  }
+  if (metrics.fkDensity > 2) {
+    recs.push({ icon: '🕸️', text: 'Use the <a href="../tools/sql-schema-dependency-analyzer.html">SQL Schema Dependency Analyzer</a> to find safe migration order and circular references.' });
+  }
+  if (metrics.indexCount === 0 && metrics.tableCount > 1) {
+    recs.push({ icon: '🚀', text: 'You have no explicit indexes beyond primary keys. Review query patterns and add covering indexes for hot foreign keys.' });
+  }
+  if (metrics.viewCount > 5) {
+    recs.push({ icon: '👁️', text: 'Document view dependencies. A schema diff tool in CI/CD catches breaking changes before they hit production.' });
+  }
+  if (metrics.maxColumns > 25) {
+    recs.push({ icon: '📐', text: 'Review the widest table for column sprawl. Extract rarely-used attributes or JSON blobs to related tables if possible.' });
+  }
+  if (metrics.triggerCount > 0) {
+    recs.push({ icon: '📝', text: 'Keep a trigger inventory. Prefer explicit application logic over triggers when the same behavior can live in code.' });
+  }
+  if (recs.length === 0) {
+    recs.push({ icon: '🌟', text: 'Schema looks clean. Keep monitoring complexity as the product grows, and add CI/CD schema checks early.' });
+  }
+  return recs;
+}
+
+function generateMarkdown(schema, metrics, score, level) {
+  let out = '# SQL Schema Complexity Report\n\n';
+  out += `Generated with [SchemaLens](https://schemalens.tech/tools/sql-schema-complexity-scorer.html)\n\n`;
+  out += `## Overall Score\n\n`;
+  out += `- **Complexity Score:** ${score}/100\n`;
+  out += `- **Level:** ${level.label}\n\n`;
+  out += `## Metrics\n\n`;
+  out += `| Metric | Value |\n|---|---:|\n`;
+  out += `| Tables | ${metrics.tableCount} |\n`;
+  out += `| Columns | ${metrics.columnCount} |\n`;
+  out += `| Indexes | ${metrics.indexCount} |\n`;
+  out += `| Foreign Keys | ${metrics.fkCount} |\n`;
+  out += `| Primary Keys | ${metrics.pkCount} |\n`;
+  out += `| Unique Constraints | ${metrics.uniqueCount} |\n`;
+  out += `| CHECK Constraints | ${metrics.checkCount} |\n`;
+  out += `| Views | ${metrics.viewCount} |\n`;
+  out += `| Triggers | ${metrics.triggerCount} |\n`;
+  out += `| Avg Columns / Table | ${metrics.avgColumns} |\n`;
+  out += `| Max Columns / Table | ${metrics.maxColumns} |\n`;
+  out += `| Nullable Columns | ${(metrics.nullableRatio * 100).toFixed(0)}% |\n\n`;
+  out += `## Recommendations\n\n`;
+  for (const r of buildRecommendations(metrics, score)) {
+    out += `- ${r.icon} ${r.text.replace(/<[^>]+>/g, '')}\n`;
+  }
+  return out;
+}
+
+function generateJSON(schema, metrics, score, level) {
+  return JSON.stringify({
+    score,
+    level: level.label,
+    metrics,
+    factors: buildFactors(metrics, score),
+    risks: buildRisks(metrics).map(r => r.text.replace(/<[^>]+>/g, '')),
+    recommendations: buildRecommendations(metrics, score).map(r => r.text.replace(/<[^>]+>/g, '')),
+  }, null, 2);
+}
+
+function renderResults(schema) {
+  const metrics = computeMetrics(schema);
+  const score = scoreComplexity(metrics);
+  const level = complexityLevel(score);
+  const factors = buildFactors(metrics, score);
+  const risks = buildRisks(metrics);
+  const recs = buildRecommendations(metrics, score);
+
+  const ring = document.getElementById('scoreRing');
+  ring.style.setProperty('--score-deg', `${score * 3.6}deg`);
+  ring.style.background = `conic-gradient(${score > 75 ? 'var(--danger)' : score > 50 ? 'var(--warning)' : score > 25 ? 'var(--primary)' : 'var(--success)'} ${score * 3.6}deg, var(--bg) 0)`;
+
+  document.getElementById('scoreNumber').textContent = score;
+  const badge = document.getElementById('levelBadge');
+  badge.textContent = level.label;
+  badge.className = `level-badge ${level.class}`;
+
+  document.getElementById('statTables').textContent = metrics.tableCount;
+  document.getElementById('statColumns').textContent = metrics.columnCount;
+  document.getElementById('statIndexes').textContent = metrics.indexCount;
+  document.getElementById('statFKs').textContent = metrics.fkCount;
+  document.getElementById('statConstraints').textContent = metrics.constraintCount;
+  document.getElementById('statViews').textContent = metrics.viewCount;
+  document.getElementById('statTriggers').textContent = metrics.triggerCount;
+  document.getElementById('statAvgCols').textContent = metrics.avgColumns;
+
+  const factorList = document.getElementById('factorList');
+  factorList.innerHTML = factors.map(f => {
+    const cls = f.value < 40 ? 'low' : f.value < 75 ? 'medium' : 'high';
+    return `<div class="factor-item">
+      <div class="factor-top"><span>${escapeHtml(f.name)}</span><span>${Math.round(f.score)}/25</span></div>
+      <div class="factor-bar"><div class="factor-fill ${cls}" style="width:${Math.round(f.value)}%"></div></div>
+    </div>`;
+  }).join('');
+
+  const riskList = document.getElementById('riskList');
+  riskList.innerHTML = risks.map(r => `<div class="rec-item"><span class="rec-icon">${r.icon}</span><div class="rec-text">${r.text}</div></div>`).join('');
+
+  const recList = document.getElementById('recList');
+  recList.innerHTML = recs.map(r => `<div class="rec-item"><span class="rec-icon">${r.icon}</span><div class="rec-text">${r.text}</div></div>`).join('');
+
+  document.getElementById('markdownOutput').textContent = generateMarkdown(schema, metrics, score, level);
+  document.getElementById('jsonOutput').textContent = generateJSON(schema, metrics, score, level);
+
+  document.getElementById('results').classList.remove('hidden');
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function updateShareUrl() {
+  const sql = document.getElementById('sqlInput').value;
+  const params = new URLSearchParams(window.location.search);
+  params.set('sql', compress(sql));
+  const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+  document.getElementById('shareUrl').value = url;
+}
+
+function compress(str) {
+  try {
+    return btoa(unescape(encodeURIComponent(str)));
+  } catch (e) { return ''; }
+}
+
+function decompress(str) {
+  try {
+    return decodeURIComponent(escape(atob(str)));
+  } catch (e) { return ''; }
+}
+
+function score() {
+  const sql = document.getElementById('sqlInput').value;
+  if (!sql.trim()) return;
+  const schema = parseSchema(sql);
+  renderResults(schema);
+  updateShareUrl();
+  if (typeof gtag === 'function') gtag('event', 'complexity_scorer_run', { event_category: 'tools' });
+}
+
+function loadFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const sql = params.get('sql');
+  if (sql) {
+    const decoded = decompress(sql);
+    if (decoded) {
+      document.getElementById('sqlInput').value = decoded;
+      score();
+    }
+  }
+}
+
+function setActiveTab(tab) {
+  document.querySelectorAll('.output-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.output-panel').forEach(p => p.classList.toggle('active', p.id === `panel-${tab}`));
+}
+
+function getActiveOutput() {
+  const active = document.querySelector('.output-tab.active');
+  if (!active) return '';
+  return document.getElementById(`${active.dataset.tab}Output`).textContent;
+}
+
+document.getElementById('scoreBtn').addEventListener('click', score);
+document.getElementById('sampleBtn').addEventListener('click', () => {
+  document.getElementById('sqlInput').value = sampleSQL;
+  score();
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('results').classList.add('hidden');
+  history.replaceState({}, '', window.location.pathname);
+});
+document.querySelectorAll('.output-tab').forEach(btn => {
+  btn.addEventListener('click', () => setActiveTab(btn.dataset.tab));
+});
+document.getElementById('copyOutputBtn').addEventListener('click', async () => {
+  const text = getActiveOutput();
+  if (!text) return;
+  await navigator.clipboard.writeText(text);
+  const btn = document.getElementById('copyOutputBtn');
+  const prev = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = prev, 1500);
+});
+document.getElementById('copyShareBtn').addEventListener('click', async () => {
+  const input = document.getElementById('shareUrl');
+  if (!input.value) return;
+  await navigator.clipboard.writeText(input.value);
+  const btn = document.getElementById('copyShareBtn');
+  const prev = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = prev, 1500);
+});
+
+loadFromUrl();
+</script>
+</body>
+</html>

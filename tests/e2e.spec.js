@@ -224,6 +224,7 @@ const pages = [
   { path: '/database-migration-incident-management.html', name: 'Database Migration Incident Management Guide' },
   { path: '/tools/migration-incident-response-training-quiz.html', name: 'Migration Incident Response Training Quiz' },
   { path: '/tools/sql-schema-dependency-analyzer.html', name: 'SQL Schema Dependency Analyzer' },
+  { path: '/tools/sql-schema-complexity-scorer.html', name: 'SQL Schema Complexity Scorer' },
 ];
 
 for (const { path, name } of pages) {
@@ -1381,4 +1382,44 @@ test('sql schema dependency analyzer loads sample and renders dependency results
   const json = await page.locator('#jsonOutput').textContent();
   expect(json).toContain('"tables"');
   expect(json).toContain('"migrationOrder"');
+});
+
+test('sql schema complexity scorer loads sample and renders score report', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/sql-schema-complexity-scorer.html`);
+  await expect(page.locator('h1')).toContainText('SQL Schema Complexity Scorer');
+
+  // Load the built-in sample schema
+  await page.click('#sampleBtn');
+
+  // Results card becomes visible
+  await expect(page.locator('#results:not(.hidden)')).toBeVisible();
+
+  // Sample schema has 5 tables, 21+ columns, 7 indexes, 5 FKs, 1 view, 1 trigger
+  await expect(page.locator('#statTables')).toHaveText('5');
+  await expect(page.locator('#statIndexes')).toHaveText('7');
+  await expect(page.locator('#statFKs')).toHaveText('5');
+  await expect(page.locator('#statViews')).toHaveText('1');
+  await expect(page.locator('#statTriggers')).toHaveText('1');
+
+  // Score is rendered as a number and a level badge is shown
+  const scoreText = await page.locator('#scoreNumber').textContent();
+  const score = parseInt(scoreText, 10);
+  expect(score).toBeGreaterThan(0);
+  expect(score).toBeLessThanOrEqual(100);
+  await expect(page.locator('#levelBadge')).toBeVisible();
+
+  // Factor breakdown and recommendations are rendered
+  await expect(page.locator('#factorList .factor-item').first()).toBeVisible();
+  await expect(page.locator('#recList .rec-item').first()).toBeVisible();
+
+  // Markdown export contains report sections
+  const markdown = await page.locator('#markdownOutput').textContent();
+  expect(markdown).toContain('# SQL Schema Complexity Report');
+  expect(markdown).toContain('Complexity Score:');
+
+  // JSON export contains score and metrics
+  await page.click('[data-tab="json"]');
+  const json = await page.locator('#jsonOutput').textContent();
+  expect(json).toContain('"score"');
+  expect(json).toContain('"metrics"');
 });
