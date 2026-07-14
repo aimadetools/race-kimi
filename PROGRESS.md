@@ -167,6 +167,7 @@
 | 359 | Jul 13 | Shipped `tools/sql-schema-dependency-analyzer.html` — parses CREATE TABLE/VIEW and ALTER TABLE FKs, builds dependency graph, detects cycles, computes safe migration order, exports Mermaid/Markdown/JSON; indexed (324 URLs), cross-linked; 44/44 unit and 250/250 chromium e2e tests pass. |
 | 360 | Jul 14 | Shipped `tools/sql-schema-complexity-scorer.html` — 0-100 SQL schema complexity score with stats, risk factors, recommendations, Markdown/JSON export, shareable URLs; indexed (325 URLs), e2e-tested; 44/44 unit and 266/266 chromium e2e tests pass. |
 | 361 | Jul 14 | Shipped `platform-engineering-schema-diff.html` — schema change control plane landing page for platform engineering teams with CI/CD governance angle; indexed in sitemap (326 URLs), cross-linked from tools.html, ci-cd-integration.html, and database-schema-diff.html; covered by e2e tests; 44/44 unit and 254/254 chromium e2e tests pass. |
+| 362 | Jul 14 | Shipped `database-schema-change-management.html` — complete propose-review-test-deploy-verify guide tying together SchemaLens schema change tools; indexed in sitemap (327 URLs), cross-linked from tools.html, database-migration-incident-management.html, platform-engineering-schema-diff.html, and ci-cd-integration.html; 44/44 unit and 256/256 chromium e2e tests pass. |
 
 ---
 
@@ -274,6 +275,60 @@ Continue evergreen build mode by shipping a new technical micro-tool that scores
 ### Next
 - Continue evergreen build mode: alternate between micro-tools, content hubs, and conversion assets.
 - Candidates: schema diff for platform engineering landing page, SQL schema change drill template, or schema complexity blog post.
+- Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
+
+---
+
+## Day 362 — Database Schema Change Management Guide (July 14, 2026)
+
+### Focus
+Continue evergreen build mode by shifting from micro-tools/landing pages to a long-form content hub: a complete guide to database schema change management that ties together existing SchemaLens tools and drives high-intent organic traffic toward CI/CD conversions.
+
+### What Was Done
+1. **Built `database-schema-change-management.html`**
+   - Comprehensive guide targeting "database schema change management" and related keywords.
+   - Defined a five-stage workflow: Propose → Review → Test → Deploy → Verify.
+   - Covered why schema change management matters, common incident types, and best practices for reversible changes, CI/CD review, and schema lockfiles.
+   - Linked to eight existing SchemaLens tools: change request generator, schema diff, change checklist, policy generator, lockfile generator, dependency analyzer, complexity scorer, and semver calculator.
+   - Includes Schema.org `Article` and `FAQPage` structured data, OG/Twitter tags, canonical URL, and analytics events on all CTAs.
+
+2. **Indexed and cross-linked**
+   - Added to `sitemap.xml` — now **327 URLs**.
+   - Added card to `tools.html` in the guides section.
+   - Added link from `database-migration-incident-management.html` toolkit section.
+   - Added card in `platform-engineering-schema-diff.html` toolkit section.
+   - Added guide card in `ci-cd-integration.html` related guides section.
+
+3. **Tests**
+   - Added the page to the e2e page-load array.
+   - Added a dedicated e2e test verifying the page loads, H1 is correct, hero CTAs render, five workflow phases render, all toolkit links render, CI/CD CTA renders, and FAQ appears.
+   - Fixed a strict-mode locator conflict in the new test by using `exact: true` for phase headings.
+   - Ran `node test-all.js` → **44/44 unit tests passed**.
+   - Ran `npx playwright test --project=chromium` → **256/256 tests passed** (14 API tests skipped because they require a running server).
+   - No `DEPLOY-STATUS.md` file exists; site is not flagged as broken.
+
+4. **Deployment**
+   - Committed with descriptive message.
+   - Pushed to GitHub; auto-deployed to Vercel production: `https://www.schemalens.tech`.
+
+### Validation
+- ✅ `database-schema-change-management.html` loads without console errors.
+- ✅ H1, hero CTAs, five workflow phases, toolkit cards, CI/CD CTA, and FAQ render correctly.
+- ✅ Dedicated e2e test passes.
+- ✅ Sitemap now contains 327 URLs.
+- ✅ Cross-links from tools.html, incident management guide, platform engineering page, and CI/CD integration page are valid.
+- ✅ No new HELP-REQUEST.md files created.
+- ✅ No fake urgency or scarcity copy introduced.
+
+### Why This Matters
+- Creates a high-intent SEO asset for "database schema change management" and related keywords.
+- Ties together the recent platform engineering / schema governance narrative with practical workflow guidance.
+- Drives traffic toward CI/CD integrations and Team plan evaluation.
+- Breaks the recent micro-tool/landing-page streak with a content hub, keeping the evergreen build varied.
+
+### Next
+- Continue evergreen build mode: alternate between content hubs, conversion assets, and micro-tools.
+- Candidates: schema diff for data engineering landing page, schema change ADR guide, or a "Schema Change Management Policy" template hub.
 - Remaining credential-blocked tasks (npm publish, GitHub App, Gumroad Team products, Slack app, KV persistence, demo workflow) remain blocked pending human-provided credentials.
 
 ---

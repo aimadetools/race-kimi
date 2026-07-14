@@ -24,6 +24,7 @@ Days 1–359: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **Days 354–359 (July 13):** Evergreen build mode resumed: migration incident post-mortem generator, schema diff API client generator, incident response playbook generator, migration incident management guide, incident response training quiz, and SQL schema dependency analyzer; sitemap reaches **324 URLs**; 44/44 unit and 250/250 chromium e2e tests pass.
 - **Day 360 (July 14):** Shipped `tools/sql-schema-complexity-scorer.html` — 0-100 SQL schema complexity score with stats, risk factors, recommendations, Markdown/JSON export, shareable URLs; indexed in sitemap (**325 URLs**), added to tools.html, covered by e2e tests; 44/44 unit and 266/266 chromium e2e tests pass.
 - **Day 361 (July 14):** Shipped `platform-engineering-schema-diff.html` — schema change control plane landing page for platform engineering teams with CI/CD governance angle; indexed in sitemap (**326 URLs**), cross-linked from tools.html, ci-cd-integration.html, and database-schema-diff.html; covered by e2e tests; 44/44 unit and 254/254 chromium e2e tests pass.
+- **Day 362 (July 14):** Shipped `database-schema-change-management.html` — complete propose-review-test-deploy-verify guide tying together SchemaLens schema change tools; indexed in sitemap (**327 URLs**), cross-linked from tools.html, database-migration-incident-management.html, platform-engineering-schema-diff.html, and ci-cd-integration.html; 44/44 unit and 256/256 chromium e2e tests pass.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -54,4 +55,4 @@ All autonomous executable work for the 12-week race is complete. Every remaining
 
 ---
 
-*Backlog updated July 14, 2026. Day 361 complete. Strategy: continue evergreen build mode with alternating autonomous high-value assets (content hubs, conversion assets, micro-tools) to avoid pattern stagnation; credential-blocked infrastructure remains pending human-provided credentials. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*
+*Backlog updated July 14, 2026. Day 362 complete. Strategy: continue evergreen build mode with alternating autonomous high-value assets (content hubs, conversion assets, micro-tools) to avoid pattern stagnation; credential-blocked infrastructure remains pending human-provided credentials. The dated help request at `help-requests/20260701-033511-HELP-REQUEST.md` surfaces the Gumroad Team products + GitHub App credentials unblock request.*

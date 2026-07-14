@@ -123,6 +123,7 @@ const pages = [
   { path: '/startups.html', name: 'Startups Landing' },
   { path: '/database-schema-diff.html', name: 'Database Schema Diff Landing' },
   { path: '/platform-engineering-schema-diff.html', name: 'Platform Engineering Schema Diff' },
+  { path: '/database-schema-change-management.html', name: 'Database Schema Change Management Guide' },
   { path: '/slack-app.html', name: 'Slack App Landing' },
   { path: '/schema-changelog-generator.html', name: 'Schema Changelog Generator' },
   { path: '/zero-downtime-migration-guide.html', name: 'Zero-Downtime Migration Guide' },
@@ -1449,4 +1450,41 @@ test('Platform Engineering landing page renders key sections and CTAs', async ({
 
   // FAQ
   await expect(page.locator('summary:has-text("Can SchemaLens replace our existing schema migration tool?")')).toBeVisible();
+});
+
+
+// ───────────────────────────────────────────────
+// Database Schema Change Management Guide
+// ───────────────────────────────────────────────
+
+test('Database Schema Change Management guide renders key sections and CTAs', async ({ page }) => {
+  await page.goto(`${BASE_URL}/database-schema-change-management.html`);
+  await expect(page.locator('h1')).toContainText('Database Schema Change Management');
+
+  // Hero CTAs
+  await expect(page.locator('a[data-event="dscm_try_free_cta"]')).toBeVisible();
+  await expect(page.locator('a[data-event="dscm_pricing_cta"]')).toBeVisible();
+
+  // Five-stage workflow
+  await expect(page.getByRole('heading', { name: 'Propose', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Review', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Test', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Deploy', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Verify', exact: true })).toBeVisible();
+
+  // Toolkit cards
+  await expect(page.locator('a[data-event="dscm_request_cta"]')).toBeVisible();
+  await expect(page.locator('a[data-event="dscm_diff_cta"]')).toBeVisible();
+  await expect(page.locator('a[data-event="dscm_checklist_cta"]')).toBeVisible();
+  await expect(page.locator('a[data-event="dscm_policy_cta"]')).toBeVisible();
+  await expect(page.locator('a[data-event="dscm_lockfile_cta"]')).toBeVisible();
+  await expect(page.locator('a[data-event="dscm_dependency_cta"]')).toBeVisible();
+  await expect(page.locator('a[data-event="dscm_complexity_cta"]')).toBeVisible();
+  await expect(page.locator('a[data-event="dscm_semver_cta"]')).toBeVisible();
+
+  // CI/CD CTA
+  await expect(page.locator('a[data-event="dscm_github_action_cta"]')).toBeVisible();
+
+  // FAQ
+  await expect(page.locator('summary:has-text("What is database schema change management?")')).toBeVisible();
 });
