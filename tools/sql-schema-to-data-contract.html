@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Schema to Data Contract Generator — Free Data Contract Builder | SchemaLens</title>
+<meta name="description" content="Turn SQL CREATE TABLE statements into a data contract (YAML/JSON/Markdown) with column types, constraints, owners, freshness SLAs, and quality rules. Free and browser-based.">
+<link rel="canonical" href="https://schemalens.tech/tools/sql-schema-to-data-contract.html">
+<meta property="og:title" content="SQL Schema to Data Contract Generator — Free Data Contract Builder">
+<meta property="og:description" content="Paste your DDL to generate a shareable data contract with quality rules, freshness SLAs, and constraint documentation.">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-schema-to-data-contract.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL Schema to Data Contract Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Data contract generation from SQL DDL, YAML/JSON/Markdown export, column-level quality rules, constraint documentation, freshness SLA, shareable URLs, PostgreSQL MySQL SQLite SQL Server Oracle support",
+  "url": "https://schemalens.tech/tools/sql-schema-to-data-contract.html"
+}
+</script>
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-hover: #334155;
+  --border: #334155;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --secondary: #8b5cf6;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.announcement-bar {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: #fff;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+.announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+}
+nav a.logo {
+  font-weight: 700; font-size: 1.2rem; color: var(--text); text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+nav a.link { color: var(--text-muted); text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+nav a.link:hover { color: var(--text); }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+header { text-align: center; padding: 48px 24px 32px; }
+header h1 {
+  font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 12px;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; margin-bottom: 20px;
+}
+.card h2 { font-size: 1.15rem; margin-bottom: 16px; }
+.card h3 { font-size: 1rem; margin: 20px 0 10px; color: var(--text-muted); }
+
+.editor-label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: block; }
+textarea.sql-input {
+  width: 100%; min-height: 240px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px; color: var(--text); font-family: 'SF Mono', Monaco, monospace;
+  font-size: 0.9rem; resize: vertical;
+}
+textarea.sql-input:focus { outline: none; border-color: var(--primary); }
+
+.form-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px;
+}
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+.form-field input {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; color: var(--text); font-size: 0.9rem;
+}
+.form-field input:focus { outline: none; border-color: var(--primary); }
+
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 22px; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; border: none; text-decoration: none; transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--surface-hover); color: var(--text); border: 1px solid var(--border); }
+.btn-copy { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; font-size: 0.85rem; }
+.btn-copy:hover { color: var(--text); border-color: var(--primary); }
+
+.summary-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-bottom: 24px;
+}
+.summary-box {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px; text-align: center;
+}
+.summary-box .number { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+.summary-box .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+.output-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.output-tab {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 14px; font-size: 0.9rem; color: var(--text-muted); cursor: pointer;
+}
+.output-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.output-panel { display: none; }
+.output-panel.active { display: block; }
+pre.code-output {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; overflow-x: auto; font-family: 'SF Mono', Monaco, monospace;
+  font-size: 0.85rem; line-height: 1.5; color: var(--text); white-space: pre-wrap;
+}
+
+.empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; }
+.hidden { display: none; }
+
+.share-row { display: flex; gap: 10px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+.share-row input {
+  flex: 1; min-width: 220px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 0.9rem;
+}
+
+.upsell {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12));
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; margin-top: 24px;
+}
+.upsell h3 { margin-top: 0; color: var(--text); }
+.upsell p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px; }
+.upsell a { color: #c7d2fe; text-decoration: underline; }
+
+footer {
+  text-align: center; padding: 40px 24px; color: var(--text-muted); font-size: 0.85rem;
+  border-top: 1px solid var(--border); margin-top: 40px;
+}
+footer a { color: var(--text-muted); text-decoration: underline; }
+
+@media (max-width: 640px) {
+  nav a.link { margin-left: 12px; font-size: 0.8rem; }
+}
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+</head>
+<body>
+
+<div class="announcement-bar">
+  Catch breaking schema changes in every PR with the free <a href="../github-action.html">SchemaLens GitHub Action</a>.
+</div>
+
+<nav>
+  <a href="../index.html" class="logo">SchemaLens</a>
+  <div>
+    <a href="../app.html" class="link">Diff</a>
+    <a href="../tools.html" class="link">Tools</a>
+    <a href="../blog.html" class="link">Blog</a>
+    <a href="../pricing.html" class="link">Pricing</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header>
+    <h1>SQL Schema to Data Contract Generator</h1>
+    <p>Turn your SQL CREATE TABLE statements into a documented data contract with quality rules, freshness SLAs, and constraint metadata. Everything stays in your browser.</p>
+  </header>
+
+  <div class="card">
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="datasetInput">Dataset / product name</label>
+        <input id="datasetInput" type="text" value="analytics_events" placeholder="e.g. analytics_events">
+      </div>
+      <div class="form-field">
+        <label for="ownerInput">Owner</label>
+        <input id="ownerInput" type="text" value="data-platform@example.com" placeholder="team or email">
+      </div>
+      <div class="form-field">
+        <label for="versionInput">Contract version</label>
+        <input id="versionInput" type="text" value="1.0.0" placeholder="e.g. 1.0.0">
+      </div>
+      <div class="form-field">
+        <label for="freshnessInput">Freshness SLA</label>
+        <input id="freshnessInput" type="text" value="1 hour" placeholder="e.g. 1 hour">
+      </div>
+      <div class="form-field" style="grid-column: 1 / -1;">
+        <label for="tagsInput">Tags (comma separated)</label>
+        <input id="tagsInput" type="text" value="production, events, clickstream" placeholder="production, events">
+      </div>
+    </div>
+
+    <label class="editor-label" for="sqlInput">Paste CREATE TABLE / CREATE INDEX / ALTER TABLE statements</label>
+    <textarea id="sqlInput" class="sql-input" placeholder="CREATE TABLE events (&#10;  id BIGSERIAL PRIMARY KEY,&#10;  user_id BIGINT NOT NULL REFERENCES users(id),&#10;  event_type VARCHAR(50) NOT NULL,&#10;  payload JSONB NOT NULL DEFAULT '{}',&#10;  created_at TIMESTAMP NOT NULL DEFAULT NOW(),&#10;  CHECK (event_type IN ('signup','purchase','logout'))&#10;);"></textarea>
+    <div class="btn-row">
+      <button id="generateBtn" class="btn btn-primary" data-event="data_contract_generate">Generate Data Contract</button>
+      <button id="sampleBtn" class="btn btn-secondary" data-event="data_contract_sample">Load sample schema</button>
+      <button id="clearBtn" class="btn btn-secondary">Clear</button>
+    </div>
+  </div>
+
+  <div id="results" class="card hidden">
+    <h2>Generated Data Contract</h2>
+
+    <div class="summary-grid">
+      <div class="summary-box"><div class="number" id="statTables">0</div><div class="label">Tables</div></div>
+      <div class="summary-box"><div class="number" id="statColumns">0</div><div class="label">Columns</div></div>
+      <div class="summary-box"><div class="number" id="statConstraints">0</div><div class="label">Constraints</div></div>
+      <div class="summary-box"><div class="number" id="statQualityRules">0</div><div class="label">Quality Rules</div></div>
+    </div>
+
+    <div class="output-tabs">
+      <button class="output-tab active" data-tab="yaml">YAML</button>
+      <button class="output-tab" data-tab="json">JSON</button>
+      <button class="output-tab" data-tab="markdown">Markdown</button>
+    </div>
+    <div id="panel-yaml" class="output-panel active">
+      <pre id="yamlOutput" class="code-output"></pre>
+    </div>
+    <div id="panel-json" class="output-panel">
+      <pre id="jsonOutput" class="code-output"></pre>
+    </div>
+    <div id="panel-markdown" class="output-panel">
+      <pre id="markdownOutput" class="code-output"></pre>
+    </div>
+
+    <div class="btn-row">
+      <button id="copyOutputBtn" class="btn btn-copy" data-event="data_contract_copy">Copy current export</button>
+      <button id="downloadBtn" class="btn btn-secondary" data-event="data_contract_download">Download contract.yaml</button>
+    </div>
+
+    <div class="share-row">
+      <input id="shareUrl" type="text" readonly placeholder="Shareable URL will appear here">
+      <button id="copyShareBtn" class="btn btn-secondary" data-event="data_contract_share_copy">Copy URL</button>
+    </div>
+  </div>
+
+  <div class="card upsell">
+    <h3>Keep data contracts in sync with your CI/CD pipeline</h3>
+    <p>SchemaLens diffs schemas in every pull request and flags breaking changes before they break dbt models, ETL jobs, or downstream consumers. <a href="../github-action.html">Add the free GitHub Action</a> or <a href="../data-engineering-schema-diff.html">see the data engineering guide</a>.</p>
+    <a href="../tools/sql-schema-dependency-analyzer.html" class="link">Analyze dependencies</a> ·
+    <a href="../tools/sql-backward-compatibility-checker.html" class="link">Check compatibility</a> ·
+    <a href="../tools/schema-change-checklist.html" class="link">Schema change checklist</a>
+  </div>
+</div>
+
+<footer>
+  <p>Built by <a href="../index.html">SchemaLens</a> · <a href="../privacy-policy.html">Privacy Policy</a></p>
+</footer>
+
+<script src="../lib/analytics-client.js"></script>
+<script>
+const sampleSQL = `CREATE TABLE events (
+  id BIGSERIAL PRIMARY KEY,
+  user_id BIGINT NOT NULL REFERENCES users(id),
+  event_type VARCHAR(50) NOT NULL,
+  payload JSONB NOT NULL DEFAULT '{}',
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  CHECK (event_type IN ('signup','purchase','logout'))
+);
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  role VARCHAR(20) NOT NULL DEFAULT 'member',
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  CHECK (role IN ('member','admin','owner'))
+);
+
+CREATE INDEX idx_events_user ON events(user_id);`;
+
+function normalizeSQL(sql) {
+  return sql
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/--[^\n]*/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function extractName(sql, regex) {
+  const m = sql.match(regex);
+  return m ? m[1].replace(/["\`]/g, '').toLowerCase() : null;
+}
+
+function extractCreateTableName(sql) {
+  return extractName(sql, /CREATE\s+(?:TEMP\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+}
+
+function extractCheckExpression(def) {
+  const idx = def.toUpperCase().indexOf('CHECK');
+  if (idx === -1) return null;
+  let start = idx + 5;
+  while (start < def.length && def[start] === ' ') start++;
+  if (def[start] !== '(') return null;
+  let depth = 0;
+  let end = start;
+  for (let i = start; i < def.length; i++) {
+    if (def[i] === '(') depth++;
+    else if (def[i] === ')') {
+      depth--;
+      if (depth === 0) { end = i; break; }
+    }
+  }
+  return def.slice(start + 1, end).trim();
+}
+
+function extractDefault(def) {
+  const match = def.match(/DEFAULT\s+(.+?)(?=\s+(NOT\s+NULL|NULL|UNIQUE|PRIMARY\s+KEY|CHECK|REFERENCES|COMMENT)\s*($|,)|$)/i);
+  if (!match) return null;
+  let val = match[1].trim();
+  if (val.endsWith(',')) val = val.slice(0, -1).trim();
+  return val || null;
+}
+
+function extractForeignKey(def) {
+  const m = def.match(/REFERENCES\s+["\`]?([A-Za-z_][A-Za-z0-9_]*)["\`]?\s*\(\s*["\`]?([A-Za-z_][A-Za-z0-9_]*)["\`]?\s*\)/i);
+  return m ? { table: m[1].toLowerCase(), column: m[2].toLowerCase() } : null;
+}
+
+function splitTopLevel(body) {
+  const parts = [];
+  let depth = 0;
+  let current = '';
+  for (const ch of body) {
+    if (ch === '(') depth++;
+    else if (ch === ')') depth--;
+    if (ch === ',' && depth === 0) {
+      parts.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+
+function extractColumns(body) {
+  const columns = [];
+  for (const part of splitTopLevel(body)) {
+    const words = part.trim().split(/\s+/);
+    if (words.length < 2) continue;
+    const name = words[0].replace(/["\`]/g, '').toLowerCase();
+    if (!name || name.match(/^(PRIMARY|UNIQUE|CONSTRAINT|FOREIGN|CHECK)$/i)) continue;
+    const upper = part.toUpperCase();
+    const type = words[1].toUpperCase();
+    columns.push({
+      name,
+      type,
+      nullable: !upper.includes('NOT NULL'),
+      defaultValue: extractDefault(part),
+      primaryKey: /PRIMARY\s+KEY/i.test(part),
+      unique: /\bUNIQUE\b/i.test(part),
+      check: extractCheckExpression(part),
+      foreignKey: extractForeignKey(part),
+    });
+  }
+  return columns;
+}
+
+function extractTableConstraints(body) {
+  const constraints = { primaryKey: [], unique: [], foreignKeys: [], check: [] };
+  for (const part of splitTopLevel(body)) {
+    const upper = part.toUpperCase();
+    if (upper.includes('PRIMARY KEY')) {
+      const m = part.match(/PRIMARY\s+KEY\s*\(\s*([\s\S]+?)\s*\)/i);
+      if (m) constraints.primaryKey = m[1].split(',').map(s => s.replace(/["\`]/g, '').trim().toLowerCase());
+    } else if (/\bUNIQUE\b/i.test(part) && !part.match(/^["\`]?[A-Za-z_]/)) {
+      const m = part.match(/UNIQUE\s*\(\s*([\s\S]+?)\s*\)/i);
+      if (m) constraints.unique.push(m[1].split(',').map(s => s.replace(/["\`]/g, '').trim().toLowerCase()));
+    } else if (upper.includes('FOREIGN KEY')) {
+      const cols = part.match(/FOREIGN\s+KEY\s*\(\s*([\s\S]+?)\s*\)/i);
+      const ref = part.match(/REFERENCES\s+["\`]?([A-Za-z_][A-Za-z0-9_]*)["\`]?\s*\(\s*([\s\S]+?)\s*\)/i);
+      if (cols && ref) {
+        constraints.foreignKeys.push({
+          columns: cols[1].split(',').map(s => s.replace(/["\`]/g, '').trim().toLowerCase()),
+          referencesTable: ref[1].toLowerCase(),
+          referencesColumns: ref[2].split(',').map(s => s.replace(/["\`]/g, '').trim().toLowerCase()),
+        });
+      }
+    }
+    const check = extractCheckExpression(part);
+    if (check) constraints.check.push(check);
+  }
+  return constraints;
+}
+
+function parseSchema(sql) {
+  const normalized = normalizeSQL(sql);
+  const statements = normalized.split(/;+/).map(s => s.trim()).filter(Boolean);
+  const tables = {};
+
+  for (const stmt of statements) {
+    if (/^CREATE\s+TABLE/i.test(stmt)) {
+      const name = extractCreateTableName(stmt);
+      if (!name) continue;
+      const bodyMatch = stmt.match(/CREATE\s+TABLE\s+[\s\S]*?\((.*)\)\s*$/i);
+      const body = bodyMatch ? bodyMatch[1] : '';
+      tables[name] = {
+        name,
+        columns: extractColumns(body),
+        constraints: extractTableConstraints(body),
+      };
+    } else if (/^ALTER\s+TABLE/i.test(stmt)) {
+      const tableMatch = stmt.match(/ALTER\s+TABLE\s+["\`]?([A-Za-z_][A-Za-z0-9_]*|["\`][^"\`]+["\`])["\`]?/i);
+      const table = tableMatch ? tableMatch[1].replace(/["\`]/g, '').toLowerCase() : null;
+      if (!table) continue;
+      if (!tables[table]) tables[table] = { name: table, columns: [], constraints: { primaryKey: [], unique: [], foreignKeys: [], check: [] } };
+      const body = stmt.replace(/ALTER\s+TABLE\s+[\s\S]*?\s+/i, '');
+      const addCol = body.match(/ADD\s+(?:COLUMN\s+)?(["\`]?[A-Za-z_][A-Za-z0-9_]*["\`]?)\s+([A-Za-z]+[\s\S]*)/i);
+      if (addCol) {
+        const colDef = addCol[1] + ' ' + addCol[2];
+        const cols = extractColumns(colDef);
+        tables[table].columns.push(...cols);
+      }
+      const tableConstraints = extractTableConstraints(body);
+      tables[table].constraints.primaryKey.push(...tableConstraints.primaryKey);
+      tables[table].constraints.unique.push(...tableConstraints.unique);
+      tables[table].constraints.foreignKeys.push(...tableConstraints.foreignKeys);
+      tables[table].constraints.check.push(...tableConstraints.check);
+    }
+  }
+  return { tables };
+}
+
+function generateContract(sql, meta) {
+  const schema = parseSchema(sql);
+  const contract = {
+    dataset: meta.dataset,
+    version: meta.version,
+    owner: meta.owner,
+    description: `Data contract for the ${meta.dataset} dataset, generated from SQL DDL.`,
+    freshness: { sla: meta.freshness },
+    tags: meta.tags,
+    generatedAt: new Date().toISOString(),
+    source: 'SQL DDL',
+    tables: {},
+  };
+
+  for (const [tname, table] of Object.entries(schema.tables)) {
+    const columns = {};
+    const qualityRules = [];
+    const constraints = {
+      primaryKey: table.constraints.primaryKey.slice(),
+      unique: table.constraints.unique.slice(),
+      foreignKeys: table.constraints.foreignKeys.slice(),
+      check: table.constraints.check.slice(),
+    };
+
+    for (const col of table.columns) {
+      columns[col.name] = {
+        type: col.type,
+        nullable: col.primaryKey ? false : col.nullable,
+        primaryKey: col.primaryKey,
+        unique: col.unique,
+        default: col.defaultValue,
+        foreignKey: col.foreignKey,
+        check: col.check,
+      };
+
+      qualityRules.push({ rule: 'type_check', column: col.name, expectedType: col.type, severity: 'warning' });
+      if (!col.nullable) qualityRules.push({ rule: 'not_null', column: col.name, severity: 'error' });
+      if (col.primaryKey) {
+        qualityRules.push({ rule: 'primary_key_required', column: col.name, severity: 'error' });
+        if (!constraints.primaryKey.includes(col.name)) constraints.primaryKey.push(col.name);
+      }
+      if (col.unique) {
+        qualityRules.push({ rule: 'unique', column: col.name, severity: 'error' });
+        if (!constraints.unique.some(arr => arr.length === 1 && arr[0] === col.name)) constraints.unique.push([col.name]);
+      }
+      if (col.foreignKey) {
+        qualityRules.push({ rule: 'foreign_key', column: col.name, references: col.foreignKey, severity: 'error' });
+        constraints.foreignKeys.push({
+          columns: [col.name],
+          referencesTable: col.foreignKey.table,
+          referencesColumns: [col.foreignKey.column],
+        });
+      }
+      if (col.check) {
+        qualityRules.push({ rule: 'check_constraint', column: col.name, expression: col.check, severity: 'error' });
+        constraints.check.push(col.check);
+      }
+    }
+
+    for (const expr of table.constraints.check) {
+      if (!table.columns.some(c => c.check === expr)) {
+        qualityRules.push({ rule: 'check_constraint', expression: expr, severity: 'error' });
+      }
+    }
+
+    contract.tables[tname] = {
+      description: '',
+      columns,
+      constraints,
+      qualityRules,
+    };
+  }
+  return contract;
+}
+
+function yamlValue(val) {
+  if (val === null || val === undefined) return 'null';
+  if (typeof val === 'boolean' || typeof val === 'number') return String(val);
+  const str = String(val);
+  if (str === '') return '""';
+  if (/[:#{}[\],&*!?|>'"@\-`]/.test(str) || /^\s/.test(str) || /\s$/.test(str)) {
+    return '"' + str.replace(/"/g, '\\"') + '"';
+  }
+  return str;
+}
+
+function contractToYAML(contract) {
+  const lines = [];
+  lines.push(`# Data Contract: ${contract.dataset}`);
+  lines.push(`# Generated by SchemaLens — https://schemalens.tech/tools/sql-schema-to-data-contract.html`);
+  lines.push(`dataset: ${yamlValue(contract.dataset)}`);
+  lines.push(`version: ${yamlValue(contract.version)}`);
+  lines.push(`owner: ${yamlValue(contract.owner)}`);
+  lines.push(`description: ${yamlValue(contract.description)}`);
+  lines.push('freshness:');
+  lines.push(`  sla: ${yamlValue(contract.freshness.sla)}`);
+  lines.push('tags:');
+  for (const tag of contract.tags) lines.push(`  - ${yamlValue(tag)}`);
+  lines.push(`generatedAt: ${yamlValue(contract.generatedAt)}`);
+  lines.push(`source: ${yamlValue(contract.source)}`);
+  lines.push('tables:');
+  for (const [tname, table] of Object.entries(contract.tables)) {
+    lines.push(`  ${tname}:`);
+    lines.push(`    description: ${yamlValue(table.description)}`);
+    lines.push('    columns:');
+    for (const [cname, col] of Object.entries(table.columns)) {
+      lines.push(`      ${cname}:`);
+      lines.push(`        type: ${yamlValue(col.type)}`);
+      lines.push(`        nullable: ${yamlValue(col.nullable)}`);
+      lines.push(`        primaryKey: ${yamlValue(col.primaryKey)}`);
+      lines.push(`        unique: ${yamlValue(col.unique)}`);
+      lines.push(`        default: ${yamlValue(col.default)}`);
+      if (col.foreignKey) {
+        lines.push('        foreignKey:');
+        lines.push(`          table: ${yamlValue(col.foreignKey.table)}`);
+        lines.push(`          column: ${yamlValue(col.foreignKey.column)}`);
+      } else {
+        lines.push('        foreignKey: null');
+      }
+      lines.push(`        check: ${yamlValue(col.check)}`);
+    }
+    lines.push('    constraints:');
+    lines.push('      primaryKey:');
+    for (const col of table.constraints.primaryKey) lines.push(`        - ${yamlValue(col)}`);
+    lines.push('      unique:');
+    for (const cols of table.constraints.unique) {
+      if (cols.length === 0) continue;
+      lines.push('        - ' + cols.map(c => yamlValue(c)).join(', '));
+    }
+    lines.push('      foreignKeys:');
+    for (const fk of table.constraints.foreignKeys) {
+      lines.push('        - columns:');
+      for (const c of fk.columns) lines.push(`            - ${yamlValue(c)}`);
+      lines.push(`          referencesTable: ${yamlValue(fk.referencesTable)}`);
+      lines.push('          referencesColumns:');
+      for (const c of fk.referencesColumns) lines.push(`            - ${yamlValue(c)}`);
+    }
+    lines.push('      check:');
+    for (const expr of table.constraints.check) lines.push(`        - ${yamlValue(expr)}`);
+    lines.push('    qualityRules:');
+    for (const rule of table.qualityRules) {
+      lines.push('      - rule: ' + yamlValue(rule.rule));
+      if ('column' in rule) lines.push('        column: ' + yamlValue(rule.column));
+      if ('columns' in rule) {
+        lines.push('        columns:');
+        for (const c of rule.columns) lines.push(`          - ${yamlValue(c)}`);
+      }
+      if ('expectedType' in rule) lines.push('        expectedType: ' + yamlValue(rule.expectedType));
+      if ('expression' in rule) lines.push('        expression: ' + yamlValue(rule.expression));
+      if ('references' in rule) {
+        lines.push('        references:');
+        const ref = rule.references;
+        if ('table' in ref) lines.push('          table: ' + yamlValue(ref.table));
+        if ('column' in ref) lines.push('          column: ' + yamlValue(ref.column));
+        if ('columns' in ref) {
+          lines.push('          columns:');
+          for (const c of ref.columns) lines.push(`            - ${yamlValue(c)}`);
+        }
+      }
+      lines.push('        severity: ' + yamlValue(rule.severity));
+    }
+  }
+  return lines.join('\n');
+}
+
+function contractToMarkdown(contract) {
+  let md = `# Data Contract: ${contract.dataset}\n\n`;
+  md += `**Version:** ${contract.version}  \n`;
+  md += `**Owner:** ${contract.owner}  \n`;
+  md += `**Freshness SLA:** ${contract.freshness.sla}  \n`;
+  md += `**Generated:** ${contract.generatedAt}  \n`;
+  md += `**Tags:** ${contract.tags.join(', ')}  \n\n`;
+  md += `## Tables\n\n`;
+  for (const [tname, table] of Object.entries(contract.tables)) {
+    md += `### ${tname}\n\n`;
+    if (table.description) md += `${table.description}\n\n`;
+    md += `| Column | Type | Nullable | Default | PK | Unique | FK | Check |\n`;
+    md += `|--------|------|----------|---------|----|--------|----|-------|\n`;
+    for (const [cname, col] of Object.entries(table.columns)) {
+      const fk = col.foreignKey ? `${col.foreignKey.table}.${col.foreignKey.column}` : '';
+      md += `| ${cname} | ${col.type} | ${col.nullable ? 'Yes' : 'No'} | ${col.default || ''} | ${col.primaryKey ? 'Yes' : ''} | ${col.unique ? 'Yes' : ''} | ${fk} | ${col.check || ''} |\n`;
+    }
+    md += `\n**Quality rules (${table.qualityRules.length}):**\n\n`;
+    for (const rule of table.qualityRules) {
+      md += `- \`${rule.rule}\` on \`${rule.column}\` (${rule.severity})\n`;
+    }
+    md += `\n`;
+  }
+  return md;
+}
+
+function updateOutputs(contract) {
+  document.getElementById('yamlOutput').textContent = contractToYAML(contract);
+  document.getElementById('jsonOutput').textContent = JSON.stringify(contract, null, 2);
+  document.getElementById('markdownOutput').textContent = contractToMarkdown(contract);
+
+  let totalColumns = 0;
+  let totalConstraints = 0;
+  let totalQuality = 0;
+  const tableNames = Object.keys(contract.tables);
+  for (const table of Object.values(contract.tables)) {
+    totalColumns += Object.keys(table.columns).length;
+    totalQuality += table.qualityRules.length;
+    totalConstraints += table.constraints.primaryKey.length +
+      table.constraints.unique.length +
+      table.constraints.foreignKeys.length +
+      table.constraints.check.length;
+  }
+  document.getElementById('statTables').textContent = String(tableNames.length);
+  document.getElementById('statColumns').textContent = String(totalColumns);
+  document.getElementById('statConstraints').textContent = String(totalConstraints);
+  document.getElementById('statQualityRules').textContent = String(totalQuality);
+}
+
+function getMeta() {
+  const tags = document.getElementById('tagsInput').value.split(',').map(s => s.trim()).filter(Boolean);
+  return {
+    dataset: document.getElementById('datasetInput').value.trim() || 'untitled',
+    owner: document.getElementById('ownerInput').value.trim() || 'unknown',
+    version: document.getElementById('versionInput').value.trim() || '1.0.0',
+    freshness: document.getElementById('freshnessInput').value.trim() || 'n/a',
+    tags: tags.length ? tags : ['schema'],
+  };
+}
+
+function generate() {
+  const sql = document.getElementById('sqlInput').value;
+  if (!sql.trim()) return;
+  const contract = generateContract(sql, getMeta());
+  updateOutputs(contract);
+  document.getElementById('results').classList.remove('hidden');
+  updateShareUrl();
+}
+
+function updateShareUrl() {
+  const payload = {
+    sql: document.getElementById('sqlInput').value,
+    ...getMeta(),
+  };
+  try {
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    const url = `${location.origin}${location.pathname}?share=${encoded}`;
+    document.getElementById('shareUrl').value = url;
+  } catch (e) {
+    document.getElementById('shareUrl').value = '';
+  }
+}
+
+function loadFromShare() {
+  try {
+    const params = new URLSearchParams(location.search);
+    const share = params.get('share');
+    if (!share) return;
+    const payload = JSON.parse(decodeURIComponent(escape(atob(share))));
+    if (payload.sql) document.getElementById('sqlInput').value = payload.sql;
+    if (payload.dataset) document.getElementById('datasetInput').value = payload.dataset;
+    if (payload.owner) document.getElementById('ownerInput').value = payload.owner;
+    if (payload.version) document.getElementById('versionInput').value = payload.version;
+    if (payload.freshness) document.getElementById('freshnessInput').value = payload.freshness;
+    if (payload.tags) document.getElementById('tagsInput').value = Array.isArray(payload.tags) ? payload.tags.join(', ') : payload.tags;
+    generate();
+  } catch (e) {}
+}
+
+function getActiveTab() {
+  return document.querySelector('.output-tab.active')?.getAttribute('data-tab') || 'yaml';
+}
+
+function getActiveOutputText() {
+  const tab = getActiveTab();
+  return document.getElementById(tab + 'Output').textContent;
+}
+
+function download(filename, text) {
+  const el = document.createElement('a');
+  el.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  el.setAttribute('download', filename);
+  el.style.display = 'none';
+  document.body.appendChild(el);
+  el.click();
+  document.body.removeChild(el);
+}
+
+function copyText(text, btn, successText) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = successText;
+      setTimeout(() => btn.textContent = original, 1500);
+    }).catch(() => {});
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const original = btn.textContent;
+    btn.textContent = successText;
+    setTimeout(() => btn.textContent = original, 1500);
+  }
+}
+
+document.getElementById('generateBtn').addEventListener('click', generate);
+document.getElementById('sampleBtn').addEventListener('click', () => {
+  document.getElementById('sqlInput').value = sampleSQL;
+  generate();
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('results').classList.add('hidden');
+});
+
+document.querySelectorAll('.output-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.output-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const key = tab.getAttribute('data-tab');
+    document.querySelectorAll('.output-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + key).classList.add('active');
+  });
+});
+
+document.getElementById('copyOutputBtn').addEventListener('click', () => {
+  copyText(getActiveOutputText(), document.getElementById('copyOutputBtn'), 'Copied!');
+});
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const tab = getActiveTab();
+  let ext = tab;
+  let content = getActiveOutputText();
+  if (tab === 'yaml') ext = 'yaml';
+  download(`contract.${ext}`, content);
+});
+
+document.getElementById('copyShareBtn').addEventListener('click', () => {
+  copyText(document.getElementById('shareUrl').value, document.getElementById('copyShareBtn'), 'URL copied!');
+});
+
+loadFromShare();
+</script>
+</body>
+</html>

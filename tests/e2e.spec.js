@@ -229,6 +229,7 @@ const pages = [
   { path: '/tools/sql-schema-dependency-analyzer.html', name: 'SQL Schema Dependency Analyzer' },
   { path: '/tools/sql-schema-complexity-scorer.html', name: 'SQL Schema Complexity Scorer' },
   { path: '/tools/sql-backward-compatibility-checker.html', name: 'SQL Backward Compatibility Checker' },
+  { path: '/tools/sql-schema-to-data-contract.html', name: 'SQL Schema to Data Contract Generator' },
 ];
 
 for (const { path, name } of pages) {
@@ -1552,4 +1553,50 @@ test('SQL Backward Compatibility Checker analyzes sample migration', async ({ pa
   await expect(page.locator('#report-output')).toBeVisible();
   await expect(page.locator('#copy-report')).toBeVisible();
   await expect(page.locator('#share-url')).toBeVisible();
+});
+
+
+// ───────────────────────────────────────────────
+// SQL Schema to Data Contract Generator
+// ───────────────────────────────────────────────
+
+test('SQL Schema to Data Contract Generator analyzes sample and exports YAML/JSON/Markdown', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/sql-schema-to-data-contract.html`);
+  await expect(page.locator('h1')).toContainText('Data Contract Generator');
+
+  // Input and buttons render
+  await expect(page.locator('#sqlInput')).toBeVisible();
+  await expect(page.locator('#generateBtn')).toBeVisible();
+  await expect(page.locator('text=Load sample schema')).toBeVisible();
+
+  // Load sample and generate contract
+  await page.locator('text=Load sample schema').click();
+  await page.locator('#generateBtn').click();
+
+  // Results render
+  await expect(page.locator('#results:not(.hidden)')).toBeVisible();
+  await expect(page.locator('#statTables')).toContainText(/[1-9]/);
+  await expect(page.locator('#statColumns')).toContainText(/[1-9]/);
+
+  // YAML tab contains generated contract
+  const yaml = await page.locator('#yamlOutput').textContent();
+  expect(yaml).toContain('Data Contract:');
+  expect(yaml).toContain('tables:');
+  expect(yaml).toContain('events:');
+  expect(yaml).toContain('qualityRules:');
+
+  // JSON tab works
+  await page.click('[data-tab="json"]');
+  const json = await page.locator('#jsonOutput').textContent();
+  expect(json).toContain('"dataset"');
+  expect(json).toContain('"tables"');
+
+  // Markdown tab works
+  await page.click('[data-tab="markdown"]');
+  const markdown = await page.locator('#markdownOutput').textContent();
+  expect(markdown).toContain('# Data Contract:');
+  expect(markdown).toContain('| Column | Type |');
+
+  // Share URL is generated
+  await expect(page.locator('#shareUrl')).not.toHaveValue('');
 });
